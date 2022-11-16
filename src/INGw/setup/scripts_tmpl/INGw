@@ -1,0 +1,78 @@
+#!/usr/bin/ksh
+
+PATH=$PATH:/usr/bin
+export PATH
+HOST_ADDR=`id | sed "s/uid=//g" | cut -d"(" -f2 | sed "s/).*//g"`
+#date_stamp=`date | awk '{ printf("%s_%s_%s", $2, $3, $4); }'`
+date_stamp=`date +%b_%d_%H_%M_%S`
+FILE_NAME="INGw_${HOST_ADDR}_${date_stamp}.rexec_out"
+
+\rm -f LOG_DIR/stack.log
+ln -s LOG_DIR/${FILE_NAME} LOG_DIR/stack.log
+
+mkdir -p LOG_DIR
+exec 1>LOG_DIR/${FILE_NAME} 2>&1
+
+export SUBSYS_DIR=SUBSYS_INGW
+
+# Execute external scripts
+. INSTALL_ROOT/$SUBSYS_DIR/PLATFORM_DIR/scripts/setup.sh
+. INSTALL_ROOT/$SUBSYS_DIR/PLATFORM_DIR/conf/hssenv.sh
+. INSTALL_ROOT/$SUBSYS_DIR/PLATFORM_DIR/conf/ss7_sig_conf.sh
+
+# Environment Variable Definition
+# Shall contain all export definition over here in following format
+# Example: 
+# Usage: This environment variable is shown as example. 
+# export DUMMY=true
+
+
+
+# Kill if process already running.
+myid=`whoami`
+ingwlist=`ps -u $myid| grep INGw| grep -v INGw|awk '{print $1;}'`
+
+if [[ -n $ingwlist ]]
+then
+   echo "INGw $ingwlist running will kill them."
+   kill -9 $ingwlist
+   sleep 2
+fi
+
+# Number of timer SIP msg will be retransmiited
+export sipMAX_RETRAN=6
+
+# Number of timer INVITE will be retransmiited
+export sipMAX_INV_RETRAN=6
+
+# port at which telnet interface will listen
+export ingwDEBUG_PORT=5656
+
+#disable the memory pool usage
+export ingwDEBUG_USE_MEM_POOL=disabled
+
+#define to alter SO_SNDBUF SO_RCVBUF properties 
+export INGW_TCP_SND_RCV=262144
+#export SIP_PARSE_SHORTFORM=1
+# to supress options message logging
+#export SUPPRESS_OPTIONS_LOGGING=1
+
+#workaround to send UIS to endpoint
+
+#export DPC=3153936
+#export RSSN=243
+
+#export TCAP_CLIENT_DBG_LVL=3
+
+#in orgder to disable INC Tcap Msg FT set the following variable as 1
+#export INGW_DISABLE_MSG_FT=1
+
+#network alive time in seconds >= 8
+#export INGW_NW_ALIVE_TIME=8 
+
+cd $INSTALLROOT/$SUBSYS_DIR/sol28g/bin
+
+
+# Execute INGw script.
+
+exec $INSTALLROOT/$SUBSYS_DIR/PLATFORM_DIR/bin/INGw $@ -oIm 0 -cIm 1234 -z $INSTALLROOT/HConfigFile.dat -d INSTALL_ROOT/$SUBSYS_DIR/PLATFORM_DIR/conf/ingw_primary.lcfg -cfgFile $INSTALLROOT/$SUBSYS_DIR/PLATFORM_DIR/conf/ccmoid.conf -ORBEndpoint iiop://:5025/portspan=5

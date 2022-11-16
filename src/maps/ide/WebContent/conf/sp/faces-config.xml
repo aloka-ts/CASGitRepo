@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+
+<!--
+/**********************************************************************
+*	 GENBAND, Inc. Confidential and Proprietary
+*
+* This work contains valuable confidential and proprietary 
+* information.
+* Disclosure, use or reproduction without the written authorization of
+* GENBAND, Inc. is prohibited.  This unpublished work by GENBAND, Inc.
+* is protected by the laws of the United States and other countries.
+* If publication of the work should occur the following notice shall 
+* apply:
+* 
+* "Copyright 2007 GENBAND, Inc.  All rights reserved."
+**********************************************************************/
+-->
+
+<!DOCTYPE faces-config PUBLIC
+   "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+<faces-config>
+
+   <application>
+      <property-resolver>org.jboss.portal.core.admin.ui.AdminPropertyResolver</property-resolver>
+      <view-handler>com.sun.facelets.FaceletPortletViewHandler</view-handler>
+		<resource-bundle>
+			<base-name>bundle.resources</base-name>
+			<var>bundle</var>
+		</resource-bundle>
+    </application>
+
+   <converter>
+      <converter-for-class>org.jboss.portal.core.model.content.ContentType</converter-for-class>
+      <converter-class>org.jboss.portal.core.admin.ui.conversion.ContentTypeConverter</converter-class>
+   </converter>
+
+   <converter>
+      <converter-for-class>org.jboss.portal.core.model.portal.PortalObjectId</converter-for-class>
+      <converter-class>org.jboss.portal.core.admin.ui.conversion.PortalObjectIdConverter</converter-class>
+   </converter>
+   
+   <managed-bean>
+      <managed-bean-name>MgmtManager</managed-bean-name>
+      <managed-bean-class>com.genband.m5.maps.mbeans.MgmtManager</managed-bean-class>
+      <managed-bean-scope>session</managed-bean-scope>
+   </managed-bean>
+	
+   <managed-bean>
+      <managed-bean-name>portletUtil</managed-bean-name>
+      <managed-bean-class>com.genband.m5.maps.common.PortletUtil</managed-bean-class>
+      <managed-bean-scope>application</managed-bean-scope>
+   </managed-bean>
+   
+		<managed-bean>
+      		<managed-bean-name>createMBean270</managed-bean-name>
+      		<managed-bean-class>com.genband.m5.maps.sp.mbeans.CreateMBean_270</managed-bean-class>
+      		<managed-bean-scope>session</managed-bean-scope> 
+   		</managed-bean>
+		<managed-bean>
+      		<managed-bean-name>listMBean270</managed-bean-name>
+      		<managed-bean-class>com.genband.m5.maps.sp.mbeans.ListMBean_270</managed-bean-class>
+      		<managed-bean-scope>session</managed-bean-scope> 
+   		</managed-bean>
+		<managed-bean>
+      		<managed-bean-name>createMBean277</managed-bean-name>
+      		<managed-bean-class>com.genband.m5.maps.sp.mbeans.CreateMBean_277</managed-bean-class>
+      		<managed-bean-scope>session</managed-bean-scope> 
+   		</managed-bean>
+              <managed-bean>
+      		<managed-bean-name>createMBean109</managed-bean-name>
+      		<managed-bean-class>com.genband.m5.maps.sp.mbeans.CreateMBean_109</managed-bean-class>
+      		<managed-bean-scope>session</managed-bean-scope> 
+   		</managed-bean>
+		<managed-bean>
+      		<managed-bean-name>listMBean109</managed-bean-name>
+      		<managed-bean-class>com.genband.m5.maps.sp.mbeans.ListMBean_109</managed-bean-class>
+      		<managed-bean-scope>session</managed-bean-scope> 
+   		</managed-bean> 
+		<navigation-rule>
+	  		<from-view-id>/WEB-INF/jsf/childOrganizationList.xhtml</from-view-id>
+      		<navigation-case>
+         		<from-outcome>SUCCESS</from-outcome>
+ 		        <to-view-id>/WEB-INF/jsf/childOrganizationList.xhtml</to-view-id>
+      		</navigation-case>
+	  		<navigation-case>
+         		<from-outcome>PROVERROR</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/prov-error.xhtml</to-view-id>
+      		</navigation-case>
+      		<navigation-case>
+         		<from-outcome>previousPage</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/childOrganizationList.xhtml</to-view-id>
+      		</navigation-case>
+      		<navigation-case>
+         		<from-outcome>nextPage</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/childOrganizationList.xhtml</to-view-id>
+      		</navigation-case>
+			<navigation-case>
+         		<from-outcome>delete</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/childOrganizationList.xhtml</to-view-id>
+      		</navigation-case>
+			<navigation-case>
+         		<from-outcome>add</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/createOrgW1.xhtml</to-view-id>
+      		</navigation-case>
+      	</navigation-rule>
+
+		<!-- Navigation flow for createOrgW1.xhtml -->
+		<navigation-rule>
+	 		 <from-view-id>/WEB-INF/jsf/createOrgW1.xhtml</from-view-id>
+	  		 <navigation-case>
+         		 <from-outcome>list</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/childOrganizationList.xhtml</to-view-id>
+     		 </navigation-case>
+	  		<navigation-case>
+         		<from-outcome>viewDetails</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/createOrgW1.xhtml</to-view-id>
+      		</navigation-case>
+			<navigation-case>
+         		<from-outcome>np1</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/createOrgW2.xhtml</to-view-id>
+      		</navigation-case>
+   		</navigation-rule> 
+
+	<!-- Navigation flow for createOrgW2.xhtml -->
+		<navigation-rule>
+	 		 <from-view-id>/WEB-INF/jsf/createOrgW2.xhtml</from-view-id>
+	  		 <navigation-case>
+         		 <from-outcome>list</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/childOrganizationList.xhtml</to-view-id>
+     		 </navigation-case>
+			  <navigation-case>
+         		 <from-outcome>viewDetails</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/createOrgW1.xhtml</to-view-id>
+     		 </navigation-case>
+			<navigation-case>
+         		<from-outcome>np2</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/createOrgW3.xhtml</to-view-id>
+      		</navigation-case>
+			<navigation-case>
+         		<from-outcome>pp2</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/createOrgW1.xhtml</to-view-id>
+      		</navigation-case>
+   		</navigation-rule> 
+
+		<!-- Navigation flow for createOrgW3.xhtml -->
+		<navigation-rule>
+	 		 <from-view-id>/WEB-INF/jsf/createOrgW3.xhtml</from-view-id>
+	  		 <navigation-case>
+         		 <from-outcome>list</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/childOrganizationList.xhtml</to-view-id>
+     		 </navigation-case>
+			  <navigation-case>
+         		 <from-outcome>viewDetails</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/createOrgW1.xhtml</to-view-id>
+     		 </navigation-case>	 
+			<navigation-case>
+         		<from-outcome>pp3</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/createOrgW2.xhtml</to-view-id>
+      		</navigation-case>
+   		</navigation-rule> 
+
+		<!-- Navigation flow for ownDetails.xhtml -->
+		<navigation-rule>
+	 		 <from-view-id>/WEB-INF/jsf/ownDetails.xhtml</from-view-id>
+	  		<navigation-case>
+         		<from-outcome>viewDetails</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/ownDetails.xhtml</to-view-id>
+      		</navigation-case>
+			<navigation-case>
+         		<from-outcome>np1</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/ownDetails2.xhtml</to-view-id>
+      		</navigation-case>
+   		</navigation-rule>
+
+		<navigation-rule>
+	 		 <from-view-id>/WEB-INF/jsf/ownDetails2.xhtml</from-view-id>
+	  		<navigation-case>
+         		<from-outcome>viewDetails</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/ownDetails2.xhtml</to-view-id>
+      		</navigation-case>
+			<navigation-case>
+         		<from-outcome>np2</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/ownDetails3.xhtml</to-view-id>
+      		</navigation-case>
+			<navigation-case>
+         		<from-outcome>pp2</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/ownDetails.xhtml</to-view-id>
+      		</navigation-case>
+   		</navigation-rule>
+
+		<navigation-rule>
+	 		 <from-view-id>/WEB-INF/jsf/ownDetails3.xhtml</from-view-id>
+	  		<navigation-case>
+         		<from-outcome>viewDetails</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/ownDetails3.xhtml</to-view-id>
+      		</navigation-case>
+			<navigation-case>
+         		<from-outcome>pp3</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/ownDetails2.xhtml</to-view-id>
+      		</navigation-case>
+   		</navigation-rule>
+
+                <!-- Navigation flow for ld20.xhtml -->
+		<navigation-rule>
+	  		<from-view-id>/WEB-INF/jsf/ld20.xhtml</from-view-id>
+      		<navigation-case>
+         		<from-outcome>SUCCESS</from-outcome>
+ 		        <to-view-id>/WEB-INF/jsf/ld20.xhtml</to-view-id>
+      		</navigation-case>
+	  		<navigation-case>
+         		<from-outcome>PROVERROR</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/prov-error.xhtml</to-view-id>
+      		</navigation-case>
+      		<navigation-case>
+         		<from-outcome>previousPage</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/ld20.xhtml</to-view-id>
+      		</navigation-case>
+      		<navigation-case>
+         		<from-outcome>nextPage</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/ld20.xhtml</to-view-id>
+      		</navigation-case>
+			<navigation-case>
+         		<from-outcome>delete</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/ld20.xhtml</to-view-id>
+      		</navigation-case>
+			<navigation-case>
+         		<from-outcome>add</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/cmv20.xhtml</to-view-id>
+      		</navigation-case>
+      	        </navigation-rule>
+		<navigation-rule>
+	 		 <from-view-id>/WEB-INF/jsf/cmv20.xhtml</from-view-id>
+	  		 <navigation-case>
+         		 <from-outcome>list</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/ld20.xhtml</to-view-id>
+     		 </navigation-case>
+	  		<navigation-case>
+         		<from-outcome>viewDetails</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/cmv20.xhtml</to-view-id>
+      		</navigation-case>
+   		</navigation-rule> 
+
+   <lifecycle>
+      <phase-listener>org.jboss.portal.core.admin.ui.Refresher</phase-listener>
+   </lifecycle>
+
+   <component>
+      <component-type>org.jboss.portal.Scroller</component-type>
+      <component-class>org.jboss.portal.faces.component.scroller.UIScroller</component-class>
+   </component>
+
+   <component>
+      <component-type>org.jboss.portal.Portlet</component-type>
+      <component-class>org.jboss.portal.faces.component.portlet.UIPortlet</component-class>
+   </component>
+   
+   <render-kit>
+      <renderer>
+         <component-family>javax.faces.Input</component-family>
+         <renderer-type>default</renderer-type>
+         <renderer-class>org.jboss.portal.faces.component.scroller.ScrollerRenderer</renderer-class>
+      </renderer>
+   </render-kit>
+</faces-config>

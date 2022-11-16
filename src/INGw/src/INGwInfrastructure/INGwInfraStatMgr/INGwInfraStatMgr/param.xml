@@ -1,0 +1,108 @@
+<root>
+<statparam oid="1.1.1" isDeferred="true" isEmsParam="false" resetOnRead="true" isSnapShot="false" isMinMaxReqd="false" isAvgReqd="true">
+  <statthreshold ThresholdType="Timediff_Percent" LowThreshold="100" HighThreshold="700" AssociatedId="1.2.3" ThresholdAction="ThreshAct_Log" AlarmId="10008" AlarmMessage="hello success" TimeDifference="10000">
+  </statthreshold>
+</statparam>
+<statparam oid="8.10.19" isDeferred="true" isEmsParam="true" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="true">
+</statparam>
+<statparam oid="8.10.24" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.24" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.50" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.51" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.52" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.53" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.54" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.55" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.56" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.57" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.58" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.59" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.60" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.61" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.62" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.63" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.64" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.65" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.66" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.67" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.68" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.69" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.70" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.71" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.72" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.73" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.110" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.111" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.112" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.113" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.114" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.115" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.116" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.117" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.118" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.119" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.120" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.121" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.122" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.123" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.10.13" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.10.15" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.10.5" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.191" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.192" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.193" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.194" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.195" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.196" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+<statparam oid="8.11.197" isDeferred="true" isEmsParam="false" resetOnRead="false" isSnapShot="false" isMinMaxReqd="true" isAvgReqd="false">
+</statparam>
+</root>

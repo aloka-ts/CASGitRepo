@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Subsystem Type="MAPS Subsystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="K:\Installer\samples\schema\subsysInstallationTemplate.xsd" ParamFileRequired="true">
+   
+   <Macros>
+       <!-- Any prompts come here-->
+       <Macro name="SERVER_CONF" question="Enter the Server Configuration Mode for MAPS (maps/maps-ha) : "/>
+       <Macro name="TEMP_LOCATION" question="Enter the temporary location for MAPS : "/>
+       <Macro name="DB_VENDOR" question="Enter the Database Vendor for MAPS : "/>
+       <Macro name="DB_DRIVER_NAME" question="Enter the Database Driver Name for MAPS : "/>
+       <Macro name="DB_LISTENER_PORT" question="Enter the Database Listener Port for Primary DB : "/>
+       <Macro name="DB_LISTENER_PORT_2" question="Enter the Database Listener Port for Secondary DB : "/>
+       <Macro name="DB_MIN_CON_THRESHOLD" question="Enter the Database Listener Port for Secondary DB : "  defaultValue="1"/>
+       <Macro name="DB_MAX_CON_THRESHOLD" question="Enter the Database Listener Port for Secondary DB : "  defaultValue="25"/>
+       <Macro name="WWW_BIND_IP" question="Enter the Binding IP for WWW request : "/>
+       <Macro name="WWW_PORT" question="Enter the Port for WWW request : "/>
+       <Macro name="WS_PORT" question="Enter the Port for Web Services request : "/>
+       <Macro name="WWW_SERVER_SSL" question="Is SSL Enabled or not for WWW (0->No/1->Yes) : "/>
+       <Macro name="WS_SSL" question="Is SSL Enabled for WebServices (0->No/1-Yes) : "/>
+       <Macro name="WWW_SSL_PORT" question="Enter the SSL Port for WWW request : "/>
+       <Macro name="WS_SSL_PORT" question="Enter the SSL Port for WS request : "/>
+       <Macro name="NS_PORT" question="Enter the JNDI Naming Service Port : "/>
+       <Macro name="HANS_PORT" question="Enter the JNDI Naming Service Port (HA Mode) : "/>
+       <Macro name="LOG_LOCATION" question="Enter the LOG Location for MAPS : " defaultValue="/LOGS/MAPS"/>
+       <Macro name="LOG_LEVEL" question="Enter the LOG Location for MAPS : "  defaultValue="ERROR"/>
+   </Macros>
+
+   <DefinedMacros>
+          <Macro name="SUBSYS_VERSION" value="6.0.0"/>
+          <Macro name="DB_STATUS" value="1"/>
+          <Macro name="LOG_FILENAME" value="server.log"/>
+   </DefinedMacros>
+ 
+   <Package Name="maps.tar" Location="MmAppProvServer6.0.0"/>
+
+   <Scripts>
+      <UserScript name="scripts/mapsUtils.sh"/>
+      <UserScript name="scripts/configMAPSData.sh"/>
+      <OSScript name="/scripts/osconfig.sh"/>
+      <OSScript name="/scripts/ftconfig.sh"/>
+      <ExecutionScript name="MmAppProvServer/scripts/maps"/>
+   </Scripts>
+  
+   <Oids>
+
+   <!-- Installation parameters -->
+        
+        <Oid name="1.11.1" defaultValue="6.0.0"/>
+	<Oid name="1.11.2" defaultValue="">
+		<alias>CURRENTDATE_STRING</alias>
+	</Oid>
+	<Oid name="1.11.3" defaultValue="">
+		<alias>CURRENTDATE_STRING</alias>
+	</Oid>
+	
+   <!-- maps Paramaters -->
+	
+	
+        <Oid name="1.3.1" defaultValue="">
+		<alias>MY_HOST_IP</alias>
+	</Oid>
+
+        <Oid name="1.12.1" defaultValue="">
+		<alias>MY_ROLE</alias>
+	</Oid>
+
+        <Oid name="33.1.1" defaultValue="">
+		<alias>SERVER_CONF</alias>
+	</Oid>
+
+        <!-- Giving Space in defualt value as it will be filled at runtime -->
+	<Oid name="33.1.2" defaultValue=" "/> 
+
+	<Oid name="33.1.3" defaultValue="">
+		<alias>TEMP_LOCATION</alias>
+	</Oid>
+
+   <!-- Db parameters -->
+   <!-- No case for dataguard added (ie. DB_FT_REQD=2) -->
+   <!-- No Mapping added explicitly for Database host ip addresses. Macros from build.xml to be picked -->
+
+      <Oid name="1.2.1" defaultValue="">
+		<alias>DB_USER</alias>
+      </Oid>
+      <Oid name="1.2.2" defaultValue="">
+		<alias>DB_PASSWD</alias>
+      </Oid>
+     
+      <Oid name="1.2.9" defaultValue="">
+		<alias>DB_FT_REQD</alias>
+	<IF value="0">
+		<Oid name="1.2.16" defaultValue="">
+			<alias>DB1_HOST</alias>
+		</Oid>	
+		<Oid name="1.2.11" defaultValue="">
+			<alias>DB1_SID</alias>	
+		</Oid>
+		<Oid name="1.2.10" defaultValue="">
+			<alias>DB_LISTENER_PORT</alias>	
+		</Oid>
+	</IF>
+	<IF value="1">
+		<Oid name="1.2.16" defaultValue="">
+			<alias>DB1_HOST</alias>
+		</Oid>
+		<Oid name="1.2.11" defaultValue="">
+			<alias>DB1_SID</alias>
+		</Oid>
+		<Oid name="1.2.20" defaultValue="">
+			<alias>DB2_HOST</alias>
+		</Oid>
+		<Oid name="1.2.21" defaultValue="">
+			<alias>DB2_SID</alias>
+		</Oid>		
+		<Oid name="1.2.10" defaultValue="">
+			<alias>DB_LISTENER_PORT</alias>	
+		</Oid>
+		<Oid name="1.2.22" defaultValue="">
+			<alias>DB_LISTENER_PORT_2</alias>	
+		</Oid>
+	</IF>
+        <IF value="3">
+                <Oid name="1.2.16" defaultValue="">
+                    <alias>DB1_HOST</alias>
+                </Oid>
+                <Oid name="1.2.11" defaultValue="">
+                    <alias>DB1_SID</alias>
+                </Oid>
+                <Oid name="1.2.20" defaultValue="">
+                    <alias>DB2_HOST</alias>
+                </Oid>
+                <Oid name="1.2.21" defaultValue="">
+                    <alias>DB2_SID</alias>
+                </Oid>
+		<Oid name="1.2.10" defaultValue="">
+			<alias>DB_LISTENER_PORT</alias>	
+		</Oid>
+		<Oid name="1.2.22" defaultValue="">
+			<alias>DB_LISTENER_PORT_2</alias>	
+		</Oid>
+         </IF>
+       </Oid>
+     	
+        <Oid name="1.2.25" defaultValue="">
+		<alias>DB_VENDOR</alias>
+	</Oid>
+
+	<Oid name="1.2.12" defaultValue="">
+                <alias>DB_DRIVER_NAME</alias>
+        </Oid>
+
+	<Oid name="1.2.14" defaultValue="">
+                <alias>DB_MIN_CON_THRESHOLD</alias>
+        </Oid>
+	<Oid name="1.2.24" defaultValue="">
+                <alias>DB_MAX_CON_THRESHOLD</alias>
+        </Oid>
+	<Oid name="1.2.17" defaultValue="">
+                <alias>DB_STATUS</alias>
+        </Oid>
+
+   <!-- HTTP parameters -->
+      	
+        <Oid name="33.2.1" defaultValue="">
+                <alias>WWW_BIND_IP</alias>
+        </Oid>
+	 	
+        <Oid name="33.2.2" defaultValue="">
+                <alias>WWW_PORT</alias>
+        </Oid>
+	
+        <Oid name="33.2.3" defaultValue="">
+                <alias>WS_PORT</alias>
+        </Oid>
+        
+        <Oid name="33.2.4" defaultValue="">
+                <alias>WWW_SERVER_SSL</alias>
+        <IF value="1">
+                <Oid name="33.2.6" defaultValue="">
+                       <alias>WWW_SSL_PORT</alias>
+                </Oid>
+        </IF>
+        </Oid>
+   
+        <Oid name="33.2.5" defaultValue="">
+                <alias>WS_SSL</alias>
+        <IF value="1">
+                <Oid name="33.2.7" defaultValue="">
+                        <alias>WS_SSL_PORT</alias>
+                </Oid>
+        </IF> 
+        </Oid>
+
+   <!-- JNDI Parameters -->
+	
+        <Oid name="33.3.1" defaultValue="">
+                <alias>NS_PORT</alias>
+        </Oid>
+
+        <Oid name="33.3.2" defaultValue="">
+                <alias>HANS_PORT</alias>
+        </Oid>
+
+
+   <!-- LOG Parameters -->
+   
+        <Oid name="1.1.1" defaultValue="">
+                <alias>LOG_LEVEL</alias>
+        </Oid>
+
+        <Oid name="1.1.2" defaultValue="">
+                <alias>LOG_LOCATION</alias>
+        </Oid>
+        
+        <Oid name="1.1.7" defaultValue="server.log">
+        </Oid>
+</Oids>
+</Subsystem>

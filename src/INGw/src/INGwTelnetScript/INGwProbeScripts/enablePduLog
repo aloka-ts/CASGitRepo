@@ -1,0 +1,30 @@
+## This script is used to enable INAP Message exchanged between INC & 
+## stack AND INC & SAS. The output are shown in /LOGS/INC/ss7PduLog.txt.log 
+## file.
+## IMPORTANT: Logging should not be enabled during high load. The purpose
+##            of this script is do debugging during functionality testing.
+##            Enabling this during high load may result in INC misbehaving.
+#!/usr/bin/ksh
+
+. ~/profile.ingw
+. $INSTALLROOT/$SUBSYS_DIR/sol28g/conf/hssenv.sh
+
+warning()
+{
+	clear
+	echo -e "********************\033[1mWARNING\033[0m********************"
+	echo "Enabling $1 during high load might impact"
+	echo "the performance and may lead to system misbehavior. "
+	echo -n "Do you still want to continue [Y/N]: "
+	read value
+}
+
+value="n"
+warning "pdu logging"
+
+if [[ $value = "y" || $value = "Y" ]]
+then
+$INSTALLROOT/$SUBSYS_DIR/sol28g/bin/INGwProbe -s $SIP_LISTENER_HOST -c "set pdu-debug-level 1"
+else
+echo "Exiting..."
+fi

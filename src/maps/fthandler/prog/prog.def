@@ -1,0 +1,19 @@
+TARGET = fthandler
+RULES = bin
+
+ifdef LINUX
+else
+EXTRA_LIBS += socket
+endif
+
+EXTRA_LIBS += pthread nsl rt
+
+LIBS += Util
+
+SRCS += BpMachPing.C \
+        BpIPAddrHandler.C \
+        BpConfiguredRole.C \
+        BpApacheHandler.C \
+        BpPeerHandler.C \
+        BpFtHandler.C \
+        main.C

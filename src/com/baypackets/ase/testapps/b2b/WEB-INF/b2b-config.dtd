@@ -1,0 +1,32 @@
+<!ELEMENT b2b-config (sleep-intervals?, request-forwardings, cdr?)>
+
+<!ELEMENT sleep-intervals (request*, response*)>
+
+<!ELEMENT request (#PCDATA)>
+
+<!ELEMENT response (#PCDATA)>
+
+<!ELEMENT request-forwardings (request-forwarding+)>
+
+<!ELEMENT request-forwarding (incoming-ip, outbound-ip, outbound-port, outbound-user?)>
+
+<!ELEMENT incoming-ip (#PCDATA)>
+
+<!ELEMENT outbound-ip (#PCDATA)>
+
+<!ELEMENT outbound-port (#PCDATA)>
+
+<!ELEMENT outbound-user (#PCDATA)>
+
+<!ELEMENT cdr EMPTY>
+
+<!ATTLIST request method CDATA #REQUIRED>
+
+<!ATTLIST request type CDATA #IMPLIED>
+
+<!ATTLIST response method CDATA #REQUIRED>
+
+<!ATTLIST response type CDATA #IMPLIED>
+
+<!ATTLIST response status CDATA #REQUIRED>
+

@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Phelim O'Doherty">
+   <META name="GENERATOR" content="">
+   <title>package</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#FF0000" vlink="#800080" alink="#0000FF">
+This package contains the JAIN SS7 Factory and the JAIN SS7 Addressing. 
+<ul> 
+<li> The JAIN SS7 Factory is the central creation point for all high level proprietary 
+JAIN SS7 objects, for example JainTcapStack Objects. The Factory provides an interface 
+for creating families of related or dependent objects without specifiying their concrete 
+classes.
+<p>
+The Jain Factory may be used by applications to create proprietary SS7 objects, representing the various JAIN Layers of an SS7 protocol stack. From this 'layer of the stack' object it is then possible to instantiate JAIN SS7 Provider objects relevent to that specific layer of the SS7 protocol stack. For example any application may go to the JainFactory to get an Instance of a JainTcapStackImpl Object, that JainTcapStackImpl Object can then be used to create JainTcapProviderImpl Objects, which provide a method of communication for any JainTcapListenerImpl Object with the TCAP layer of that JainTcapStackImpl Object.  This architecture for JAIN SS7 Object creation was adopted to:
+<UL>
+<LI> Provide a central point for Object creation, and force the use of JAIN SS7 Objects from the one family.
+<LI> Ensure the code deals only with an interface to an object, therefore can work with any concrete classes that support that interface.
+<LI> Provide more flexible and reusable code, by eliminating the instantiation of application specific classes.
+<LI> Ensure it can be adapted easily to Remote Method Invocation, which is essential for a distributed environment.
+</UL>
+<p>
+<li> The JAIN SS7 Addressing is a combined design effort between the JAIN SS7 protocol
+experts groups to avoid redundancy in the JAIN SS7 specifications. There are primarily
+two types of address in the SS7 world, SCCP Addressing specific to MAP, INAP and TCAP
+and ISUP Addressing specific to only ISUP. The SCCPUserAddress contains all necessary 
+functionality in order to route TCAP messages, namely SignalingPointCode, Subsystem 
+Number and Globaltitle. 
+</ul>
+</body>
+</html>

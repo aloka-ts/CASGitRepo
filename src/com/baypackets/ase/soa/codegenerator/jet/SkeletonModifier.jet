@@ -1,0 +1,175 @@
+<%@ jet package = "com.baypackets.ase.soa.codegenerator " imports = "java.util.* java.lang.reflect.* org.apache.log4j.*;" class = "SkeletonModifierGenerator" %>
+
+<% 	
+    Map argsMap = (HashMap)argument;
+    ClassInspector classInspector = (ClassInspector)argsMap.get("ClassInspector");
+    String proxyClassName = (String)argsMap.get("ProxyClass");
+    String parentClassPkg= classInspector.getPackageName();
+    String parentClassName= classInspector.getClassName();
+ 	
+%>
+package <%= parentClassPkg %>;
+
+
+import org.apache.log4j.*;
+
+public class <%= parentClassName %> {
+	private static Logger m_logger = Logger.getLogger(<%= parentClassName %>.class);
+	private <%= proxyClassName  %> proxy = new <%= proxyClassName  %>();
+	
+<%
+    String name = "";
+    String returnType = "";
+	boolean isPrimitive = false;
+    String modifiers = "";
+    Method[] methods = classInspector.getMethods();
+    for(int i=0;i<methods.length;i++)   {
+        Method m = methods[i];
+        name = m.getName();
+        Class retType = m.getReturnType();
+		isPrimitive = retType.isPrimitive();
+        modifiers = Modifier.toString((m.getModifiers()));
+        returnType = retType.getName();
+        Class[] params = m.getParameterTypes();
+        StringBuffer methodArguments = new StringBuffer();
+        StringBuffer implArguments = new StringBuffer();
+        for(int j=0;j<params.length;j++)    {
+            Class paramType = params[j];
+			if(paramType.isPrimitive()) {
+                methodArguments.append(paramType.getName());
+            }else if(!(paramType.isArray())) {
+                methodArguments.append(paramType.getName());
+            }else if(paramType.isArray())   {
+                methodArguments.append(paramType.getComponentType().getName());
+                methodArguments.append("[]");
+            }
+            methodArguments.append(" arg"+j);
+            implArguments.append(" arg"+j);
+            methodArguments.append(",");
+            implArguments.append(",");
+        }
+        int index = methodArguments.length();
+        if(index > 0)
+            methodArguments.deleteCharAt(index -1);
+        index = implArguments.length();
+        if(index > 0)   {
+            implArguments.deleteCharAt(index -1);
+        }
+        Class[] exps = m.getExceptionTypes();
+        StringBuffer exceptions = new StringBuffer();
+        if(exps.length > 0) {
+            exceptions.append("throws ");
+            for(int k=0;k<exps.length;k++)  {
+                exceptions.append(exps[k].getName());
+                exceptions.append(",");
+            }
+            index = exceptions.length();
+        	if(index > 0)
+            	exceptions.deleteCharAt(index -1);
+        }
+                                                                                                                            
+%>
+    public <%= returnType %> <%= name %> (<%= methodArguments.toString() %> ) <%= exceptions.toString() %> {
+
+	<%
+        if(!isPrimitive) {
+        %>
+            <%= returnType %> retVal = null;
+        <%
+        }
+        %>
+                                                                                                                                              
+        <%
+        if(returnType.equals("int"))  {
+        %>
+            <%= returnType %> retVal = 0;
+        <%
+        }
+        %>
+                                                                                                                                              
+        <%
+        if(returnType.equals("short"))  {
+        %>
+            <%= returnType %> retVal = 0;
+        <%
+        }
+        %>
+                                                                                                                                              
+        <%
+        if(returnType.equals("long"))  {
+        %>
+            <%= returnType %> retVal = 0;
+        <%
+        }
+        %>
+                                                                                                                                              
+        <%
+        if(returnType.equals("float"))  {
+        %>
+            <%= returnType %> retVal = 0.0f;
+        <%
+        }
+        %>
+                                                                                                                                              
+		<%
+        if(returnType.equals("double"))  {
+        %>
+            <%= returnType %> retVal = 0.0;
+        <%
+        }
+        %>
+                                                                                                                                              
+        <%
+        if(returnType.equals("boolean"))  {
+        %>
+            <%= returnType %> retVal = false;
+        <%
+        }
+        %>
+                                                                                                                                              
+        <%
+        if(returnType.equals("char"))  {
+        %>
+            <%= returnType %> retVal =  '\u0000';
+        <%
+        }
+        %>
+                                                                                                                                              
+        <%
+        if(returnType.equals("byte"))  {
+        %>
+            <%= returnType %> retVal = 0;
+        <%
+        }
+        %>
+
+
+
+	try	{
+		<%
+		if(!returnType.equals("void"))  {
+		%>
+			retVal = proxy.<%= name %>(<%= implArguments.toString() %>);
+		<%
+		}else	{
+		%>
+			proxy.<%= name %>(<%= implArguments.toString() %>);
+		<%
+		}
+		%>
+	}catch(Exception e)	{
+		m_logger.error("Error in invoking "+"<%= name %>"+"("+"<%= implArguments.toString() %>" +") on Proxy ",e);
+	} 	
+      <%
+	if(!returnType.equals("void"))	{
+     %>
+	 	return (<%= returnType %>)retVal; 
+<% 
+	}
+%>
+		
+    }
+<%
+        }
+%>
+}

@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<project name="alcml-macros" basedir=".">
+      <property name="ALCML_HOME" value="${alcml.dir}"/>
+      <import file="${alcml.dir}/src/build-macros.xml"/>
+
+        <macrodef name="xsltc">
+           <attribute name="source"/>
+           <attribute name="transform"/>
+           <attribute name="appbuilddir"/>
+           <attribute name="output"/>
+            <sequential>    
+            <!--
+                  <java classname="com.genband.ase.alc.alcml.jaxb.CmdlineTransform">                  
+                        <arg line="file://@{transform}"/>
+                        <arg line="file://@{source}"/>
+                        <arg line="file://@{output}"/>
+                       <classpath refid="classpath"/>
+                  </java>                  
+                  -->
+                  <property name="java.exec" Value="${JAVA_HOME}/bin/java"/>
+                  <exec dir="@{appbuilddir}" executable="${java.exec}">
+                        <arg line="-cp @{appbuilddir}"/>
+                        <arg line="com.genband.ase.alc.alcml.jaxb.CmdlineTransform"/>
+                        <arg line="file://@{transform}"/>
+                        <arg line="file://@{source}"/>
+                        <arg line="file://@{output}"/>
+                  </exec>
+            </sequential>   
+        </macrodef>
+
+      <target name="alc-compilation-setup" depends="init">
+            <echo message="${app.name}:"/>
+            <property name="app.src.dir" value="${basedir}/src"/>
+            <property name="app.build.dir" Value="${alc.build.dir}/${app.name}/build"/>
+            <!--property name="jar.dest" value="${alc.build.dir}/ServiceDefinitionApp/WebContent/WEB-INF/lib"/-->
+            <property name="sar.dest" value="${alc.build.dir}/../sysapps/"/>
+            <property name="alc.jar.dest" value="${alc.build.dir}/../alcjars/"/>
+            <property name="bp.jar.dest" value="${alc.build.dir}/../bpjars/"/>
+            <property name="jar.dest" value="${bp.jar.dest}"/>
+
+            <mkdir dir="${app.build.dir}"/>
+            <mkdir dir="${jar.dest}"/>
+            <mkdir dir="${sar.dest}"/>
+            <mkdir dir="${alc.jar.dest}"/>
+            <chmod perm="ugo+rw" type="both">
+                   <fileset dir="${alc.build.dir}/../">
+                        <include name="alcjars"/>
+                   </fileset>
+            </chmod>
+            
+            <!-- Set the classpath for compiling the application -->
+            <path id="classpath">
+                  <fileset dir="${app.build.dir}/../../../">
+                        <include name="**/*.jar"/>
+                  </fileset>
+            </path>
+            <property name="additionalclasspath" refid="classpath"/>
+      </target>
+      
+      <target name="alc-compilation-curent" depends="alc-compilation-setup">
+            <mkdir dir="${app.src.dir}/alcmltemp"/>
+            <dependset>
+                  <sources>
+                        <fileset dir="${app.src.dir}">
+                              <include name="**/*.java"/>
+                              <exclude name="**/*ServiceUserAction.java"/>
+                        </fileset>
+                  </sources>
+                  <targets>
+                        <fileset dir="${app.src.dir}">
+                              <include name="alcmltemp/build.current"/>
+                        </fileset>
+                  </targets>
+            </dependset>  
+
+            <available file="${app.src.dir}/alcmltemp/build.current" property="alc-compilation-upToDate"/>
+      </target>
+      
+      <target name="contribute-alcml" unless="alc-compilation-upToDate" depends="alc-compilation-curent">
+            <delete dir="${app.src.dir}/alcmltemp"/>
+            <mkdir dir="${app.src.dir}/alcmltemp"/>
+            <alcmlc classpath="${additionalclasspath}"
+                  destdir="${app.src.dir}/alcmltemp/"
+                  srcdir="${app.src.dir}/"
+                  internalUseMultipass="true"/>
+                  
+            <touch file="${app.src.dir}/alcmltemp/build.current"/>
+      </target>
+
+      <target name="alc-circular-build" depends="alc-compilation-setup">
+            <dependset>
+                  <sources>
+                      <fileset dir="${app.src.dir}">
+                        <include name="**/*.java"/>
+                      </fileset>
+                  </sources>
+                  <targets>
+                      <fileset dir="${app.build.dir}">
+                        <include name="build.current"/>
+                      </fileset>
+                  </targets>
+            </dependset>  
+
+            <available file="${app.build.dir}/build.current" property="build-upToDate"/>
+      </target>
+
+      <target name="alc-circular-compile" depends="alc-circular-build" unless="build-upToDate">
+            <!-- Create the directories for building -->
+            <mkdir dir="${app.build.dir}"/>
+
+            <!-- Copy the resource files -->
+            <copy todir="${app.build.dir}">
+                  <fileset dir="${app.src.dir}">
+                        <include name="**/*.xml"/>
+                        <include name="**/*.xsd"/>
+                        <exclude name="**/*DECL.xsd"/>
+                        <exclude name="**/*DECL_TYPE.xsd"/>
+                        <exclude name="**/*.java"/>
+                  </fileset>
+            </copy>
+
+            <!-- Compile the Source Code -->
+            <javac srcdir="${app.src.dir}" destdir="${app.build.dir}" debug="true">
+                 <include name="**/*.java"/>
+                 <classpath refid="classpath"/>
+            </javac>
+
+            <!-- Copy the alc unnamed package files -->
+            <copy todir="${app.build.dir}" flatten="true">
+                  <fileset dir="${app.build.dir}">
+                        <include name="**/alcmltemp/*.class"/>
+                  </fileset>                        
+            </copy> 
+
+            <touch file="${app.build.dir}/build.current"/>
+      </target>
+
+      <target name="alc-macros-buildapp" depends="alc-circular-compile">
+            <!-- Package the application into a .jar file -->
+            <jar update="true" jarfile="${jar.dest}/${app.name}.jar" basedir="${app.build.dir}"/>
+      </target>
+      
+      <target name="alc-macros-make-real-clean" depends="alc-compilation-setup">
+              <delete dir="${app.src.dir}/alcmltemp"/>
+              <delete file="${jar.dest}/${app.name}.jar"/>
+      </target>
+
+</project>
+

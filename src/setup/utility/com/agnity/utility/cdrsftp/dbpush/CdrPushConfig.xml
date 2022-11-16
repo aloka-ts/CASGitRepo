@@ -1,0 +1,45 @@
+<!--  
+DB push script configuration File
+@author saneja
+bug 7667
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="cdrPushConfigBean"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders">
+			<value>true</value>
+		</property>
+
+		<property name="locations">
+			<list>
+				<value>
+					classpath:/CdrPushConfig.properties
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Script property-->
+	<bean id="cdrPushToDbConfig"
+		class="com.agnity.utility.cdrsftp.dbpush.utils.CDRPushConfig">
+		<property name="dbSrvc" value="${cdrpush.db.srvcname}" />
+		<property name="dbUser" value="${cdrpush.db.username}" />
+		<property name="dbPassword" value="${cdrpush.db.password}" />
+		<property name="ctrlFileName" value="${cdrpush.db.load.ctrlfile.name}" />
+		<property name="cdrPushWaitInterval" value="${cdrpush.wait.interval}" />
+		<property name="cdrPushPrimaryDirName" value="${cdrpush.primary.dir.name}" />
+		<property name="cdrPushSecondaryDirName" value="${cdrpush.secondary.dir.name}" />
+		<property name="cdrPushArchiveDirName" value="${cdrpush.archive.dir.name}" />
+		<property name="cdrPushFilePrefix" value="${cdrpush.cdr.file.Prefix}" />
+		<property name="cdrPushFileExtension" value="${cdrpush.cdr.file.extension}" />		
+		<property name="cdrFileSize" value="${cdrpush.cdr.file.size}" />		
+		<property name="cdrPushIgnoreCdrIdentifier" value="${cdrpush.ignore.cdr.identifier}" />
+		<property name="cdrStartIndex" value="${cdrpush.startIndex}"/>
+		<property name="maxCdrWriters" value="${cdrpush.maxCdrWriters}"/>
+		<property name="cdrPushOemCdrHeader" value="${cdrpush.oem.cdr.header}"/>
+	</bean>
+</beans>

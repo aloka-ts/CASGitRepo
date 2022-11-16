@@ -1,0 +1,74 @@
+RULES          	= lib
+
+EXTRA_INCLUDES  += $(XERCESROOT)/include
+
+
+EXTRA_DEFINES   += _BP_STAT_MGR_ _BP_PARAM_REP_ _BP_AIN_PROVIDER_ 
+EXTRA_DEFINES   += _BP_CCM_ALMMGR_ _BP_CCM_
+EXTRA_DEFINES   += _BP_AIN_SM_DMP_ 
+#EXTRA_DEFINES   += __CCPU_CPLUSPLUS
+
+
+#these are used for unit testing purpose
+#EXTRA_DEFINES   += _BP_AIN_SM_TESTING_ ALM_TESTING STUBBED
+
+#EXTRA_RULES     += oracle
+EXTRA_RULES     += vbroker
+    
+EXTRA_LIBDIRS   += $(XERCESROOT)/lib $(AIN_STACK_HOME)/lib
+EXTRA_LIBS      += Util xerces-c CCMUtil 
+
+ifdef LINUX
+EXTRA_LIBS    += stk_ftha
+else
+EXTRA_LIBS    += stk_ftha
+endif
+
+
+TARGET          = libINGwStackManager
+
+#include ../commondefs/ccm-config.def
+#include ../INGwCommonDefs/trillium-ainstack.def
+include ../INGwCommonDefs/ccpu-stack.def
+
+SRCS            =  INGwStackManager/INGwSmAdaptor.C \
+                   INGwStackManager/INGwSmAlmHdlr.C \
+                   INGwStackManager/INGwSmCfgHdlr.C \
+                   INGwStackManager/INGwSmCtlHdlr.C \
+                   INGwStackManager/INGwSmDistributor.C \
+                   INGwStackManager/INGwSmRepository.C \
+                   INGwStackManager/INGwSmReqHdlr.C \
+                   INGwStackManager/INGwSmRequest.C \
+                   INGwStackManager/INGwSmRequestTable.C \
+                   INGwStackManager/INGwSmStaHdlr.C \
+                   INGwStackManager/INGwSmStsHdlr.C \
+                   INGwStackManager/INGwSmStsMap.C \
+                   INGwStackManager/INGwSmStub.C \
+                   INGwStackManager/INGwSmTrcHdlr.C \
+                   INGwStackManager/INGwSmWrapper.C \
+                   INGwStackManager/INGwSmBlkConfig.C
+
+
+
+HDRS            =  INGwStackManager/INGwSmAdaptor.h \
+                   INGwStackManager/INGwSmStkReqRespDat.h \
+                   INGwStackManager/INGwSmAlmCodes.h \
+                   INGwStackManager/INGwSmAlmHdlr.h \
+                   INGwStackManager/INGwSmCfgHdlr.h \
+                   INGwStackManager/INGwSmCommon.h \
+                   INGwStackManager/INGwSmCtlHdlr.h \
+                   INGwStackManager/INGwSmDistributor.h \
+                   INGwStackManager/INGwSmIncludes.h \
+                   INGwStackManager/INGwSmQueueMsg.h \
+                   INGwStackManager/INGwSmRepository.h \
+                   INGwStackManager/INGwSmReqHdlr.h \
+                   INGwStackManager/INGwSmRequest.h \
+                   INGwStackManager/INGwSmRequestTable.h \
+                   INGwStackManager/INGwSmStaHdlr.h \
+                   INGwStackManager/INGwSmStsHdlr.h \
+                   INGwStackManager/INGwSmStsMap.h \
+                   INGwStackManager/INGwSmTrcHdlr.h \
+                   INGwStackManager/INGwSmWrapper.h \
+                   INGwStackManager/INGwSmBlkConfig.h
+
+

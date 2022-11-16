@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <!--Auto-Generated schema definition.-->
+      <!--This schema describes compliant instances of a new MIME type: application/tcap+xml-->
+      <!--And is derived from the JCP JainTcap JSR-0011 reference implementation-->
+      <xs:group name="state-req-event-group">
+            <xs:sequence/>
+      </xs:group>
+      <xs:group name="dialogue-ind-event-group">
+            <xs:sequence>
+                  <xs:element name="dialogue-portion" type="dialogue-portion-type" minOccurs="0"/>
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="component-ind-event" type="component-ind-event-type"/>
+                  </xs:choice>
+            </xs:sequence>
+      </xs:group>
+      <xs:group name="component-ind-event-group">
+            <xs:sequence/>
+      </xs:group>
+      <xs:group name="state-ind-event-group">
+            <xs:sequence/>
+      </xs:group>
+      <xs:group name="dialogue-req-event-group">
+            <xs:sequence>
+                  <xs:element name="dialogue-portion" type="dialogue-portion-type" minOccurs="0"/>
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="component-req-event" type="component-req-event-type"/>
+                  </xs:choice>
+            </xs:sequence>
+      </xs:group>
+      <xs:group name="global-title-group">
+            <xs:sequence>
+                  <xs:element name="address-information" type="xs:hexBinary" minOccurs="0"/>
+            </xs:sequence>
+      </xs:group>
+      <xs:group name="component-req-event-group">
+            <xs:sequence/>
+      </xs:group>
+      <xs:complexType name="error-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-req-event-group"/>
+                  <xs:element name="parameters" type="parameters-type" minOccurs="0"/>
+                  <xs:element name="error-code" type="xs:hexBinary" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <!-- ComponentReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <!-- end group attributes -->
+            <xs:attribute name="link-id" type="xs:integer"/>
+            <xs:attribute name="error-type" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="ERROR_LOCAL"/>
+                              <xs:enumeration value="ERROR_GLOBAL"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="timer-reset-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-req-event-group"/>
+            </xs:sequence>
+            <!-- ComponentReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <!-- end group attributes -->
+      </xs:complexType>
+      <xs:complexType name="gtindicator0001-type">
+            <xs:sequence>
+                  <xs:group ref="global-title-group"/>
+            </xs:sequence>
+            <!-- GlobalTitle group attributes -->
+            <!-- end group attributes -->
+            <xs:attribute name="translation-type" type="xs:byte"/>
+            <xs:attribute name="numbering-plan">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="NP_UNKNOWN"/>
+                              <xs:enumeration value="NP_ISDN_TEL"/>
+                              <xs:enumeration value="NP_GENERIC"/>
+                              <xs:enumeration value="NP_DATA"/>
+                              <xs:enumeration value="NP_TELEX"/>
+                              <xs:enumeration value="NP_MARITIME_MOBILE"/>
+                              <xs:enumeration value="NP_LAND_MOBILE"/>
+                              <xs:enumeration value="NP_ISDN_MOBILE"/>
+                              <xs:enumeration value="NP_NETWORK"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="nature-of-addr-ind">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="NA_UNKNOWN"/>
+                              <xs:enumeration value="NA_SUBSCRIBER"/>
+                              <xs:enumeration value="NA_RESERVED"/>
+                              <xs:enumeration value="NA_NATIONAL_SIGNIFICANT"/>
+                              <xs:enumeration value="NA_INTERNATIONAL"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="encoding-scheme">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="ES_UNKNOWN"/>
+                              <xs:enumeration value="ES_ODD"/>
+                              <xs:enumeration value="ES_EVEN"/>
+                              <xs:enumeration value="ES_NATIONAL_SPECIFIC"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="user-abort-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-ind-event-group"/>
+                  <xs:element name="user-abort-information" type="xs:hexBinary" minOccurs="0"/>
+            </xs:sequence>
+            <!-- DialogueIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <!-- end group attributes -->
+            <xs:attribute name="abort-reason">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="ABORT_REASON_ACN_NOT_SUPPORTED"/>
+                              <xs:enumeration value="ABORT_REASON_USER_SPECIFIC"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+      </xs:complexType>
+      <xs:complexType name="reject-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-req-event-group"/>
+                  <xs:element name="parameters" type="parameters-type" minOccurs="0"/>
+            </xs:sequence>
+            <!-- ComponentReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <!-- end group attributes -->
+            <xs:attribute name="link-id" type="xs:integer"/>
+            <xs:attribute name="problem-type" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="PROBLEM_TYPE_GENERAL"/>
+                              <xs:enumeration value="PROBLEM_TYPE_INVOKE"/>
+                              <xs:enumeration value="PROBLEM_TYPE_RETURN_RESULT"/>
+                              <xs:enumeration value="PROBLEM_TYPE_RETURN_ERROR"/>
+                              <xs:enumeration value="PROBLEM_TYPE_TRANSACTION"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="problem" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="PROBLEM_CODE_BADLY_STRUCTURED_COMPONENT"/>
+                              <xs:enumeration value="PROBLEM_CODE_MISTYPED_COMPONENT"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNISED_COMPONENT"/>
+                              <xs:enumeration value="PROBLEM_CODE_DUPLICATE_INVOKE_ID"/>
+                              <xs:enumeration value="PROBLEM_CODE_INITIATING_RELEASE"/>
+                              <xs:enumeration value="PROBLEM_CODE_LINKED_RESPONSE_UNEXPECTED"/>
+                              <xs:enumeration value="PROBLEM_CODE_MISTYPED_PARAMETER"/>
+                              <xs:enumeration value="PROBLEM_CODE_RESOURCE_LIMITATION"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNEXPECTED_LINKED_OPERATION"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNIZED_INVOKE_ID"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNIZED_LINKED_ID"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNIZED_OPERATION"/>
+                              <xs:enumeration value="PROBLEM_CODE_RETURN_RESULT_UNEXPECTED"/>
+                              <xs:enumeration value="PROBLEM_CODE_RETURN_ERROR_UNEXPECTED"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNIZED_ERROR"/>
+                              <xs:enumeration value="PROBLEM_CODE_BADLY_STRUCTURED_TRANSACTION"/>
+                              <xs:enumeration value="PROBLEM_CODE_INCORRECT_TRANSACTION"/>
+                              <xs:enumeration value="PROBLEM_CODE_PERMISSION_TO_RELEASE"/>
+                              <xs:enumeration value="PROBLEM_CODE_RESOURCE_UNAVAILABLE"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNASSIGNED_RESPONDING_ID"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNIZED_PACKAGE_TYPE"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="reject-type">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="REJECT_TYPE_USER"/>
+                              <xs:enumeration value="REJECT_TYPE_REMOTE"/>
+                              <xs:enumeration value="REJECT_TYPE_LOCAL"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="end-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-ind-event-group"/>
+            </xs:sequence>
+            <!-- DialogueIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <!-- end group attributes -->
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+      </xs:complexType>
+      <xs:complexType name="user-cancel-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-req-event-group"/>
+            </xs:sequence>
+            <!-- ComponentReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <!-- end group attributes -->
+      </xs:complexType>
+      <xs:complexType name="operation-type-def">
+            <xs:sequence>
+                  <xs:element name="operation-code" type="xs:hexBinary" minOccurs="1" maxOccurs="1"/>
+                  <xs:element name="private-operation-data" type="xs:hexBinary" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="operation-type" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="OPERATIONTYPE_GLOBAL"/>
+                              <xs:enumeration value="OPERATIONTYPE_LOCAL"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="error-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-ind-event-group"/>
+                  <xs:element name="parameters" type="parameters-type" minOccurs="0"/>
+                  <xs:element name="error-code" type="xs:hexBinary" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <!-- ComponentIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <xs:attribute name="last-component" type="xs:boolean"/>
+            <!-- end group attributes -->
+            <xs:attribute name="link-id" type="xs:integer"/>
+            <xs:attribute name="error-type" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="ERROR_LOCAL"/>
+                              <xs:enumeration value="ERROR_GLOBAL"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="dialogue-portion-type">
+            <xs:sequence>
+                  <xs:element name="app-context-name" type="xs:hexBinary" minOccurs="0"/>
+                  <xs:element name="user-information" type="xs:hexBinary" minOccurs="0"/>
+                  <xs:element name="security-context-information" type="xs:hexBinary" minOccurs="0"/>
+                  <xs:element name="confidentiality-information" type="xs:hexBinary" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="protocol-version">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="DP_PROTOCOL_VERSION_ANSI_96"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="app-context-identifier">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="APPLICATION_CONTEXT_INTEGER"/>
+                              <xs:enumeration value="APPLICATION_CONTEXT_OBJECT"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="security-context-identifier">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="SECURITY_CONTEXT_INTEGER"/>
+                              <xs:enumeration value="SECURITY_CONTEXT_OBJECT"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="tcap-user-address-type">
+            <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="nstate-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="state-ind-event-group"/>
+                  <xs:element name="affected-user" type="sccp-user-address-type" minOccurs="1" maxOccurs="1"/>
+                  <xs:element name="own-point-code" type="signaling-point-code-type" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <!-- StateIndEvent group attributes -->
+            <!-- end group attributes -->
+            <xs:attribute name="user-status" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="USER_OUT_OF_SERVICE"/>
+                              <xs:enumeration value="USER_IN_SERVICE"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="provider-abort-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-ind-event-group"/>
+            </xs:sequence>
+            <!-- DialogueIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <!-- end group attributes -->
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+            <xs:attribute name="p-abort" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="P_ABORT_UNRCGNZ_MSG_TYPE"/>
+                              <xs:enumeration value="P_ABORT_UNRECOGNIZED_TRANSACTION_ID"/>
+                              <xs:enumeration value="P_ABORT_BADLY_FORMATTED_TRANSACTION_PORTION"/>
+                              <xs:enumeration value="P_ABORT_INCORRECT_TRANSACTION_PORTION"/>
+                              <xs:enumeration value="P_ABORT_RESOURCE_LIMIT"/>
+                              <xs:enumeration value="P_ABORT_ABNORMAL_DIALOGUE"/>
+                              <xs:enumeration value="P_ABORT_UNRECOG_DIALOGUE_PORTION_ID"/>
+                              <xs:enumeration value="P_ABORT_BADLY_STRUCTURED_DIALOGUE_PORTION"/>
+                              <xs:enumeration value="P_ABORT_MISSING_DIALOGUE_PORTION"/>
+                              <xs:enumeration value="P_ABORT_INCONSISTENT_DIALOGUE_PORTION"/>
+                              <xs:enumeration value="P_ABORT_PERMISSION_TO_RELEASE_PROBLEM"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="user-abort-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-req-event-group"/>
+                  <xs:element name="user-abort-information" type="xs:hexBinary" minOccurs="0"/>
+            </xs:sequence>
+            <!-- DialogueReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+            <!-- end group attributes -->
+            <xs:attribute name="abort-reason">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="ABORT_REASON_ACN_NOT_SUPPORTED"/>
+                              <xs:enumeration value="ABORT_REASON_USER_SPECIFIC"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="begin-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-ind-event-group"/>
+                  <xs:element name="destination-address" type="sccp-user-address-type" minOccurs="1" maxOccurs="1"/>
+                  <xs:element name="originating-address" type="sccp-user-address-type" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <!-- DialogueIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <!-- end group attributes -->
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+            <xs:attribute name="allowed-permission" type="xs:boolean"/>
+      </xs:complexType>
+      <xs:complexType name="invoke-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-req-event-group"/>
+                  <xs:element name="operation" type="operation-type-def" minOccurs="1" maxOccurs="1"/>
+                  <xs:element name="parameters" type="parameters-type" minOccurs="0"/>
+                  <xs:element name="time-out" type="xs:long" minOccurs="0"/>
+            </xs:sequence>
+            <!-- ComponentReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <!-- end group attributes -->
+            <xs:attribute name="linked-id" type="xs:integer"/>
+            <xs:attribute name="class-type">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="CLASS_1"/>
+                              <xs:enumeration value="CLASS_2"/>
+                              <xs:enumeration value="CLASS_3"/>
+                              <xs:enumeration value="CLASS_4"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="last-invoke-event" type="xs:boolean"/>
+      </xs:complexType>
+      <xs:complexType name="gtindicator0100-type">
+            <xs:sequence>
+                  <xs:group ref="global-title-group"/>
+            </xs:sequence>
+            <!-- GlobalTitle group attributes -->
+            <!-- end group attributes -->
+            <xs:attribute name="translation-type" type="xs:byte" use="required"/>
+            <xs:attribute name="numbering-plan" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="NP_UNKNOWN"/>
+                              <xs:enumeration value="NP_ISDN_TEL"/>
+                              <xs:enumeration value="NP_GENERIC"/>
+                              <xs:enumeration value="NP_DATA"/>
+                              <xs:enumeration value="NP_TELEX"/>
+                              <xs:enumeration value="NP_MARITIME_MOBILE"/>
+                              <xs:enumeration value="NP_LAND_MOBILE"/>
+                              <xs:enumeration value="NP_ISDN_MOBILE"/>
+                              <xs:enumeration value="NP_NETWORK"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="nature-of-addr-ind" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="NA_UNKNOWN"/>
+                              <xs:enumeration value="NA_SUBSCRIBER"/>
+                              <xs:enumeration value="NA_RESERVED"/>
+                              <xs:enumeration value="NA_NATIONAL_SIGNIFICANT"/>
+                              <xs:enumeration value="NA_INTERNATIONAL"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="encoding-scheme" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="ES_UNKNOWN"/>
+                              <xs:enumeration value="ES_ODD"/>
+                              <xs:enumeration value="ES_EVEN"/>
+                              <xs:enumeration value="ES_NATIONAL_SPECIFIC"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="sub-system-address-type">
+            <xs:sequence>
+                  <xs:element name="signaling-point-code" type="signaling-point-code-type" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="sub-system-number" type="xs:integer" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="signaling-point-code-type">
+            <xs:sequence/>
+            <xs:attribute name="member" type="xs:integer" use="required"/>
+            <xs:attribute name="cluster" type="xs:integer" use="required"/>
+            <xs:attribute name="zone" type="xs:integer" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="unidirectional-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-req-event-group"/>
+                  <xs:element name="destination-address" type="sccp-user-address-type" minOccurs="1" maxOccurs="1"/>
+                  <xs:element name="originating-address" type="sccp-user-address-type" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <!-- DialogueReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+            <!-- end group attributes -->
+      </xs:complexType>
+      <xs:complexType name="reject-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-ind-event-group"/>
+                  <xs:element name="parameters" type="parameters-type" minOccurs="0"/>
+            </xs:sequence>
+            <!-- ComponentIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <xs:attribute name="last-component" type="xs:boolean"/>
+            <!-- end group attributes -->
+            <xs:attribute name="link-id" type="xs:integer"/>
+            <xs:attribute name="problem-type" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="PROBLEM_TYPE_GENERAL"/>
+                              <xs:enumeration value="PROBLEM_TYPE_INVOKE"/>
+                              <xs:enumeration value="PROBLEM_TYPE_RETURN_RESULT"/>
+                              <xs:enumeration value="PROBLEM_TYPE_RETURN_ERROR"/>
+                              <xs:enumeration value="PROBLEM_TYPE_TRANSACTION"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="problem" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="PROBLEM_CODE_BADLY_STRUCTURED_COMPONENT"/>
+                              <xs:enumeration value="PROBLEM_CODE_MISTYPED_COMPONENT"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNISED_COMPONENT"/>
+                              <xs:enumeration value="PROBLEM_CODE_DUPLICATE_INVOKE_ID"/>
+                              <xs:enumeration value="PROBLEM_CODE_INITIATING_RELEASE"/>
+                              <xs:enumeration value="PROBLEM_CODE_LINKED_RESPONSE_UNEXPECTED"/>
+                              <xs:enumeration value="PROBLEM_CODE_MISTYPED_PARAMETER"/>
+                              <xs:enumeration value="PROBLEM_CODE_RESOURCE_LIMITATION"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNEXPECTED_LINKED_OPERATION"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNIZED_INVOKE_ID"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNIZED_LINKED_ID"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNIZED_OPERATION"/>
+                              <xs:enumeration value="PROBLEM_CODE_RETURN_RESULT_UNEXPECTED"/>
+                              <xs:enumeration value="PROBLEM_CODE_RETURN_ERROR_UNEXPECTED"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNIZED_ERROR"/>
+                              <xs:enumeration value="PROBLEM_CODE_BADLY_STRUCTURED_TRANSACTION"/>
+                              <xs:enumeration value="PROBLEM_CODE_INCORRECT_TRANSACTION"/>
+                              <xs:enumeration value="PROBLEM_CODE_PERMISSION_TO_RELEASE"/>
+                              <xs:enumeration value="PROBLEM_CODE_RESOURCE_UNAVAILABLE"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNASSIGNED_RESPONDING_ID"/>
+                              <xs:enumeration value="PROBLEM_CODE_UNRECOGNIZED_PACKAGE_TYPE"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="reject-type">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="REJECT_TYPE_USER"/>
+                              <xs:enumeration value="REJECT_TYPE_REMOTE"/>
+                              <xs:enumeration value="REJECT_TYPE_LOCAL"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="local-cancel-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-ind-event-group"/>
+            </xs:sequence>
+            <!-- ComponentIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <xs:attribute name="last-component" type="xs:boolean"/>
+            <!-- end group attributes -->
+      </xs:complexType>
+      <xs:complexType name="gtindicator0011-type">
+            <xs:sequence>
+                  <xs:group ref="global-title-group"/>
+            </xs:sequence>
+            <!-- GlobalTitle group attributes -->
+            <!-- end group attributes -->
+            <xs:attribute name="translation-type" type="xs:byte" use="required"/>
+            <xs:attribute name="numbering-plan" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="NP_UNKNOWN"/>
+                              <xs:enumeration value="NP_ISDN_TEL"/>
+                              <xs:enumeration value="NP_GENERIC"/>
+                              <xs:enumeration value="NP_DATA"/>
+                              <xs:enumeration value="NP_TELEX"/>
+                              <xs:enumeration value="NP_MARITIME_MOBILE"/>
+                              <xs:enumeration value="NP_LAND_MOBILE"/>
+                              <xs:enumeration value="NP_ISDN_MOBILE"/>
+                              <xs:enumeration value="NP_NETWORK"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="encoding-scheme" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="ES_UNKNOWN"/>
+                              <xs:enumeration value="ES_ODD"/>
+                              <xs:enumeration value="ES_EVEN"/>
+                              <xs:enumeration value="ES_NATIONAL_SPECIFIC"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="continue-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-req-event-group"/>
+                  <xs:element name="originating-address" type="sccp-user-address-type" minOccurs="0"/>
+            </xs:sequence>
+            <!-- DialogueReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+            <!-- end group attributes -->
+            <xs:attribute name="allowed-permission" type="xs:boolean"/>
+      </xs:complexType>
+      <xs:complexType name="nstate-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="state-req-event-group"/>
+                  <xs:element name="affected-user" type="sccp-user-address-type" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <!-- StateReqEvent group attributes -->
+            <!-- end group attributes -->
+            <xs:attribute name="user-status" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="USER_OUT_OF_SERVICE"/>
+                              <xs:enumeration value="USER_IN_SERVICE"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="unidirectional-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-ind-event-group"/>
+                  <xs:element name="destination-address" type="sccp-user-address-type" minOccurs="1" maxOccurs="1"/>
+                  <xs:element name="originating-address" type="sccp-user-address-type" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <!-- DialogueIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <!-- end group attributes -->
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+      </xs:complexType>
+      <xs:complexType name="continue-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-ind-event-group"/>
+            </xs:sequence>
+            <!-- DialogueIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <!-- end group attributes -->
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+            <xs:attribute name="allowed-permission" type="xs:boolean"/>
+      </xs:complexType>
+      <xs:complexType name="gtindicator0010-type">
+            <xs:sequence>
+                  <xs:group ref="global-title-group"/>
+            </xs:sequence>
+            <!-- GlobalTitle group attributes -->
+            <!-- end group attributes -->
+            <xs:attribute name="translation-type" type="xs:byte" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="npcstate-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="state-ind-event-group"/>
+                  <xs:element name="affected-dpc" type="signaling-point-code-type" minOccurs="1" maxOccurs="1"/>
+                  <xs:element name="own-point-code" type="signaling-point-code-type" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <!-- StateIndEvent group attributes -->
+            <!-- end group attributes -->
+            <xs:attribute name="signaling-point-status" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="DESTINATION_CONGESTED"/>
+                              <xs:enumeration value="DESTINATION_CONGESTION_ABATEMENT"/>
+                              <xs:enumeration value="DESTINATION_INACCESSIBLE"/>
+                              <xs:enumeration value="DESTINATION_ACCESSIBLE"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="begin-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-req-event-group"/>
+                  <xs:element name="destination-address" type="sccp-user-address-type" minOccurs="1" maxOccurs="1"/>
+                  <xs:element name="originating-address" type="sccp-user-address-type" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <!-- DialogueReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+            <!-- end group attributes -->
+            <xs:attribute name="allowed-permission" type="xs:boolean"/>
+      </xs:complexType>
+      <xs:complexType name="notice-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-ind-event-group"/>
+                  <xs:element name="destination-address" type="sccp-user-address-type" minOccurs="0"/>
+                  <xs:element name="originating-address" type="sccp-user-address-type" minOccurs="0"/>
+                  <xs:element name="report-cause" type="xs:hexBinary" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <!-- DialogueIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <!-- end group attributes -->
+      </xs:complexType>
+      <xs:complexType name="invoke-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-ind-event-group"/>
+                  <xs:element name="operation" type="operation-type-def" minOccurs="1" maxOccurs="1"/>
+                  <xs:element name="parameters" type="parameters-type" minOccurs="0"/>
+            </xs:sequence>
+            <!-- ComponentIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <xs:attribute name="last-component" type="xs:boolean"/>
+            <!-- end group attributes -->
+            <xs:attribute name="linked-id" type="xs:integer"/>
+            <xs:attribute name="class-type">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="CLASS_1"/>
+                              <xs:enumeration value="CLASS_2"/>
+                              <xs:enumeration value="CLASS_3"/>
+                              <xs:enumeration value="CLASS_4"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="last-invoke-event" type="xs:boolean"/>
+      </xs:complexType>
+      <xs:complexType name="result-ind-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-ind-event-group"/>
+                  <xs:element name="operation" type="operation-type-def" minOccurs="0"/>
+                  <xs:element name="parameters" type="parameters-type" minOccurs="0"/>
+            </xs:sequence>
+            <!-- ComponentIndEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <xs:attribute name="last-component" type="xs:boolean"/>
+            <!-- end group attributes -->
+            <xs:attribute name="link-id" type="xs:integer"/>
+            <xs:attribute name="last-result-event" type="xs:boolean" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="end-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="dialogue-req-event-group"/>
+            </xs:sequence>
+            <!-- DialogueReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="quality-of-service" type="xs:byte"/>
+            <!-- end group attributes -->
+            <xs:attribute name="termination">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="TC_BASIC_END"/>
+                              <xs:enumeration value="TC_PRE_ARRANGED_END"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="result-req-event-type">
+            <xs:sequence>
+                  <xs:group ref="component-req-event-group"/>
+                  <xs:element name="operation" type="operation-type-def" minOccurs="0"/>
+                  <xs:element name="parameters" type="parameters-type" minOccurs="0"/>
+            </xs:sequence>
+            <!-- ComponentReqEvent group attributes -->
+            <xs:attribute name="dialogue-id" type="xs:integer"/>
+            <xs:attribute name="invoke-id" type="xs:integer"/>
+            <!-- end group attributes -->
+            <xs:attribute name="link-id" type="xs:integer"/>
+            <xs:attribute name="last-result-event" type="xs:boolean" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="sccp-user-address-type">
+            <xs:sequence>
+                  <xs:element name="sub-system-address" type="sub-system-address-type" minOccurs="0"/>
+                  <xs:element name="global-title" type="global-title-type" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="routing-indicator" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="ROUTING_SUBSYSTEM"/>
+                              <xs:enumeration value="ROUTING_GLOBALTITLE"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="national-use" type="xs:boolean"/>
+      </xs:complexType>
+      <xs:complexType name="parameters-type">
+            <xs:sequence>
+                  <xs:element name="parameter" type="xs:hexBinary" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="parameter-identifier" use="required">
+                  <xs:simpleType>
+                        <xs:restriction base="xs:NMTOKEN">
+                              <xs:enumeration value="PARAMETERTYPE_SINGLE"/>
+                              <xs:enumeration value="PARAMETERTYPE_SEQUENCE"/>
+                              <xs:enumeration value="PARAMETERTYPE_SET"/>
+                        </xs:restriction>
+                  </xs:simpleType>
+            </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="state-req-event-type">
+            <xs:choice>
+                  <xs:element name="nstate-req-event" type="nstate-req-event-type"/>
+            </xs:choice>
+      </xs:complexType>
+      <xs:complexType name="dialogue-ind-event-type">
+            <xs:choice>
+                  <xs:element name="user-abort-ind-event" type="user-abort-ind-event-type"/>
+                  <xs:element name="end-ind-event" type="end-ind-event-type"/>
+                  <xs:element name="provider-abort-ind-event" type="provider-abort-ind-event-type"/>
+                  <xs:element name="begin-ind-event" type="begin-ind-event-type"/>
+                  <xs:element name="unidirectional-ind-event" type="unidirectional-ind-event-type"/>
+                  <xs:element name="continue-ind-event" type="continue-ind-event-type"/>
+                  <xs:element name="notice-ind-event" type="notice-ind-event-type"/>
+            </xs:choice>
+      </xs:complexType>
+      <xs:complexType name="component-ind-event-type">
+            <xs:choice>
+                  <xs:element name="error-ind-event" type="error-ind-event-type"/>
+                  <xs:element name="reject-ind-event" type="reject-ind-event-type"/>
+                  <xs:element name="local-cancel-ind-event" type="local-cancel-ind-event-type"/>
+                  <xs:element name="invoke-ind-event" type="invoke-ind-event-type"/>
+                  <xs:element name="result-ind-event" type="result-ind-event-type"/>
+            </xs:choice>
+      </xs:complexType>
+      <xs:complexType name="state-ind-event-type">
+            <xs:choice>
+                  <xs:element name="nstate-ind-event" type="nstate-ind-event-type"/>
+                  <xs:element name="npcstate-ind-event" type="npcstate-ind-event-type"/>
+            </xs:choice>
+      </xs:complexType>
+      <xs:complexType name="dialogue-req-event-type">
+            <xs:choice>
+                  <xs:element name="user-abort-req-event" type="user-abort-req-event-type"/>
+                  <xs:element name="unidirectional-req-event" type="unidirectional-req-event-type"/>
+                  <xs:element name="continue-req-event" type="continue-req-event-type"/>
+                  <xs:element name="begin-req-event" type="begin-req-event-type"/>
+                  <xs:element name="end-req-event" type="end-req-event-type"/>
+            </xs:choice>
+      </xs:complexType>
+      <xs:complexType name="global-title-type">
+            <xs:choice>
+                  <xs:element name="gtindicator0001" type="gtindicator0001-type"/>
+                  <xs:element name="gtindicator0100" type="gtindicator0100-type"/>
+                  <xs:element name="gtindicator0011" type="gtindicator0011-type"/>
+                  <xs:element name="gtindicator0010" type="gtindicator0010-type"/>
+            </xs:choice>
+      </xs:complexType>
+      <xs:complexType name="component-req-event-type">
+            <xs:choice>
+                  <xs:element name="error-req-event" type="error-req-event-type"/>
+                  <xs:element name="timer-reset-req-event" type="timer-reset-req-event-type"/>
+                  <xs:element name="reject-req-event" type="reject-req-event-type"/>
+                  <xs:element name="user-cancel-req-event" type="user-cancel-req-event-type"/>
+                  <xs:element name="invoke-req-event" type="invoke-req-event-type"/>
+                  <xs:element name="result-req-event" type="result-req-event-type"/>
+            </xs:choice>
+      </xs:complexType>
+      <xs:element name="tcap" type="tcap-type"/>
+      <xs:complexType name="tcap-type">
+            <xs:sequence>
+                  <xs:choice minOccurs="1" maxOccurs="1">
+                        <xs:element name="dialogue-req-event" type="dialogue-req-event-type"/>
+                        <xs:element name="dialogue-ind-event" type="dialogue-ind-event-type"/>
+                        <xs:element name="state-req-event" type="state-req-event-type"/>
+                        <xs:element name="state-ind-event" type="state-ind-event-type"/>
+                        <!--Local component errors/timeouts-->
+                        <xs:element name="local-cancel-ind-event" type="local-cancel-ind-event-type"/>
+                        <xs:element name="reject-ind-event" type="reject-ind-event-type"/>
+                        <xs:element name="configuration" type="tcap-config-type"/>
+                  </xs:choice>
+            </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="tcap-config-type">
+            <xs:choice minOccurs="1" maxOccurs="unbounded">
+                  <xs:element name="local-user-address" type="sub-system-address-type"/>
+            </xs:choice>
+      </xs:complexType>
+</xs:schema>

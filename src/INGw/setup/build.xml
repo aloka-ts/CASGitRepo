@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BuildNavigator	SystemType="rsiIngw" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="K:\Installer\samples
+\schema\build.xsd">
+	<Macros>
+		<Macro name="INGW_FIP" question="Enter Floating IP for INGW for this FT setup: "/>
+		<Macro name="SS7_STACK_FT_MODE" question="Enter SS7 stack FT mode (Non-FT - 1, FT - 2) : " 
+					 defaultValue="2" />
+		<Macro name="SIP_FIREWALL_ADDRESS" question="Enter SIP Firewall Proxy IP address : " />
+		<Macro name="SAS_FIP_LIST" question="Enter comma seperated list of SAS FIP(eg 10.1.1.1,10.1.1.2 ) : " />
+		<Macro name="SS7_APP_INFO" question="Enter comma seperated SAS App Info list: "
+								defaultValue = "1,1-1-1,241|2,1-2-1,241"/>
+	</Macros>
+
+	<PackageInformation>
+		<Subsystem type="INGw" template="INGwINGW_VERSION/INGw_template.xml" presence="mandatory"/>
+	</PackageInformation>
+
+	<PreConfiguration>
+		<DefinedMacros>
+			<Macro name="NONE_ANS" value="NONE"/>
+			<Macro name="PLATFORM_DIR" value="PLTFRM_DIR"/>
+			<Macro name="SUBSYS_INGW" value="INGw"/>
+			<Macro name="SYSTEM_VERSION" value="PLATFORM_VERSION"/>
+			<Macro name="SYSTEM_DESCRIPTION" value="GENBAND' IN Gateway"/>
+			<Macro name="PRODUCT_ID" value="IN Gateway, SAS"/>
+			<Macro name="CLEI_CODE"	value="NOT SET"/>
+			<Macro name="ACCEPTANCE_DATE" value=" "/>
+			<Macro name="WARRANTY_PERIOD" value="180"/>
+			<Macro name="EXPIRY_DATE" value=" "/>
+			<Macro name="LICENSE_KEY" value=" "/>
+			<Macro name="VENDOR_NAME" value="GENBAND, Inc. "/>
+			<Macro name="BINARY_TYPE" value=" "/>
+		</DefinedMacros>
+
+		<AlwaysToBePromptedMacros>
+			<Macro name="FT_MODE">
+				<IF value="2">
+					<Macro name="INGW_FIP"/>
+				</IF>
+			</Macro>
+
+			<Macro name="SS7_STACK_FT_MODE">
+				<!-- FT Mode -->
+				<IF value="2">
+					<Macro name="SAS_FIP_LIST"/>
+				</IF>
+
+				<!-- Non-FT Mode -->
+				<IF value="1">
+					<Macro name="SAS_FIP_LIST"/>
+				</IF>
+			</Macro>
+		</AlwaysToBePromptedMacros>
+
+	</PreConfiguration>
+</BuildNavigator>
+         

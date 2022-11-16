@@ -1,0 +1,61 @@
+unset ENV
+unset BASH_ENV
+
+export RELROOT=/vob/Sipservlet/src
+export INSTALLROOT=$1
+
+# Solaris 10 specific enviroment variable.
+
+export PLTFRM_DIR=sol28g
+#export THIRDPARTY=/home/rarya/thirdParty
+export THIRDPARTY=/vob/thirdParty
+#export THIRDPARTY1=/home/rarya/thirdParty
+
+if [ "$2" == "USE_IWF_STUB" ]
+then
+export USE_IWF_STUB=1
+fi
+
+#
+# COMPILATION DEFINITION
+#
+sunVer=`uname -a | cut -f3 -d' '`
+
+if [ "$sunVer" == "5.10" ]
+then
+export CCCOMPILER=/opt/SUNWspro/bin/CC
+else
+export CCCOMPILER=/opt/SUNWspro/WS6U1/bin/CC
+fi
+export IMAKEPATH=$THIRDPARTY/TAO/imake
+export SMARTHEAP_HOME=$THIRDPARTY/SmartHeap/SmartHeap_6.01smp
+export SIP_STACK_HOME=$THIRDPARTY/stacks/SIPStack/HSS2.0.1/sip_uatoolkit_2_0_src
+export DEBUG=-g
+
+#
+# CORBA DEFINITION
+#
+export ACE_ROOT=$THIRDPARTY/TAO/ACE_1.8/ACE_wrappers
+export XERCESROOT=$THIRDPARTY/XML_PARSER/xerces-2.2.0
+export DOM_HOME=$XERCESROOT
+
+#
+# SS7 STACK DEFINITION
+#export CCPU_STACK_HOME=$THIRDPARTY/stacks/ss7Stack/ag_ccpu
+export CCPU_STACK_HOME=/home/mriganka/ccpu_20Oct_Base_Build_Mriganka/ag_ccpu_ANSI
+
+#
+# XERCES HOME (Latest one)
+export XSD_HOME=$THIRDPARTY/XSD/xsd-3.0.0-sparc-solaris/libxsd
+#export XERCES_HOME=$THIRDPARTY/xerces
+export XERCES_HOME=$THIRDPARTY/XML_PARSER/xerces-c_2_8_0-sparc-solaris-cc_5_7
+export XERCESROOT=$XERCES_HOME
+
+
+#
+# PATH and LIBRARY_PATH
+export PATH=/usr/bin:/usr/local/bin:/usr/sbin:${IMAKEPATH}/bin:${PATH}
+export LD_LIBRARY_PATH=${ACE_ROOT}/ace:${ACE_ROOT}/TAO/TAO_IDL
+
+alias imake='imake CXX=$CCCOMPILER'
+

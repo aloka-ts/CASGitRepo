@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Subsystem Type="INGw" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="K:\Installer\samples\schema\subsysInstallationTemplate.xsd">
+
+	<!--Subsystem Type="INGw"-->
+  <Macros>
+	</Macros>
+
+	<DefinedMacros>
+		<Macro name="SUBSYS_VERSION" value="INGW_VERSION"/>
+    <Macro name="INGW_AGT_PORT" value="12000"/>
+	</DefinedMacros>
+
+	<Package Name="ingw.tar" Location="INGwINGW_VERSION"/>
+
+	<Scripts>
+		<UserScript name="PLTFRM_DIR/configscripts/macroconfig.sh"/>
+		<UserScript name="PLTFRM_DIR/configscripts/miscconfig.sh"/>
+    <OSScript	name="PLTFRM_DIR/configscripts/osconfig.sh"/>
+		<ExecutionScript name="INGw/PLTFRM_DIR/scripts/INGw"/>
+	</Scripts>
+
+	<Oids>
+		<!--Network Params with Oid base 1.3-->
+		<Oid name="1.3.1"	defaultValue="SIGNAL_IP">
+			<alias>MY_HOST_SIG_IP</alias>
+		</Oid>
+
+		<Oid name="1.3.2"	defaultValue="39590"/>
+
+   	<!--BayTalk Params with Oid base 1.4-->
+    <Oid name="1.4.1"	defaultValue="5000"/>
+    <Oid name="1.4.2"	defaultValue="5000"/>
+    <Oid name="1.4.3"	defaultValue="5"/>
+
+		<!-- Component Info Oid base 1.11-->
+		<Oid name="1.11.1" defaultValue="PLATFORMVERSION">
+			<extraString>INGW_VERSION</extraString>
+		</Oid>
+
+    <Oid name="1.11.2" defaultValue="DATETIME">
+			<alias>CURRENTDATE_STRING</alias>
+    </Oid>
+
+    <Oid name="1.11.3" defaultValue="DATETIME">
+			<alias>CURRENTDATE_STRING</alias>
+    </Oid>
+
+		<!-- Subsystem Role Oid base 1.12-->
+
+    <Oid name="1.12.3" defaultValue="0:0:0"/>
+
+    <Oid name="NO_OID" defaultValue="Standby">
+			<alias>MY_ROLE</alias>
+			<!-- ACTIVE -->
+	 		<IF value="Active">
+	   		<Oid name="1.12.1" defaultValue="Active" />
+				<Oid name="1.12.2" defaultValue="Active" />
+	   		<Oid name="32.1.2" defaultValue="--INGW1_IM_USER--">
+	   			<subsys>
+		 				<subsystemType>INGw</subsystemType>
+		 				<ftRole>secondary</ftRole>
+	   			</subsys>
+	   		</Oid>
+
+				<Oid name="32.1.1" defaultValue="1"/>
+			</IF>
+
+			<!-- STANDBY -->
+			<IF value="Standby" >
+	   		<Oid name="1.12.1" defaultValue="Standby" />
+				<Oid name="1.12.2" defaultValue="Standby" />
+	   		<Oid name="32.1.2" defaultValue="--INGW2_IM_USER--">
+	      		<subsys>
+		  				<subsystemType>INGw</subsystemType>
+		  				<ftRole>primary</ftRole>
+	       		</subsys>
+	   		</Oid>
+
+	   		<Oid name="32.1.1" defaultValue="0"/>
+	 		</IF>
+		</Oid>
+
+		<!-- INGw Generic Oid base 32.1-->
+    <Oid name="32.1.3"	defaultValue="0.0.0.0"/>
+	 	<Oid name="NO_OID" defaultValue="">
+			<alias>FT_MODE</alias>
+      <IF value="2">
+				<Oid name="32.1.3" defaultValue="0.0.0.0">
+					<alias>INGW_FIP</alias>
+        </Oid>
+ 			</IF>
+		</Oid>
+
+    <Oid name="32.1.4"	defaultValue="12000"/>
+    <Oid name="32.1.7"	defaultValue="70"   />
+    <Oid name="32.1.8"	defaultValue="5"    />
+    <Oid name="32.1.9"	defaultValue="/LOGS/INGw" />
+
+    <Oid name="32.1.10" defaultValue="0.0.0.0">
+			<alias>SAS_FIP_LIST</alias>
+    </Oid>
+
+		<!-- INGw Tcap    Oid base 32.2
+			-  32.2.1 - TCAP Worker Thread Count
+			-  32.2.2 - TCAP Message PDU Filename
+			-  32.2.3 - TCAP PDU File Size
+			-  32.2.4 - PDU Log Level 
+			-  32.2.5 - SS7 App Info
+		-->
+    <Oid name="32.2.1"	defaultValue="4"              />
+    <Oid name="32.2.2"	defaultValue="ss7PduDump.txt" />
+    <Oid name="32.2.3"	defaultValue="5000000"        />
+    <Oid name="32.2.4"	defaultValue="0"              />
+
+    <Oid name="32.2.5"	defaultValue="0">
+			<alias>SS7_APP_INFO</alias>
+    </Oid>
+
+		<!-- Stack FT required -->
+		<!-- INGw Sip     Oid base 32.3
+			-  32.3.1 - SIP Worker Thread Count
+			-  32.3.2 - Sip Stack Debug level
+			-  32.3.3 - Sip Stack listener Port
+			-  32.3.4 - Sip heartbeat timeout in msec
+			-  32.3.5 - Sip heartbeat timeout max count
+			-  32.3.6 - Sip From Info UserName
+			-  32.3.7 - Sip Contact info username
+			-  32.3.8 - Sip Stack user Profile
+			-  32.3.9 - Sip Header Copy
+			-  32.3.10 - Sip Parser configuration
+			-  32.3.10.1 - Sip processing Incoming VIA
+			-  32.3.11 - SIP Transport Type
+		-->
+
+     <Oid name="32.3.1"	  defaultValue="4"                        />
+     <Oid name="32.3.2"	  defaultValue="0"                        />
+     <Oid name="32.3.3"	  defaultValue="5070"                     />
+     <Oid name="32.3.4"	  defaultValue="2000"                      />
+     <Oid name="32.3.5"	  defaultValue="5"                        />
+     <Oid name="32.3.6"	  defaultValue="ingw"         />
+     <Oid name="32.3.7"	  defaultValue="ingw"   />
+     <Oid name="32.3.8"	  defaultValue="../conf/up.xml"           />
+     <Oid name="32.3.9"	  defaultValue="TOHDR_DEFAULT_TARGET"     />
+     <Oid name="32.3.10.1"	defaultValue="1"                        />
+     <Oid name="32.3.11"	defaultValue="UDP"                        />
+
+		<!-- INGw Load Distribution   Oid base 32.4
+			-  32.4.1 - Load Distribution Patter
+		-->
+    <Oid name="32.4.1"	  defaultValue="ROUND_ROBIN"     />
+
+		<!-- INGw Perf    Oid base 32.5
+			-  32.5.1 - Total Active Calls
+		-->
+    <Oid name="32.5.1"	  defaultValue="0" />
+
+		<!-- INGw Measurement Set Oid base 32.6
+			-  32.6.1 - Total Message Rx
+			-  32.6.2 - Total Message Tx
+			-  32.6.3 - Total Active Transaction
+			-  32.6.4 - Total Begin Rx
+			-  32.6.5 - Total Begin Tx
+			-  32.6.6 - Total Continue Rx
+			-  32.6.7 - Total Continue Tx
+			-  32.6.8 - Total End Rx
+			-  32.6.9 - Total End Tx
+			-  32.6.10- Total QWP Rx
+			-  32.6.11- Total QWP Tx
+			-  32.6.12- Total QWoP Rx
+			-  32.6.13- Total QWoP Tx
+			-  32.6.14- Total CWP Rx
+			-  32.6.15- Total CWP Tx
+			-  32.6.16- Total CWoP Rx
+			-  32.6.17- Total CWoP Tx
+			-  32.6.18- Total Response Rx
+			-  32.6.19- Total Response Tx
+			-  32.6.20- Total Unidirectional Rx
+			-  32.6.21- Total Unidirectional Tx
+			-  32.6.22- Total Abort Rx
+			-  32.6.23- Total Abort Tx
+			-  32.6.24- Total Component Rx
+			-  32.6.25- Total Component Tx
+			-  32.6.26- Total ReturnResult Rx
+			-  32.6.27- Total ReturnResult Tx
+			-  32.6.28- Total Reject Rx
+			-  32.6.29- Total Reject Tx
+			-  32.6.30- Total ReturnError Rx
+			-  32.6.31- Total ReturnError Tx
+		-->
+    <Oid name="32.6.1"	defaultValue="0"/>
+    <Oid name="32.6.2"	defaultValue="0"/>
+    <Oid name="32.6.3"	defaultValue="0"/>
+    <Oid name="32.6.4"	defaultValue="0"/>
+    <Oid name="32.6.5"	defaultValue="0"/>
+    <Oid name="32.6.6"	defaultValue="0"/>
+    <Oid name="32.6.7"	defaultValue="0"/>
+    <Oid name="32.6.8"	defaultValue="0"/>
+    <Oid name="32.6.9"	defaultValue="0"/>
+    <Oid name="32.6.10"	defaultValue="0"/>
+    <Oid name="32.6.11"	defaultValue="0"/>
+    <Oid name="32.6.12"	defaultValue="0"/>
+    <Oid name="32.6.13"	defaultValue="0"/>
+    <Oid name="32.6.14"	defaultValue="0"/>
+    <Oid name="32.6.15"	defaultValue="0"/>
+    <Oid name="32.6.16"	defaultValue="0"/>
+    <Oid name="32.6.17"	defaultValue="0"/>
+    <Oid name="32.6.18"	defaultValue="0"/>
+    <Oid name="32.6.19"	defaultValue="0"/>
+    <Oid name="32.6.20"	defaultValue="0"/>
+    <Oid name="32.6.21"	defaultValue="0"/>
+    <Oid name="32.6.22"	defaultValue="0"/>
+    <Oid name="32.6.23"	defaultValue="0"/>
+    <Oid name="32.6.24"	defaultValue="0"/>
+    <Oid name="32.6.25"	defaultValue="0"/>
+    <Oid name="32.6.26"	defaultValue="0"/>
+    <Oid name="32.6.27"	defaultValue="0"/>
+    <Oid name="32.6.28"	defaultValue="0"/>
+    <Oid name="32.6.29"	defaultValue="0"/>
+    <Oid name="32.6.30"	defaultValue="0"/>
+    <Oid name="32.6.31"	defaultValue="0"/>
+	</Oids>
+
+	<MeasurementMgr minScanIntervalInSec="100"
+	  minAccumulationIntervalInSec="300">
+
+		<MeasurementCounter id="Active Call" oid="32.5.1"
+	  		refType="name" mode="instantaneous" type="incDec"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Message Rx" oid="32.6.1"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Message Tx" oid="32.6.2"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Active Transaction" oid="32.6.3"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Begin Rx" oid="32.6.4"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Begin Tx" oid="32.6.5"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Continue Rx" oid="32.6.6"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Continue Tx" oid="32.6.7"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total End Rx" oid="32.6.8"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total End Tx" oid="32.6.9"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total QWP Rx" oid="32.6.10"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total QWP Tx" oid="32.6.11"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total QWoP Rx" oid="32.6.12"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total QWoP Tx" oid="32.6.13"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total CWP Rx" oid="32.6.14"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total CWP Tx" oid="32.6.15"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total CWoP Rx" oid="32.6.16"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total CWoP Tx" oid="32.6.17"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Response Rx" oid="32.6.18"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Response Tx" oid="32.6.19"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Unidirectional Rx" oid="32.6.20"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Unidirectional Tx" oid="32.6.21"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Abort Rx" oid="32.6.22"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Abort Tx" oid="32.6.23"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Component Rx" oid="32.6.24"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Component Tx" oid="32.6.25"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total ReturnResult Rx" oid="32.6.26"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total ReturnResult Tx" oid="32.6.27"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Reject Rx" oid="32.6.28"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total Reject Tx" oid="32.6.29"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total ReturnError Rx" oid="32.6.30"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementCounter id="Total ReturnError Tx" oid="32.6.31"
+	  		refType="name" mode="instantaneous" type="incOnly"
+	  		scanIntervalInSec="100" enable="true"/>
+
+		<MeasurementSet id="Basic_Measurements" version="1"
+				entityType="OSS" accumulationIntervalInSec="300" priority="0" 
+				enable="true" resetFlag="true">
+
+		<MeasurementCounter id="Active Call"         />
+		<MeasurementCounter id="Total Message Rx"         />
+		<MeasurementCounter id="Total Message Tx"         />
+		<MeasurementCounter id="Total Active Transaction" />
+		<MeasurementCounter id="Total Begin Rx"           />
+		<MeasurementCounter id="Total Begin Tx"           />
+		<MeasurementCounter id="Total Continue Rx"        />
+		<MeasurementCounter id="Total Continue Tx"        />
+		<MeasurementCounter id="Total End Rx"             />
+		<MeasurementCounter id="Total End Tx"             />
+		<MeasurementCounter id="Total QWP Rx"             />
+		<MeasurementCounter id="Total QWP Tx"             />
+		<MeasurementCounter id="Total QWoP Rx"            />
+		<MeasurementCounter id="Total QWoP Tx"            />
+		<MeasurementCounter id="Total CWP Rx"             />
+		<MeasurementCounter id="Total CWP Tx"             />
+		<MeasurementCounter id="Total CWoP Rx"            />
+		<MeasurementCounter id="Total CWoP Tx"            />
+		<MeasurementCounter id="Total Response Rx"        />
+		<MeasurementCounter id="Total Response Tx"        />
+		<MeasurementCounter id="Total Unidirectional Rx"  />
+		<MeasurementCounter id="Total Unidirectional Tx"  />
+		<MeasurementCounter id="Total Abort Rx" 		      />
+		<MeasurementCounter id="Total Abort Tx" 		      />
+		<MeasurementCounter id="Total Component Rx" 			/>
+		<MeasurementCounter id="Total Component Tx" 			/>
+		<MeasurementCounter id="Total ReturnResult Rx" 		/>
+		<MeasurementCounter id="Total ReturnResult Tx"    />
+		<MeasurementCounter id="Total Reject Rx"    			/>
+		<MeasurementCounter id="Total Reject Tx"    			/>
+		<MeasurementCounter id="Total ReturnError Rx" 		/>
+		<MeasurementCounter id="Total ReturnError Tx"     />
+		</MeasurementSet>
+	</MeasurementMgr>
+</Subsystem>

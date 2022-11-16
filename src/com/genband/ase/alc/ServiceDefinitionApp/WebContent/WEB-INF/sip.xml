@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sip-app PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN" "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+<sip-app id="ServiceDefinitionInit">
+      <display-name>alcml</display-name>
+      <distributable/>
+      <servlet>
+            <servlet-name>alcml</servlet-name>
+            <display-name>alcml</display-name>
+            <description></description>
+            <servlet-class>com.genband.sip.ServiceDefinitionApp.alcml</servlet-class>
+            <load-on-startup>1</load-on-startup>
+        </servlet>
+</sip-app>

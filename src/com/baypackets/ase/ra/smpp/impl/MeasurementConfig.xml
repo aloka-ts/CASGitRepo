@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementMgr minScanIntervalInSec="100" minAccumulationIntervalInSec="300">
+
+	<MeasurementCounter id="Bind Transmitter Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.101">
+		<param name="Bind Transmitter Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Bind Transmitter Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.102">
+		<param name="Bind Transmitter Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Bind Receiver Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.103">
+		<param name="Bind Receiver Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Bind Receiver Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.104">
+		<param name="Bind Receiver Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Bind Transceiver Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.105">
+		<param name="Bind Transceiver Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Bind Transceiver Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.106">
+		<param name="Bind Transceiver Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Outbind Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.107">
+		<param name="Outbind Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Unbind Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.108">
+		<param name="Unbind Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Unbind Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.109">
+		<param name="Unbind Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="SMPP Request OUT Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.110">
+		<param name="SMPP Request OUT Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="SMPP Response OUT Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.111">
+		<param name="SMPP Response OUT Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="SMPP Request IN Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.112">
+		<param name="SMPP Request IN Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="SMPP Response IN Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.113">
+		<param name="SMPP Response IN Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="SUBMIT_SM Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.114">
+		<param name="SUBMIT_SM Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="SUBMIT_SM Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.115">
+		<param name="SUBMIT_SM Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="SUBMITMULTI_SM Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.116">
+		<param name="SUBMITMULTI_SM Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="SUBMITMULTI_SM Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.117">
+		<param name="SUBMITMULTI_SM Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="DATA_SM Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.118">
+		<param name="DATA_SM Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="DATA_SM Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.119">
+		<param name="DATA_SM Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="DELIVER_SM Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.120">
+		<param name="DELIVER_SM Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="DELIVER_SM Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.121">
+		<param name="DELIVER_SM Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="QUERY_SM Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.122">
+		<param name="QUERY_SM Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="QUERY_SM Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.123">
+		<param name="QUERY_SM Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="REPLACE_SM Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.124">
+		<param name="REPLACE_SM Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="REPLACE_SM Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.125">
+		<param name="REPLACE_SM Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="CANCEL_SM Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.126">
+		<param name="CANCEL_SM Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="CANCEL_SM Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.127">
+		<param name="CANCEL_SM Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="ENQUIRE_LINK Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.128">
+		<param name="ENQUIRE_LINK Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="ENQUIRE_LINK Response Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.129">
+		<param name="ENQUIRE_LINK Response Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="ALERT_NOTIFICATION Request Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.130">
+		<param name="ALERT_NOTIFICATION Request Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="GENERIC_NACK Requst Count"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.131">
+		<param name="GENERIC_NACK Requst Count"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="SMPP req send error"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.132">
+		<param name="SMPP req send error"/>
+	</MeasurementCounter>
+
+	<MeasurementCounter id="SMPP res send error"
+		refType="name" mode="event" 
+		scanInterval="60" oid="30.22.133">
+		<param name="SMPP req send error"/>
+	</MeasurementCounter>
+
+    <!-- Measurement Set Definition --> 
+    <MeasurementSet id="Smpp Interface MeasurementSet" version="1"
+			    accumulationInterval="300" priority="0">
+		<MeasurementCounter id="Bind Transmitter Request Count"/> 
+		<MeasurementCounter id="Bind Transmitter Response Count"/> 
+		<MeasurementCounter id="Bind Receiver Request Count"/> 
+		<MeasurementCounter id="Bind Receiver Response Count"/> 
+		<MeasurementCounter id="Bind Transceiver Request Count"/> 
+		<MeasurementCounter id="Bind Transceiver Response Count"/> 
+		<MeasurementCounter id="Outbind Request Count"/> 
+		<MeasurementCounter id="Unbind Request Count"/> 
+		<MeasurementCounter id="Unbind Response Count"/> 
+		<MeasurementCounter id="SMPP Request OUT Count"/> 
+		<MeasurementCounter id="SMPP Response OUT Count"/> 
+		<MeasurementCounter id="SMPP Request IN Count"/> 
+		<MeasurementCounter id="SMPP Response IN Count"/> 
+		<MeasurementCounter id="SUBMIT_SM Request Count"/> 
+		<MeasurementCounter id="SUBMIT_SM Response Count"/> 
+		<MeasurementCounter id="SUBMITMULTI_SM Request Count"/> 
+		<MeasurementCounter id="SUBMITMULTI_SM Response Count"/> 
+		<MeasurementCounter id="DATA_SM Request Count"/> 
+		<MeasurementCounter id="DATA_SM Response Count"/> 
+		<MeasurementCounter id="DELIVER_SM Request Count"/> 
+		<MeasurementCounter id="DELIVER_SM Response Count"/> 
+		<MeasurementCounter id="QUERY_SM Request Count"/> 
+		<MeasurementCounter id="QUERY_SM Response Count"/> 
+		<MeasurementCounter id="REPLACE_SM Request Count"/> 
+		<MeasurementCounter id="REPLACE_SM Response Count"/> 
+		<MeasurementCounter id="CANCEL_SM Request Count"/> 
+		<MeasurementCounter id="CANCEL_SM Response Count"/> 
+		<MeasurementCounter id="ENQUIRE_LINK Request Count"/> 
+		<MeasurementCounter id="ENQUIRE_LINK Response Count"/> 
+		<MeasurementCounter id="ALERT_NOTIFICATION Request Count"/> 
+		<MeasurementCounter id="GENERIC_NACK Requst Count"/> 
+		<MeasurementCounter id="SMPP req send error"/> 
+		<MeasurementCounter id="SMPP res send error"/> 
+    </MeasurementSet>
+</MeasurementMgr>

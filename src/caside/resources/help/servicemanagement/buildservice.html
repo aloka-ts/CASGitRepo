@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+  
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+
+
+  
+  
+  <title>buildservice</title>
+</head>
+
+
+<body>
+
+
+<h2><a name="_Toc133742250">Building </a>Service<o:p></o:p></h2>
+
+
+
+
+<p class="bodytext"><span style="font-size: 12pt; font-family: Arial;">This
+option
+allows you to build a service. By building service we mean building of
+a 'sar' file so that it can be deployed on a Sip Application Server.
+&nbsp;When user creates a BayPackets project <span style="font-weight: bold;">build.properties</span> file is generated along with many other files. User can customize the process of building Service by editing this file.  <o:p></o:p></span></p>
+
+
+
+
+<div style="border-style: solid none none; border-color: rgb(176, 88, 0) -moz-use-text-color -moz-use-text-color; border-width: 1pt medium medium; padding: 0in;">
+
+<p class="startpoint"><span style="font-size: 12pt; font-family: Arial;"><span style="font-weight: bold;">To
+build&nbsp;service</span><o:p></o:p></span></p>
+
+
+
+
+</div>
+
+
+
+
+<p class="listnumber" style="margin-left: 21pt; text-indent: 0in;"><comment title="[if !supportLists]" xmlns="http://disruptive-innovations.com/zoo/nvu"></comment><span style="font-size: 12pt; font-family: Arial;"><span style="">1.<span style="font-family: &quot;Times New Roman&quot;; font-style: normal; font-variant: normal; font-weight: normal; font-size: 7pt; line-height: normal; font-size-adjust: none; font-stretch: normal;">&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><comment title="[endif]" xmlns="http://disruptive-innovations.com/zoo/nvu"></comment><span style="font-size: 12pt; font-family: Arial;">Open <b>Eclipse</b>. <o:p></o:p></span></p>
+
+
+
+
+<p class="listnumber" style="margin-left: 21pt; text-indent: 0in;"><comment title="[if !supportLists]" xmlns="http://disruptive-innovations.com/zoo/nvu"></comment><span style="font-size: 12pt; font-family: Arial;"><span style="">2.<span style="font-family: &quot;Times New Roman&quot;; font-style: normal; font-variant: normal; font-weight: normal; font-size: 7pt; line-height: normal; font-size-adjust: none; font-stretch: normal;">&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><comment title="[endif]" xmlns="http://disruptive-innovations.com/zoo/nvu"></comment><span style="font-size: 12pt; font-family: Arial;">Select the <span style="font-weight: bold;">BuildService </span>menu icon on Eclipse menu bar. Then click the Build Service. <o:p></o:p></span></p>
+
+
+
+
+<p class="listnumber" style="margin-left: 21pt; text-indent: 0in;"><comment title="[if !supportLists]" xmlns="http://disruptive-innovations.com/zoo/nvu"></comment><span style="font-size: 12pt; font-family: Arial;"><span style="">3.<span style="font-family: &quot;Times New Roman&quot;; font-style: normal; font-variant: normal; font-weight: normal; font-size: 7pt; line-height: normal; font-size-adjust: none; font-stretch: normal;">&nbsp;&nbsp;&nbsp;</span></span></span><comment title="[endif]" xmlns="http://disruptive-innovations.com/zoo/nvu"></comment><b style=""><span style="font-size: 12pt; font-family: Arial;"> Eclipse</span></b><span style="font-size: 12pt; font-family: Arial;">
+displays the <b style="">Message Dialog</b>&nbsp;<span style="font-weight: bold;"><span style="font-weight: bold;"></span></span>showing 'sar' file is built.&nbsp;<o:p></o:p></span></p>
+
+
+
+
+<p class="listnumber" style="margin-left: 21pt; text-indent: 0in;"><span style="font-size: 12pt; font-family: Arial;"><span style="">&nbsp;<br>
+
+
+<span style="font-weight: bold;">Editing build.properties file </span>&nbsp;&nbsp; </span><comment title="[if gte vml 1]&gt;&lt;v:shapetype
+  id=&quot;_x0000_t75&quot; coordsize=&quot;21600,21600&quot; o:spt=&quot;75&quot; o:preferrelative=&quot;t&quot;
+  path=&quot;m@4@5l@4@11@9@11@9@5xe&quot; filled=&quot;f&quot; stroked=&quot;f&quot;&gt;
+  &lt;v:stroke joinstyle=&quot;miter&quot;/&gt;
+  &lt;v:formulas&gt;
+   &lt;v:f eqn=&quot;if lineDrawn pixelLineWidth 0&quot;/&gt;
+   &lt;v:f eqn=&quot;sum @0 1 0&quot;/&gt;
+   &lt;v:f eqn=&quot;sum 0 0 @1&quot;/&gt;
+   &lt;v:f eqn=&quot;prod @2 1 2&quot;/&gt;
+   &lt;v:f eqn=&quot;prod @3 21600 pixelWidth&quot;/&gt;
+   &lt;v:f eqn=&quot;prod @3 21600 pixelHeight&quot;/&gt;
+   &lt;v:f eqn=&quot;sum @0 0 1&quot;/&gt;
+   &lt;v:f eqn=&quot;prod @6 1 2&quot;/&gt;
+   &lt;v:f eqn=&quot;prod @7 21600 pixelWidth&quot;/&gt;
+   &lt;v:f eqn=&quot;sum @8 21600 0&quot;/&gt;
+   &lt;v:f eqn=&quot;prod @7 21600 pixelHeight&quot;/&gt;
+   &lt;v:f eqn=&quot;sum @10 21600 0&quot;/&gt;
+  &lt;/v:formulas&gt;
+  &lt;v:path o:extrusionok=&quot;f&quot; gradientshapeok=&quot;t&quot; o:connecttype=&quot;rect&quot;/&gt;
+  &lt;o:lock v:ext=&quot;edit&quot; aspectratio=&quot;t&quot;/&gt;
+ &lt;/v:shapetype&gt;&lt;v:shape id=&quot;_x0000_i1025&quot; type=&quot;#_x0000_t75&quot; style='width:372pt;
+  height:180.75pt'&gt;
+  &lt;v:imagedata src=&quot;Undeploying%20a%20Service_files/image001.png&quot; o:title=&quot;&quot;/&gt;
+ &lt;/v:shape&gt;&lt;![endif]" xmlns="http://disruptive-innovations.com/zoo/nvu"><img src="chrome://editor/content/images/tag-comment.gif"><!--[if gte vml 1]><v:shapetype
+ id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+ path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:372pt;
+ height:180.75pt'>
+ <v:imagedata src="Undeploying%20a%20Service_files/image001.png" o:title=""/>
+</v:shape><![endif]--></comment><comment title="[if !vml]" xmlns="http://disruptive-innovations.com/zoo/nvu"><img src="chrome://editor/content/images/tag-comment.gif"></comment></span></p>
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<span style="font-size: 12pt; font-family: Arial;">The build.properties file contains following default entries as created during Bay Packets Project creation time.<br>
+
+
+<br>
+
+
+</span><img src="buildservice.JPG" alt=""><br>
+
+
+<br>
+
+
+<span style="font-size: 12pt; font-family: Arial;"><span style="font-weight: bold;"> output=bin</span> means Eclipse will place the binaries of the project (when user builds the project) into this folder.<br>
+
+
+<span style="font-weight: bold;">source=src </span>means that the source folder of the Project is src and user will create source files (i.e. java files) in this folder.<br>
+
+
+WEB-INF/classes=bin means that WEB-INF/classes will contain all the binaries of the project.<br>
+
+
+<br>
+
+If the user wants to add a jar file or any file or any directory in the
+WEB-INF directory. &nbsp;The following procedure should be adopted. <br>
+
+
+<br>
+
+
+1.&nbsp;&nbsp;&nbsp; Select the Project, right click and select <span style="font-weight: bold;">import, </span>click Next.<br>
+
+
+<span style="font-weight: bold;"><br>
+
+
+</span></span>&nbsp;<img src="buil.JPG" alt=""><br>
+
+
+<span style="font-size: 12pt; font-family: Arial;"><br>
+
+
+2. &nbsp;Select appropriate files, folder from the File system browser. <br>
+
+
+<br>
+
+
+</span><img src="brow.JPG" alt=""><br>
+
+
+<br>
+
+
+<span style="font-size: 12pt; font-family: Arial;">3. &nbsp;Click the
+finish button. Now add the names of the imported files or folders to
+appropriate directory as a comma separated list in build.properties.
+Usually SIP based services require files under WEB-INF directory.
+Assuming user wants to add some files under WEB-INF. Then after
+importing those files/folder as mentioned above edit build.propreties
+as
+shown. Now when user builds the service, the service sar file will
+contain bpsbb.jar, bpresource.jar and ase.jar in WEB-INF/lib directory
+and datasources.xml in WEB-INF/ directory.<br>
+
+
+<br>
+
+
+</span><img src="build2.JPG" alt=""><br>
+
+
+<span style="font-size: 12pt; font-family: Arial;"><br>
+
+
+</span><span style="font-size: 12pt; font-family: Arial;"></span>
+</body>
+</html>

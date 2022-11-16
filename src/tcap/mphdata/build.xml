@@ -1,0 +1,53 @@
+<!-- ==================================================== -->
+<!-- Build file: JAIN  TCAP -->
+<!-- ==================================================== -->
+
+<project name="TCAP MPH DATA" default="build" basedir=".">
+      <!-- ***************************************** -->
+      <!-- Main target -->
+      <target name="build" depends="mph-data">
+      </target>
+      <!-- ***************************************** -->
+
+      <!-- Set the variables used inside -->
+      <property name="app.name" value="mph-data"/>
+      <property name="app.src.dir" value="${MPHDATA_HOME}"/>
+      <property name="app.build.dir" Value="${INSTALLROOT}/TcapClasses/mphdata"/>
+      <property name="bpjar.dir" Value="${INSTALLROOT}/bpjars"/>
+      <property name="otherjar.dir" Value="${INSTALLROOT}/otherjars"/>
+
+      <!-- Set the classpath for compiling the application -->
+      <path id="classpath">
+            <fileset dir="${bpjar.dir}" includes="*.jar" />
+            <fileset dir="${otherjar.dir}" includes="*.jar"/>
+      </path>
+
+      <target name="mph-data" depends="cleanup">
+              <echo message ="Building the Tcap ServiceData  "/>
+                          <echo message ="${app.src.dir}"/>
+                          <echo message ="${app.build.dir}"/>
+                          <echo message ="${app.name}"/>
+                          <echo message="${bpjar.dir}"/>
+                          <mkdir dir="${app.build.dir}"/>
+
+                <echo message=" Deleting Service-data jar"/>
+                           <delete file="${bpjar.dir}/${app.name}.jar"/>
+
+              <javac srcdir="${app.src.dir}" destdir="${app.build.dir}" debug="true">
+                       <include name="com/agnity/**/*.java"/>
+                       <classpath refid="classpath"/>
+             </javac>
+
+
+                        <!-- Package the Service Data into a .jar file -->
+            <jar update="true" jarfile="${bpjar.dir}/mph-data.jar" basedir="${app.build.dir}">
+                  <include name="com/agnity/**/*.class"/>
+            </jar>
+
+     </target>
+
+     <!-- Cleanup the build directory -->
+     <target name="cleanup">
+            <delete dir="${app.build.dir}"/>
+     </target>
+</project>

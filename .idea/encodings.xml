@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/tcap/inap/itu-t/cs2/codec/src/com/agnity/inapitutcs2/enumdata/AdtnlPartyCatNameEnum.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/tcap/inap/itu-t/cs2/codec/src/com/agnity/inapitutcs2/enumdata/TransmissionMedReqEnum.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/tcap/inap/jap_cs_2_2/codec/src/com/genband/inap/enumdata/AdtnlPartyCatNameEnum.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/tcap/inap/jap_cs_2_2/codec/src/com/genband/inap/enumdata/TransmissionMedReqEnum.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/tcap/win/codec/src/com/agnity/win/datatypes/NonASNDigitCollectionControl.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/tcap/win/codec/src/com/agnity/win/datatypes/NonASNIMSIType.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/tcap/win/codec/src/com/agnity/win/datatypes/NonASNMINType.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/tcap/win/codec/src/com/agnity/win/enumdata/AccessDeniedReasonEnum.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/tcap/win/codec/src/com/agnity/win/enumdata/ClassEnum.java" charset="ISO-8859-1" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

@@ -1,0 +1,75 @@
+RULES = lib
+
+EXTRA_INCLUDES += $(INSTALLROOT)/include 
+
+TARGET = libINGwSipProvider
+
+EXTRA_RULES += vbroker
+
+EXTRA_DEFINES += USE_LOCK_FOR_REF_COUNT
+EXTRA_DEFINES += DO_NOT_USE_BUFFER_POOL
+EXTRA_DEFINES += QUEUE_CHANGES 
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+#EXTRA_DEFINES += INGW_LOOPBACK_SAS
+#EXTRA_DEFINES += INGW_EXTRA_LOGS 
+EXTRA_DEFINES += CAPTURE_TS
+
+#define to trace call thread 
+EXTRA_DEFINES += INGW_TRACE_CALL_THREAD 
+
+include ../../INGwCommonDefs/hss-sipstack.def
+
+CODE_HOME=INGwSipProvider
+
+SRCS = $(CODE_HOME)/INGwSpBufferFactory.C             \
+       $(CODE_HOME)/INGwSpSipCallTable.C              \
+       $(CODE_HOME)/INGwSpSipProviderConfig.C         \
+       $(CODE_HOME)/INGwSpSipListenerThread.C         \
+       $(CODE_HOME)/INGwSpSipConnectionFactory.C      \
+       $(CODE_HOME)/INGwSpSipUtil.C                   \
+       $(CODE_HOME)/INGwSpData.C                     \
+       $(CODE_HOME)/INGwSpDataFactory.C                     \
+       $(CODE_HOME)/INGwSpThreadSpecificSipData.C       \
+       $(CODE_HOME)/INGwSpStackTimer.C                \
+       $(CODE_HOME)/INGwSpSipCall.C            \
+       $(CODE_HOME)/INGwSpSipCallTable.C            \
+       $(CODE_HOME)/INGwSpSipConnection.C             \
+       $(CODE_HOME)/INGwSpSipStackIntfLayer.C         \
+       $(CODE_HOME)/INGwSpSipProvider.C               \
+       $(CODE_HOME)/INGwSpHash.C            \
+       $(CODE_HOME)/INGwSpSipIface.C            \
+       $(CODE_HOME)/INGwSpSipCallFactory.C            \
+       $(CODE_HOME)/INGwSpSipHeaderPolicy.C           \
+       $(CODE_HOME)/INGwSpStackConfigMgr.C           \
+       $(CODE_HOME)/INGwSpTcpConnection.C           \
+       $(CODE_HOME)/INGwSpTcpConnMgr.C           \
+       $(CODE_HOME)/INGwSpSipCallController.C            
+
+HDRS = $(CODE_HOME)/INGwSpBufferFactory.h             \
+       $(CODE_HOME)/INGwSpSipCallTable.h              \
+       $(CODE_HOME)/INGwSpSipCommon.h                 \
+       $(CODE_HOME)/INGwSpSipConnection.h             \
+       $(CODE_HOME)/INGwSpSipContext.h                \
+       $(CODE_HOME)/INGwSpSipListenerThread.h         \
+       $(CODE_HOME)/INGwSpSipProvider.h               \
+       $(CODE_HOME)/INGwSpSipProviderConfig.h         \
+       $(CODE_HOME)/INGwSpSipStackIntfLayer.h         \
+       $(CODE_HOME)/INGwSpSipUtil.h                   \
+       $(CODE_HOME)/INGwSpData.h                     \
+       $(CODE_HOME)/INGwSpDataFactory.h               \
+       $(CODE_HOME)/INGwSpSipIncludes.h                 \
+       $(CODE_HOME)/INGwSpThreadSpecificSipData.h       \
+       $(CODE_HOME)/INGwSpStackTimer.h                \
+       $(CODE_HOME)/INGwSpSipConnectionFactory.h      \
+       $(CODE_HOME)/INGwSpAddress.h            \
+       $(CODE_HOME)/INGwSpSipCall.h            \
+       $(CODE_HOME)/INGwSpHash.h            \
+       $(CODE_HOME)/INGwSpSipCallMap.h            \
+       $(CODE_HOME)/INGwSpSipCallController.h            \
+       $(CODE_HOME)/INGwSpSipIface.h            \
+       $(CODE_HOME)/INGwSpSipCallFactory.h            \
+       $(CODE_HOME)/INGwSpStackConfigMgr.h            \
+       $(CODE_HOME)/INGwSpTcpConnection.h           \
+       $(CODE_HOME)/INGwSpTcpConnMgr.h            \
+       $(CODE_HOME)/INGwSpSipHeaderPolicy.h           
+

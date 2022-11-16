@@ -1,0 +1,10 @@
+"hotshot"&WS;<sip:455667@someHost.com> VIMAL MYHOST  sip:NUSER@NHOST.com
+"hotshot"&WS;<sip:455667@someHost.com>;tag=TAG;branch=BRANCH VIMAL MYHOST  sip:NUSER@NHOST.com
+sip:455667@someHost.com VIMAL MYHOST  sip:NUSER@NHOST.com
+<sip:17324208824@135.25.29.36;user=phone;phone-context=national;role=call> VIMAL MYHOST  sip:NUSER@NHOST.com
+<sip:call@135.25.29.36:5060;lr>;q=0.8 VIMAL MYHOST  sip:NUSER@NHOST.com
+<sip:5161110000@192.168.100.2:5060;user=phone>;q=0.8;expires=3600 VIMAL MYHOST  sip:NUSER@NHOST.com
+"hotshot"&WS;<tel:+455667>;q=0.8;expires=3600 VIMAL MYHOST  sip:NUSER@NHOST.com
+tel:+455667@somthing.com VIMAL MYHOST  sip:NUSER@NHOST.com
+http:455667@someHost.com VIMAL MYHOST  sip:NUSER@NHOST.com
+ONE TWO THREE VIMAL MYHOST  sip:NUSER@NHOST.com

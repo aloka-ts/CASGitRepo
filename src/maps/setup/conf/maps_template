@@ -1,0 +1,158 @@
+#!/bin/ksh
+### ====================================================================== ###
+##                                                                          ##
+##  MAPS Bootstrap Script                                                  ##
+##                                                                          ##
+### ====================================================================== ###
+
+echo "### Running Startup script for MAPS : maps ###"
+
+### $Id: run.sh,v 1.9.2.2 2002/09/24 16:47:01 starksm Exp $ ###
+HOST_ADDR=`id | sed "s/uid=//g" | cut -d"(" -f2 | sed "s/).*//g"`
+date_stamp=`date | awk '{ printf("%s_%s_%s", $2, $3, $4); }'`
+FILE_NAME="MAPS_${HOST_ADDR}_${date_stamp}.rexec_out"
+JVM_64BIT="false"
+
+mkdir -p LOG_DIRECTORY
+
+exec 1>LOG_DIRECTORY/${FILE_NAME} 2>&1
+
+MAPS_PLTFRM=`uname`
+CUR_DIR=`pwd`
+echo "Installation Platform is  $MAPS_PLTFRM "
+if [ $MAPS_PLTFRM == "Linux" ]
+then
+        echo "Linux system"
+        ECHO_PREFIX=' -e '
+else
+        echo "Solaris system"
+        ECHO_PREFIX=''
+fi
+
+#
+# Run the setup.sh to set the various environment variables used
+#
+
+. INSTALL_ROOT/MmAppProvServer/scripts/setup.sh
+
+##############################################################################
+# Find out if it is 64 bit processor
+uname -a > /tmp/uname_a.$$ 2>&1
+if grep "Sun-Fire-V490" /tmp/uname_a.$$ > /dev/null
+then
+        export JVM_64BIT="true"
+fi
+
+if grep "Netra-T2000" /tmp/uname_a.$$ > /dev/null
+then
+        export JVM_64BIT="true"
+fi
+rm /tmp/uname_a.$$
+
+###############################################################################
+# Create the lib links as per the JVM mode (32-bit/64-bit) (for Solaris only)
+
+if [ ${MAPS_PLTFRM} == "SunOS" ]
+then
+        \rm -f $INSTALLROOT/MmAppProvServer/lib/libjavautil.so
+
+        if [[ $JVM_64BIT == "true" ]]
+        then
+                ln -s $INSTALLROOT/MmAppProvServer/lib/libjavautil.so.64bit $INSTALLROOT/MmAppProvServer/lib/libjavautil.so
+        else
+                ln -s $INSTALLROOT/MmAppProvServer/lib/libjavautil.so.32bit $INSTALLROOT/MmAppProvServer/lib/libjavautil.so
+        fi
+fi
+###############################################################################
+
+DIRNAME=`dirname $0`
+PROGNAME=`basename $0`
+GREP="grep"
+
+#
+# Helper to complain.
+#
+warn() {
+    echo "${PROGNAME}: $*"
+}
+
+#
+# Helper to puke.
+#
+die() {
+    warn $*
+    exit 1
+}
+
+# Setup the JVM
+if [ "x$JAVA" = "x" ]; then
+    if [ "x$JAVA_HOME" != "x" ]; then
+	JAVA="$JAVA_HOME/bin/java"
+    else
+	JAVA="java"
+    fi
+fi
+
+# Setup the classpath
+runjar="$JBOSS_HOME/bin/run.jar"
+if [ ! -f $runjar ]; then
+    die "Missing required file: $runjar"
+fi
+
+JBOSS_BOOT_CLASSPATH="$runjar"
+
+
+if [ "x$JBOSS_CLASSPATH" = "x" ]; then
+    JBOSS_CLASSPATH="$JBOSS_BOOT_CLASSPATH"
+else
+    JBOSS_CLASSPATH="$JBOSS_CLASSPATH:$JBOSS_BOOT_CLASSPATH"
+fi
+
+# Set jacorb options
+JACORB_OPTS="-Djacorb.security.support_ssl=off \
+                                        -Djacorb.security.enforce_ssl=off \
+                                        -Djacorb.security.ssl.client.required_options=40 \
+                                        -Djacorb.security.ssl.client.supported_options=40 \
+                                        -DOAPort=5050"
+# Setup JBoss sepecific properties
+
+JAVA_OPTS="$JACORB_OPTS $JAVA_OPTS -Dprogram.name=$PROGNAME -DDEBUG_MODE=0 -DLOG_LEVEL=DEBUG -DLD_LIBRARY_PATH=$LD_LIBRARY_PATH -DInstallRoot=$INSTALLROOT/MmAppProvServer -DORACLE_HOME=$ORACLE_HOME -DPATH=$PATH -DJBOSS_HOME=$JBOSS_HOME "
+
+#JAVA_OPTS="-verbose:class $JAVA_OPTS"
+
+JBOSS_CLASSPATH=$JBOSS_CLASSPATH:$JAVA_HOME/lib/tools.jar
+
+CLASSPATH=$JBOSS_CLASSPATH:$GB_JARS/ems.jar:$GB_JARS/slee.jar:$GB_JARS/mgmt.jar:$JACORB_HOME/lib/idl.jar:$JACORB_HOME/lib/jacorb.jar
+
+if test $PLTFRM = "Linux"
+then
+	CLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$JBOSS_CLASSPATH:$CLASSPATH
+else
+	CLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$JBOSS_CLASSPATH:$CLASSPATH:$JAVA_HOME/jre/lib/jsse.jar
+fi
+
+# Display our environment
+echo "================================================================================"
+echo ""
+echo "  MAPS Bootstrap Environment"
+echo ""
+echo "  JBOSS_HOME: $JBOSS_HOME"
+echo ""
+echo "  JAVA: $JAVA"
+echo ""
+echo "  JAVA_OPTS: $JAVA_OPTS"
+echo ""
+echo "  CLASSPATH: $JBOSS_CLASSPATH"
+echo ""
+echo "================================================================================"
+echo ""
+
+# MAPS runtime Environment
+
+MAPSPIDFILE=$INSTALLROOT/MmAppProvServer/conf/MAPSPidFile
+echo $$>$MAPSPIDFILE
+
+exec $JACORB_HOME/bin/jaco  -Djava.endorsed.dirs="$JBOSS_HOME/lib/endorsed" -Xbootclasspath/p:$JBOSS_HOME/server/maps/lib/log4j.jar -Xmx512m -Xms128m $JAVA_OPTS "-DPROTOCOL_VARIANT=ITU" "-DINSTALLROOT=$INSTALLROOT/MmAppProvServer" "-DWebServerUrlRetry=5" "-DSESSION_TIMEOUT=30" "-Dorg.omg.PortableInterceptor.ORBInitializerClass.com.genband.m5.maps.mgmt.ClientInitializer" com.genband.m5.maps.mgmt.MapsProvider $@ -z $INSTALLROOT/HConfigFile.dat
+
+echo "### Exiting Startup script for MAPS : maps ###"
+

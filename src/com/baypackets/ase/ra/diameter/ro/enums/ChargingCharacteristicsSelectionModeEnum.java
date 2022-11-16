@@ -1,0 +1,57 @@
+package com.baypackets.ase.ra.diameter.ro.enums;
+
+import java.util.Hashtable;
+import com.traffix.openblox.diameter.ro.generated.enums.EnumChargingCharacteristicsSelectionMode;
+
+public enum ChargingCharacteristicsSelectionModeEnum
+{
+APNSPECIFIC,
+HOMEDEFAULT,
+ROAMINGDEFAULT,
+SERVINGNODESUPPLIED,
+SUBSCRIPTIONSPECIFIC,
+VISITINGDEFAULT;
+
+private static Hashtable<ChargingCharacteristicsSelectionModeEnum,EnumChargingCharacteristicsSelectionMode> stackMapping = new Hashtable<ChargingCharacteristicsSelectionModeEnum,EnumChargingCharacteristicsSelectionMode>();
+private static Hashtable<EnumChargingCharacteristicsSelectionMode,ChargingCharacteristicsSelectionModeEnum> containerMapping = new Hashtable<EnumChargingCharacteristicsSelectionMode,ChargingCharacteristicsSelectionModeEnum>();
+
+ static {
+stackMapping.put(ChargingCharacteristicsSelectionModeEnum.APNSPECIFIC, EnumChargingCharacteristicsSelectionMode.APNSpecific);
+stackMapping.put(ChargingCharacteristicsSelectionModeEnum.HOMEDEFAULT, EnumChargingCharacteristicsSelectionMode.HomeDefault);
+stackMapping.put(ChargingCharacteristicsSelectionModeEnum.ROAMINGDEFAULT, EnumChargingCharacteristicsSelectionMode.RoamingDefault);
+stackMapping.put(ChargingCharacteristicsSelectionModeEnum.SERVINGNODESUPPLIED, EnumChargingCharacteristicsSelectionMode.ServingNodeSupplied);
+stackMapping.put(ChargingCharacteristicsSelectionModeEnum.SUBSCRIPTIONSPECIFIC, EnumChargingCharacteristicsSelectionMode.SubscriptionSpecific);
+stackMapping.put(ChargingCharacteristicsSelectionModeEnum.VISITINGDEFAULT, EnumChargingCharacteristicsSelectionMode.VisitingDefault);
+
+containerMapping.put(EnumChargingCharacteristicsSelectionMode.APNSpecific, ChargingCharacteristicsSelectionModeEnum.APNSPECIFIC);
+containerMapping.put(EnumChargingCharacteristicsSelectionMode.HomeDefault, ChargingCharacteristicsSelectionModeEnum.HOMEDEFAULT);
+containerMapping.put(EnumChargingCharacteristicsSelectionMode.RoamingDefault, ChargingCharacteristicsSelectionModeEnum.ROAMINGDEFAULT);
+containerMapping.put(EnumChargingCharacteristicsSelectionMode.ServingNodeSupplied, ChargingCharacteristicsSelectionModeEnum.SERVINGNODESUPPLIED);
+containerMapping.put(EnumChargingCharacteristicsSelectionMode.SubscriptionSpecific, ChargingCharacteristicsSelectionModeEnum.SUBSCRIPTIONSPECIFIC);
+containerMapping.put(EnumChargingCharacteristicsSelectionMode.VisitingDefault, ChargingCharacteristicsSelectionModeEnum.VISITINGDEFAULT);
+}
+
+public static final ChargingCharacteristicsSelectionModeEnum getContainerObj(EnumChargingCharacteristicsSelectionMode stkEnum){
+	return containerMapping.get(stkEnum);
+}
+
+public static final EnumChargingCharacteristicsSelectionMode getStackObj(ChargingCharacteristicsSelectionModeEnum cntrEnum){
+	return stackMapping.get(cntrEnum);
+}
+
+public static ChargingCharacteristicsSelectionModeEnum fromCode(int value){
+	return getContainerObj(EnumChargingCharacteristicsSelectionMode.fromCode(value));
+}
+
+public static java.lang.String getName(int key){
+	return EnumChargingCharacteristicsSelectionMode.getName(key);
+}
+
+public static boolean isValid(int value){
+	return EnumChargingCharacteristicsSelectionMode.isValid(value);
+}
+
+public static int[] keys(){
+	return EnumChargingCharacteristicsSelectionMode.keys();
+}
+}

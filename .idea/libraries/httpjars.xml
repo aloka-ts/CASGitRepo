@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="httpjars">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/httpjars/ase-http.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

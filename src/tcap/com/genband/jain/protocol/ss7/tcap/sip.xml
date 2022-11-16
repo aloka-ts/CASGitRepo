@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+  PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+  "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+<sip-app>
+      <display-name>Jain TCAP Provider Application</display-name>
+      <distributable/>
+
+      <context-param>
+            <param-name>ConnectionTransport</param-name>
+            <param-value>udp</param-value>
+      </context-param>
+      <context-param>
+            <param-name>IdleConnectionKeepAliveTimer</param-name>
+            <param-value>2000</param-value>
+      </context-param>
+      <context-param>
+            <param-name>FailedConnectionRetryTimer</param-name>
+            <param-value>50000</param-value>
+      </context-param>
+       <context-param>
+            <param-name>Initial_Req_Handling</param-name>
+            <param-value>2</param-value>
+      </context-param>
+
+      <!-- The following parameters are added for sending the requests through an outbound gateway.
+	Uncommenting the parameter(s) will enable the SAS to send the corresponding request through the specified outbound proxy  --> 
+      <!--
+      <context-param>
+            <param-name>invite.route</param-name>
+            <param-value>sip:<ip.address>:<port>;lr</param-value>
+      </context-param>
+      <context-param>
+            <param-name>notify.route</param-name>
+            <param-value>sip:<ip.address>:<port>;lr</param-value>
+      </context-param>
+      -->
+      <listener>
+            <listener-class>com.genband.jain.protocol.ss7.tcap.HeartBeatTimerListener</listener-class>
+      </listener>
+      <listener>
+            <listener-class>com.genband.jain.protocol.ss7.tcap.JainTcapProviderImpl</listener-class>
+      </listener>
+      <servlet>
+            <servlet-name>JainTcapProvider</servlet-name>
+            <servlet-class>com.genband.jain.protocol.ss7.tcap.JainTcapProviderImpl</servlet-class>
+            <load-on-startup>1</load-on-startup>
+      </servlet>
+      <servlet-mapping>
+            <servlet-name>JainTcapProvider</servlet-name>
+            <pattern>
+                  <equal>
+                        <var>request.uri.user</var>
+                        <value>TcapListener</value>
+                  </equal>
+            </pattern>
+      </servlet-mapping>
+
+      <!-- The following section specifies the application session timeout value. -->
+      <session-config>
+            <session-timeout>5</session-timeout>
+      </session-config>
+</sip-app>

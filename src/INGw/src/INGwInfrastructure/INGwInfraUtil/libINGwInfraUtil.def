@@ -1,0 +1,50 @@
+RULES  = lib
+
+CXXFLAGS.debug:=-g
+
+TARGET = libINGwInfraUtil
+
+EXTRA_DEFINES += USE_LOCK_FOR_REF_COUNT
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+#include ../commondefs/ccm-config.def
+include ../../INGwCommonDefs/ccpu-stack.def 
+
+SRCS = INGwInfraUtil/INGwIfrUtlConfigurable.C 	\
+       INGwInfraUtil/INGwIfrUtlLogger.C 				\
+       INGwInfraUtil/INGwIfrUtlMachPing.C 			\
+       INGwInfraUtil/INGwIfrUtlSerializable.C 	\
+       INGwInfraUtil/INGwIfrUtlStrStr.C 				\
+       INGwInfraUtil/INGwIfrUtlStrUtil.C 				\
+       INGwInfraUtil/INGwIfrUtlThread.C					\
+       INGwInfraUtil/INGwIfrUtlLock.C						\
+       INGwInfraUtil/INGwIfrUtlBucket.C					\
+       INGwInfraUtil/INGwIfrUtlHashMap.C				\
+       INGwInfraUtil/INGwIfrUtlReject.C					\
+       INGwInfraUtil/INGwIfrUtlGlbFunc.C        \
+			 INGwInfraUtil/INGwIfrUtlRefCount.C       \
+			 INGwInfraUtil/INGwIfrUtlBitArray.C       \
+			 INGwInfraUtil/INGwIfrUtlBucket.C
+
+HDRS = 	INGwInfraUtil/INGwIfrUtlAlgorithm.h			\
+				INGwInfraUtil/INGwIfrUtlBucket.h				\
+				INGwInfraUtil/INGwIfrUtlConfigurable.h	\
+				INGwInfraUtil/INGwIfrUtlGlbFunc.h				\
+				INGwInfraUtil/INGwIfrUtlGlbInclude.h		\
+				INGwInfraUtil/INGwIfrUtlHashMap.h				\
+				INGwInfraUtil/INGwIfrUtlLock.h					\
+				INGwInfraUtil/INGwIfrUtlLogger.h				\
+				INGwInfraUtil/INGwIfrUtlMachPing.h			\
+				INGwInfraUtil/INGwIfrUtlMacro.h					\
+				INGwInfraUtil/INGwIfrUtlObjectPool.h		\
+			  INGwInfraUtil/INGwIfrUtlObjectPool.C    \
+				INGwInfraUtil/INGwIfrUtlRefCount.h			\
+				INGwInfraUtil/INGwIfrUtlReject.h				\
+				INGwInfraUtil/INGwIfrUtlSerializable.h	\
+				INGwInfraUtil/INGwIfrUtlSingleton.h			\
+				INGwInfraUtil/INGwIfrUtlStatCounter.h		\
+				INGwInfraUtil/INGwIfrUtlStrStr.h				\
+				INGwInfraUtil/INGwIfrUtlStrUtil.h				\
+				INGwInfraUtil/INGwIfrUtlBitArray.h			\
+				INGwInfraUtil/INGwIfrUtlThread.h			

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationServiceImplementation xmlns:x0="http://www.w3.org/2001/XMLSchema">
+<!-- ***************************************************** -->
+<!-- *               Service Profiler                    * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>ServiceDefinitions</ActionClass>
+        <ActionMethod>Files</ActionMethod>
+        <Context>
+            <Tag>MediaService</Tag>
+            <Value>com.genband.ase.alc.alcml.ALCServiceInterface.MediaService</Value>
+        </Context>
+        <Context>
+            <Tag>Expression</Tag>
+            <Value>com.genband.ase.alc.alcml.ALCServiceInterface.Expression</Value>
+        </Context>
+    </ActionImplementation>
+</ApplicationServiceImplementation>

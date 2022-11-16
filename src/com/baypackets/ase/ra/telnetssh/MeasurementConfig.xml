@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementMgr minScanIntervalInSec="100"
+	minAccumulationIntervalInSec="300">
+<!-- 
+	<MeasurementCounter id="Number of Requests" refType="name"
+		mode="event" scanInterval="60" oid="30.20.201">
+		<param name="Number of Requests" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of Success Response" refType="name"
+		mode="event" scanInterval="60" oid="30.20.202">
+		<param name="Number of Success Response" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of Failure Events" refType="name"
+		mode="event" scanInterval="60" oid="30.20.203">
+		<param name="Number of Success Response" />
+	</MeasurementCounter>
+-->
+	<!-- Measurement Set Definition -->
+<!-- 
+	<MeasurementSet id="Ls Interface MeasurementSet"
+		version="1" accumulationInterval="300" priority="0">
+		<MeasurementCounter id="Number of Requests" />
+		<MeasurementCounter id="Number of Success Response" />
+		<MeasurementCounter id="Number of Failure Events" />
+	</MeasurementSet>
+	-->
+</MeasurementMgr>

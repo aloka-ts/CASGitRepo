@@ -1,0 +1,45 @@
+RULES = lib
+
+ifeq ($(INCLUDE_AIN), true)
+EXTRA_DEFINES += COMPILE_AIN_PROVIDER
+endif
+
+include ../../INGwCommonDefs/hss-sipstack.def
+#include ../../INGwCommonDefs/telesys-stack.def
+#include ../../INGwCommonDefs/trillium-ainstack.def
+include ../../INGwCommonDefs/ccpu-stack.def
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+#define to trace call thread 
+#EXTRA_DEFINES += INGW_TRACE_CALL_THREAD 
+
+EXTRA_RULES += vbroker
+
+SRCS    =  \
+        INGwInfraManager/INGwIfrMgrAlarmMgr.C        \
+        INGwInfraManager/INGwIfrMgrNotificationMgr.C \
+        INGwInfraManager/INGwIfrMgrThreadMgr.C       \
+        INGwInfraManager/INGwIfrMgrTimer.C           \
+        INGwInfraManager/INGwIfrMgrIPAddrHandler.C      \
+        INGwInfraManager/INGwIfrMgrWorkerThread.C       \
+        INGwInfraManager/INGwIfrMgrAgentClbkImpl.C      \
+        INGwInfraManager/INGwIfrMgrRoleMgr.C       \
+				INGwInfraManager/INGwIfrMgrManager.C
+
+HDRS    =  \
+        INGwInfraManager/INGwIfrMgrAlarmInfo.h          \
+        INGwInfraManager/INGwIfrMgrAlarmInfoEntry.h     \
+        INGwInfraManager/INGwIfrMgrAlarmMgr.h        \
+        INGwInfraManager/INGwIfrMgrFtIface.h     \
+        INGwInfraManager/INGwIfrMgrNotificationMgr.h \
+        INGwInfraManager/INGwIfrMgrThreadMgr.h       \
+        INGwInfraManager/INGwIfrMgrTimer.h           \
+        INGwInfraManager/INGwIfrMgrIPAddrHandler.h      \
+        INGwInfraManager/INGwIfrMgrWorkUnit.h           \
+        INGwInfraManager/INGwIfrMgrWorkerClbkIntf.h     \
+        INGwInfraManager/INGwIfrMgrWorkerThread.h       \
+        INGwInfraManager/INGwIfrMgrTimerContext.h      \
+        INGwInfraManager/INGwIfrMgrAgentClbkImpl.h       \
+        INGwInfraManager/INGwIfrMgrRoleMgr.h       \
+				INGwInfraManager/INGwIfrMgrManager.h

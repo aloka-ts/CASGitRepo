@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!-- ==================================================== -->
+<!-- Build file: JainTcapInterfaceALC  -->
+<!-- ==================================================== -->
+<project name="ALC JainTcapInterfaceALC" default="all" basedir=".">
+      <import file="${alcml.dir}/src/alcml-macros.xml"/>
+
+      <!-- ***************************************** -->
+      <!-- Main target -->
+      <target name="all" depends="buildapp">
+      </target>
+      <!-- ***************************************** -->
+
+      <target name="init" >
+            <!-- Set the variables used inside -->
+            <property name="app.name" value="JainTcapInterfaceALC"/>
+      </target>
+
+      <target name="make-real-clean" depends="alc-macros-make-real-clean">
+      </target>
+
+      <target name="buildapp" depends="alc-macros-buildapp">
+      </target>
+       
+</project>

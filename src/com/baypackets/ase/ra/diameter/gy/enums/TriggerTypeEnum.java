@@ -1,0 +1,125 @@
+package com.baypackets.ase.ra.diameter.gy.enums;
+
+import java.util.Hashtable;
+
+import com.traffix.openblox.diameter.gy.generated.enums.EnumTriggerType;
+
+public enum TriggerTypeEnum
+{
+CHANGE_IN_LOCATION,
+CHANGE_IN_MEDIA_COMPOSITION,
+CHANGE_IN_PARTICIPANTS_NMB,
+CHANGE_IN_QOS,
+CHANGE_IN_RAT,
+CHANGE_IN_SERVICE_CONDITION,
+CHANGE_IN_SGSN_IP_ADDRESS,
+CHANGE_IN_THRSHLD_OF_PARTICIPANTS_NMB,
+CHANGE_IN_USER_CSG_INFORMATION,
+CHANGE_IN_USER_PARTICIPATING_TYPE,
+CHANGEINLOCATION_CELLID,
+CHANGEINLOCATION_LAC,
+CHANGEINLOCATION_MCC,
+CHANGEINLOCATION_MNC,
+CHANGEINLOCATION_RAC,
+CHANGEINQOS_DELAY_CLASS,
+CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_DOWNLINK,
+CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_UPLINK,
+CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_DOWNLINK,
+CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_UPLINK,
+CHANGEINQOS_MEAN_THROUGHPUT,
+CHANGEINQOS_PEAK_THROUGHPUT,
+CHANGEINQOS_PRECEDENCE_CLASS,
+CHANGEINQOS_RELIABILITY_CLASS,
+CHANGEINQOS_RESIDUAL_BER,
+CHANGEINQOS_SDU_ERROR_RATIO,
+CHANGEINQOS_TRAFFIC_CLASS,
+CHANGEINQOS_TRAFFIC_HANDLING_PRIORITY,
+CHANGEINQOS_TRANSFER_DELAY;
+
+private static Hashtable<TriggerTypeEnum,EnumTriggerType> stackMapping = new Hashtable<TriggerTypeEnum,EnumTriggerType>();
+private static Hashtable<EnumTriggerType,TriggerTypeEnum> containerMapping = new Hashtable<EnumTriggerType,TriggerTypeEnum>();
+
+ static {
+stackMapping.put(TriggerTypeEnum.CHANGE_IN_LOCATION, EnumTriggerType.CHANGE_IN_LOCATION);
+stackMapping.put(TriggerTypeEnum.CHANGE_IN_MEDIA_COMPOSITION, EnumTriggerType.CHANGE_IN_MEDIA_COMPOSITION);
+stackMapping.put(TriggerTypeEnum.CHANGE_IN_PARTICIPANTS_NMB, EnumTriggerType.CHANGE_IN_PARTICIPANTS_NMB);
+stackMapping.put(TriggerTypeEnum.CHANGE_IN_QOS, EnumTriggerType.CHANGE_IN_QOS);
+stackMapping.put(TriggerTypeEnum.CHANGE_IN_RAT, EnumTriggerType.CHANGE_IN_RAT);
+stackMapping.put(TriggerTypeEnum.CHANGE_IN_SERVICE_CONDITION, EnumTriggerType.CHANGE_IN_SERVICE_CONDITION);
+stackMapping.put(TriggerTypeEnum.CHANGE_IN_SGSN_IP_ADDRESS, EnumTriggerType.CHANGE_IN_SGSN_IP_ADDRESS);
+stackMapping.put(TriggerTypeEnum.CHANGE_IN_THRSHLD_OF_PARTICIPANTS_NMB, EnumTriggerType.CHANGE_IN_THRSHLD_OF_PARTICIPANTS_NMB);
+stackMapping.put(TriggerTypeEnum.CHANGE_IN_USER_PARTICIPATING_TYPE, EnumTriggerType.CHANGE_IN_USER_PARTICIPATING_TYPE);
+stackMapping.put(TriggerTypeEnum.CHANGEINLOCATION_CELLID, EnumTriggerType.CHANGEINLOCATION_CellId);
+stackMapping.put(TriggerTypeEnum.CHANGEINLOCATION_LAC, EnumTriggerType.CHANGEINLOCATION_LAC);
+stackMapping.put(TriggerTypeEnum.CHANGEINLOCATION_MCC, EnumTriggerType.CHANGEINLOCATION_MCC);
+stackMapping.put(TriggerTypeEnum.CHANGEINLOCATION_MNC, EnumTriggerType.CHANGEINLOCATION_MNC);
+stackMapping.put(TriggerTypeEnum.CHANGEINLOCATION_RAC, EnumTriggerType.CHANGEINLOCATION_RAC);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_DELAY_CLASS, EnumTriggerType.CHANGEINQOS_DELAY_CLASS);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_DOWNLINK, EnumTriggerType.CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_DOWNLINK);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_UPLINK, EnumTriggerType.CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_UPLINK);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_DOWNLINK, EnumTriggerType.CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_DOWNLINK);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_UPLINK, EnumTriggerType.CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_UPLINK);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_MEAN_THROUGHPUT, EnumTriggerType.CHANGEINQOS_MEAN_THROUGHPUT);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_PEAK_THROUGHPUT, EnumTriggerType.CHANGEINQOS_PEAK_THROUGHPUT);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_PRECEDENCE_CLASS, EnumTriggerType.CHANGEINQOS_PRECEDENCE_CLASS);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_RELIABILITY_CLASS, EnumTriggerType.CHANGEINQOS_RELIABILITY_CLASS);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_RESIDUAL_BER, EnumTriggerType.CHANGEINQOS_RESIDUAL_BER);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_SDU_ERROR_RATIO, EnumTriggerType.CHANGEINQOS_SDU_ERROR_RATIO);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_TRAFFIC_CLASS, EnumTriggerType.CHANGEINQOS_TRAFFIC_CLASS);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_TRAFFIC_HANDLING_PRIORITY, EnumTriggerType.CHANGEINQOS_TRAFFIC_HANDLING_PRIORITY);
+stackMapping.put(TriggerTypeEnum.CHANGEINQOS_TRANSFER_DELAY, EnumTriggerType.CHANGEINQOS_TRANSFER_DELAY);
+
+containerMapping.put(EnumTriggerType.CHANGE_IN_LOCATION, TriggerTypeEnum.CHANGE_IN_LOCATION);
+containerMapping.put(EnumTriggerType.CHANGE_IN_MEDIA_COMPOSITION, TriggerTypeEnum.CHANGE_IN_MEDIA_COMPOSITION);
+containerMapping.put(EnumTriggerType.CHANGE_IN_PARTICIPANTS_NMB, TriggerTypeEnum.CHANGE_IN_PARTICIPANTS_NMB);
+containerMapping.put(EnumTriggerType.CHANGE_IN_QOS, TriggerTypeEnum.CHANGE_IN_QOS);
+containerMapping.put(EnumTriggerType.CHANGE_IN_RAT, TriggerTypeEnum.CHANGE_IN_RAT);
+containerMapping.put(EnumTriggerType.CHANGE_IN_SERVICE_CONDITION, TriggerTypeEnum.CHANGE_IN_SERVICE_CONDITION);
+containerMapping.put(EnumTriggerType.CHANGE_IN_SGSN_IP_ADDRESS, TriggerTypeEnum.CHANGE_IN_SGSN_IP_ADDRESS);
+containerMapping.put(EnumTriggerType.CHANGE_IN_THRSHLD_OF_PARTICIPANTS_NMB, TriggerTypeEnum.CHANGE_IN_THRSHLD_OF_PARTICIPANTS_NMB);
+containerMapping.put(EnumTriggerType.CHANGE_IN_USER_PARTICIPATING_TYPE, TriggerTypeEnum.CHANGE_IN_USER_PARTICIPATING_TYPE);
+containerMapping.put(EnumTriggerType.CHANGEINLOCATION_CellId, TriggerTypeEnum.CHANGEINLOCATION_CELLID);
+containerMapping.put(EnumTriggerType.CHANGEINLOCATION_LAC, TriggerTypeEnum.CHANGEINLOCATION_LAC);
+containerMapping.put(EnumTriggerType.CHANGEINLOCATION_MCC, TriggerTypeEnum.CHANGEINLOCATION_MCC);
+containerMapping.put(EnumTriggerType.CHANGEINLOCATION_MNC, TriggerTypeEnum.CHANGEINLOCATION_MNC);
+containerMapping.put(EnumTriggerType.CHANGEINLOCATION_RAC, TriggerTypeEnum.CHANGEINLOCATION_RAC);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_DELAY_CLASS, TriggerTypeEnum.CHANGEINQOS_DELAY_CLASS);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_DOWNLINK, TriggerTypeEnum.CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_DOWNLINK);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_UPLINK, TriggerTypeEnum.CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_UPLINK);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_DOWNLINK, TriggerTypeEnum.CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_DOWNLINK);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_UPLINK, TriggerTypeEnum.CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_UPLINK);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_MEAN_THROUGHPUT, TriggerTypeEnum.CHANGEINQOS_MEAN_THROUGHPUT);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_PEAK_THROUGHPUT, TriggerTypeEnum.CHANGEINQOS_PEAK_THROUGHPUT);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_PRECEDENCE_CLASS, TriggerTypeEnum.CHANGEINQOS_PRECEDENCE_CLASS);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_RELIABILITY_CLASS, TriggerTypeEnum.CHANGEINQOS_RELIABILITY_CLASS);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_RESIDUAL_BER, TriggerTypeEnum.CHANGEINQOS_RESIDUAL_BER);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_SDU_ERROR_RATIO, TriggerTypeEnum.CHANGEINQOS_SDU_ERROR_RATIO);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_TRAFFIC_CLASS, TriggerTypeEnum.CHANGEINQOS_TRAFFIC_CLASS);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_TRAFFIC_HANDLING_PRIORITY, TriggerTypeEnum.CHANGEINQOS_TRAFFIC_HANDLING_PRIORITY);
+containerMapping.put(EnumTriggerType.CHANGEINQOS_TRANSFER_DELAY, TriggerTypeEnum.CHANGEINQOS_TRANSFER_DELAY);
+}
+
+public static final TriggerTypeEnum getContainerObj(EnumTriggerType stkEnum){
+	return containerMapping.get(stkEnum);
+}
+
+public static final EnumTriggerType getStackObj(TriggerTypeEnum cntrEnum){
+	return stackMapping.get(cntrEnum);
+}
+
+public static TriggerTypeEnum fromCode(int value){
+	return getContainerObj(EnumTriggerType.fromCode(value));
+}
+
+public static java.lang.String getName(int key){
+	return EnumTriggerType.getName(key);
+}
+
+public static boolean isValid(int value){
+	return EnumTriggerType.isValid(value);
+}
+
+public static int[] keys(){
+	return EnumTriggerType.keys();
+}
+}

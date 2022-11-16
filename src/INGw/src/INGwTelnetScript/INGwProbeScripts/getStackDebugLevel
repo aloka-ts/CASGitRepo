@@ -1,0 +1,8 @@
+## This script is used to fetch debug level of different stack layer.
+## sonfigured on INC.
+#!/usr/bin/ksh
+
+. ~/profile.ingw
+. $INSTALLROOT/$SUBSYS_DIR/sol28g/conf/hssenv.sh
+
+$INSTALLROOT/$SUBSYS_DIR/sol28g/bin/INGwProbe -s $SIP_LISTENER_HOST -c "get stack-debug-level"

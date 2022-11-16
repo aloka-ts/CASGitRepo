@@ -1,0 +1,7 @@
+#!/bin/ksh
+
+EMS_MANAGED=true
+
+### INSTALL\_ROOT should be replaced at the time of install with actual value.
+. INSTALL_ROOT/ASESubsystem/scripts/ase_no_ems $@
+

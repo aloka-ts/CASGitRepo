@@ -1,0 +1,383 @@
+ 
+<div
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:pfc="http://www.jboss.com/portal/facelet/common"
+   xmlns:c="http://java.sun.com/jstl/core">
+	
+   <!-- <f:loadBundle basename="bundle.resources" var="bundle"/> -->
+   <f:view locale="#{facesContext.externalContext.request.locale}">
+	
+<h:form>
+	<table width="100%">
+   			<thead class="portlet-section-header">
+				<th colspan="2" align="center">
+						<h:outputText style="color:blue" value="Primary Contact Details"/>
+				</th>
+			</thead>
+   		<tbody>
+			<tr class="portlet-section-alternate">
+				<th colspan="2" style="color:white; background:#869286">
+					<h:outputText  value="#{bundle.D277_Organization_Group_BAR3}"/>
+				</th>
+			</tr>  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D277_address1_StreetAddress1}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_address1_StreetAddress1" value="#{createMBean277.address1StreetAddress1}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_address1_StreetAddress1" value="#{createMBean277.address1StreetAddress1}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_address1_StreetAddress1"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_address1_StreetAddress2}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_address1_StreetAddress2" value="#{createMBean277.address1StreetAddress2}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_address1_StreetAddress2" value="#{createMBean277.address1StreetAddress2}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_address1_StreetAddress2"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D277_address1_City}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_address1_City" value="#{createMBean277.address1City}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_address1_City" value="#{createMBean277.address1City}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_address1_City"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D277_address1_State}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_address1_State" value="#{createMBean277.address1State}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_address1_State" value="#{createMBean277.address1State}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_address1_State"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D277_address1_Country}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:selectOneMenu id="D277_address1_Country" value="#{createMBean277.country}" styleClass="portlet-form-input-field" required="true">
+								<f:selectItems value="#{createMBean277.address1CountryCountryName}"/>
+							<f:convertNumber/>
+							</h:selectOneMenu>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_address1_Country" value="#{createMBean277.address1CountryCountryName[createMBean277.selectedCountry].label}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_address1_Country"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D277_address1_Zip}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_address1_Zip" value="#{createMBean277.address1Zip}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_address1_Zip" value="#{createMBean277.address1Zip}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_address1_Zip"/>
+	    	</td>
+         	</tr>
+
+			<tr class="portlet-section-alternate">
+				<th colspan="2" style="color:white; background:#869286">
+					<h:outputText  value="#{bundle.D277_Organization_Group_BAR4}"/>
+				</th>
+			</tr>  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D277_contactInfo1_ContactPerson}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_contactInfo1_ContactPerson" value="#{createMBean277.contactInfo1ContactPerson}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_contactInfo1_ContactPerson" value="#{createMBean277.contactInfo1ContactPerson}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_contactInfo1_ContactPerson"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D277_contactInfo1_EmailId1}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_contactInfo1_EmailId1" value="#{createMBean277.contactInfo1EmailId1}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_contactInfo1_EmailId1" value="#{createMBean277.contactInfo1EmailId1}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_contactInfo1_EmailId1"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_contactInfo1_EmailId2}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_contactInfo1_EmailId2" value="#{createMBean277.contactInfo1EmailId2}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_contactInfo1_EmailId2" value="#{createMBean277.contactInfo1EmailId2}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_contactInfo1_EmailId2"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D277_contactInfo1_PhoneNumber}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_contactInfo1_PhoneNumber" value="#{createMBean277.contactInfo1PhoneNumber}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_contactInfo1_PhoneNumber" value="#{createMBean277.contactInfo1PhoneNumber}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_contactInfo1_PhoneNumber"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_contactInfo1_AlternatePhoneNumber}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_contactInfo1_AlternatePhoneNumber" value="#{createMBean277.contactInfo1AlternatePhoneNumber}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_contactInfo1_AlternatePhoneNumber" value="#{createMBean277.contactInfo1AlternatePhoneNumber}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_contactInfo1_AlternatePhoneNumber"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_contactInfo1_MobileNumber}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_contactInfo1_MobileNumber" value="#{createMBean277.contactInfo1MobileNumber}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_contactInfo1_MobileNumber" value="#{createMBean277.contactInfo1MobileNumber}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_contactInfo1_MobileNumber"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D277_contactInfo1_FaxNumber}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_contactInfo1_FaxNumber" value="#{createMBean277.contactInfo1FaxNumber}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_contactInfo1_FaxNumber" value="#{createMBean277.contactInfo1FaxNumber}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_contactInfo1_FaxNumber"/>
+	    	</td>
+         	</tr>
+ 			
+   			<tr class="portlet-section-body" colspan="2">
+	     	<td align="left">
+				<h:panelGroup> 
+					<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:commandButton style="height:21px; width:51px" action="viewDetails" actionListener="#{createMBean277.saveAction}" value="#{bundle.Save}"/>
+						</c:when>
+						<c:otherwise>
+							<h:commandButton style="height:21px; width:51px" action="viewDetails" actionListener="#{createMBean277.modifyAction}" value="#{bundle.Modify}"/>
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:commandButton style="height:21px; width:51px" action="#{createMBean277.cancelAction}" value="#{bundle.Cancel}" immediate="true"/>
+						</c:when>
+					</c:choose>
+	      		 </h:panelGroup>
+            </td>
+            <td align="right">
+				<h:panelGroup> 				
+						<h:commandButton style="height:21px; width:51px" id="PREVIOUS" action="#{createMBean277.previousPage}" value="Back">
+						</h:commandButton>
+						<h:commandButton style="height:21px; width:51px" id="NEXT" action="#{createMBean277.nextPage}" value="Next">
+						</h:commandButton>
+	     			  </h:panelGroup>
+	     	</td>
+        	</tr>
+   		
+   		</tbody>
+   	</table>
+</h:form>
+</f:view> 
+</div>

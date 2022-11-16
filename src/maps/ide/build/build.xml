@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="com.genband.m5.maps" default="build" basedir=".">
+
+    <property name="source" value="/vob/Sipservlet/src/maps/ide"/>
+    <property name="ide.dir" Value="${INSTALLROOT}/maps-ide"/>
+	<property name="eclipse.dir" Value="/vob/thirdParty/eclipse/eclipse3.3"/>
+  	<property name="jboss.dir" Value="${INSTALLROOT}/${SUBSYS_NAME}/${JBoss}"/> 
+
+	<!-- Define the project class path -->
+    <path id="project.classpath">
+        <pathelement location="bin"/>
+		<pathelement location="${eclipse.dir}/plugins/org.eclipse.ui_3.3.0.I20070614-0800.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.swt_3.3.0.v3346.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.swt.gtk.linux.x86_3.3.0.v3346.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.jface_3.3.0.I20070606-0010.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.core.commands_3.3.0.I20070605-0010.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.ui.workbench_3.3.0.I20070608-1100.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.core.runtime_3.3.100.v20070530.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.osgi_3.3.0.v20070530.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.equinox.common_3.3.0.v20070426.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.core.jobs_3.3.0.v20070423.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.100.v20070316/runtime_registry_compatibility.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.equinox.registry_3.3.0.v20070522.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.equinox.preferences_3.2.100.v20070522.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.core.contenttype_3.2.100.v20070319.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.equinox.app_1.0.0.v20070606.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.core.resources_3.3.0.v20070604.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.jdt.launching_3.3.0.v20070510.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.jdt_3.3.0.v20070607-1300.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.debug.core_3.3.0.v20070607-1800.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.debug.ui_3.3.0.v20070607-1800.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.jdt.core_3.3.0.v_771.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.jdt.compiler.apt_1.0.0.v20070510-2000.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.jdt.compiler.tool_1.0.0.v_771.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.core.boot_3.1.100.v20060603.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.core.expressions_3.3.0.v20070606-0010.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.core.variables_3.2.0.v20070426.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.jdt.ui_3.3.0.v20070607-0010.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.ui.ide_3.3.0.I20070620.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.ui.forms_3.3.0.v20070511.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.ui.views_3.2.100.I20070319-0010.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.jface.text_3.3.0.v20070606-0010.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.text_3.3.0.v20070606-0010.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.gef_3.2.100.v20070620.jar"/>
+        <pathelement location="${eclipse.dir}/plugins/org.eclipse.draw2d_3.2.100.v20070529.jar"/>
+        <fileset dir="${ide.dir}/library">
+        	<include name="*.jar"/>
+      	</fileset>
+    </path>
+
+        <!-- Define the classpath -->
+    <path id="classpath">
+
+            <fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/lib">
+                <include name="*.jar"/>
+            </fileset>
+
+            <fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/lib">
+                <include name="*.jar"/>
+            </fileset>
+
+            <fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/lib">
+                <include name="*.jar"/>
+            </fileset>
+
+            <fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/jboss-web.deployer/jsf-libs">
+                <include name="jsf-api.jar"/>
+            </fileset>
+
+            <fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/ejb3.deployer">
+                <include name="jboss-annotations-ejb3.jar"/>
+            </fileset>
+
+    </path>
+
+    <target name="init">
+        <mkdir dir="${ide.dir}"/>
+        <mkdir dir="${ide.dir}/bin"/>
+        <mkdir dir="${ide.dir}/library"/>
+
+		<echo message="Copying the lib files....." />
+		<copy todir="${ide.dir}/library">
+                <fileset dir="${jboss.dir}/server/${server.conf}/lib">
+                    <include name="ejb3-persistence.jar"/>
+                    <include name="hibernate3.jar"/>
+                    <include name="jboss-ejb3x.jar"/>
+                    <include name="jboss-j2ee.jar"/>
+                    <include name="log4j.jar"/>
+                    <include name="servlet-api.jar"/>
+                    <include name="el-api.jar"/> 
+                </fileset>
+
+                <fileset dir="${jboss.dir}/server/${server.conf}/deploy/${PORTAL}/lib">
+                    <include name="portlet-api-lib.jar"/>
+                </fileset>
+
+
+                <fileset dir="${jboss.dir}/server/${server.conf}/deploy/jbossws.sar">
+                    <include name="jboss-jaxws.jar"/>
+                </fileset>
+
+               <fileset dir="${jboss.dir}/client">
+                    <include name="jbossall-client.jar"/>
+                </fileset>
+ 
+
+                <fileset dir="/vob/thirdParty/otherjars/">
+                    <include name="myfaces-api-1.2.0.jar"/>
+                    <include name="myfaces-impl-1.2.0.jar"/>
+                </fileset>
+  		
+        </copy>
+		<echo message="Copied the lib files....." />
+
+    </target>
+
+    <target name="clean">
+        <delete dir="${ide.dir}"/>
+    </target>
+
+    <target name="build" depends="init">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+
+	<!--  Copy the NON JAVA resource files into the bin directory -->
+        <echo message="Compiling src is.... ${source}" />
+		<copy todir="${ide.dir}/bin">
+        	<fileset dir="${source}/src">
+        		<exclude name="**/*.java"/>
+        		<exclude name="**/*contrib*"/>
+        	</fileset>
+        </copy>
+
+	<!-- Compile the JAVA Source Files -->
+		<echo message="compiling in ide all source under ide.src with source of ${javac.source} and target of ${javac.target}....." />
+        <javac destdir="${ide.dir}/bin" debug="true" source="${javac.source}" target="${javac.target}">
+		
+            <src path="${source}/src"/>
+			<include name="com/genband/m5/maps/**/*.java"/>
+			<exclude name="com/genband/m5/maps/mgmt/**"/>
+            <classpath refid="project.classpath"/>
+            <classpath refid="classpath"/>
+        </javac>
+
+
+        <jar jarfile="${ide.dir}/library/gb-common.jar">
+                        <fileset dir="${ide.dir}/bin">
+                                <include name="com/genband/m5/maps/common/*.class"/>
+                                <include name="com/genband/m5/maps/interfaces/*.class"/>
+                                <include name="com/genband/m5/maps/common/entity/Organization.class"/>
+                                <include name="com/genband/m5/maps/common/entity/OrganizationAddress.class"/>
+                                <include name="com/genband/m5/maps/common/entity/OrganizationContactInfo.class"/>
+                                <include name="com/genband/m5/maps/common/entity/Country.class"/>
+                                <include name="com/genband/m5/maps/security/MethodPermission.class"/>
+                                <include name="com/genband/m5/maps/identity/GBUserPrincipal.class"/>
+                                <include name="com/genband/m5/maps/common/entity/DeployedApp.class"/>
+                        </fileset>
+        </jar>
+       
+      
+
+        <mkdir dir="${ide.dir}/library/CPF_EJB"/>   
+       
+        <copy todir="${ide.dir}/library/CPF_EJB">
+            <fileset dir="${ide.dir}/bin">
+                <include name="com/genband/m5/maps/session/*.class"/>
+				<exclude name="com/genband/m5/maps/session/MgmtEntityManagerWrapper*.class"/>
+				<exclude name="com/genband/m5/maps/session/MgmtSessionFacade*.class"/>
+                <include name="com/genband/m5/maps/security/*.class"/>
+				<exclude name="com/genband/m5/maps/security/MgmtDataLoaderBean*.class"/>
+				<exclude name="com/genband/m5/maps/security/MgmtSecurityManager*.class"/>
+				<exclude name="com/genband/m5/maps/security/MgmtListener*.class"/>
+            </fileset>
+        </copy>
+  
+        <mkdir dir="${ide.dir}/library/CPF_EJB/META-INF"/>       
+        <copy file="../resources/misc/ejb-jar.xml" todir="${ide.dir}/library/CPF_EJB/META-INF"/>   
+
+        <jar jarfile="${ide.dir}/library/CPF_EJB.jar">
+                        <fileset dir="${ide.dir}/library/CPF_EJB">
+                                  <include name="META-INF/*.xml"/>   
+                                  <include name="com/genband/m5/maps/session/*.class"/>
+                                  <include name="com/genband/m5/maps/security/*.class"/>
+                        </fileset>
+        </jar>
+   
+      	<delete dir="${ide.dir}/library/CPF_EJB"/> 
+
+
+		<!-- Copy the other required files to the buildDir -->
+		<copy todir="${ide.dir}">
+			<fileset dir="${source}">
+                    <include name="icons/**"/>
+                    <include name="resources/**"/>
+                    <include name="META-INF/**"/>
+                    <include name="build.properties"/>
+                    <include name="plugin.xml"/>
+			</fileset>
+		</copy>
+    </target>
+</project>
+

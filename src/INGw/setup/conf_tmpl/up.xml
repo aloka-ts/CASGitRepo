@@ -1,0 +1,206 @@
+<scope>
+	<!--
+		==============================================================
+			Some general comments on the configuration file format
+		==============================================================
+		1. 	All headers should be between <name></name> tags.
+		2.  Each header can take a series of values as indicated by 
+			the <value></value> tag (present below each header).
+		3.	All <value> tags must have an attribute called 'name'. 
+			The value that this attribute has varies from header to 
+			header. For the FROM, CONTACT and MEDIA headers these values 
+			are fixed and indicate a particular component of the header. 
+			For example: name="port" will indicate that the <value> tag 
+						 contains the port.
+		
+		'scope' refers to the name of the component. It can be changed to 
+		suit any name the user wants. 
+		
+		-->
+	<name>CUAFW</name>
+
+	<property>
+		<!--FROM is a mandatory header. -->
+		<name>FROM</name>
+			<!--Display name to be sent for the user. Ex. Sip Team -->
+			<value name="displayname">ingw</value>
+			
+			<!--SIP URL identifying the user. This is mandatory-->
+			<value name="address">sip:1111@INGW_FIP</value>
+			
+			<!--This describes the port (udp and tcp) to which the 
+				application binds. This is mandatory-->
+			<value name="port">5060</value>
+	</property>
+	
+	<property>
+	    <!--CONTACT is a mandatory header. If the user has more than one 
+			contacting address multiple can be specified.
+			
+			NOTES: 	1. 	In case multiple contacts' are specified, the first
+			===== 		one is taken as the user's current location (for use
+						in INVITEs' and 2xx to INVITE or OPTIONS).
+					2. 	The CONTACT host, port SHOULD contain the same 
+						values as the FROM described above
+			-->
+		<name>CONTACT</name>
+			
+			<!--SIP URL identifying where the user should be contacted. 
+				This is mandatory-->
+			<value name="address">sip:123450000@INGW_FIP</value>
+			
+			<!--This describes the port (udp and tcp) on which the user can
+				 be contacted. This is mandatory-->
+			<value name="port">5060</value>
+
+			<!--This describes the displayname of the user Ex. Sip Team -->
+			<value name="displayname">ingw</value>
+		<name>CONTACT</name>
+			<value name="address">sip:123450000@INGW_FIP</value>
+			<value name="port">5060</value>
+			<value name="displayname">MnUser</value>
+	</property>
+
+	<property>
+		<!--REGISTRAR is a mandatory header, similar in structure to the 
+			FROM and CONTACT. It contains the address and the port of the 
+			Registrar with which the client would register. The host, port 
+			and scheme are mandatory fields-->
+		<name>REGISTRAR</name>
+			<!--This is the host name on which the application is running.
+				It can also be the IP address. It can take the form "user@host"
+				or "host". This is mandatory-->
+			<value name="address">INGW_FIP</value>
+			
+			<!--This describes the port (udp and tcp) to which the application
+				 binds. This is mandatory-->
+			<value name="port">5060</value>
+	</property>
+	
+	<!--
+	<property>
+		<name>OUTBOUND-PROXY</name>
+			<value name="address">PSX_PRI_IP</value>
+			<value name="port">PSX_PRI_PORT</value>
+	</property>
+	-->
+    <!--
+	<property>
+		<name>OUTBOUND-PROXY</name>
+			<value name="address">PSX_SEC_IP</value>
+			<value name="port">PSX_SEC_PORT</value>
+	</property>
+	-->
+	
+	<property>
+		<name>SDP</name>
+		<value name="uri">u=http://www.yahoo.com</value>
+		<value name="connection">c=IN IP4 139.85.259.22</value>
+		<value name="information">i=SIP Session in HssUA</value>
+		<value name="phone">p=+1-809-256</value>
+		<value name="email">e=airoy@hss.hns.com</value>
+		<value name="key">k=clear:hnscom</value>
+		<value name="bandwidth">b=nscom:84</value>
+		<value name="attribute">a=rtpmap2</value>
+		<value name="session">s=SipSession with HssUA</value>
+	</property>
+
+	<property>
+		<!-- MEDIA is mandatory. If the user wants both audio and video or
+			if he wants multiple media lines then he has to specify a 
+			separate MEDIA header. Within the MEDIA <property>, multiple 
+			<value></value> tags containing the same ATTRIBUTE type 
+			are not allowed. For example,
+				<value name="codecs"> GSM <value>
+				<value name="codecs"> PCMU<value>
+			is NOT ALLOWED. He should specify this as
+				<value name="codecs">GSM PCMU<value>-->
+		<name>MEDIA</name>
+			<!--This describes the tansport port to which the media stream 
+				will be sent (by the other party of the call). It is 
+				mandatory-->
+			<value name="port">2222</value>
+			
+			<!--This describes the type of media. If it is not specified 
+				then it	is taken as 'audio'-->
+			<value name="mediatype">audio</value>
+			
+			<!--This specifies the number of transport ports to which the 
+				media stream may be sent. It is NOT a mandatory field and 
+				the default value is zero-->
+			<value name="numports">0</value>
+			
+			<!--This specifies the  transport protocol for media used.
+				It is mandatory-->
+			<value name="transport">RTP/AVP</value>
+			
+			<!--This specifies the media payload formats. Allowed to 
+				specify both static payloads like PCMU or dynamic ones 
+				like 98. It is mandatory-->
+			<value name="codecs">GSM/8000</value>
+			
+			<!--This specifies the type of transport attribute i.e. sendonly 
+				or recvonly or sendrecv-->
+			<value name="typeoftransport">sendrecv</value>
+
+			<!--This describes the lines under a media. They have to follow 
+				the correct attribute syntax as defined in RFC 2327. These 
+				are optional lines. 
+				NOTE: 	Apart from a= other fields like c=, b= etc. which can 
+						occur under a media field are not allowed here -->
+			<value name="mediaconnection">c=IN IP4 139.85.229.22</value>
+			<value name="mediabandwidth">b=xy:128</value>
+			<value name="mediakey">k=clear:xy128</value>
+			<value name="mediainformation">i=hello</value>
+	</property>
+
+	<property>
+		<!--Apart from the FROM,CONTACT and the MEDIA any other header is 
+			handled as unknown to the configuration tool. 
+
+			For unknown headers:
+			===================
+			1. 	The <name></name> tag has a special attribute called 
+				'addalways' which can take on the values "yes" or "no". 
+				This will indicate if the header should go out in all 
+				Requests(yes) or not (no). This must be specified. 
+			2.	The header can have a series of <value> tags. All <value> 
+				tags MUST have attributes as name="any". Giving 'name' any 
+				other type would cause that particular data to be left 
+				out. 
+
+			Each value that the Supported header can take SHOULD be on new 
+			lines-->
+		<name addalways="yes">SUPPORTED</name>
+		
+		<!--These are values that the unknown header can take. It has to have
+			the attribute name="any". -->
+		<!--
+		<value name="any">100rel</value>
+		<value name="any">timer</value>
+		-->
+		<!-- '*' has a special meaning in SUPPORTED. It means 'accept any 
+			feature that the incoming request demands' (as reflected in the 
+			Require Header)-->
+	</property>
+
+  <!-- Some COG gateway are unable to parse this header
+	<property>
+		<name addalways="yes">FACE</name>
+		<value name="any">http://www.genband.com</value>
+	</property> -->
+
+  <!-- Uncomment this property if Cognitronics GW - cx3000 is being used
+       since it doesn't support PRACK etc -->
+  <!-- <property>
+    <name addalways="yes">ALLOW</name>
+    <value name="any">INFO</value> 
+    <value name="any">NOTIFY</value> 
+  </property> -->
+
+
+	<!--<property>
+		<name addalways="yes">Require</name>
+		<value name="any">100rel</value>
+	</property> -->
+</scope>

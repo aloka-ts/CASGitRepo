@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sh-apps>
+	<app-mapping>
+		<app-name>shtest</app-name>
+		<pattern>
+			<and>
+				<equal>
+					<var>request.orig.host</var>
+					<value>192.168.9.39</value>
+				</equal>
+				<equal>
+					<var>request.orig.realm</var>
+					<value>traffix.com</value>
+				</equal>
+			</and>
+		</pattern>
+	</app-mapping>
+</sh-apps>

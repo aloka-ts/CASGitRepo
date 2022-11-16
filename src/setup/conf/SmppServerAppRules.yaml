@@ -1,0 +1,23 @@
+ipAddress: 10.32.18.116
+portNumber: 5018
+commsTimeout: 30000
+receiverTimeout : 60000
+sendEnquireLink : true
+rules:
+  -
+    AppName: testSMPP
+    Range: "12345678"
+    npi: 6
+    ton: 3
+  -
+    AppName: testSMPP
+    Range: "98765432"
+    npi: 6
+    ton: 3
+users:
+  records:
+  - attributes:
+    - name: "name"
+      value: "GB2"
+    - name: "password"
+      value: "gb2"

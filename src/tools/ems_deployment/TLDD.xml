@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Agility-Application>
+	<subsystems>
+
+		<subsystem priority = "1">
+			<name>SAS</name>
+			<archives>
+				<archive>
+			        <label>sas.service.app4</label>
+			        <archive-file-name>SAR_NAME</archive-file-name>
+			        <description>This is the archive for the service chaining thirdParty application.</description> 
+				</archive>
+				<!-- There can be number of archives going to one subsystem -->
+			</archives>
+		</subsystem>
+	</subsystems>
+</Agility-Application>

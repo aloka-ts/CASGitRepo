@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--<!DOCTYPE cas-app
+  PUBLIC "-//Baypackets SIP Application Server//DTD CAS Descriptor//EN"
+  "http://www.baypackets.com/dtds/cas-app_1_0.dtd">-->
+  
+<cas-app>
+	<name>$NAME</name>
+
+	<version>$VERSION</version>
+	
+	<priority>$PRIORITY</priority>
+	
+	<!--$DIAMETER_RA-->
+	
+	<!--$HTTP_RA-->
+		
+	<enable-annotation>false</enable-annotation>
+	<enable-lib-annotation>false</enable-lib-annotation>
+	
+	<!--$SBB-->
+
+</cas-app>

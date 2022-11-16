@@ -1,0 +1,37 @@
+rules=lib
+
+EXTRA_RULES += vbroker
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+SRCS = \
+INGwFtTalk/INGwFtTkChannel.C \
+INGwFtTalk/INGwFtTkChannelManager.C \
+INGwFtTalk/INGwFtTkCommunicator.C \
+INGwFtTalk/INGwFtTkConnHandle.C \
+INGwFtTalk/INGwFtTkFaultManager.C \
+INGwFtTalk/INGwFtTkHostMonitor.C \
+INGwFtTalk/INGwFtTkInterface.C \
+INGwFtTalk/INGwFtTkMsgHandlerInf.C \
+INGwFtTalk/INGwFtTkReceiverQueue.C \
+INGwFtTalk/INGwFtTkRef.C \
+INGwFtTalk/INGwFtTkSubCompMgr.C \
+INGwFtTalk/INGwFtTkVersionSet.C
+
+
+HDRS = \
+INGwFtTalk/INGwFtTkAppInf.h \
+INGwFtTalk/INGwFtTkConnHandle.h \
+INGwFtTalk/INGwFtTkConnHandlerInf.h \
+INGwFtTalk/INGwFtTkConnState.h \
+INGwFtTalk/INGwFtTkFaultHandlerInf.h \
+INGwFtTalk/INGwFtTkInterface.h \
+INGwFtTalk/INGwFtTkMsgHandlerInf.h \
+INGwFtTalk/INGwFtTkReceiverQueue.h \
+INGwFtTalk/INGwFtTkRef.h \
+INGwFtTalk/INGwFtTkVersionHandlerInf.h \
+INGwFtTalk/INGwFtTkVersionSet.h
+
+#Headers defined in the interfaces were only exposed. If any other includes 
+#were viewed/required by application, point of calling INGwFtTalk Interface is 
+#lost. -Suriya.

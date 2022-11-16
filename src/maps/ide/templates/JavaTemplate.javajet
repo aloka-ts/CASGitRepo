@@ -1,0 +1,544 @@
+<%@ jet 
+	package="com.genband.m5.maps.ide.model.template" 
+	class="CreateJava" 
+	imports="com.genband.m5.maps.ide.model.* 
+			 com.genband.m5.maps.ide.CPFPlugin
+			 java.util.* java.util.List 
+			 com.genband.m5.maps.ide.model.util.*
+			 com.genband.m5.maps.common.*"
+%>
+<%
+//Varible declaration for the template usage
+	CPFPlugin LOG = CPFPlugin.getDefault();
+	CPFResource CPFArgument = (CPFResource)argument; 
+ 	CPFScreen cpfScreen = (CPFScreen)CPFArgument.getCpfScreen();
+ 	ResourceInfo resourceInfo = (ResourceInfo)CPFArgument.getResourceInfo();
+ 	String resourceName = resourceInfo.getResourceName();
+ 	LOG.info("Generating Java Bean for resource : " + resourceName);
+ 	ModelEntity modelEntity = null;			//which will hold the modelentity name to creat this bean
+ 	modelEntity = (ModelEntity)cpfScreen.getBaseEntity();
+ 	ModelEntity baseEntity = cpfScreen.getPortletRef().getBaseEntity();	//which will hold the base entity name while creting this bean
+ 	LOG.info("Base Entity found for this Web Service is : " + baseEntity.getName());
+ 	List<CPFAttribute> selectedAttributes = null;	//whihc will hold the selected attributes for this model entity					
+ 	int operationId = cpfScreen.getPortletRef().getPortletId();		//Holds Operation Id of the method
+ 	LOG.info("Web Service is generating for the Portlet Id : " + operationId);
+	Map<RelationKey, List<CPFAttribute>> nestedAttributes = cpfScreen.getNestedAttributes();
+	Map<CPFAttribute, String> attributeSetters = new HashMap<CPFAttribute, String>();		//Holds Setter function names
+	Map<CPFAttribute, String> attributeGetters = new HashMap<CPFAttribute, String>();       //Holds Getter function names
+	Map<RelationKey, String> otherEntitiesSetters = new HashMap<RelationKey, String>();		//Holds Setter function names for dependent Entities
+	Map<RelationKey, String> otherEntitiesGetters = new HashMap<RelationKey, String>();		//Holds Getter function names for dependent Entities
+	Map<CPFAttribute, String> attributeDataType = new HashMap<CPFAttribute, String>();		//Holds selected attributes datatype
+	Map<RelationKey, String> otherEntitiesDataType = new HashMap<RelationKey, String>(); 	//Holds dependent entities datatype (like collection or not)
+	Map<CPFAttribute, String> attributeVariableName = new HashMap<CPFAttribute, String>();	//Holds selected attributes variable name through out this bean
+	Map<RelationKey, String> otherEntitiesVariableName = new HashMap<RelationKey, String>(); //Holds denpendent entities variable name through out this bean
+	List<String> declarations =  new ArrayList<String> ();
+	List<String> imports = new ArrayList<String>();
+	imports.add("import java.util.*");
+	//imports.add("import com.genband.m5.maps.ide.model.util.ModelUtil");
+%>
+<%
+		//Doing process for import packages as well as assigning selected attributes depending upon Base entity or dependednt entities
+ 	if (resourceName.equals(baseEntity.getName()))     //comparing resourcename with modelBean name to Create bean class for baseEntity
+ 	{
+ 		LOG.info("This resource is the baseEntity resource");
+ 		imports.add("import " + modelEntity.getCanonicalTypeName ());		//Importing Base entity EJB into this java bean
+			//For importing packages of EJBs into this java bean
+		if (nestedAttributes != null) {
+			for (Iterator<RelationKey> itr = nestedAttributes.keySet().iterator(); itr.hasNext();)
+			{
+				RelationKey relationKey = itr.next();
+				imports.add("import " + relationKey.getReferencedEntity().getCanonicalTypeName ());		//Improting dependent EJBs for this base java bean
+			} 
+		} 
+		
+		//getting selected attributes for Base entity
+		selectedAttributes = (List<CPFAttribute>)cpfScreen.getSelectedAttributes();
+	}
+	else
+	{
+		LOG.info("This resource is not a Base entity.. Infact it is a Dependent Entity..");
+		Iterator<RelationKey> keys = nestedAttributes.keySet().iterator();
+		for (; keys.hasNext(); )
+		{
+			RelationKey relationKey = keys.next();
+			modelEntity = relationKey.getReferencedEntity();
+			if(resourceName.equals(relationKey.getRelationShipInfo().getPropertyName()))         //Comparing with the related entities to create bean class if it is the resource name
+			{
+					//getting selected attributes for Dependent Entity
+				selectedAttributes = nestedAttributes.get(relationKey);   
+				break;
+			}
+		}
+		if(!imports.contains("import " + modelEntity.getCanonicalTypeName ())) {
+			imports.add("import " + modelEntity.getCanonicalTypeName ());  //Importing this specific EJB into this java bean
+		}
+	}
+	if (selectedAttributes == null)     //If Attributes are not selected from that model entity
+	{
+		LOG.info ("Model Entity "+modelEntity + " deos not exist");
+		System.exit(1);
+	}
+	
+	//Imports for Related Strong Entities here....
+	for (Iterator<CPFAttribute> itr = selectedAttributes.iterator (); itr.hasNext ();) {
+		CPFAttribute cpf = itr.next ();
+		if (cpf.getForeignColumn () != null) {
+			imports.add("import " + cpf.getModelAttrib ().getForeignEntity ().getCanonicalTypeName ());		//Importing strong entities EJBs into this Java Bean
+		}
+	}
+	
+	//Holds the name of this Java Bean
+	String className = null;
+	if(resourceName.equals(baseEntity.getName())) {
+		className = modelEntity.getName()+"_"+operationId;
+	} else {
+		String temp = resourceName;
+		temp = temp.toUpperCase().charAt(0) + temp.substring(1);
+		className = temp + "_"+operationId;
+	}   	
+	LOG.info("The Java Bean name is : " + className);
+%>
+<% 
+			//Doing Process for Variable declaration here..................................................
+	LOG.info("Doing Process for " + modelEntity.getName() + " entity selected attributes...");
+	for(Iterator<CPFAttribute> attributeItr = selectedAttributes.iterator(); attributeItr.hasNext(); ) { 
+ 		CPFAttribute selectedAttribute = (CPFAttribute)attributeItr.next();    //For each selected attribute
+ 		ModelAttribute modelAttrib = null;
+ 		String type = null;
+		modelAttrib = selectedAttribute.getModelAttrib();
+ 		if(selectedAttribute.getForeignColumn () == null) {
+			type = new String(modelAttrib.getCanonicalTypeName());      //retrieving Attribute data type 
+		} else {
+			LOG.info("Selected Attribtue " + selectedAttribute.getName() + " is a Foreign Key.");
+			RelationShipInfo relationShipInfo = selectedAttribute.getModelAttrib().getRelType();
+			LOG.info("RelationShip from its parent is : " + relationShipInfo.getMapping());
+			type = relationShipInfo.getSimpleTypeInfo ();
+			if(type.contains("<")) {
+				//type = type.substring(0, type.lastIndexOf("<")+1) + "Long>";
+				type = "java.lang.Long[]";
+			} else {
+				type = "java.lang.Long";
+			}
+		}
+		
+		if (type.equals ("java.sql.Date") || type.equals ("java.sql.Time") || type.equals ("java.sql.Timestamp")) {
+			LOG.info("Date Data Type found for this Attribute..");
+			type = new String ("java.util.Date");
+		} else if (type.equals ("java.sql.Blob")) {
+			type = new String ("byte[]");
+		} else if (type.equals ("java.sql.Clob")) {
+			type= new String ("char[]");
+		}
+		declarations.add("private " + type + " " + modelAttrib.getName());  //adding declaration
+		attributeDataType.put(selectedAttribute, type);						//adding datatype
+		attributeVariableName.put(selectedAttribute, modelAttrib.getName());
+		String temp = Character.toUpperCase(modelAttrib.getName().charAt(0))+modelAttrib.getName().substring(1);
+		String setter = "set" + temp;
+		String getter = "get" + temp;
+  		attributeSetters.put(selectedAttribute, setter);
+		attributeGetters.put(selectedAttribute, getter);	
+	}			
+			//Generating Varible declarations for Dependent Entities here (Only in case of generating bean for Base Entity)........
+	Map<RelationKey, String> otherEntitiesSign = new HashMap<RelationKey, String>();			//Holds return type signature for dependent entities
+	Map<RelationKey, String> otherEntitesProperty = new HashMap<RelationKey, String>();			//Holds Property Name of Dependent entities in Base Entity
+		
+	if (baseEntity.getName().equals(resourceName) && nestedAttributes != null) {
+		for (Iterator<RelationKey> itr = nestedAttributes.keySet().iterator(); itr.hasNext(); ) {
+			RelationKey relationKey = itr.next();
+			RelationShipInfo relationShipInfo = relationKey.getRelationShipInfo();
+			LOG.info("Doing Process for " + relationKey.getReferencedEntity() + " entity selected attributes "
+						+ "with property name " + relationShipInfo.getPropertyName() + "...");
+			String signature = relationShipInfo.getSimpleTypeInfo();
+			String temp = relationShipInfo.getPropertyName();	//Added this line
+			temp = temp.toUpperCase().charAt(0) + temp.substring(1);	//Added this line
+			if(signature.lastIndexOf(">") > 0){
+				signature = signature.substring (0, signature.lastIndexOf("<") + 1)
+								+ temp + "_"	+	operationId + ">";
+			}
+			else {
+				signature = temp + "_" + operationId;
+			}
+			otherEntitiesDataType.put(relationKey, signature);
+			otherEntitiesSign.put(relationKey, signature);
+				//May not required has to check once redundant info
+			otherEntitesProperty.put(relationKey, relationShipInfo.getPropertyName());
+			String getter = "get" + temp;
+			String setter = "set" + temp;
+			otherEntitiesGetters.put(relationKey, getter);
+			otherEntitiesSetters.put(relationKey, setter);
+			String tempName = relationKey.getRelationShipInfo().getPropertyName();
+			otherEntitiesVariableName.put(relationKey, tempName);
+			declarations.add("private " + signature + " " + otherEntitiesVariableName.get(relationKey));
+		}
+	}			//End of doing process for Variable declaration here.............................
+%>
+<% 
+	//Bean Generation Started Here 
+%>
+
+package com.genband.m5.maps.messages;
+
+<%
+		//Importing packages here.............................
+	LOG.info("Adding Import statements to the class");
+	for(Iterator<String> itrImports = imports.iterator(); itrImports.hasNext();) {
+%>
+<%= itrImports.next() %>;
+<%
+	}   //End of Importing packages..............
+	LOG.info("class name added...");
+%>
+
+/**
+		This is the model Bean class for <%= modelEntity.getName() %> 
+		created by Damodar Reddy T
+*/
+
+public class  <%= className %> {
+	
+<%
+		//variables declaration goes here....
+	LOG.info("Variables declaration started...");
+	for(Iterator<String> itrDeclarations = declarations.iterator(); itrDeclarations.hasNext();) {
+%>
+		<%= itrDeclarations.next() %>;
+<%
+	}   //End of variables declaration........
+	LOG.info("Variables declaration ended and default constructor added...");
+%>
+
+		public <%= className %> () {
+		}
+
+<%			
+	LOG.info("Defining tbe Getters...");			
+			//Generating Getter functions here....................................................
+	for(Iterator<CPFAttribute> attributeItr = selectedAttributes.iterator(); attributeItr.hasNext(); ) {
+		CPFAttribute selectedAttribute = (CPFAttribute)attributeItr.next();    //For each selected attribute
+		
+%>	
+   		public <%= attributeDataType.get(selectedAttribute) %> <%= attributeGetters.get(selectedAttribute) %> () {
+   				return this.<%= attributeVariableName.get(selectedAttribute) %>;
+   		}	 		 
+<%	
+	} 		//In case of Base Entity only this will call
+	if (baseEntity.getName().equals(resourceName) && nestedAttributes != null) {
+		for (Iterator<RelationKey> itr = nestedAttributes.keySet().iterator(); itr.hasNext(); ) {
+			RelationKey relationKey = itr.next();
+%>
+		public <%= otherEntitiesSign.get(relationKey) %> <%= otherEntitiesGetters.get(relationKey) %> () {
+			return this.<%= otherEntitiesVariableName.get(relationKey) %>;
+		}
+<%
+		}
+	}
+	
+ 		//Generating Setter functions here.....................................................
+ 	LOG.info("Defining the setters....");
+ 	for(Iterator<CPFAttribute> attributeItr = selectedAttributes.iterator(); attributeItr.hasNext(); ) { 
+  		CPFAttribute selectedAttribute = (CPFAttribute)attributeItr.next();              //For each selected attribute
+%>	
+		public void <%= attributeSetters.get(selectedAttribute) %> (<%= attributeDataType.get(selectedAttribute) %> <%= attributeVariableName.get(selectedAttribute) %>) {
+				this.<%= attributeVariableName.get(selectedAttribute) %> = <%= attributeVariableName.get(selectedAttribute) %>;
+		}
+<% 
+ 	}
+ 	if (baseEntity.getName().equals(resourceName) && nestedAttributes != null) {
+		for (Iterator<RelationKey> itr = nestedAttributes.keySet().iterator(); itr.hasNext(); ) {
+			RelationKey relationKey = itr.next();
+%>
+		public void <%= otherEntitiesSetters.get(relationKey) %> (<%= otherEntitiesSign.get(relationKey) %> <%= otherEntitiesVariableName.get(relationKey) %>) {
+			this.<%= otherEntitiesVariableName.get(relationKey) %> = <%= otherEntitiesVariableName.get(relationKey) %>;
+		}
+<%
+		} 
+	}
+	
+			// Generating Constructor which will take base Entity as argument and set the values for this java bean.......
+		LOG.info("Generating Constructor with signature " + modelEntity.getName());	
+%>
+		public <%= className %> (<%= modelEntity.getName() %> Obj) {
+		
+			int i;
+<%
+			//For CPFAtributes setting Bean values
+		for (Iterator<CPFAttribute> attributeItr = selectedAttributes.iterator(); attributeItr.hasNext();) {
+			CPFAttribute itrCPFAttribute = attributeItr.next();
+		if (itrCPFAttribute.getForeignColumn () == null) {
+			String setArgument = null;
+			if (attributeDataType.get(itrCPFAttribute).equals ("java.sql.Blob")) {
+				setArgument = new String ("ModelUtil.mapBlob2ByteArray (Obj." + attributeGetters.get(itrCPFAttribute) + "())");
+			} else if (attributeDataType.get(itrCPFAttribute).equals ("java.sql.Clob")) {
+				setArgument = new String ("ModelUtil.mapClob2CharArray (Obj." + attributeGetters.get(itrCPFAttribute) + "())");
+			}else {
+				setArgument = new String ("Obj." + attributeGetters.get(itrCPFAttribute) + "()");
+			}
+%>
+			<%= attributeSetters.get(itrCPFAttribute) %> (<%= setArgument %>);
+<%
+		} else {
+			ModelEntity fkModelEntity = itrCPFAttribute.getForeignColumn ().getEntity ();
+			RelationShipInfo relationShipInfo = itrCPFAttribute.getModelAttrib().getRelType();
+			String signature = relationShipInfo.getSimpleTypeInfo();
+			if (signature.lastIndexOf (">") > 0) {
+				String fkPrimayKeyName = fkModelEntity.getPrimaryKey();
+				fkPrimayKeyName = fkPrimayKeyName.toUpperCase().charAt(0) + fkPrimayKeyName.substring(1);
+%>
+			if(Obj.<%= attributeGetters.get (itrCPFAttribute) %>() != null) {
+				i = 0;
+				Long[] <%= itrCPFAttribute.getModelAttrib ().getName () %> = new Long[Obj.<%= attributeGetters.get (itrCPFAttribute) %>().size()];
+				for (Iterator<<%= fkModelEntity.getName() %>> itr = Obj.<%= attributeGetters.get (itrCPFAttribute) %>().iterator (); itr.hasNext ();) {
+					<%= itrCPFAttribute.getModelAttrib ().getName () %>[i++] =  new Long(itr.next ().get<%= fkPrimayKeyName %> ());		//getCountryId() has to replace with some method call
+				}
+				<%= attributeSetters.get (itrCPFAttribute) %> (<%= itrCPFAttribute.getModelAttrib ().getName () %>);
+			}
+<%
+			} else {
+				String getter = fkModelEntity.getPrimaryKey();
+				getter = getter.toUpperCase ().charAt (0) + getter.substring (1);
+%>
+			if(Obj.<%= attributeGetters.get (itrCPFAttribute) %> () != null)
+				<%= attributeSetters.get (itrCPFAttribute) %> (Obj.<%= attributeGetters.get (itrCPFAttribute) %> ().get<%= getter %> ());
+<%
+			}
+%>
+<%
+		}
+%>
+<%
+		}
+%>
+<%
+			////For OtherSelectedEntities setting Bean values
+		if (baseEntity.getName ().equals (resourceName) && nestedAttributes != null) {
+			LOG.info("For dependenti Entities setting values");
+		for (Iterator<RelationKey> itr = nestedAttributes.keySet().iterator (); itr.hasNext (); ) {
+			RelationKey relationKey = itr.next();
+			ModelEntity itrModelEntity = relationKey.getReferencedEntity();
+			String getter = otherEntitesProperty.get (relationKey);
+			getter = getter.toUpperCase ().charAt (0)+getter.substring (1);
+			String genericType = otherEntitiesSign.get (relationKey);
+			if (genericType.lastIndexOf ("<") > 0) {
+				genericType = genericType.substring (genericType.lastIndexOf ("<")+1, genericType.lastIndexOf (">"));
+			}
+		if (otherEntitiesSign.get(relationKey).lastIndexOf(">") > 0) {
+%>
+			Iterator<<%= itrModelEntity.getName() %>> <%= otherEntitesProperty.get (relationKey) %>Entity = Obj.get<%= getter %> ().iterator ();
+<%
+			if (otherEntitiesSign.get(relationKey).substring (0, otherEntitiesSign.get(relationKey).lastIndexOf("<")).equals ("Set")) {		
+%>
+			<%= otherEntitiesSign.get(relationKey) %> <%= otherEntitesProperty.get (relationKey) %> = new HashSet<<%= genericType %>> ();
+<%
+			} else {
+%>
+			<%= otherEntitiesSign.get(relationKey) %> <%= otherEntitesProperty.get (relationKey) %> = new ArrayList<<%= genericType %>> ();
+<%
+			}
+%>
+			<%= genericType %> temp = null;
+			while (<%= otherEntitesProperty.get (relationKey) %>Entity.hasNext ()) {
+				temp = new <%= genericType %> (<%= otherEntitesProperty.get (relationKey) %>Entity.next ());
+				<%= otherEntitesProperty.get (relationKey) %>.add (temp);
+			}
+<%
+		} else {
+%>
+			if(Obj.get<%= getter %> () != null) {
+			<%= otherEntitiesSign.get(relationKey) %> <%= otherEntitesProperty.get (relationKey) %> = new <%= genericType %> (Obj.get<%= getter %> ());
+<%
+		}
+%>
+			<%= otherEntitiesSetters.get (relationKey) %>(<%= otherEntitesProperty.get (relationKey) %>);
+<%
+			if (!otherEntitiesSign.get(relationKey).contains("<")) {
+%>
+			}
+<%
+			}
+		}
+		}
+%>
+		}
+		
+	//Generating Merge Function which will set values for ModelEntity and returns ModelEntity
+	    public <%= modelEntity.getName () %> merge() {
+	    	<%= modelEntity.getName () %> returnEntity = new <%= modelEntity.getName () %> ();
+<%
+		LOG.info("Generating merge function which will return the object : " + modelEntity.getName());
+				//For CPFAtribtues setting modelEntity values
+	    for (Iterator<CPFAttribute> attributeItr = selectedAttributes.iterator(); attributeItr.hasNext();) {
+			CPFAttribute itrCPFAttribute = attributeItr.next();
+		if (itrCPFAttribute.getForeignColumn () == null) {
+			String cast = itrCPFAttribute.getModelAttrib ().getCanonicalTypeName ();
+			String mergeArgument = null;
+			if (cast.equals("java.sql.Date") || cast.equals("java.sql.Time") || cast.equals("java.sql.Timestamp")) {
+				mergeArgument = new String("new " + cast + "(" + itrCPFAttribute.getModelAttrib ().getName () + ".getTime ())");
+%>
+			if(<%= itrCPFAttribute.getModelAttrib ().getName () %> != null)
+<%
+			} else if (cast.equals("java.sql.Blob")) {
+				mergeArgument= new String ("ModelUtil.mapByteArray2Blob (" + itrCPFAttribute.getModelAttrib ().getName () + ")");
+			} else if (cast.equals("java.sql.Clob")) {
+				mergeArgument= new String ("ModelUtil.mapCharArray2Clob (" + itrCPFAttribute.getModelAttrib ().getName () + ")");
+			}else {
+				//Edited on 20th Feb...
+				mergeArgument = attributeVariableName.get(itrCPFAttribute);
+			}
+%>
+			returnEntity.<%= attributeSetters.get(itrCPFAttribute) %> (<%= mergeArgument %>);
+<%
+		} else {
+			ModelEntity fkModelEntity = itrCPFAttribute.getForeignColumn ().getEntity ();
+			RelationShipInfo relationShipInfo = itrCPFAttribute.getModelAttrib().getRelType();
+			RelationShipInfo inverseRelationShipInfo = itrCPFAttribute.getModelAttrib().getInverseRelType();
+			String inversePropertyName = null;
+			if(inverseRelationShipInfo != null) {
+				if(relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.OneToOne) 
+					|| relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.OneToMany)) {
+					inversePropertyName = new String(inverseRelationShipInfo.getPropertyName());
+					inversePropertyName = inversePropertyName.toUpperCase().charAt(0) 
+											+ inversePropertyName.substring(1);
+				}
+			} else {
+				LOG.info("Did not get inverse Relation ship between parent and child for Strong relation so exiting..");
+				//System.exit(1);
+			}
+			String signature = relationShipInfo.getSimpleTypeInfo();
+			if (signature.lastIndexOf (">") > 0) {	//In case of Many relationship between parent and child entities
+				String fkPrimayKeyName = fkModelEntity.getPrimaryKey();
+				fkPrimayKeyName = fkPrimayKeyName.toUpperCase().charAt(0) + fkPrimayKeyName.substring(1);
+				String varName = itrCPFAttribute.getModelAttrib ().getName () + "List";
+%>
+				if(<%= itrCPFAttribute.getModelAttrib ().getName () %> != null && <%= itrCPFAttribute.getModelAttrib ().getName () %>.length > 0) {
+<%
+				if (signature.substring (0, signature.lastIndexOf("<")).equals ("Set")) {
+%>
+					<%= signature %> <%= varName %> = new HashSet<<%= fkModelEntity.getName () %>> ();
+<%
+				} else {
+%>
+					<%= signature %> <%= varName %> = new ArrayList<<%= fkModelEntity.getName () %>> ();
+<%
+				}
+%>
+					for (int i = 0; i < <%= itrCPFAttribute.getModelAttrib ().getName () %>.length; i++) {
+						<%= fkModelEntity.getName () %> <%= itrCPFAttribute.getModelAttrib ().getName () %> = new <%= fkModelEntity.getName () %> ();
+						<%= itrCPFAttribute.getModelAttrib ().getName () %>.set<%= fkPrimayKeyName %> (this.<%= itrCPFAttribute.getModelAttrib ().getName () %>[i]);
+							//Setting child reference in Parent entity
+<%
+							//Added on 6th Mar,08...
+						if (relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.OneToMany)) {
+%>
+						<%= itrCPFAttribute.getModelAttrib ().getName () %>.set<%= inversePropertyName %>(returnEntity);
+<%
+						}
+%>	
+						<%= varName %>.add (<%= itrCPFAttribute.getModelAttrib ().getName () %>);
+					}
+					returnEntity.<%= attributeSetters.get (itrCPFAttribute) %> (<%= varName %>);
+				}
+<%
+			} else {
+				String setter = fkModelEntity.getPrimaryKey();
+				setter = setter.toUpperCase().charAt(0)+setter.substring (1);
+%>
+			if(this.<%= itrCPFAttribute.getModelAttrib ().getName () %> != null) {
+			<%= signature  %> <%= itrCPFAttribute.getModelAttrib ().getName () %> = new <%= signature  %> ();
+			<%= itrCPFAttribute.getModelAttrib ().getName () %>.set<%= setter %> (this.<%= itrCPFAttribute.getModelAttrib ().getName () %>);
+<%
+				if(inversePropertyName != null) {
+%>
+			<%= itrCPFAttribute.getModelAttrib ().getName () %>.set<%= inversePropertyName %> (returnEntity);
+<%
+				}
+%>
+			returnEntity.<%= attributeSetters.get (itrCPFAttribute) %> (<%= itrCPFAttribute.getModelAttrib ().getName () %>);
+			}		
+<%
+			}
+%>
+<%
+		}
+%>
+<%
+		}
+%>	
+<%
+			////For OtherSelectedEntities setting modelEntity values
+		if (baseEntity.getName ().equals (resourceName) && nestedAttributes != null) {
+			LOG.info("For Dependent entities...");
+		for (Iterator<RelationKey> itr = nestedAttributes.keySet().iterator (); itr.hasNext (); ) {
+			RelationKey relationKey = itr.next();
+			RelationShipInfo inverseRelationShipInfo = relationKey.getInverseRelationShipInfo();
+			String inversePropertyName = null;
+			
+			ModelEntity itrModelEntity = relationKey.getReferencedEntity();
+			String setter = otherEntitesProperty.get (relationKey);
+			setter = setter.toUpperCase ().charAt (0)+setter.substring (1);
+			String genericType = otherEntitiesSign.get (relationKey);
+			String varName = otherEntitiesVariableName.get(relationKey);
+			String ifCondition = new String (varName + "!= null");
+			if (genericType.lastIndexOf ("<") > 0) {
+				genericType = genericType.substring (genericType.lastIndexOf ("<")+1, genericType.lastIndexOf (">"));
+				ifCondition = ifCondition.concat(" && " + varName + ".size() > 0");
+			}
+			if(inverseRelationShipInfo != null) {
+				if(relationKey.getRelationShipInfo().getMapping().equals(CPFConstants.RelationshipType.OneToOne) 
+					|| relationKey.getRelationShipInfo().getMapping().equals(CPFConstants.RelationshipType.OneToMany)) {
+				inversePropertyName = new String(inverseRelationShipInfo.getPropertyName());
+				inversePropertyName = inversePropertyName.toUpperCase().charAt(0) 
+										+ inversePropertyName.substring(1);
+				}
+			}
+%>
+			if(<%= ifCondition %>) {
+<%
+		if (otherEntitiesSign.get(relationKey).lastIndexOf(">") > 0) {	
+
+			if (otherEntitiesSign.get(relationKey).substring (0, otherEntitiesSign.get(relationKey).lastIndexOf("<")).equals ("Set")) { 
+%>
+			<%= otherEntitiesSign.get(relationKey).substring(0,otherEntitiesSign.get(relationKey).lastIndexOf("<") ) %><<%= itrModelEntity.getName() %>> <%= otherEntitesProperty.get (relationKey) %>Entity = new HashSet<<%= itrModelEntity.getName() %>> ();
+<%
+			} else {
+%>
+			<%= otherEntitiesSign.get(relationKey).substring(0,otherEntitiesSign.get(relationKey).lastIndexOf("<") ) %><<%= itrModelEntity.getName() %>> <%= otherEntitesProperty.get (relationKey) %>Entity = new ArrayList<<%= itrModelEntity.getName() %>> ();
+<%
+			}
+%>
+			Iterator<<%= genericType  %>> <%= otherEntitesProperty.get (relationKey) %>Bean = <%= varName %>.iterator();
+			while (<%= otherEntitesProperty.get (relationKey) %>Bean.hasNext ()) {
+				<%= itrModelEntity.getName() %> tempEntity = <%= otherEntitesProperty.get (relationKey) %>Bean.next ().merge ();
+					//Setting child entity reference in parent entity
+				tempEntity.set<%= inversePropertyName %> (returnEntity);
+				<%= otherEntitesProperty.get (relationKey) %>Entity.add (tempEntity);
+			}
+			returnEntity.set<%= setter %>(<%= otherEntitesProperty.get (relationKey) %>Entity);
+<%
+		} else {
+%>
+			<%= itrModelEntity.getName() %> <%= otherEntitesProperty.get (relationKey) %> = new <%= itrModelEntity.getName() %> ();
+			<%= otherEntitesProperty.get (relationKey) %> = this.<%= otherEntitesProperty.get (relationKey) %>.merge ();;
+<%
+			if(inversePropertyName != null) {
+%>    
+			//Setting child entity reference in parent entity
+			<%= otherEntitesProperty.get (relationKey) %>.set<%= inversePropertyName %> (returnEntity);
+<%
+			}
+%>
+			returnEntity.set<%= setter %> (<%= otherEntitesProperty.get (relationKey) %>);
+<%
+		}
+%>
+			}
+<%
+		}
+		}
+%>
+			return returnEntity;
+	    }
+}
+<%
+	LOG.info("Java Bean Generation completed from template Side...");
+	//Bean Generation Ended Here...
+%>

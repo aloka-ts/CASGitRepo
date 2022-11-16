@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationLogicControl xmlns:x0="http://www.w3.org/2001/XMLSchema">
+        <Service Name="Initialize">
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+		<Set Variable="debug" EqualTo="true"/>
+        </Service>
+</ApplicationLogicControl>
+
+

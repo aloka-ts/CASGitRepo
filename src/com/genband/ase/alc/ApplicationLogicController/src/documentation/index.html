@@ -1,0 +1,360 @@
+<html>
+<head>
+<title>Application Logic Controller</title>
+<style type="text/css">
+code           { font-family: monospace; }
+
+div.constraint,
+div.issue,
+div.note,
+div.notice     { margin-left: 2em; }
+
+ol.enumar      { list-style-type: decimal; }
+ol.enumla      { list-style-type: lower-alpha; }
+ol.enumlr      { list-style-type: lower-roman; }
+ol.enumua      { list-style-type: upper-alpha; }
+ol.enumur      { list-style-type: upper-roman; }
+
+
+div.exampleInner pre { margin-left: 1em;
+                       margin-top: 0em; margin-bottom: 0em}
+div.exampleOuter {border: 4px double gray;
+                  margin: 0em; padding: 0em}
+div.exampleInner { background-color: #d5dee3;
+                   border-top-width: 4px;
+                   border-top-style: double;
+                   border-top-color: #d3d3d3;
+                   border-bottom-width: 4px;
+                   border-bottom-style: double;
+                   border-bottom-color: #d3d3d3;
+                   padding: 4px; margin: 0em }
+div.exampleWrapper { margin: 4px }
+div.exampleHeader { font-weight: bold;
+                    margin: 4px}
+
+   img { color: white; border: none }
+   span.nav { float: right}
+   span.arrow { font-style: normal; font-weight: bold }
+   code { font-family: monospace; font-size: 100%}
+   span.propdef { font-weight: bold; font-family: monospace }
+   span.termdef {color: #850021}
+   a.termref:visited, a.termref:link {font-family: sans-serif;
+	     font-style: normal;
+	     color: black;
+	     text-decoration: none }
+   a.eltref:visited, a.eltref:link { font-family: sans-serif;
+	     color: black;
+	     text-decoration: none }
+   a.propref:visited, a.xpropref:visited, a.propref:link, a.xpropref:link { color: black; text-decoration: none;
+			  font-family: sans-serif }
+   dl.props, dl.psvi {margin-bottom: .5em; margin-top: 0em}
+   div.toc1 {margin-left: 5ex}
+   div.toc2 {margin-left: 2ex}
+   div.tocLine{margin: 0em; text-indent: -6ex}
+   h3.withToc {margin-bottom: 0em}
+   div.constraintnote { margin-top: 1em }
+   div.constraint {
+     margin-left: 1em; }
+
+   div.constraintlist {
+     margin-left: 1em; margin-bottom: 0em
+   }
+   div.clnumber {
+     text-indent: -1em;
+     margin-top: 0em; margin-bottom: 0em }
+
+   div.schemaComp { border: 4px double gray;
+		    margin: 0em 1em; padding: 0em }
+   div.compHeader { margin: 4px;
+		   font-weight: bold }
+   span.schemaComp { color: #A52A2A }
+   div.compBody {
+		 border-top-width: 4px;
+		 border-top-style: double;
+		 border-top-color: #d3d3d3;
+		 padding: 4px ; margin: 0em}
+
+   div.psviDef { border: 4px double gray;
+		    margin: 1em 1em; padding: 0em }
+   div.psviHeader { margin: 4px;
+		   font-weight: bold }
+   span.psviDef { color: #A52A2A }
+   div.psviBody { border-top-width: 4px;
+		 border-top-style: double;
+		 border-top-color: #d3d3d3;
+		 padding: 4px ; margin: 0em}
+
+   div.reprdef { border: 4px double gray;
+		    margin: 0em 1em; padding: 0em }
+   div.reprHeader { margin: 4px;
+		   font-weight: bold }
+   span.reprdef { color: #A52A2A }
+   div.reprBody, div.reprcomp, div.reprdep {
+		 border-top-width: 4px;
+		 border-top-style: double;
+		 border-top-color: #d3d3d3;
+		 padding: 4px ; margin: 0em}
+   table.reprcomp { margin-bottom: -.5em}
+   p.element-syntax-1 { font-family: monospace;
+		       margin-top: 0em; margin-bottom: .5em }
+   p.element-syntax { font-family: monospace;
+		 border-top-width: 1px;
+		 border-top-style: solid;
+		 border-top-color: #d3d3d3;
+		 padding: 4px ; margin: 0em}
+
+   div.exampleInner pre { margin-left: 1em;
+			 margin-top: 0em; margin-bottom: 0em}
+   div.exampleOuter {border: 4px double gray;
+		    margin: 0em; padding: 0em}
+   div.exampleInner { background-color: #d5dee3;
+		     border-top-width: 4px;
+		     border-top-style: double;
+		     border-top-color: #d3d3d3;
+		     border-bottom-width: 4px;
+		     border-bottom-style: double;
+		     border-bottom-color: #d3d3d3;
+		     padding: 4px; margin: 0em }
+   div.exampleWrapper { margin: 4px }
+   div.exampleHeader { font-weight: bold;
+		      margin: 4px}
+   span.edtext { color: red }
+
+   table.restricts { margin-top: 1em; margin-bottom: 1em; margin-left: -2em}
+   table.restricts th { margin-left: 0em }
+   table.ubc td, table.ubc th { font-size: smaller }
+   table.dtdemo th { text-align: center;
+		    background-color: #d5dee3}
+   table.dtdemo pre { margin-left: 0em;  margin-bottom: 0em}
+   table.dtdemo td {background-color: #bedce6}
+   table.scrap {background-color:  #f5dcb3}
+
+   img { color: white; border: none }
+   span.nav { float: right}
+   span.arrow { font-style: normal; font-weight: bold }
+</style></head>
+<body>
+<h2>Application Logic Controller</h2>
+<p>
+The purpose of this document is to convey to the reader the current state of the Application Logic Contoller project.  The project consists of a multitude of aspects:  the Service Control Markup Language (with xml schema definition), the ALC processing software, the java alc compiler environment, the existing service implementations.
+</p>
+
+<h3>The Application Logic Control Markup Language.</h3>
+<p>
+Application Logic Control is a markup created to allow for fast, extensible service creation.  Used in conjuction with SIP and Genband's Sip Application Server, services can be deployed, created and reconfigured effeciently given a rudimentary knowledge of XML and ALCML schema definition.
+</p>
+<h4>ALCML</h4>
+<object id="EmbeddedContent" data="application-logic-controltype.html" width="1000" height="800">
+<embed src="application-logic-controltype.html">
+</embed>
+</object>
+
+<div class="exampleOuter">
+	<div class="exampleHeader">Example</div>
+	<div class="exampleWrapper">Hello World Display</div>
+	<div class="exampleInner"><pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;application-logic-control&gt;
+    &lt;service name="helloWorld"&gt;
+        &lt;set variable="ATestForYou" equal-to="Hello World"/&gt;
+        &lt;print value="The canonical ${ATestForYou} example"/&gt;
+    &lt;/service&gt;
+&lt;/application-logic-control&gt;
+	</pre></div>
+</div>
+
+<p>The example illustrates a simple function that outputs a string to standard output.</p>
+<p>Notice that the contents of string literals (as element attributes) have special meaning within the ALCML.  Context variables can be embedded into string literals using the syntax ${&lt;variable&gt;}.  These string literals are realized from context at execution time and therefore can be set by any component that has access to the service context.  These special expressions are known as ALCMLExpressions.</p>
+<p>Java users may get and set context variable via the <a href="javadoc/com/genband/ase/alc/alcml/jaxb/ServiceContext.html">ServiceContext</a> Object.  Service context is the execution context for a service block.
+</p>
+<div class="exampleOuter">
+	<div class="exampleHeader">&lt;Example&gt;</div>
+	<div class="exampleWrapper">Execution of Hello World Service:</div>
+	<div class="exampleInner"><pre>
+			...
+			ServiceDefinition.CreateALCMLDefinition("TestNameSpace", new URL("&lt;my url&gt;");
+			ServiceDefinition helloWorldService = ServiceDefinition.getServiceDefinition("TestNameSpace", "helloWorld");
+			if (helloWorldService != null)
+			{
+				// Calling initialize service on namspace
+				ServiceContext sdContext = new ServiceContext();
+				helloWorldService.execute(sdContext);
+
+				// now ATestForYou in context is equal to literal Hello World.
+				String HelloWorld = (String)sdContext.getAttribute("ATestForYou");
+			}
+			...
+</pre>
+</div>
+</div>
+
+<h4>Defining a standalone ALCML service</h4>
+<p>
+The current distribution contains a telnet interface that allows for standalone alcml services to be defined.
+</p>
+<p>
+Usage: deploy-alcml-service &lt;service name&gt; [&lt;version&gt;] [&lt;priority&gt;] &lt;ALC URL&gt;
+<br/>Deploys a service based on the alcml in the &lt;ALC URL&gt; parameter.
+<br/>Upon deployment, a service namespace is created for the URL (which helps to isolate the service from other alcml activities).
+<br/>A service named "initialize" is searched for and if found is executed.
+<br/>A service named "destruct" is searched for and if found is executed upon the undeploying of the service.  The namespace is also removed.
+</p>
+
+<h3>The Application Logic Control Markup Language Extension Compiler.</h3>
+
+<h4>ALC compiler</h4>
+<p>
+The ALC compiler allows java developers to extend the markup schema definition and thus the alcml.  The compiler utilizes the standard java annotation paradigm.  The following annotations are defined:
+</p>
+<pre>
+	public @interface <a href="javadoc/com/genband/ase/alc/alcml/jaxb/ALCMLActionClass.html">ALCMLActionClass</a>
+
+	public @interface <a href="javadoc/com/genband/ase/alc/alcml/jaxb/ALCMLActionClass.html">ALCMLActionMethod</a>
+
+	public @interface <a href="javadoc/com/genband/ase/alc/alcml/jaxb/ALCMLActionClass.html">ALCMLMethodParameter</a>
+</pre>
+<p>
+The only requirement of a method that is invoked by the ALC engine is that the first parameter to an annotated method is a <a href="javadoc/com/genband/ase/alc/alcml/jaxb/ServiceContext.html">ServiceContext</a> object.  This allows the method developer a context to convey to the ALC software when the action has completed or failed to complete.  The context can also be used to specify results and set well-known (to the particular service user) variables for later reflection.
+</p>
+<pre style="font-size: 10pt;">
+
+ +----------------+                      +----------------+
+ | User's         |                      | ALC compiler   |
+ | ALC extension  | ====================>|                |
+ | Java           |                      |                |
+ +----------------+                      +----------------+
+                                                 |
+                                                 |
+                                                 |
+                                     +-----------+-----------+--------------+
+                                     |                       |              |
+                                     |                       |              |
+                                     |                       |              |
+                                     V                       V              V
+
+                            XML Schema Definition       JAXB bindings     ALC bindings
+
+</pre>
+<p>
+The resultant new schema will allow users of the markup to actuate code in the user space.  The annotated class must implement the interface ALCServiceInterface, which is the main interface between the ALC execution logic and the user object.  The user object is instantiated for every instance (where one doesn't already exist) of ServiceContext that is executed against a ServiceDefinition.
+</p>
+<p>
+The compiler is currently defined in an ant macro file (build-macros.xml) with the alc-compiler.jar distribution and is accessed like an ant task element in the form:
+The classes generated must be packaged in a jar file and placed in the &lt;ase.home&gt;/alcjars directory on an installed SAS platform.
+</p>
+<div class="exampleOuter">
+	<div class="exampleHeader">&lt;alcmlc&gt;</div>
+	<div class="exampleWrapper">attributes:</div>
+	<div class="exampleInner"><pre>
+classpath="&lt;users classpath&gt;"
+		- User supplied class path (for ALC bindings)
+destdir="&lt;output directory&gt;"
+		- An output directory in the user's space that should be cleaned prior to this task. The user must also compile java source (and make available class definition) in this directory
+srcdir="&lt;source directory&gt;"
+		- Where the compiler should start it's search for the input files.  The compiler will transcend this directory structure searching for &lt;input&gt; filter.
+bindingOutputDir="&lt;binding output&gt;"
+		- Where the compiler should place the XML Schema java bindings (JAXB).  User should compile this directory and package produced classes.
+
+Therefore an build.xml fragment could look like,
+	&lt;?xml version="1.0"?&gt;
+	&lt;!-- ==================================================== --&gt;
+	&lt;!-- Build file: Application Logic Controller --&gt;
+	&lt;!-- ==================================================== --&gt;
+	&lt;project name="Application Logic Controller Extension" default="all" basedir="."&gt;
+	        &lt;property environment="env"/&gt;
+	        &lt;property name="ALCML_HOME" Value="${env.ALCML_HOME}"/&gt;
+	        &lt;property name="JAVA_HOME" Value="${env.JAVA_HOME}"/&gt;
+	        &lt;property name="INSTALL_ALC" Value="${env.INSTALL_ALC}"/&gt;
+	        &lt;import file="${ALCML_HOME}/src/build-macros.xml"/&gt;
+	        &lt;target name="all"&gt;
+	                &lt;path id="classpath"&gt;
+	                        &lt;fileset dir="${ALCML_HOME}"&gt;
+	                                &lt;include name="**/*.jar"/&gt;
+	                        &lt;/fileset&gt;
+	                &lt;/path&gt;
+	                &lt;property name="additionalclasspath" refid="classpath"/&gt;
+	                &lt;delete dir="${basedir}/src/alcmltemp"/&gt;
+	                &lt;mkdir dir="${basedir}/src/alcmltemp"/&gt;
+	                &lt;delete dir="${basedir}/src/com/genband/ase/alc/alcml/jaxb/xjc/"/&gt;
+	                &lt;mkdir dir="${basedir}/src/com/genband/ase/alc/alcml/jaxb/xjc/"/&gt;
+	                &lt;alcmlc srcdir="${basedir}/src" destdir="${basedir}/src/alcmltemp"
+	                        classpath="${additionalclasspath}" bindingOutputDir="${basedir}/src"/&gt;
+	                &lt;mkdir dir="${basedir}/build"/&gt;
+	                &lt;javac srcdir="${basedir}/src" destdir="${basedir}/build"&gt;
+	                        &lt;classpath refid="classpath"/&gt;
+	                &lt;/javac&gt;
+	                &lt;jar jarfile="${INSTALL_ALC}/MyExtJAXB.jar" basedir="${basedir}/build"/&gt;
+	        &lt;/target&gt;
+	&lt;/project&gt;
+** currently the SAS has to be restarted when a new extension is installed in &lt;ase.home&gt;/alcjars
+</pre>
+</div>
+</div>
+
+<p>
+The following is an illustration of usage of the annotations for ALC extensions
+</p>
+<div class="exampleOuter">
+	<div class="exampleHeader">Example</div>
+	<div class="exampleWrapper">Play method from Media Services</div>
+	<div class="exampleInner"><pre>
+	@ALCMLActionMethod( name="play", help="Plays a prompt on a connected media server.\n"
+											+"Example:	&lt;play prompt-uri=\"file:////foo.bar.wav\"&gt;")
+	public void Play(ServiceContext sContext,
+
+			@ALCMLMethodParameter(	name="prompt-uri",
+									asAttribute=true,
+									help="The URI prompt to be played on the connected media server.\n"
+										+"If this is not present the current (or included) play list\n"
+										+"will be used.\n")
+										String URIPrompt,
+
+			@ALCMLMethodParameter(	name="specification",
+									asAttribute=true,
+									help="Media Specification that governs the presentation to the media server.\n"
+										+"Most all applications can use the default values (Thus ignoring this attibute).\n"
+										+"These values are contained in the ASIML distribution file as MSMLProfiles.xml\n"
+										+"and MSCMLProfiles.xml\n",
+									defaultValue="Default" )
+										String Specification,
+
+			@ALCMLMethodParameter(	name="use-current-playlist",
+									asAttribute=true,
+									help="Indicates whether to use current play list.  If set to false, the current play\n"
+										+"list remains intact/unchanged.\n"
+										+"If the current play list is used, the URI components that are additionally\n"
+										+"specified in this action will be amended at the end of the list prior to execution.\n",
+									type=ALCMLDefaults.XSDBoolean,
+									defaultValue="true" )
+										Boolean UseCurrentPlayList,
+
+			@ALCMLMethodParameter(	name="clear-current-playlist",
+									asAttribute=true,
+									help="Indicates whether to clear current play list.  If set to false, the current play\n"
+										+"list remains intact but can be used. NOTE: if you are not using the current play list,\n"
+										+"use-current-play-list = false, then this value is always assumed false.\n"
+										+"If the current play list is used, the URI components that are additionally\n"
+										+"specified in this action will be amended at the end of the list prior to execution.\n",
+									type=ALCMLDefaults.XSDBoolean,
+									defaultValue="true" )
+										Boolean ClearCurrentPlayList,
+
+			@ALCMLMethodParameter(	name="media-specification-list",
+									type="media-specification-listtype",
+									help="A play list, that allows the user to play multiple prompts and/or variable announcements")
+										Object MediaSpecificationList
+
+										) throws ServiceActionExecutionException
+    {
+	...
+	}
+</pre></div></div>
+
+<p>
+	This allows an XML instance to access a Play element.<br/>
+        &lt;play prompt-uri="file:////foo.bar.wav"&gt;
+</p>
+
+<h2>Current XML Schema Definition</h2>
+<a href="tmpApplicationLogicControl.xsd">Schema XSD</a>
+</html>

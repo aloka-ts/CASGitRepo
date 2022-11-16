@@ -1,0 +1,6 @@
+tel:+123455667
+tel:+123455667;user=phone
+tel:+123455667@somthing.com
+sip:123455667@someHost.com
+\"hotshot\" <sip:123455667@someHost.com>
+http:123455667@someHost.com

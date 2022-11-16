@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!-- ==================================================== -->
+<!-- Build file : BayPackets ASE -->
+<!-- build.xml, 12/08/04 -->
+<!-- Author : Ravi -->
+<!-- ==================================================== -->
+<project name="BayPackets APP" default="all" basedir=".">
+
+	<!-- ***************************************** -->
+	<!-- Main target -->
+	<target name="all" depends="init,test-apps">
+	</target>
+
+	<!-- ***************************************** -->
+
+	<!-- ***************************************** -->
+	<target name="init" >
+		
+		<!-- Set the variables used inside -->
+		<property file="ant.properties"/>
+		<property name="src" value="${SRC}"/>
+		<property name="buildDir" Value="${INSTALLROOT}"/>
+		<property name="bpjarDir" Value="${INSTALLROOT}/bpjars"/>
+		<property name="libDir" Value="${THIRDPARTY}/otherjars"/>
+        <property name="test.apps"  value="${buildDir}/test-apps"/>
+     <!-- ********************
+     <if> 
+       <equals arg1="${src}" arg2="/vob/Sipservlet/src"/> 
+         <then> 
+      ********************** -->
+          <copy todir="${test.apps}">
+            <fileset dir="${src}/tools/servlets"/>
+          </copy>
+     <!-- *******************
+         </then>
+      </if>  
+      ********************** -->
+	</target>
+
+  <!-- TEST SERVLET APPLICATIONS -->
+
+  <target name="test-apps"
+          depends="init, uas, uac, b2bua, proxy">
+  </target>
+
+  <target name="uas" description="build uas app" 
+    depends="init">
+    <antcall target="build-test-app">
+      <param name="app.name" value="uas"/>
+    </antcall>
+  </target>
+
+  <target name="uac" description="build uac app"
+    depends="init">
+    <antcall target="build-test-app">
+      <param name="app.name" value="uac"/>
+    </antcall>
+  </target>
+  
+  <target name="b2bua"  description="build b2bua app"
+    depends="init">
+    <antcall target="build-test-app">
+      <param name="app.name" value="b2bua"/>
+    </antcall>
+  </target>
+  
+  <target name="proxy"  description="build proxy app"
+    depends="init">
+    <antcall target="build-test-app">
+      <param name="app.name" value="proxy"/>
+    </antcall>
+  </target>
+
+  <target name="build-test-app">
+	<!-- Define the classpath -->
+	<path id="classpath">
+		<fileset dir="${libDir}">
+			<include name="servlet-2.4.jar"/>
+	 	</fileset>
+     	<fileset dir="${libDir}">
+			<include name="sipservlet.jar"/>
+	 	</fileset>
+
+     	<fileset dir="${bpjarDir}">
+			<include name="bpsbb.jar"/>
+	 	</fileset>
+     	<pathelement 
+           path="${buildDir}/test-apps/${app.name}/WEB-INF/classes"/>
+		<pathelement location="${buildDir}/otherjars/log4j-1.2.8.jar"/>
+
+     </path>
+
+     <!-- ********************
+      <if>  
+       <equals arg1="${src}" arg2="/vob/Sipservlet/src"/> 
+         <then> 
+      ********************** -->
+         <copy todir="${buildDir}/test-apps/${app.name}">
+           <fileset dir="${src}/tools/servlets/${app.name}">
+                <exclude name="**/*.java"/>
+                <exclude name="**/*contrib*"/>
+           </fileset>
+         </copy>
+     <!-- ********************
+         </then> 
+      </if> 
+      ********************** -->
+
+    <property name="app.src"
+             value="${buildDir}/test-apps/${app.name}/WEB-INF/classes"/>
+    <property name="app.dest"
+             value="${buildDir}/test-apps/${app.name}/WEB-INF/classes"/>
+    
+    <javac srcdir="${app.src}" 
+      destdir="${app.dest}" debug="true">
+         <include name="**/*.java"/>
+         <classpath refid="classpath"/>
+    </javac>
+   
+ 
+    <!-- construct .sar file -->
+    <jar jarfile="${test.apps}/${app.name}.sar"
+         basedir="${test.apps}/${app.name}"/>
+  </target>
+
+</project>

@@ -1,0 +1,128 @@
+package com.agnity.win.enumdata;
+
+public enum SMSCauseCodeEnum {
+
+	ADDRESS_VACANT(0), ADDRESS_TRANSLATION_FAILURE(1), NETWORK_RESOURCE_SHORTAGE(2), NETWORK_FAILURE(
+			3),INVALID_TELESERVICEID(4), OTHER_NETWORK_PROBLEM(5), UNSUPPORTED_NETWORK_INTERFACE(6), NO_PAGE_RESPONSE(32), 
+			DESTINATION_BUSY(33), NO_ACKNOWLEDGEMENT(34), DESTINATION_RESOURCE_SHORTAGE(35), SMS_DELIVERY_POSTPONED(36),
+			DESTINATION_OUT_OF_SERVICE(37), DESTINATION_NOT_AT_THIS_ADDRESS(38), OTHER_TERMINAL_PROBLEM(39), RADIO_INTERFACE_SHORTAGE(64),
+			RADIO_INTERFACE_INCOMPATIBILITY(65),OTHER_RADIO_INTERFACE_PROBLEM(66),UNSUPPORTIVE_BASE_STATION_CAPABILITY(67),ENCODING_PROBLEM(96),
+			SERVICE_ORIGINATION_DENIED(97),SERVICE_TERMINATION_DENIED(98),SUPPLEMENTARY_SERVICE_NOT_SUPPORTED(99),SERVICE_NOT_SUPPORTED(100),
+			MISSING_EXPECTED_PARAM(102),MISSING_MANDATORY_PARAM(103),UNRECOGNIZED_PARAM_VAL(104),UNEXPECTED_PARAM_VAL(105),USER_DATA_SIZE_ERROR(106),
+			OTHER_GENERAL_PROBLEMS(107),SESSION_NOT_ACTIVE(108),SERVICE_DENIED(109);
+
+	private int code;
+
+	private SMSCauseCodeEnum(int c) {
+		code = c;
+	}
+
+	public int getCode() {
+		return code;
+	}
+
+	public static SMSCauseCodeEnum fromInt(int num) {
+		switch (num) {
+		case 0: {
+			return ADDRESS_VACANT;
+		}
+		case 1: {
+			return ADDRESS_TRANSLATION_FAILURE;
+		}
+		case 2: {
+			return NETWORK_RESOURCE_SHORTAGE;
+		}
+		case 3: {
+			return NETWORK_FAILURE;
+		}
+		case 4: {
+			return INVALID_TELESERVICEID;
+		}
+		case 5: {
+			return OTHER_NETWORK_PROBLEM;
+		}
+		case 6: {
+			return UNSUPPORTED_NETWORK_INTERFACE;
+		}
+		case 32: {
+			return NO_PAGE_RESPONSE;
+		}
+		case 33: {
+			return DESTINATION_BUSY;
+		}
+		case 34: {
+			return NO_ACKNOWLEDGEMENT;
+		}
+		case 35: {
+			return DESTINATION_RESOURCE_SHORTAGE;
+		}
+		case 36: {
+			return SMS_DELIVERY_POSTPONED;
+		}
+		case 37: {
+			return DESTINATION_OUT_OF_SERVICE;
+		}
+		case 38: {
+			return DESTINATION_NOT_AT_THIS_ADDRESS;
+		}
+		case 39: {
+			return OTHER_TERMINAL_PROBLEM;
+		}
+		case 64: {
+			return RADIO_INTERFACE_SHORTAGE;
+		}
+		case 65: {
+			return RADIO_INTERFACE_INCOMPATIBILITY;
+		}
+		case 66: {
+			return OTHER_RADIO_INTERFACE_PROBLEM;
+		}
+		case 67: {
+			return UNSUPPORTIVE_BASE_STATION_CAPABILITY;
+		}
+		case 96: {
+			return ENCODING_PROBLEM;
+		}
+		case 97: {
+			return SERVICE_ORIGINATION_DENIED;
+		}
+		case 98: {
+			return SERVICE_TERMINATION_DENIED;
+		}
+		case 99: {
+			return SUPPLEMENTARY_SERVICE_NOT_SUPPORTED;
+		}
+		case 100: {
+			return SERVICE_NOT_SUPPORTED;
+		}
+		case 102: {
+			return MISSING_EXPECTED_PARAM;
+		}
+		case 103: {
+			return MISSING_MANDATORY_PARAM;
+		}
+		case 104: {
+			return UNRECOGNIZED_PARAM_VAL;
+		}
+		case 105: {
+			return UNEXPECTED_PARAM_VAL;
+		}
+		case 106: {
+			return USER_DATA_SIZE_ERROR;
+		}
+		case 107: {
+			return OTHER_GENERAL_PROBLEMS;
+		}
+		case 108: {
+			return SESSION_NOT_ACTIVE;
+		}
+		case 109: {
+			return SERVICE_DENIED;
+		}	
+		default: {
+			return null;
+		}
+		}
+	}
+
+}

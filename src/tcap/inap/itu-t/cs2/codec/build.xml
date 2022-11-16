@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="INAPCodec">
+
+<!--
+	<property name="INSTALLROOT" value="/vob/src/SipServlet" />
+-->
+	<property name="INAP_HOME" value="${PARENT_BASE}/tcap/inap" />
+	 
+	<target name="clean" description="Clean the build directory">
+		<delete dir="${INSTALLROOT}/inap"/>
+		<delete file="${INSTALLROOT}/bpjars/inapitutcS2.codecs.jar"/>
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${INSTALLROOT}/inap/codecClasses"/>
+	</target>
+
+	<path id="lib.dir">
+      <fileset dir="${THIRDPARTY}/otherjars">
+            <include name="log4j-1.2.8.jar"/>
+            <include name="guava-19.0.jar"/>
+            <include name="commons-lang3-3.4.jar"/> 
+            <include name="nio_char.jar"/> 
+      </fileset>
+	   <fileset dir="${INSTALLROOT}/bpjars">
+			<include name="tcap-provider-api.jar"/>
+      </fileset>
+    </path>
+	
+	<target name="build" depends="init">
+			<echo message="THIRDPARTY: ${THIRDPARTY}"/>
+			<javac srcdir="${INAP_HOME}/itu-t/cs2/codec/src" destdir="${INSTALLROOT}/inap/codecClasses" debug="true">
+				  <include name="**/*.java"/>
+				  <classpath refid="lib.dir"/>
+			</javac>
+			<jar update="true" jarfile="${INSTALLROOT}/bpjars/inapitutcS2.codecs.jar" basedir="${INSTALLROOT}/inap/codecClasses"/>
+			<delete dir="${INSTALLROOT}/inap"/>
+	  </target>
+	  
+</project>

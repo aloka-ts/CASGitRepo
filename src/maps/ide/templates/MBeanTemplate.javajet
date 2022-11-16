@@ -1,0 +1,1683 @@
+<%@ jet
+	package="com.genband.m5.maps.ide.model.template"
+	class="CreateMBean" 
+	imports="com.genband.m5.maps.common.CPFConstants
+			com.genband.m5.maps.ide.model.* 
+			com.genband.m5.maps.ide.CPFPlugin
+			java.util.* 
+			java.util.List
+			com.genband.m5.maps.ide.model.util.*;"
+%>
+<%
+	CPFPlugin LOG = CPFPlugin.getDefault();
+	CPFResource CPFArgument = (CPFResource)argument; 
+ 	CPFScreen cpfScreen = (CPFScreen)CPFArgument.getCpfScreen();
+ 	ModelEntity modelEntity = null;
+ 	modelEntity = (ModelEntity)cpfScreen.getBaseEntity();
+ 	LOG.info("Generating Managed Bean for Details Screen of Base Entity : " + modelEntity.getName());
+ 	List<CPFAttribute> selectedAttributes = cpfScreen.getSelectedAttributes ();
+ 	int operationId = cpfScreen.getPortletRef().getPortletId();		//Holds Operation Id of the method
+ 	LOG.info("Generatinf details Managed bean for Portlet Id : " + operationId);
+	Map<RelationKey, List<CPFAttribute>> nestedAttributes = cpfScreen.getNestedAttributes();
+	List<String> varibleNames = new ArrayList<String>();
+	List<String> setters = new ArrayList<String>();
+	List<String> getters = new ArrayList<String>();
+	List<String> signatures = new ArrayList<String>();
+	List<String> declarations = new ArrayList<String>();
+	List<String> imports = new ArrayList<String>();
+	Map<CPFAttribute, String> attributeSetters = new HashMap<CPFAttribute, String>();		//Holds Setter function names
+	Map<CPFAttribute, String> attributeGetters = new HashMap<CPFAttribute, String>();		//Holds Getter function names
+	Map<String, String> otherEntitiesSign = new HashMap<String, String>();			//Holds return type signature for dependent entities
+	List<List<String>> attrbVisibility = new ArrayList<List<String>>();		//Holds values related to getListVisibility()
+	List<String> distributeData = new ArrayList<String>();
+	String modifyFields = new String();		//Holds field values for Modify mode 
+	String viewFields = new String();		//Holds field values for View mode... Infact both can be same if we donot want attibute name in case of strong relation with foreign entity
+		//Holds the map of taggedValue name inside managed bean and its user defined map of code and value values
+	Map<String, Map<String, String>> taggedValues = null;
+	Map<String, String> tvSelectedName = null;
+		//Holds the default values for each attribute if set by user otherwise holds null value
+	List<String> defaultValues = new ArrayList<String>();
+	List<String> formatTypes = new ArrayList<String>();	//Holds the format types for attributes..
+	boolean selectItemImport = true;
+	List<String> puVarName = null;	//Holds variable Names for related Strong entities;
+	List<String> puSelectedName = null;	//Holds variable names for related entities whihch holds index for selected item..
+	Map<String, String[]> puArguments = null;	//Holds arguments to be passed to portlet Util to get SelectItems
+	String className = "CreateMBean_" + operationId;
+	LOG.info("Generating Class name as : " + className);
+	imports.add(modelEntity.getCanonicalTypeName());
+	if(!modelEntity.getName().equals("Organization")) {
+		imports.add("com.genband.m5.maps.common.entity.Organization");
+	}
+%>
+<%
+		//doing process for Variable declaration, setters, getters and DataTypes here..................
+	LOG.info("Doing process over Base Entity selected Attributes for declaration of them in class and thier setters getters as well Data types..");
+	for(Iterator<CPFAttribute> attributeItr = selectedAttributes.iterator(); attributeItr.hasNext(); ) { 
+ 		CPFAttribute selectedAttribute = (CPFAttribute)attributeItr.next();    //For each selected attribute
+		ModelAttribute modelAttrib; 
+		modelAttrib = selectedAttribute.getModelAttrib();
+		String type = null;      //retrieving Attribute data type
+			//not working on group items
+		if (selectedAttribute.isGroup () ) {
+			LOG.info ("Found a group item. skipping it ... " + selectedAttribute.getName ());
+			continue;
+		}		
+ 		if(selectedAttribute.getForeignColumn () == null) {	//For Basic attributes...
+ 			if(selectedAttribute.getModelAttrib().isFK()) {
+ 				throw new IllegalArgumentException("You have not selected column to be displayed for this foreign attribute.. "
+ 													+ "please select it and then try the code geenration..");
+ 			}
+			type = new String(modelAttrib.getCanonicalTypeName());      //retrieving Attribute data type 
+			modifyFields = modifyFields.concat(modelAttrib.getName() + ", ");
+			viewFields = viewFields.concat(modelAttrib.getName() + ", ");
+				//For user defined tagged values...i.e, If user selected any control type other than textbox..
+			if(!selectedAttribute.getControlType ().equals(CPFConstants.ControlType.TEXTBOX)
+				&& !selectedAttribute.getControlType ().equals(CPFConstants.ControlType.CALENDAR)
+				&& !selectedAttribute.getControlType ().equals(CPFConstants.ControlType.CLOCK)
+				&& selectedAttribute.getTaggedValues () == null) {
+				LOG.info(selectedAttribute.getName() + " attribute is user defined tagged value...");
+				throw new IllegalArgumentException ("You have not entered any 'code and value' values into tagged values "
+														+ "please enter the pair of values and then try for code generation..");
+			} else if(!selectedAttribute.getControlType ().equals(CPFConstants.ControlType.TEXTBOX) 
+						&& !selectedAttribute.getControlType ().equals(CPFConstants.ControlType.CALENDAR)
+						&& !selectedAttribute.getControlType ().equals(CPFConstants.ControlType.CLOCK)
+						&& selectedAttribute.getTaggedValues () != null) {
+				LOG.info(selectedAttribute.getName() + " attribute is user defined tagged value...");
+				if(selectedAttribute.getTaggedValues ().size() == 0) {
+					throw new IllegalArgumentException ("You have not entered any code and value values into tagged values "
+														+ "please enter the pair of values and then try for code generation..");
+				}
+				if(taggedValues == null) {
+					taggedValues = new HashMap<String, Map<String, String>>();
+					tvSelectedName = new HashMap<String, String>();
+					if(!imports.contains("javax.faces.model.SelectItem")) {
+						imports.add("javax.faces.model.SelectItem");
+					}
+					imports.add("com.genband.m5.maps.common.CommonUtil");
+				}
+				String temp = new String();
+				temp = temp.concat("b" + modelAttrib.getName() + "TV");
+				Map<String, String> tempTags = new HashMap<String, String>();
+				tempTags = selectedAttribute.getTaggedValues();
+				for(Iterator<String> itrTags = tempTags.keySet().iterator(); itrTags.hasNext();) {
+					String tc = itrTags.next();
+					LOG.info("TC is : " + tc);
+					if(tc == null || tc.trim().equals("")) {
+						throw new IllegalArgumentException ("You have not entered taaged code for a tagged value..");
+					}
+					if(tempTags.get(tc) == null) {
+						tempTags.put(tc, tc);
+					}
+				}
+				taggedValues.put(temp, selectedAttribute.getTaggedValues());
+				tvSelectedName.put(temp, "selected" + modelAttrib.getName().toUpperCase().charAt(0)
+									+ modelAttrib.getName().substring(1));
+			}
+		} else {	//For Foreign Column attributes...
+				//getting information to call portletUtil from add, modify and view acitons later
+			if(selectItemImport) {
+				selectItemImport = false;
+				imports.add("javax.faces.model.SelectItem");
+				imports.add("com.genband.m5.maps.common.PortletUtil");
+			}
+			LOG.info("Adding import statement : " + selectedAttribute.getForeignColumn().getEntity().getCanonicalTypeName());
+			if(!imports.contains(selectedAttribute.getForeignColumn().getEntity().getCanonicalTypeName())) {
+				imports.add(selectedAttribute.getForeignColumn().getEntity().getCanonicalTypeName());
+			}
+			LOG.info("Selected property Name is : " + selectedAttribute.getModelAttrib().getName());
+			LOG.info("Selected DSC Name is : " + selectedAttribute.getForeignColumn().getName());
+			if(puVarName == null) {
+				puVarName = new ArrayList<String>();
+				puArguments = new HashMap<String, String[]>();
+			}
+			RelationShipInfo relInfo = selectedAttribute.getModelAttrib().getRelType();
+			String tempPuName = relInfo.getPropertyName();
+			if(relInfo.getMapping().equals(CPFConstants.RelationshipType.OneToOne)
+				|| relInfo.getMapping().equals(CPFConstants.RelationshipType.ManyToOne)) {
+				if (puSelectedName == null) {
+					puSelectedName = new ArrayList<String> ();
+				}
+				String te = new String("selected");
+				te = te.concat(tempPuName.toUpperCase().charAt(0) + tempPuName.substring(1));
+				puSelectedName.add(te);
+			}
+			tempPuName = tempPuName + selectedAttribute.getForeignColumn().getName().toUpperCase().charAt(0)
+							+ selectedAttribute.getForeignColumn().getName().substring(1);
+			puVarName.add(tempPuName);
+			String[] tempP = new String[6];	//argumetns to be passed is 5 So hardcoded and last but one is for one to many purpose .. 1 for one2One 2 for one2Many
+			tempP[0] = new String();
+			tempP[0] = modelAttrib.getForeignEntity().getName();
+			tempP[1] = new String();
+			tempP[1] = modelAttrib.getForeignEntity().getPrimaryKey();
+			tempP[2] = new String();
+			tempP[2] = selectedAttribute.getForeignColumn().getName();
+			tempP[3] = new String();
+			if(modelAttrib.getForeignEntity().isStatic()) {
+				tempP[3] = "true";
+			} else {
+				tempP[3] = "false";
+			}
+			if(relInfo.getMapping().equals(CPFConstants.RelationshipType.ManyToOne)
+				|| relInfo.getMapping().equals(CPFConstants.RelationshipType.OneToOne)) {
+				if(modelAttrib.isRequired()) {
+					tempP[4] = "2";
+				} else {
+					tempP[4] = "1";
+				}
+			} else {
+				tempP[4] = "2";
+			}			tempP[5] = new String();			tempP[5] = selectedAttribute.getExtraPredicateOnFK();
+			puArguments.put(tempPuName, tempP);
+			//End of getting info for portletUtil
+			
+			RelationShipInfo relationShipInfo = modelAttrib.getRelType();
+			type = new String(relationShipInfo.getSimpleTypeInfo ());
+			if(type.contains("<")) {
+				modifyFields = modifyFields.concat(relationShipInfo.getPropertyName() + "[n], ");
+				viewFields = viewFields.concat(relationShipInfo.getPropertyName() + "[n]."
+												+ selectedAttribute.getForeignColumn().getName() + ", ");
+				type = new String("List<Long>");
+			} else {
+				modifyFields = modifyFields.concat(relationShipInfo.getPropertyName() + ", ");
+				viewFields = viewFields.concat(relationShipInfo.getPropertyName() + "."
+												+ selectedAttribute.getForeignColumn().getName() + ", ");
+				type = "java.lang.Long";
+			}
+		} //end if-else selectedAttribute.getForeignColumn () == null
+		if(selectedAttribute.getDefaultValue () != null) {
+			defaultValues.add(selectedAttribute.getDefaultValue ());
+		} else {
+			LOG.info("Default value found for the attribute : " + selectedAttribute.getName());
+			defaultValues.add(null);
+		}		
+			//Getting format type information..Added on 29th April..
+		if(selectedAttribute.getFormatData() != null) {
+			LOG.info("format Type is : " + selectedAttribute.getFormatData().getCategory());
+			formatTypes.add(selectedAttribute.getFormatData().getCategory().toString());
+		} else {
+			LOG.info("For This attribute no format has been set If it is date adding default conversion..");
+			if(selectedAttribute.getModelAttrib().getDataType().equals(CPFConstants.AttributeDataType.DATE)){
+				formatTypes.add(CPFConstants.FormatType.DATE.toString());
+			} else if(selectedAttribute.getModelAttrib().getDataType().equals(CPFConstants.AttributeDataType.TIMESTAMP)){
+				if(selectedAttribute.getModelAttrib().getCanonicalTypeName().equals(java.sql.Time.class)) {
+					formatTypes.add(CPFConstants.FormatType.TIME.toString());
+				} else {
+					formatTypes.add(CPFConstants.FormatType.DATE_TIME.toString());
+				}
+			}else {
+				formatTypes.add(null);
+			}
+		}
+		if (type.equals ("java.sql.Date") || type.equals ("java.sql.Time") || type.equals ("java.sql.Timestamp")) {
+			LOG.info(selectedAttribute.getName()  + " attribute data type found as Date...");
+			type = new String ("java.util.Date");
+		} else if (type.equals ("java.sql.Blob")) {
+			type = new String("byte[]");
+		} else if (type.equals ("java.sql.Clob")) {
+			type = new String("char[]");
+		}		
+		if(selectedAttribute.getRolesException() != null && selectedAttribute.getRolesException().size() > 0) {
+			LOG.info("Some roles cannot see this Attribute : " + selectedAttribute.getName() );
+ 			List<String> rolesList = selectedAttribute.getRolesException().get(CPFConstants.OperationType.VIEW);
+ 			attrbVisibility.add(rolesList);
+ 		} else {
+ 			attrbVisibility.add(null);
+ 		}		
+		String varName = modelAttrib.getName();
+		varibleNames.add (varName);
+		varName = varName.toUpperCase ().charAt (0) + varName.substring (1);
+		String setter = "set" + varName;
+		String getter = "get" + varName;
+		setters.add (setter);
+		getters.add ("get" + varName);
+		varName = varName.toLowerCase ().charAt (0) + varName.substring (1);
+		signatures.add (type);
+  		attributeSetters.put(selectedAttribute, setter);
+  		attributeGetters.put(selectedAttribute, getter);
+		declarations.add("private " + type + " " + varName);	//Adding declaration..  this may move up so that varName changing to lower case  may ommited
+	} //end for process over Base Entity selected Attributes	
+			//Generating Varible declarations for Dependent here........
+	Set<RelationKey> selectedOtherEntities = null;
+	if(nestedAttributes != null) {
+		selectedOtherEntities = nestedAttributes.keySet();
+		if (selectedOtherEntities != null) {
+			LOG.info("Doing process for selected other dependent entities selected attributes....");
+			for (Iterator<RelationKey> itr = selectedOtherEntities.iterator(); itr.hasNext(); ) {
+				RelationKey relationKey = itr.next();
+				String otherModelEntityProp = relationKey.getRelationShipInfo().getPropertyName();
+				List<CPFAttribute> selectedOtherAttributes = nestedAttributes.get (relationKey);
+				ModelEntity otherModelEntity = relationKey.getReferencedEntity();
+				if(!imports.contains(otherModelEntity.getCanonicalTypeName())) {
+					imports.add(otherModelEntity.getCanonicalTypeName());
+				}		
+				RelationShipInfo relationShipInfo = relationKey.getRelationShipInfo();
+				String signature = relationShipInfo.getSimpleTypeInfo();
+				otherEntitiesSign.put(otherModelEntityProp, signature);
+				String tempPurpose = null;
+				if(relationShipInfo.getTypeInfo().contains("<")) {	//No need to change getTypeInfo to getSimpleTypeInfo...
+					tempPurpose = new String("[n].");
+				} else {
+					tempPurpose = new String(".");
+				}
+					//Adding Dependent Entity primaryKey to modifyfields and viewFields here....
+				modifyFields = modifyFields.concat(relationShipInfo.getPropertyName() + tempPurpose +
+													otherModelEntity.getPrimaryKey () + "," );
+				viewFields = viewFields.concat(relationShipInfo.getPropertyName() + tempPurpose +
+												otherModelEntity.getPrimaryKey () + ", ");
+				for (Iterator<CPFAttribute> itrAttribute = selectedOtherAttributes.iterator(); itrAttribute.hasNext();) {
+					CPFAttribute selectedAttribute = (CPFAttribute) itrAttribute.next ();
+					ModelAttribute modelAttrib; 
+					String type = null;
+					String varName = null;
+					modelAttrib = selectedAttribute.getModelAttrib();
+					varName = modelAttrib.getName();
+					if(selectedAttribute.getForeignColumn () == null) {	//For Basic attribtues...
+						if(selectedAttribute.getModelAttrib().isFK()) {
+ 							throw new IllegalArgumentException("You have not selected column to be displayed for this foreign attribute.. "
+ 																+ "please select it and then try the code geenration.."); 				
+ 						}
+						type = new String(modelAttrib.getCanonicalTypeName());      //retrieving Attribute data type 
+						varName = varName.toUpperCase ().charAt (0) + varName.substring (1);
+						String temp = otherModelEntityProp;
+						temp = temp.toLowerCase().charAt(0) + temp.substring(1);
+						varName = temp + varName;
+						modifyFields = modifyFields.concat(relationShipInfo.getPropertyName() + tempPurpose +
+															modelAttrib.getName() + "," );
+						viewFields = viewFields.concat(relationShipInfo.getPropertyName() + tempPurpose +
+														modelAttrib.getName() + ", ");
+						//For user defined tagged values...i.e, If user selected any control type other than textbox..
+						if(!selectedAttribute.getControlType ().equals(CPFConstants.ControlType.TEXTBOX)
+							&& !selectedAttribute.getControlType ().equals(CPFConstants.ControlType.CALENDAR)
+							&& !selectedAttribute.getControlType ().equals(CPFConstants.ControlType.CLOCK)
+							&& selectedAttribute.getTaggedValues () == null) {
+								LOG.info(selectedAttribute.getName() + " attribute is user defined tagged value...");
+								throw new IllegalArgumentException ("You have not entered any 'code and value' values into tagged values "
+																	+ "please enter the pair of values and then try for code generation..");
+						} else if(!selectedAttribute.getControlType ().equals(CPFConstants.ControlType.TEXTBOX)
+									&& !selectedAttribute.getControlType ().equals(CPFConstants.ControlType.CALENDAR)
+									&& !selectedAttribute.getControlType ().equals(CPFConstants.ControlType.CLOCK)
+									&& selectedAttribute.getTaggedValues () != null) {
+							LOG.info(selectedAttribute.getName() + " attribute is user defined tagged value...");
+							if(selectedAttribute.getTaggedValues ().size() == 0) {
+								throw new IllegalArgumentException ("You have not entered any code and value values into tagged values "
+																	+ "please enter the pair of values and then try for code generation..");
+							}
+							if(taggedValues == null) {
+								taggedValues = new HashMap<String, Map<String, String>>();
+								tvSelectedName = new HashMap<String, String>();
+								if(!imports.contains("javax.faces.model.SelectItem")) {
+									imports.add("javax.faces.model.SelectItem");
+								}
+								imports.add("com.genband.m5.maps.common.CommonUtil");
+							}					
+							temp = new String();
+							temp = temp.concat("d" + modelAttrib.getName() + "TV");
+							taggedValues.put(temp, selectedAttribute.getTaggedValues());
+							tvSelectedName.put(temp, "selected" + varName.toUpperCase().charAt(0)
+												+ varName.substring(1));
+						}	//End of if(!selectedAttribute.getControlType ().equals(CPFConstants.ControlType.TEXTBOX)
+					} else {	//For Foreign column attribtues....
+							//getting information to call portletUtil from add modify and view acitons later
+						if(selectItemImport) {
+							selectItemImport = false;
+							imports.add("javax.faces.model.SelectItem");
+							imports.add("com.genband.m5.maps.common.PortletUtil");
+						}				
+						if(puVarName == null) {
+							puVarName = new ArrayList<String>();
+							puArguments = new HashMap<String, String[]>();
+						}
+						if(!imports.contains(selectedAttribute.getForeignColumn().getEntity().getCanonicalTypeName())) {
+							imports.add(selectedAttribute.getForeignColumn().getEntity().getCanonicalTypeName());
+						}
+						RelationShipInfo relInfo = selectedAttribute.getModelAttrib().getRelType();
+						String tempPuName = relInfo.getPropertyName();
+						
+						if(relInfo.getMapping().equals(CPFConstants.RelationshipType.OneToOne)
+							|| relInfo.getMapping().equals(CPFConstants.RelationshipType.ManyToOne)) {
+							if (puSelectedName == null) {
+								puSelectedName = new ArrayList<String> ();
+							}
+							String te = new String("selected");
+							te = te.concat(tempPuName.toUpperCase().charAt(0) + tempPuName.substring(1));
+							puSelectedName.add(te);
+						}				
+						tempPuName = tempPuName.toUpperCase().charAt(0) + tempPuName.substring(1);
+						tempPuName = relationShipInfo.getPropertyName()
+									+ tempPuName + selectedAttribute.getForeignColumn().getName().toUpperCase().charAt(0)
+									+ selectedAttribute.getForeignColumn().getName().substring(1);
+						puVarName.add(tempPuName);
+						String[] tempP = new String[6];	//argumetns to be passed is 6 So hardcoded and last but one is for one2one or one2many purpose..
+						tempP[0] = new String();
+						tempP[0] = modelAttrib.getForeignEntity().getName();
+						tempP[1] = new String();
+						tempP[1] = modelAttrib.getForeignEntity().getPrimaryKey();
+						tempP[2] = new String();
+						tempP[2] = selectedAttribute.getForeignColumn().getName();
+						tempP[3] = new String();
+						if(modelAttrib.getForeignEntity().isStatic()) {
+							tempP[3] = "true";
+						} else {
+							tempP[3] = "false";
+						}
+						if(relInfo.getMapping().equals(CPFConstants.RelationshipType.ManyToOne)
+							|| relInfo.getMapping().equals(CPFConstants.RelationshipType.OneToOne)) {
+							if(modelAttrib.isRequired()) {
+								tempP[4] = "2";
+							} else {
+								tempP[4] = "1";
+							}
+						} else {
+							tempP[4] = "2";
+						}
+			   			tempP[5] = new String();
+			   			 			    		tempP[5] = selectedAttribute.getExtraPredicateOnFK();
+						puArguments.put(tempPuName, tempP);
+							//End of getting info for portletUtil				
+						ModelEntity innerModelEntity = selectedAttribute.getForeignColumn().getEntity();
+						imports.add(innerModelEntity.getCanonicalTypeName());				
+						RelationShipInfo innerRelationShipInfo = modelAttrib.getRelType();
+						type = new String(innerRelationShipInfo.getSimpleTypeInfo ());
+						if(type.contains("<")) {
+							modifyFields = modifyFields.concat(relationShipInfo.getPropertyName() + tempPurpose 											+ innerRelationShipInfo.getPropertyName() + "[n], ");
+							viewFields = viewFields.concat(relationShipInfo.getPropertyName() + tempPurpose 											+ innerRelationShipInfo.getPropertyName() + "[n]." 											+ selectedAttribute.getForeignColumn().getName() + ", ");
+							type = type.substring(0, type.lastIndexOf("<")+1) + "Long>";
+						} else {
+							modifyFields = modifyFields.concat(relationShipInfo.getPropertyName() + tempPurpose 											+ innerRelationShipInfo.getPropertyName() + ", ");
+							viewFields = viewFields.concat(relationShipInfo.getPropertyName() + tempPurpose 											+ innerRelationShipInfo.getPropertyName() + "." 											+ selectedAttribute.getForeignColumn().getName() + ", ");
+							type = "java.lang.Long";
+						}	
+					}	//End of if(selectedAttribute.getForeignColumn () == null)
+					if (type.equals ("java.sql.Date") || type.equals ("java.sql.Time") || type.equals ("java.sql.Timestamp")) {
+						type = new String ("java.util.Date");
+					}else if (type.equals ("java.sql.Blob")) {
+						type = new String ("Byte[]");
+					} else if (type.equals ("java.sql.Clob")) {
+						type = new String ("Char[]");
+					}			
+					if(selectedAttribute.getDefaultValue () != null) {
+						defaultValues.add(selectedAttribute.getDefaultValue ());
+					} else {
+						defaultValues.add(null);
+					}
+					
+						//Getting format type information..Added on 29th April..
+					if(selectedAttribute.getFormatData() != null) {
+						LOG.info("format Type is : " + selectedAttribute.getFormatData().getCategory());
+						formatTypes.add(selectedAttribute.getFormatData().getCategory().toString());
+					} else {
+						LOG.info("For This attribute no format has been set If it is date adding default conversion..");
+						if(selectedAttribute.getModelAttrib().getDataType().equals(CPFConstants.AttributeDataType.DATE)){
+							formatTypes.add(CPFConstants.FormatType.DATE.toString());
+						} else if(selectedAttribute.getModelAttrib().getDataType().equals(CPFConstants.AttributeDataType.TIMESTAMP)){
+							if(selectedAttribute.getModelAttrib().getCanonicalTypeName().equals(java.sql.Time.class)) {
+								formatTypes.add(CPFConstants.FormatType.TIME.toString());
+							} else {
+								formatTypes.add(CPFConstants.FormatType.DATE_TIME.toString());
+							}
+						}else {		
+							formatTypes.add(null);
+						}
+					}		
+					if(selectedAttribute.getRolesException() != null && selectedAttribute.getRolesException().size() > 0) {
+						List<String> rolesList = selectedAttribute.getRolesException().get(CPFConstants.OperationType.VIEW);
+ 						attrbVisibility.add(rolesList);
+ 					} else {
+ 						attrbVisibility.add(null);
+ 					}			
+					varibleNames.add (varName);	
+					declarations.add("private " + type + " " + varName);	//Adding declaration	
+					varName = varName.toUpperCase ().charAt (0) + varName.substring (1);
+					setters.add ("set" + varName);
+					getters.add ("get" + varName);
+					signatures.add (type);
+				}	//End of for (Iterator<CPFAttribute> itrAttribute = selectedOtherAttributes.iterator()
+			}	//End of for (Iterator<RelationKey> itr = selectedOtherEntities.iterator()
+		} //End of if(selectedOtherEntities != null)
+	} //End of if(nestedAttributes != null)
+	modifyFields = modifyFields.substring(0, modifyFields.lastIndexOf(','));
+	viewFields = viewFields.substring(0, viewFields.lastIndexOf(','));
+	//End of doing process for Variable declaration, setters, getters and DataTypes here...............
+%>	
+<%
+	//Bean generation Started Here.....
+	LOG.info("adding Imports to the class...");
+%>
+
+package com.genband.m5.maps.mbeans;
+import java.util.*;
+import java.util.List;
+import com.genband.m5.maps.common.CPFManager;
+import com.genband.m5.maps.common.PortletFacesUtils;
+import javax.faces.event.ActionEvent;
+import com.genband.m5.maps.common.CPFException;
+import com.genband.m5.maps.common.CPFConstants;
+import com.genband.m5.maps.common.Criteria;
+import com.genband.m5.maps.common.User;
+import com.genband.m5.maps.common.SS_Constants;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.el.ELContext;
+import javax.el.ExpressionFactory;
+import javax.el.ValueExpression;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Principal;
+import com.genband.m5.maps.identity.GBUserPrincipal;
+import java.util.Set;
+import org.jboss.security.SecurityAssociation;
+<%
+	Iterator<String> itrImports = imports.iterator();
+	
+	while(itrImports.hasNext()) {
+%>
+import <%= itrImports.next() %>;
+<%
+	}
+%>
+
+/**
+		This is the managed Bean class for <%= modelEntity.getName() %> 
+		@Genband.com
+*/
+public class  <%= className %> {
+<%
+	LOG.info("Declaring variables inside Class...");
+		//Variables declaration started here....
+	//general variables declaration started here...
+	for(Iterator<String> itrDeclarations = declarations.iterator(); itrDeclarations.hasNext();) {
+%>
+		<%= itrDeclarations.next() %>;
+<%
+	}	 
+	
+		//Declaration for Tagged Values here..... declaring as SelectItem
+	if(taggedValues != null) {
+		LOG.info("Declaration for tagged values ...");
+		Iterator<String> itrTaggedValues = taggedValues.keySet().iterator();
+		while (itrTaggedValues.hasNext()) {
+			String tvVariableName = itrTaggedValues.next();
+%>
+		private static List<SelectItem> <%= tvVariableName %>;		
+		private int <%= tvSelectedName.get(tvVariableName) %>;
+<%
+		}
+	}
+		//Generating Dependent Entity primary Keys for Modify have to set primaryKey Value;
+			//TODO This works only for OneToOne for OneToMany have to define as a Collection... Have to think once for that
+	if (selectedOtherEntities != null) {
+		for (Iterator<RelationKey> itr = selectedOtherEntities.iterator(); itr.hasNext(); ) {
+			RelationKey rk = itr.next();
+			String otherEntityPKName = new String(rk.getRelationShipInfo().getPropertyName()); 
+			otherEntityPKName = otherEntityPKName.concat("PKValue");
+%>
+		private Long <%= otherEntityPKName %>;
+<%
+		}
+	}	//End of Generating Dependent Entity primary Keys for Modify have to set primaryKey Value;
+	
+		//This is for Strong Related Entites
+	if(puVarName != null) {
+		Iterator<String> itrPuVarName = puVarName.iterator();
+		while(itrPuVarName.hasNext()) {
+%>
+		private List<SelectItem> <%= itrPuVarName.next() %>;
+<%
+		}	
+	}
+		//This is for storing index of selected items for related entities...
+	if (puSelectedName != null) {
+		Iterator<String> itrPuSelectedName = puSelectedName.iterator();
+		while (itrPuSelectedName.hasNext()) {
+%>
+		private int <%= itrPuSelectedName.next() %>;
+<%
+		}
+	}
+	//End Variables declaration here....
+%>
+		private int mode;
+		
+		private int uiMode;
+		private Long primarykeyValue;
+		
+		private int operationId;
+		private String userRole;
+		private List<Boolean> listVisibility;
+		private Criteria criteria;
+		
+		private String clientId;
+		
+		private String returnString;
+//Varibles declaration End...........................................
+		public <%= className %> () {
+		}
+<%		
+	if(taggedValues != null) {		//This is for loading Tagged Values Statically
+		LOG.info("adding static load for tagged values.....");
+		Iterator<String> itrTaggedValues = taggedValues.keySet().iterator();
+%>
+			//Loading Static data...
+		static {
+			SelectItem temp = null;
+<%
+		while(itrTaggedValues.hasNext()) {
+			String tagName = itrTaggedValues.next();
+			Map<String, String> tagValues = taggedValues.get(tagName);
+			Iterator<String> itrTagCode = tagValues.keySet().iterator(); 
+%>
+
+			<%= tagName %> = new ArrayList<SelectItem>();
+<%
+			while(itrTagCode.hasNext()) {
+				String tc = itrTagCode.next();
+				String tv = tagValues.get(tc);
+%>
+			temp = new SelectItem();
+			temp.setValue("<%= tc %>");
+			temp.setLabel("<%= tv %>");
+			<%= tagName %>.add(temp);
+<%
+			}
+		}
+%>
+		}	
+<%
+	}	//End of loading Tagged Values Statically
+%>
+<%
+		//Generating Getters here.......................
+	LOG.info("Defining Getters inside Class.....");
+	Iterator<String> itrGetter = getters.iterator ();
+	Iterator<String> itrVaribleNames = varibleNames.iterator ();
+	Iterator<String> itrSignatures =  signatures.iterator ();
+	while (itrGetter.hasNext ()) {
+%>
+		public <%= (String)itrSignatures.next() %> <%= (String)itrGetter.next () %> () {
+			return this.<%= (String)itrVaribleNames.next () %>;
+		}
+<%
+	}	
+		//Generating getters for Dependent entities primaryKeys
+		//TODO This works only for OneToOne for OneToMany have to define as a Collection... Have to think once for that
+	if (selectedOtherEntities != null) {
+		for (Iterator<RelationKey> itr = selectedOtherEntities.iterator(); itr.hasNext(); ) {
+			RelationKey rk = itr.next();
+			String otherEntityPKName = new String(rk.getRelationShipInfo().getPropertyName()); 
+			otherEntityPKName = otherEntityPKName.concat("PKValue");
+%>
+		public Long get<%= otherEntityPKName.toUpperCase().charAt(0) + otherEntityPKName.substring(1) %> () {
+			return this.<%= otherEntityPKName %>;
+		}
+<%
+		}
+	}	
+		//For Strong Related Entities
+	if(puVarName != null) {
+		Iterator<String> itrPuVarName = puVarName.iterator();
+		while(itrPuVarName.hasNext()) {
+			String tempP = itrPuVarName.next();
+%>
+		public List<SelectItem> get<%= tempP.toUpperCase().charAt(0) + tempP.substring(1) %> () {
+			return this.<%= tempP %>;
+		}
+		
+<%
+		}
+	}
+		//This is also for Related entities..
+	if (puSelectedName != null) {
+		Iterator<String> itrPuSelectedName = puSelectedName.iterator();
+		while (itrPuSelectedName.hasNext()) {
+			String tempS = itrPuSelectedName.next();
+%>
+		public int get<%= tempS.toUpperCase().charAt(0) + tempS.substring(1) %> () {
+			return this.<%= tempS %>;
+		}
+<%
+		}
+	}
+		//For User Defined Tagged Values
+	if(taggedValues != null) {	
+		Iterator<String> itrTaggedValues = taggedValues.keySet().iterator();
+		while (itrTaggedValues.hasNext()) {
+			String temp = itrTaggedValues.next();
+			String get = temp.toUpperCase().charAt(0) + temp.substring(1);
+			get = "get" + get;
+%>
+		public List<SelectItem> <%= get %> () {
+			return this.<%= temp %>;
+		} 		
+		public int get<%= tvSelectedName.get(temp).toUpperCase().charAt(0) + tvSelectedName.get(temp).substring(1) %> () {
+			return this.<%= tvSelectedName.get(temp) %>;
+		}
+<%
+		}
+	}
+%>
+		public int getMode () {
+			return this.mode;
+		}		
+		
+		public int getUiMode () {
+
+			return this.uiMode;
+
+		}
+		public Long getPrimarykeyValue () {
+			return this.primarykeyValue;
+		}		
+		public String getUserRole() {
+			return userRole;
+		}		
+		public List<Boolean> getListVisibility() {
+			return listVisibility;
+		}		
+		public Criteria getCriteria() {
+			return criteria;
+		}
+<%
+		//Generating Setters here.......................
+	LOG.info("Defining Setters inside Class....");
+	Iterator<String> itrSetter = setters.iterator ();
+	itrVaribleNames = varibleNames.iterator ();
+	itrSignatures =  signatures.iterator ();
+	while (itrSetter.hasNext ()) {
+		String varName = (String)itrVaribleNames.next ();
+%>
+		public void <%= (String)itrSetter.next () %> (<%= (String)itrSignatures.next() %> <%= varName %>) {
+			this.<%= varName %> = <%= varName %>;
+		}		 
+<%
+	}
+	
+		//Generating setters for Dependent entities primaryKeys
+		//TODO This works only for OneToOne for OneToMany have to define as a Collection... Have to think once for that
+	if (selectedOtherEntities != null) {
+		for (Iterator<RelationKey> itr = selectedOtherEntities.iterator(); itr.hasNext(); ) {
+			RelationKey rk = itr.next();
+			String otherEntityPKName = new String(rk.getRelationShipInfo().getPropertyName()); 
+			otherEntityPKName = otherEntityPKName.concat("PKValue");
+%>
+		public void set<%= otherEntityPKName.toUpperCase().charAt(0) + otherEntityPKName.substring(1) %> (Long <%= otherEntityPKName %>) {
+			this.<%= otherEntityPKName %> = <%= otherEntityPKName %>;
+		}
+<%
+		}
+	}		
+		//For Strong Related Entities
+	if(puVarName != null) {
+		Iterator<String> itrPuVarName = puVarName.iterator();
+		while(itrPuVarName.hasNext()) {
+			String tempP = itrPuVarName.next();
+%>
+		public void set<%= tempP.toUpperCase().charAt(0) + tempP.substring(1) %>(List<SelectItem> <%= tempP %>) {
+			this.<%= tempP %> = <%= tempP %>;
+		}
+<%
+		}
+	}
+		//This is also for Related entities..
+	if (puSelectedName != null) {
+		Iterator<String> itrPuSelectedName = puSelectedName.iterator();
+		while (itrPuSelectedName.hasNext()) {
+			String tempS = itrPuSelectedName.next();
+%>
+		public void set<%= tempS.toUpperCase().charAt(0) + tempS.substring(1) %> (int <%= tempS %>) {
+			this.<%= tempS %> = <%= tempS %>;
+		}
+<%
+		}
+	}
+	if(taggedValues != null) {		//For User Defined Tagged Values
+		Iterator<String> itrTaggedValues = taggedValues.keySet().iterator();
+		while (itrTaggedValues.hasNext()) {
+			String temp = itrTaggedValues.next();
+			String set = temp.toUpperCase().charAt(0) + temp.substring(1);
+			set = "set" + set;
+%>
+		public void <%= set %> (List<SelectItem> temp) {
+			this.<%= temp %> = <%= temp %>;
+		}		
+		public void set<%= tvSelectedName.get(temp).toUpperCase().charAt(0) + tvSelectedName.get(temp).substring(1) %> (int <%= tvSelectedName.get(temp) %>) {
+			this.<%= tvSelectedName.get(temp) %> = <%= tvSelectedName.get(temp) %>;
+		}
+<%
+		}
+	}
+%>
+		public void setMode (int mode) {
+			this.mode = mode;
+		}
+		
+		public void setUiMode (int uiMode) {
+
+			this.uiMode = uiMode;
+
+		}
+		public void setPrimarykeyValue (Long primarykeyValue) {
+			this.primarykeyValue = primarykeyValue;
+		}			
+		public void setUserRole(String userRole) {
+			this.userRole = userRole;
+		}
+		public void setListVisibility(List<Boolean> listVisibility) {
+			this.listVisibility = listVisibility;
+		}
+		
+		public void setCriteria(Criteria criteria) {
+			this.criteria = criteria;
+		}
+		
+		public String getClientId() {
+			return clientId;
+		}
+		
+		public void setClientId(String clientId) {
+			this.clientId = clientId;
+		}
+			//Generating getObject Function which will set values for ModelEntity and returns ModelEntity.  This itself will do process for Distribute Data
+	    private <%= modelEntity.getName () %> getObject() {
+	    	<%= modelEntity.getName () %> returnEntity = new <%= modelEntity.getName () %> ();
+<%
+		LOG.info("Adding getObject method inside Class.....");
+		distributeData.add(modelEntity.getName () + " dataObject = (" + modelEntity.getName() + ")o;" );
+		Iterator<String> itrVariableNames = varibleNames.iterator();
+				//For CPFAtribtues setting modelEntity values
+	    for (Iterator<CPFAttribute> attributeItr = selectedAttributes.iterator(); attributeItr.hasNext();) {
+			CPFAttribute itrCPFAttribute = attributeItr.next();			
+				//skip group item
+			if ( itrCPFAttribute.isGroup () ) {
+				LOG.info ("Skipping group item. .. " + itrCPFAttribute.getName ());
+				continue;
+			}			
+			String variableName = itrVariableNames.next();      //getting member class variable name here 
+		if (itrCPFAttribute.getForeignColumn () == null) {
+			String cast = itrCPFAttribute.getModelAttrib ().getCanonicalTypeName ();
+			
+			Class classD = null;
+			try {
+				classD = Class.forName(cast);
+			} catch(ClassNotFoundException e) {
+				LOG.info("Not a lang data type...");
+			}
+			String mergeArgument = null;
+			if (cast.equals("java.sql.Date") || cast.equals("java.sql.Time") || cast.equals("java.sql.Timestamp")) {
+				mergeArgument = new String("new " + cast + "(" + itrCPFAttribute.getModelAttrib ().getName () + ".getTime ())");
+			} else if (cast.equals("java.sql.Blob")) {
+				mergeArgument= new String ("ModelUtil.mapByteArray2Blob (" + itrCPFAttribute.getModelAttrib ().getName () + ")");
+			} else if (cast.equals("java.sql.Clob")) {
+				mergeArgument= new String ("ModelUtil.mapCharArray2Clob (" + itrCPFAttribute.getModelAttrib ().getName () + ")");
+			}else {
+				mergeArgument = itrCPFAttribute.getModelAttrib ().getName ();
+			}
+			distributeData.add("this." + variableName + " = dataObject."
+									+ attributeGetters.get(itrCPFAttribute) + "();");   //For distributeData Method purpose
+			if (cast.equals("java.sql.Date") || cast.equals("java.sql.Time") || cast.equals("java.sql.Timestamp")) {
+%>
+			if(<%= itrCPFAttribute.getModelAttrib ().getName () %> != null)
+<%
+			}
+%>
+				returnEntity.<%= attributeSetters.get(itrCPFAttribute) %> (<%= mergeArgument %>);
+<%
+			if(!itrCPFAttribute.getControlType().equals(CPFConstants.ControlType.TEXTBOX)
+				&& itrCPFAttribute.getTaggedValues() != null && itrCPFAttribute.getTaggedValues().size() > 0) {
+				String selectName = new String("selected");
+				selectName = selectName + variableName.toUpperCase().charAt(0) + variableName.substring(1);
+				String tvName = new String("b" + itrCPFAttribute.getModelAttrib().getName() + "TV");
+				if(classD != null) {
+					distributeData.add("this." + selectName + " = this.getIndex(this."
+										+ variableName + ".toString(), this." + tvName + ");");
+%>
+				this.<%= selectName %> = this.getIndex(this.<%= variableName %>.toString(), this.<%= tvName %>);
+<%
+				} else {
+					distributeData.add("this." + selectName + " = this.getIndex(CommonUtil.getWrapperForPrimitive(this."
+										+ variableName + ").toString(), this." + tvName + ");");
+%>
+				this.<%= selectName %> = this.getIndex(CommonUtil.getWrapperForPrimitive(this.<%= variableName %>).toString(), this.<%= tvName %>);
+<%
+				}
+			}	//End of if(!itrCPFAttribute.getControlType().equals(CPFConstants.ControlType.TEXTBOX) 
+		} else {
+			ModelEntity fkModelEntity = itrCPFAttribute.getForeignColumn ().getEntity ();
+			RelationShipInfo relationShipInfo = itrCPFAttribute.getModelAttrib().getRelType();
+			RelationShipInfo inverseRelationShipInfo = itrCPFAttribute.getModelAttrib().getInverseRelType();
+			String signature = relationShipInfo.getSimpleTypeInfo();
+			String fkPrimaryKeyName = fkModelEntity.getPrimaryKey();
+			fkPrimaryKeyName = fkPrimaryKeyName.toUpperCase().charAt(0) + fkPrimaryKeyName.substring(1);
+			if (signature.lastIndexOf (">") > 0) {
+				String varName = itrCPFAttribute.getModelAttrib ().getName () + "List";
+				String inversePropName = null;
+				if(inverseRelationShipInfo != null) {
+					inversePropName = inverseRelationShipInfo.getPropertyName();
+				}
+				if(relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.OneToMany)
+					&& inversePropName == null) {
+					throw new IllegalArgumentException("Have not found inverse Propertyname for "
+						+ relationShipInfo.getPropertyName() + "... please check the relatinships..");
+				}
+				if(inversePropName != null) {
+					inversePropName = inversePropName.toUpperCase().charAt(0) + inversePropName.substring(1);
+				}
+				distributeData.add(signature + " list" + relationShipInfo.getPropertyName()
+									+ " = dataObject.get" + relationShipInfo.getPropertyName().toUpperCase().charAt(0) + relationShipInfo.getPropertyName().substring(1) + "();");   //For distributeData method only
+				distributeData.add("if (list" + relationShipInfo.getPropertyName() + " != null) {");
+%>	
+				if(this.<%= itrCPFAttribute.getModelAttrib ().getName () %> != null) {
+<%
+				if (signature.substring (0, signature.lastIndexOf("<")).equals ("Set")) {
+				
+					distributeData.add("this." + variableName + " = new ArrayList<Long>();" );		//For distributeData method only
+%>
+					<%= signature %> <%= varName %> = new HashSet<<%= fkModelEntity.getName () %>> ();
+<%
+				} else {
+					distributeData.add("this." + variableName + " = new ArrayList<Long>();" );		//For distributeData method only
+%>
+					<%= signature %> <%= varName %> = new ArrayList<<%= fkModelEntity.getName () %>> ();
+<%
+				}
+				distributeData.add("Iterator<" + fkModelEntity.getName() + "> itrList" + fkModelEntity.getName()
+									 + " = list" + relationShipInfo.getPropertyName()  + ".iterator();");
+				distributeData.add("while(itrList" + fkModelEntity.getName() + ".hasNext()) {");
+				distributeData.add("	this." + variableName + ".add(" + "itrList"
+									+ fkModelEntity.getName() + ".next().get" + fkPrimaryKeyName + "());");
+				distributeData.add("}");
+				distributeData.add("}");
+%>
+					for (Iterator<Long> itr = <%= itrCPFAttribute.getModelAttrib ().getName () %>.iterator ()
+							; itr.hasNext();) {
+						<%= fkModelEntity.getName () %> <%= itrCPFAttribute.getModelAttrib ().getName () %> = new <%= fkModelEntity.getName () %> ();
+						<%= itrCPFAttribute.getModelAttrib ().getName () %>.set<%= fkPrimaryKeyName %> (itr.next());
+<%
+					if (relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.OneToMany)) {
+%>						
+						<%= itrCPFAttribute.getModelAttrib ().getName () %>.set<%= inversePropName %> (returnEntity);		//Added this line on 31st Jan for setting child Entity reference in Parent Entity
+<%
+					}
+%>		 
+						<%= varName %>.add (<%= itrCPFAttribute.getModelAttrib ().getName () %>);
+					} 
+					returnEntity.<%= attributeSetters.get (itrCPFAttribute) %> (<%= varName %>);
+				}
+<%
+			} else { //Else for if (signature.lastIndexOf (">") > 0) {
+					//Adding this If Condition on 31st Jan for the purpose of setting Child reference in parent entity in case Of One to One Relation Only
+						//and if the Foreign entity is the Parent one then only
+				String inversePropertyName = null;
+				if(relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.OneToOne)) {
+					if(!itrCPFAttribute.getModelAttrib().isOwner()) {
+						inversePropertyName = inverseRelationShipInfo.getPropertyName();
+						inversePropertyName = inversePropertyName.toUpperCase().charAt(0)
+												+ inversePropertyName.substring(1);
+					}
+				}
+				String setter = fkModelEntity.getPrimaryKey();
+				String capPropName = relationShipInfo.getPropertyName().toUpperCase().charAt(0)
+										+ relationShipInfo.getPropertyName().substring(1); 
+				setter = setter.toUpperCase().charAt(0)+setter.substring (1);
+				distributeData.add(fkModelEntity.getName() + " temp" + relationShipInfo.getPropertyName()
+									+ " = dataObject.get" + relationShipInfo.getPropertyName().toUpperCase().charAt(0)
+										+ relationShipInfo.getPropertyName().substring(1) + " ();");
+				distributeData.add("if (temp" + relationShipInfo.getPropertyName() + " != null) {");
+				distributeData.add("	this." + variableName + " = temp" + relationShipInfo.getPropertyName() +
+										".get" + fkPrimaryKeyName + "();");
+			    distributeData.add("	this.selected" + capPropName + " = getIndex(this."
+			    					+ relationShipInfo.getPropertyName() + ", this." + relationShipInfo.getPropertyName()
+			    					+ itrCPFAttribute.getForeignColumn().getName().toUpperCase().charAt(0)
+			    					+ itrCPFAttribute.getForeignColumn().getName().substring(1) + ");");
+				distributeData.add("} else {");
+				distributeData.add("	this.selected" + capPropName + " = -1;");
+				distributeData.add("}");
+%>
+			if(this.<%= itrCPFAttribute.getModelAttrib ().getName () %> != -1) {
+			<%= signature  %> <%= itrCPFAttribute.getModelAttrib ().getName () %> = new <%= signature  %> ();
+			<%= itrCPFAttribute.getModelAttrib ().getName () %>.set<%= setter %> (this.<%= itrCPFAttribute.getModelAttrib ().getName () %>);
+<%
+				if(inversePropertyName != null) {	//if condition for the purpose of settingg child reference in Parent entity
+%>
+			<%= itrCPFAttribute.getModelAttrib ().getName () %>.set<%= inversePropertyName %> (returnEntity);
+<%
+				}
+			String firstArg = itrCPFAttribute.getModelAttrib ().getName ();
+			String secondArg = firstArg + itrCPFAttribute.getForeignColumn().getName().toUpperCase().charAt(0)
+								 + itrCPFAttribute.getForeignColumn().getName().substring(1);
+%>
+			returnEntity.<%= attributeSetters.get (itrCPFAttribute) %> (<%= itrCPFAttribute.getModelAttrib ().getName () %>);
+			this.selected<%= attributeSetters.get (itrCPFAttribute).substring(3) %> = this.getIndex(this.<%= firstArg %>, this.<%= secondArg %>);										
+			} else {
+				this.selected<%= attributeSetters.get (itrCPFAttribute).substring(3) %> = -1; 
+			}
+<%
+			} //End of if (signature.lastIndexOf (">") > 0) {
+		}	//End of if (itrCPFAttribute.getForeignColumn () == null) {
+		} //End of  for (Iterator<CPFAttribute> attributeItr = selectedAttributes.iterator()
+%>	
+<%
+			//For OtherSelectedEntities setting modelEntity values
+		if (modelEntity.getName ().equals (modelEntity.getName()) && selectedOtherEntities != null) {
+			LOG.info("getObject ..for Dependent Entities...");
+			boolean c = false;
+		for (Iterator<RelationKey> itr = selectedOtherEntities.iterator (); itr.hasNext (); ) {
+			c = false;
+			RelationKey relationKey = itr.next();
+			String tempProp = relationKey.getRelationShipInfo().getPropertyName();
+			List<CPFAttribute> cpfAttributes = nestedAttributes.get(relationKey);
+			ModelEntity itrModelEntity = relationKey.getReferencedEntity();
+			String setter = new String(itrModelEntity.getName ().toLowerCase().charAt(0) + itrModelEntity.getName ().substring(1));
+			RelationShipInfo relationShipInfo = relationKey.getRelationShipInfo();
+			RelationShipInfo inverseRelationShipInfo = relationKey.getInverseRelationShipInfo();
+			String outerPropertyName = relationShipInfo.getPropertyName();		//Holds this ModelEntity property name in base Entity
+			setter = outerPropertyName;
+			outerPropertyName = outerPropertyName.toUpperCase().charAt(0) + outerPropertyName.substring(1);
+			String genericType = new String(otherEntitiesSign.get (tempProp));
+			String inversePropertyName = null;
+			String depPKN = itrModelEntity.getPrimaryKey();		//Holds the dependent(dep) Primary(P) Key(K) Name(N)				
+			String depPKNClass = tempProp + "PKValue";
+			LOG.info(tempProp + " Inverse Relation is : " + inverseRelationShipInfo);
+			if(inverseRelationShipInfo != null) {
+				inversePropertyName = new String(inverseRelationShipInfo.getPropertyName());
+				LOG.info("Inverse ProeprtyName : " + inversePropertyName);
+				LOG.info("PropertyName is : " + tempProp);
+			}
+				//Edited this on 19th Feb...
+			distributeData.add(genericType + " " + relationShipInfo.getPropertyName()
+								+ itrModelEntity.getName() + " = dataObject.get" + outerPropertyName + "();");
+								
+			distributeData.add("if (" + relationShipInfo.getPropertyName() + itrModelEntity.getName()
+								+ " != null) {");
+			LOG.info(tempProp + " generic type is : " + genericType);		
+			if (genericType.lastIndexOf ("<") > 0) {
+				c = true;
+				genericType = genericType.substring (genericType.lastIndexOf ("<")+1, genericType.lastIndexOf (">"));
+			}
+%>
+<%
+			//As we are not supporting explicitly ManyToMany Creation still considered as ManyTomany only but not implented code in that way
+				//but assumed as ManyToOne only So iterator did not do on the Input given by the user
+					//later Have to implement If we support for Many instances in the UI
+		if (c) {
+			LOG.info(tempProp + " Sign is : " + otherEntitiesSign.get(tempProp));
+			String temp = otherEntitiesSign.get(tempProp).substring(0,otherEntitiesSign.get(tempProp).lastIndexOf("<") );
+			
+			distributeData.add("if(" + relationShipInfo.getPropertyName()
+								+ itrModelEntity.getName() + ".iterator().hasNext()) {");
+								
+			distributeData.add(itrModelEntity.getName() + " iterate = " + relationShipInfo.getPropertyName()
+								+ itrModelEntity.getName() + ".iterator().next();");
+			if (temp.equals ("Set")) { 	//Instead of equals we can use contains also 
+%>
+			<%= temp %><<%= itrModelEntity.getName() %>> <%= tempProp %> = new HashSet<<%= itrModelEntity.getName() %>> ();
+<%
+			} else {
+%>
+			<%= temp %><<%= itrModelEntity.getName() %>> <%= tempProp %> = new ArrayList<<%= itrModelEntity.getName() %>> ();
+<%
+			}
+		}
+		
+		String varName = relationShipInfo.getPropertyName() + genericType;
+%>
+			<%= genericType %> <%= varName %> = new <%= genericType %> ();
+			<%= varName %>.set<%= depPKN.toUpperCase().charAt(0) + depPKN.substring(1) %> (this.<%= depPKNClass %>);
+<%
+			//For distribute Data
+		if(c) {
+			distributeData.add("this." + depPKNClass + " = iterate.get" + depPKN.toUpperCase().charAt(0) + depPKN.substring(1) + "();");
+		} else {
+			distributeData.add("this." + depPKNClass + " = " + relationShipInfo.getPropertyName() + itrModelEntity.getName()
+										+ ".get" + depPKN.toUpperCase().charAt(0) + depPKN.substring(1) + "();");
+		}
+		Iterator<CPFAttribute> itrCpfAttributes = cpfAttributes.iterator();
+		while(itrCpfAttributes.hasNext()) {
+			CPFAttribute cpfAttribute = itrCpfAttributes.next();
+			ModelAttribute modelAttribute = cpfAttribute.getModelAttrib ();
+			String variableName = itrVariableNames.next();      //getting member class variable name here 
+			if(cpfAttribute.getForeignColumn()== null) {
+				setter = relationShipInfo.getPropertyName();	//TODO added this line on 16th Feb...
+				String temp = modelAttribute.getName ().toUpperCase().charAt(0) + modelAttribute.getName().substring(1);
+				String tempSetter = setter + temp;
+				String tempGetter = "get" + temp;
+				String cast = cpfAttribute.getModelAttrib ().getCanonicalTypeName ();
+				Class classD = null;
+				try {
+					classD = Class.forName(cast);
+				} catch(ClassNotFoundException e) {
+					LOG.info("Not a lang data type...");
+				}				
+				String mergeArgument = null;
+				if (cast.equals("java.sql.Date") || cast.equals("java.sql.Time") || cast.equals("java.sql.Timestamp")) {
+					mergeArgument = new String("new " + cast + "(" + tempSetter + ".getTime ())");
+				} else if (cast.equals("java.sql.Blob")) {
+					mergeArgument= new String ("ModelUtil.mapByteArray2Blob (" + tempSetter + ")");
+				} else if (cast.equals("java.sql.Clob")) {
+					mergeArgument= new String ("ModelUtil.mapCharArray2Clob (" + tempSetter + ")");
+				}else {
+					mergeArgument = tempSetter;
+				}
+				if(c) {
+					distributeData.add("this." + variableName + " = iterate." + tempGetter + "();");
+				} else {
+					distributeData.add("this." + variableName + " = " + relationShipInfo.getPropertyName() + itrModelEntity.getName()
+										+ "." + tempGetter + "();");
+				}
+%>
+			<%= varName %>.set<%= temp %> (<%= mergeArgument %>);
+<%
+				if(!cpfAttribute.getControlType().equals(CPFConstants.ControlType.TEXTBOX)
+					&& cpfAttribute.getTaggedValues() != null && cpfAttribute.getTaggedValues().size() > 0) {
+					String selectName = new String("selected");
+					selectName = selectName + variableName.toUpperCase().charAt(0) + variableName.substring(1);
+					String tvName = new String("d" + cpfAttribute.getModelAttrib().getName() + "TV");
+					if(classD != null) {
+						distributeData.add("this." + selectName + " = this.getIndex(this." 
+											+ variableName + ", this." + tvName + ");");
+%>
+			this.<%= selectName %> = this.getIndex(this.<%= variableName %>, this.<%= tvName %>);
+<%
+					} else {
+						distributeData.add("this." + selectName + " = this.getIndex(CommonUtil.getWrapperForPrimitive(this."
+											+ variableName + "), this." + tvName + ");");
+%>
+			this.<%= selectName %> = this.getIndex(CommonUtil.getWrapperForPrimitive(this.<%= variableName %>), this.<%= tvName %>);s
+<%
+					}
+				}
+			} else {
+				ModelEntity foreignEntity = modelAttribute.getForeignEntity ();
+				setter = new String(foreignEntity.getName().toLowerCase().charAt(0)
+									+ foreignEntity.getName().substring(1));
+				String feName = foreignEntity.getName ().toLowerCase().charAt(0)
+									+ foreignEntity.getName ().substring(1);
+				String temp = foreignEntity.getPrimaryKey ().toUpperCase().charAt(0)
+									+ foreignEntity.getPrimaryKey ().substring(1);
+				String tempSetter = modelAttribute.getName();
+				RelationShipInfo relationShipInfoF = cpfAttribute.getModelAttrib().getRelType();
+				RelationShipInfo inverseRelationShipInfoF = cpfAttribute.getModelAttrib().getInverseRelType();
+				String propertyName = relationShipInfoF.getPropertyName ();
+				propertyName = propertyName.toUpperCase().charAt(0) + propertyName.substring(1);
+				String typeInfo = relationShipInfoF.getSimpleTypeInfo();
+				if(c) {
+					distributeData.add(typeInfo + " inner = " + "iterate.get"
+										+ foreignEntity.getName() + "();");
+				} else {
+					distributeData.add(typeInfo + " inner = " + relationShipInfo.getPropertyName() + itrModelEntity.getName() + ".get"
+										+ propertyName + "();");
+										
+					distributeData.add("if(inner != null) {");
+				}
+				if(typeInfo.contains("<")) {
+					String inversePropertyNameF = inverseRelationShipInfoF.getPropertyName();
+					inversePropertyNameF = inversePropertyNameF.toUpperCase().charAt(0)
+											+ inversePropertyNameF.substring(1);
+					if(typeInfo.startsWith("Set")) {
+						distributeData.add("this." + variableName + " = new HashSet<Long>();");
+%>
+					<%= typeInfo %> <%= feName %>Temp = new Hash<%= typeInfo %>();
+<%
+					} else {
+						distributeData.add("this." + variableName + " = new ArrayList<Long>();");
+%>
+					<%= typeInfo %> <%= feName %>Temp = new ArrayList<<%= foreignEntity.getName()  %>>();
+<%
+					}
+					distributeData.add("Iterator<" + foreignEntity.getName() + "> temp = inner.iterator();");
+					distributeData.add("while(temp.hasNext()) {");
+					distributeData.add("	this." + variableName + ".add(temp.next().get" + temp + "());");
+					distributeData.add("}");
+%>
+					Iterator<Long> itr<%= tempSetter %> = <%= tempSetter %>.iterator();
+					while(itr<%= tempSetter %>.hasNext()) {
+						<%= foreignEntity.getName() %> temp = new <%= foreignEntity.getName() %>();
+						temp.set<%= temp %> (itr<%= tempSetter %>.next());
+<%
+					if (relationShipInfoF.getMapping().equals(CPFConstants.RelationshipType.OneToMany)) {
+%>						
+						temp.set<%= inversePropertyNameF %> (<%= varName %>);
+<%
+					}
+%>
+						<%= feName %>Temp.add(temp);
+					}
+<%
+				} else {
+					String inversePropertyNameF = null;
+					if(relationShipInfoF.getMapping ().equals(CPFConstants.RelationshipType.OneToOne)) {
+						if(!cpfAttribute.getModelAttrib().isOwner()) {
+							if(inverseRelationShipInfoF != null) {
+								inversePropertyNameF = inverseRelationShipInfoF.getPropertyName();
+								inversePropertyNameF = inversePropertyNameF.toUpperCase().charAt(0)
+														+ inversePropertyNameF.substring(1);
+							} else {
+								System.out.println("Did not get parent Entity propertyName in child so exiting..");
+								System.exit(1);
+							}
+						}
+					}
+					distributeData.add("this." + variableName + " = " + "inner.get" + temp + "();");
+%>
+				if(this.<%= tempSetter %> != -1) {
+				<%= foreignEntity.getName () %> <%= feName %>Temp = new <%= foreignEntity.getName () %> ();
+				<%= feName %>Temp.set<%= temp %> (<%= tempSetter %>);
+<%
+					if(inversePropertyNameF != null) {
+%>
+				<%= feName %>Temp.set<%= inversePropertyNameF %> (<%= varName %>);
+<%
+					}
+				}
+				String firstArg = cpfAttribute.getModelAttrib ().getName ();
+				String secondArg = relationShipInfo.getPropertyName() + propertyName + cpfAttribute.getForeignColumn().getName().toUpperCase()
+									.charAt(0) + cpfAttribute.getForeignColumn().getName().substring(1);
+				distributeData.add("this.selected" + propertyName + " = this.getIndex(this." + firstArg
+									+ ", this." + secondArg + ");");
+				distributeData.add("} else {");
+				distributeData.add("this.selected" + propertyName + " = -1;");
+				distributeData.add("}");
+%>
+				<%= varName %>.set<%= propertyName %> (<%= feName %>Temp);
+				this.selected<%= propertyName %> = this.getIndex(this.<%= firstArg %>, this.<%= secondArg %>);		
+				} else {
+					this.selected<%= propertyName %> = -1;
+				}
+<%
+			}
+		}
+				if(c || (relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.OneToOne)
+					&& inversePropertyName != null)) {
+					inversePropertyName = inversePropertyName.toUpperCase().charAt(0) +
+											inversePropertyName.substring(1);
+%>
+				<%= varName %>.set<%= inversePropertyName %>(returnEntity);
+<%
+				}
+		if(c) {			
+			distributeData.add("}");
+%>
+			<%= tempProp %>.add(<%= varName %>);
+<%
+			varName = tempProp;
+		}
+		distributeData.add("}");
+		String setterName = tempProp.toUpperCase().charAt(0) + tempProp.substring(1);
+%>
+			returnEntity.set<%= setterName %> (<%= varName %>);
+<%
+		}
+		}
+%>
+			return returnEntity;
+	    }	    
+	    private <%= modelEntity.getName () %> getBaseObject () {
+			<%= modelEntity.getName () %> baseObject = new <%= modelEntity.getName () %> ();
+			return baseObject;
+		}		
+//For getting OperationId for a particular Operation depending upon the user's Role	
+		private int getOperationId (CPFConstants.OperationType opType) {
+			int operationId = new Integer (-99);
+			FacesContext context = FacesContext.getCurrentInstance();
+			ExternalContext exContext = context.getExternalContext();
+<%
+			LOG.info("Adding getOperationId method inside Class.....");
+			Map<Integer, String[]> operationRoleMap = null;			//which holds roles vs operationIDs
+			Iterator<CPFConstants.OperationType> operations = cpfScreen.getMappedRoles().keySet().iterator();
+			while(operations.hasNext()) {
+				CPFConstants.OperationType operation = operations.next();
+%>
+			if(opType.equals(CPFConstants.OperationType.<%= operation %>)) {
+<%
+			operationRoleMap = cpfScreen.getOperationRoleMap (operation);
+			if(operationRoleMap != null && operationRoleMap.size() != 0) {
+			for (Iterator<Integer> keysRole = operationRoleMap.keySet ().iterator (); keysRole.hasNext ();) {
+				Integer id = keysRole.next ();
+				String[] roles = operationRoleMap.get (id);
+				String condition = new String ();
+				for (int i = 0; i < roles.length; i++) {
+					condition = condition.concat ("exContext.isUserInRole (\"" + roles [i] + "\") ||");
+				} 
+				condition = condition.substring (0, condition.lastIndexOf (")")+1); 
+%>
+				if (<%= condition %>) {
+					operationId = <%= id.intValue () %>;
+				}
+			}
+<%
+			}
+			}	//End of If(operationRoleMap != null)
+			}	//End of while(operations.hasNext())
+%>
+			return operationId;
+		}
+<%
+			//Generating ActionEvents for this Managed Bean
+		String passingObject = modelEntity.getName().toLowerCase().charAt(0) + modelEntity.getName().substring(1);
+		LOG.info("Adding saveAction method inside Class.....");
+%>
+	
+		public String saveAction() {
+		
+			return this.returnString;
+			
+		}
+		public String saveAction (ActionEvent e) {
+			System.out.println("Inside <%= modelEntity.getName () %>");
+			
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			Locale currentLocal=ctx.getViewRoot().getLocale();
+			String code=currentLocal.getLanguage() + "_"+ currentLocal.getCountry();
+			InputStream stream=this.getClass().getClassLoader().getResourceAsStream("bundle/resources_"+code+".properties");
+			if(stream==null){
+				stream=this.getClass().getClassLoader().getResourceAsStream("bundle/resources.properties");
+			}
+			Properties bundle=new Properties();
+		    try {
+				bundle.load(stream);
+			} catch (IOException ie) {
+				ie.printStackTrace();
+			}
+			String returnValue = null;
+			<%= modelEntity.getName () %> <%= passingObject %> = getObject();
+			Organization merchantAc = _getMerchantAccount();		//Getting merchant Account from Session Object 
+			<%= passingObject %>.setMerchantAccount(merchantAc);
+			if(this.mode == 0) {
+				this.operationId = getOperationId(CPFConstants.OperationType.CREATE);
+								try{
+					returnValue = CPFManager.save(<%= passingObject %>, this.operationId);
+				} catch (CPFException e1) {
+					ctx.addMessage(e.getComponent().getParent().getParent().getId() + ":save", new FacesMessage(bundle.getProperty("cr_failure") + e1.getMessage()));
+					this.returnString = new String("viewDetails");
+					return SS_Constants.ReturnMessage.PROVERROR.toString();
+				}
+			} else if(this.mode == 1) {
+				this.operationId = getOperationId(CPFConstants.OperationType.MODIFY);
+				this.fillCriteria(CPFConstants.OperationType.MODIFY);				
+				try{
+					returnValue = CPFManager.save(<%= passingObject %>, this.criteria, this.operationId);
+				} catch (CPFException e1) {
+					ctx.addMessage(e.getComponent().getParent().getParent().getId() + ":save", new FacesMessage(bundle.getProperty("mod_failure") + e1.getMessage()));
+					this.returnString = new String("viewDetails");
+					return SS_Constants.ReturnMessage.PROVERROR.toString();
+				}
+			}
+			
+			if(this.mode == 0) {
+				ctx.addMessage(this.clientId, new FacesMessage(bundle.getProperty("cr_success")));
+			} else if(this.mode == 1) {
+				ctx.addMessage(this.clientId, new FacesMessage(bundle.getProperty("mod_success")));
+			}
+			this.returnString = new String("list");
+			this.mode = 2;
+<%
+		if(cpfScreen.getPortletRef().getListScreen() != null) {
+%>		
+			ELContext elCtx = ctx.getELContext();
+			ExpressionFactory exF = ctx.getApplication().getExpressionFactory();
+			ValueExpression ve = exF.createValueExpression(elCtx, "#{listMBean<%= operationId %>}", ListMBean_<%= operationId %>.class);
+			ListMBean_<%= operationId %> res = (ListMBean_<%= operationId %>) ve.getValue(elCtx);
+			res.setMode(0);
+<%
+		}
+%>			
+			return returnValue;
+		}		
+		public String modifyAction (ActionEvent e) throws Exception {
+			System.out.println("mod");
+			Object val = e.getComponent().getAttributes().get("pkValue");
+			this.primarykeyValue = new Long(val.toString());
+			String returnString = viewAction(null);
+			setMode(1);
+			this.uiMode = 1;
+<%
+		if(puVarName != null) {
+			Iterator<String> itrPuVarName = puVarName.iterator();
+%>
+			SelectItem def = null;
+<%
+			while(itrPuVarName.hasNext()) {
+				String tempP = itrPuVarName.next();
+				String[] tempArg = puArguments.get(tempP);
+				if(tempArg[4].equals("1")) {
+%>
+			def = new SelectItem();
+			def.setLabel("No-Selection");
+			def.setValue("-1");
+			this.<%= tempP %>.add(0, def);
+<%
+				}
+			}
+		}
+%>		
+			FacesContext context = FacesContext.getCurrentInstance();
+			this.userIsInRole(context);
+			this.getDetailsVisibility(this.userRole);
+			this.clientId = e.getComponent().getClientId(context);
+			System.out.println("In modifyAction: " + this);
+			return "modify";
+			
+		}
+		public String addAction (ActionEvent e) throws CPFException {
+			this.mode = 0;
+			this.uiMode = 0;
+<%
+		LOG.info("adding addAction method inside Class....");
+			itrSignatures = signatures.iterator();
+			itrVaribleNames = varibleNames.iterator();
+			Iterator<String> itrDv = defaultValues.iterator();
+			Iterator<String> itrFormatType = formatTypes.iterator();
+			while(itrDv.hasNext()) {
+				String dv = itrDv.next();
+				String sig = itrSignatures.next();
+				String varName = itrVaribleNames.next();
+				String formatType = itrFormatType.next();
+				if(dv == null) {
+					Class  c = null; 
+					try {
+						LOG.info("SIg is : " + sig);
+						c = Class.forName(sig);
+						LOG.info("Class is : " + c);
+					} catch (ClassNotFoundException e) {
+						LOG.info("Not a lang data type...");
+					}
+					if(sig.contains("<") || sig.contains("[") || c != null) {
+%>
+			this.<%= varName %> = null;
+<%
+					} else {
+%>
+			this.<%= varName %> = 0;
+<%
+					}
+				} else {
+					if(sig.equals("java.lang.String")) {
+%>
+			this.<%= varName %> = new String("<%= dv %>");
+<%
+					}  else if(sig.equals("java.lang.Long")){
+%>
+			this.<%= varName %> = new Long(<%= dv %>);
+<%
+					} else if (sig.equals("java.lang.Integer")) {
+%>
+			this.<%= varName %> = new Integer(<%= dv %>);
+<%
+					}else if(sig.equals("java.lang.Double")) {
+%> 
+			this.<%= varName %> = new Double(<%= dv %>);
+<%
+					} else if (sig.equals("java.lang.Float")) {
+%>
+			this.<%= varName %> = new Float(<%= dv %>);
+<%
+					}else if(sig.equals("java.util.Date")) {
+						if(formatType.equals("DATE")) {
+						//TODO Date has to do something
+%>
+			try {
+			 this.<%= varName %> = DateFormat.getDateInstance(DateFormat.SHORT).parse(new String("12/03/08"));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			this.<%= varName %> = new Date(System.currentTimeMillis());
+<%
+						}
+					} else if(sig.equals("java.lang.Character") || sig.equals("char")) {
+%>
+			this.<%= varName %> = '<%= dv %>';
+<%
+					}else {
+%>
+			this.<%= varName %> = <%= dv %>;
+<%
+					}
+				}
+			}
+				//Setting dependent primaryKey values to null
+			if(selectedOtherEntities != null) {
+				for (Iterator<RelationKey> itr = selectedOtherEntities.iterator(); itr.hasNext(); ) {
+					RelationKey rk = itr.next();
+					String otherEntityPKName = new String(rk.getRelationShipInfo().getPropertyName()); 
+					otherEntityPKName = otherEntityPKName.concat("PKValue");
+%>
+			this.<%= otherEntityPKName %> = null;
+<%
+				}
+			}
+%>
+			FacesContext context = FacesContext.getCurrentInstance();
+			this.userIsInRole(context);
+			this.getDetailsVisibility(this.userRole);		
+			this.clientId = e.getComponent().getClientId(context);	
+<%
+		if(puVarName != null) {
+			Iterator<String> itrPuVarName = puVarName.iterator();
+%>
+			SelectItem def = null;
+			PortletUtil portletUtil = new PortletUtil();
+<%
+			while(itrPuVarName.hasNext()) {
+				String tempP = itrPuVarName.next();
+				String[] tempArg = puArguments.get(tempP);
+%>
+			this.<%= tempP %> = portletUtil.getData("<%= tempArg[0] %>", "<%= tempArg[1] %>", "<%= tempArg[2] %>", <%= tempArg[3] %> ,"<%= tempArg[5] %>");
+<%
+			if(tempArg[4].equals("1")) {
+%>
+			def = new SelectItem();
+			def.setLabel("No-Selection");
+			def.setValue("-1");
+			this.<%= tempP %>.add(0, def);
+<%
+			}
+			}
+		}
+		LOG.info("Adding viewAction inside Class...");
+%>			
+			return SS_Constants.ReturnMessage.SUCCESS.toString();
+		}		
+		public String viewAction (ActionEvent e) throws Exception {
+			System.out.println("View");
+			if(e != null) {
+				Object val = e.getComponent().getAttributes().get("pkValue");
+				this.primarykeyValue = new Long(val.toString());
+			}
+			Object object = null;
+			if(e == null) {
+				this.operationId = getOperationId(CPFConstants.OperationType.MODIFY);
+				this.fillCriteria(CPFConstants.OperationType.MODIFY);
+			}
+			else {
+				this.operationId = getOperationId(CPFConstants.OperationType.VIEW);
+				this.fillCriteria(CPFConstants.OperationType.VIEW);
+				
+				FacesContext context = FacesContext.getCurrentInstance();
+				this.userIsInRole(context);
+				this.getDetailsVisibility(this.userRole);
+			}
+			try {
+				object = CPFManager.getDetails(this.operationId, this.getBaseObject(), this.criteria);
+			} catch (CPFException e1) {
+				e1.printStackTrace();
+				return SS_Constants.ReturnMessage.PROVERROR.toString();
+			}
+			this.mode = 2;
+			this.uiMode = 2;
+<%
+		if(puVarName != null) {
+			Iterator<String> itrPuVarName = puVarName.iterator();
+%>
+			PortletUtil portletUtil = new PortletUtil();
+<%
+			while(itrPuVarName.hasNext()) {
+				String tempP = itrPuVarName.next();
+				String[] tempArg = puArguments.get(tempP);
+%>
+			this.<%= tempP %> = portletUtil.getData("<%= tempArg[0] %>", "<%= tempArg[1] %>", "<%= tempArg[2] %>", <%= tempArg[3] %> , "<%= tempArg[5] %>");
+<%
+			}
+		}
+%>		
+			System.out.println("View : " );		
+			distributeData(object);			//Setting all member class variables here....
+			System.out.println("View end: ");
+			return SS_Constants.ReturnMessage.SUCCESS.toString();
+		}	
+//This will return user's Role depending upon context	
+	private void userIsInRole (FacesContext context) throws CPFException{
+		ExternalContext exContext = context.getExternalContext();
+<%
+		LOG.info("Adding userIsInRole method to Class....");
+		List<String> roles = cpfScreen.getMappedRoles().get(CPFConstants.OperationType.VIEW);
+		Iterator<String> itrRoles = roles.iterator();
+		while(itrRoles.hasNext()) {
+			String roleIs = itrRoles.next();
+%>
+		if (exContext.isUserInRole("<%= roleIs %>")) {
+			this.setUserRole ("<%= roleIs %>");
+		} else
+<%
+		}
+%>
+		{
+			throw new CPFException("Not Authenticated please contact provider for necessary  privileges", 4046);
+		}
+	}	
+//Start of getting visibility for Details columns	
+	private void getDetailsVisibility(String userRole) {
+		this.listVisibility = new ArrayList<Boolean>();
+<%
+		LOG.info("Adding getDetailsVisibility method to class....");
+		itrRoles = roles.iterator();
+		while(itrRoles.hasNext()) {
+			String roleIs = itrRoles.next();
+%>
+		if(userRole.equals("<%= roleIs %>")) {
+<%
+			Iterator<List<String>> itrAttrbVisibility = attrbVisibility.iterator();
+			while(itrAttrbVisibility.hasNext()) {
+				List<String> tempRoles = itrAttrbVisibility.next();
+				if(tempRoles == null) {
+%>
+			this.listVisibility.add(true);
+<%
+				} else if(tempRoles.size() == 0 || !tempRoles.contains(roleIs)) {
+%>
+			this.listVisibility.add(true);
+<%
+				} else {
+%>
+			this.listVisibility.add(false);
+<%
+				}
+			}
+%>
+		}
+<%
+		}
+%>
+	}
+//End of getting visibility for listing columns		
+	//This will returns MerchantAccount Object of Current User
+	private Organization _getMerchantAccount() {
+<%
+	if(modelEntity.isStatic()) {
+%>
+		Organization o =  new Organization ();
+		o.setOrganizationId (new Long (-1));
+		return o;
+<%
+	} else {
+%>	
+            Set<Principal> s = SecurityAssociation.getSubject().getPrincipals();
+            for (Principal principal : s) {
+                        if (principal instanceof GBUserPrincipal) {
+                              Organization enterprise = ((GBUserPrincipal) principal).getMerchantAccount();
+                              long enterpriseId = enterprise.getOrganizationId();
+                              return enterprise;
+                        }
+                  }
+            return null;<%
+	}
+%>
+	}	
+	//This will set all the member class values from Object returned by CPFSessionFacade
+	private void distributeData(Object o) {
+		this.resetValues();
+<%
+	Iterator<String> itrDistributeData = distributeData.iterator();
+	while(itrDistributeData.hasNext()) {
+%>
+		<%= itrDistributeData.next() %>
+<%
+	}
+%>
+	}	
+	private void resetValues() {
+<%
+	LOG.info("Adding resetValues method to Class...");
+	itrVariableNames = varibleNames.iterator();
+	Iterator<String> itrSig = signatures.iterator();
+	while(itrVariableNames.hasNext()) {
+		Class c = null;
+		String sig = itrSig.next();
+		try {
+			c = Class.forName(sig);
+		} catch(ClassNotFoundException e) {
+			LOG.info("Not a lang data type...");
+		}
+		if(sig.contains("<") || sig.contains("[") || c != null) {
+%>
+		this.<%= itrVariableNames.next() %> = null;
+<%
+		} else {
+%>
+		this.<%= itrVariableNames.next() %> = 0;
+<%
+		}
+	}
+	LOG.info("Adding fillCriteria method to Class...");
+%>
+	}
+<%
+		//This is for only Related One2One or Many2One related attributes only... used for getting index from selectItem of selcted item from GUI...
+	if(puSelectedName != null || taggedValues != null) {
+%>
+	 private int getIndex(Object selected, List<SelectItem> available) {
+	 	int i = 0;
+	    for(Iterator<SelectItem> itr = available.iterator(); itr.hasNext();) {
+	    	SelectItem temp = itr.next();
+	    	if(temp.getValue().equals(selected)) {
+	    		break;
+	    	}
+	    	i++;	
+	    }
+	    return i;
+	 }
+<%
+	}
+%>	
+	private void fillCriteria(CPFConstants.OperationType o) {
+		Criteria c = new Criteria();
+		c.setBaseEntityName("<%= modelEntity.getName() %>");
+		c.setBasePrimaryKey("<%= modelEntity.getPrimaryKey() %>");
+		c.setBasePrimaryKeyValue(this.getPrimarykeyValue());
+		Long merchantId = this._getMerchantAccount().getOrganizationId();
+		c.setWhere("<%= modelEntity.getName() %>.merchantAccount= (select merchantAccount from Organization merchantAccount where merchantAccount.organizationId=" + merchantId + ")");
+		if(o.equals(CPFConstants.OperationType.MODIFY)) {
+			c.setFields("<%= modifyFields %>");
+		} else if(o.equals(CPFConstants.OperationType.VIEW)) {
+			c.setFields("<%= viewFields %>");
+		}
+		this.criteria = c;
+	}
+}
+<%
+		//Bean Generation Ended here.....
+	LOG.info("Generating Details Managed Bean finished from Template side...");
+%>

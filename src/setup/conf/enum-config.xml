@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!-- This file contains configuration details to be used by various ENUM server -->
+	
+<enum-context>
+	<!-- servers to be used for resolution -->
+	<!--
+	<servers>
+		<server>
+			<ip>192.168.9.13</ip>
+			<port>53</port> 
+			<timeout>30000</timeout>
+			<retries>3</retries>
+			<protocol>TCP</protocol>
+		</server>
+		<server>
+			<ip>192.168.9.14</ip>
+			<port>53</port> 
+			<timeout>30000</timeout>
+			<retries>3</retries>
+			<protocol>TCP</protocol>
+		</server>
+
+	</servers>
+	-->
+
+	<!-- Cache Option -->
+	<cache>false</cache> 
+
+	<!-- recursion option -->
+	<recursion>true</recursion>
+
+	<!-- Maximum number of recursion in case of non-terminal NAPTR -->
+	<max-recursion>5</max-recursion>
+
+	<parallel-query>false</parallel-query>
+
+	<!-- URI scheme -->
+	<uri-scheme>sip</uri-scheme> 
+
+	<!-- Asynchronous call Option --> 	
+	<async>true</async>
+
+</enum-context>
+		

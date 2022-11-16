@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+   "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+    
+<sip-app>
+
+  <display-name>A Sample Proxy Application</display-name>
+  <distributable/>
+ 
+  <servlet>
+    <servlet-name>Proxy</servlet-name>
+    <servlet-class>com.baypackets.testapps.ProxyServlet</servlet-class>
+    <init-param>
+        <param-name>proxyURI_1</param-name>
+        <param-value>sip:uas@192.168.2.172:6060</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>    
+  </servlet>    
+         
+  <servlet-mapping>
+    <servlet-name>Proxy</servlet-name>
+    <pattern>
+        <or>
+            <equal>
+                <var>request.method</var>
+                <value>MESSAGE</value>
+            </equal>
+            <equal>
+                <var>request.method</var>
+                <value>INVITE</value>
+            </equal>
+        </or>
+    </pattern>
+  </servlet-mapping>  
+      
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+  
+</sip-app>

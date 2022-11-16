@@ -1,0 +1,45 @@
+ifdef LINUX
+   HSS_STACK = $(SIP_STACK_HOME)/sip_stack_5_0_src
+   EXTRA_DEFINES += SIP_LINUX SDF_LINUX 
+else
+   HSS_STACK = $(SIP_STACK_HOME)/sip_stack_5_1_src
+   EXTRA_DEFINES += SIP_SOLARIS SDF_SOLARIS 
+endif
+
+HSS_UA = $(SIP_STACK_HOME)/ua_2_0_src
+
+EXTRA_INCLUDES += $(INSTALLROOT)/include
+EXTRA_INCLUDES += $(HSS_UA)/source/h
+EXTRA_INCLUDES += $(HSS_STACK)/source/common/h
+EXTRA_INCLUDES += $(HSS_STACK)/source/common/tel/h
+EXTRA_INCLUDES += $(HSS_STACK)/source/accessor/h
+EXTRA_INCLUDES += $(HSS_STACK)/source/parser/h
+EXTRA_INCLUDES += $(HSS_STACK)/source/parser/tel/h
+EXTRA_INCLUDES += $(HSS_STACK)/source/common/rpr/h
+EXTRA_INCLUDES += $(HSS_STACK)/source/common/ccp/h
+EXTRA_INCLUDES += $(HSS_STACK)/source/accessor/rpr/h
+EXTRA_INCLUDES += $(HSS_STACK)/source/accessor/dcs/h
+EXTRA_INCLUDES += $(HSS_UA)/source/ha/common/h
+EXTRA_INCLUDES += $(HSS_UA)/source/ha/active/h
+EXTRA_INCLUDES += $(HSS_UA)/source/ha/serialize/h
+EXTRA_INCLUDES += $(HSS_UA)/source/ha/standby/h
+
+ifdef HSS_STACK_DEBUG
+EXTRA_LIBDIRS += $(SIP_STACK_HOME)/debugLib
+else
+EXTRA_LIBDIRS += $(SIP_STACK_HOME)/lib
+endif
+
+EXTRA_LIBS += sipapi sipcore sipserialize ua uaha sipserialize
+
+
+EXTRA_DEFINES += ANSI_PROTO _REENTRANT SIP_IMPP SIP_MWI SIP_TEL \
+                 SIP_SESSIONTIMER SIP_CCP SIP_DCS SIP_BY_REFERENCE \
+                 SIP_NO_CALLBACK  SIP_THREAD_SAFE SIP_STATISTICS SIP_ERROR \
+                 SIP_SELECTIVE_PARSE SIP_LOCKEDREFCOUNT \
+                 SDF_TEL SDF_SESSION_TIMER SDF_TIMER_IF SDF_THREAD_SAFE \
+                 SDF_STATISTICS SDF_ERROR SDF_APP_CONTROLLED_REMOTE_RETX SDF_HA
+
+#### for ref count lock in INGw
+EXTRA_DEFINES += USE_LOCK_FOR_REF_COUNT
+

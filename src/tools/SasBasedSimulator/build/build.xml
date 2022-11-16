@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="SimulatorApplication">
+
+	<!-- Name of project and version -->
+	<property name="proj.name"      value="SasBasedSimulator"/>
+	<!-- Global properties for this build -->
+	<property environment="env"/>
+		
+	<!--<property name="INSTALLROOT"   value="D:/SAS/SipServlet7.5.3.0/ASESubsystem"/>-->
+	<property name="src.dir"   value="../src"/>
+	<property name="web.dir" value="../WebContent" />
+	<property name="config.dir" value="../conf" />
+	<property name="appbuild.dir" value="${INSTALLROOT}/simulatorbuild"/>
+	<property name="webbuild.dir" value="${appbuild.dir}/SimulatorApp"/>
+	<property name="classes.dir" value="${appbuild.dir}/classes" />
+	<property name="lib.dir" value="${appbuild.dir}/libs" />
+	<property name ="dest.root" value ="${INSTALLROOT}/test-apps/Simulator"/>
+	<property name="sas.sarFile" value="${dest.root}/Simulator.war" />
+	<property name="bpjar.dir" Value="${INSTALLROOT}/bpjars"/>
+	<property name="otherjar.dir" Value="${INSTALLROOT}/otherjars"/>
+	
+	<!-- Set the classpath for compiling the application -->
+	<path id="build.classpath">
+		<fileset dir="${lib.dir}" includes="*.jar" />
+		<fileset dir="${otherjar.dir}" includes="*.jar" />
+	</path>
+	 
+	
+	<!-- Clean up -->
+	<target name="clean" description="Clean the build directory">
+		<delete dir="${classes.dir}" />
+		<delete dir="${lib.dir}" />
+		<delete dir="${webbuild.dir}" />
+		<delete file="${sas.sarFile}" />
+	</target>
+
+
+	<target name="init" depends="clean">
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${lib.dir}" />
+		<mkdir dir="${webbuild.dir}" />
+		<copy todir="${lib.dir}" file="${bpjar.dir}/inapjapv2.2codecs.jar"/>
+		<copy todir="${lib.dir}" file="${bpjar.dir}/isup-codecs.jar"/>
+		<copy todir="${lib.dir}" file="${bpjar.dir}/sbb-if.jar"/>
+		<copy todir="${lib.dir}" file="${bpjar.dir}/tcap-provider-api.jar"/>
+		<copy todir="${lib.dir}" file="${bpjar.dir}/wincodecs.jar"/>
+		<!-- test import
+		<copy todir="${lib.dir}" file="${bpjar.dir}/bpspi.jar"/> -->
+<copy todir="${lib.dir}" file="${THIRDPARTY}/otherjars/jsch-0.1.44.jar" />
+                <copy todir="${lib.dir}" file="${THIRDPARTY}/otherjars/commons-net-3.0.1.jar"/>
+	</target>
+
+	
+	<target name="compile" depends="init">
+			<javac srcdir="${src.dir}"
+				destdir="${classes.dir}"
+				classpathref="build.classpath" debug="true">
+			</javac>
+	</target>
+
+	<target name="build" depends="compile">
+		<copy todir="${webbuild.dir}/WEB-INF/" file="${web.dir}/WEB-INF/sip.xml" />
+		<copy todir="${webbuild.dir}/WEB-INF/" file="${web.dir}/WEB-INF/sas.xml" />
+<copy todir="${webbuild.dir}/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jsch-0.1.44.jar" />
+		<copy todir="${webbuild.dir}/WEB-INF/lib" file="${THIRDPARTY}/otherjars/commons-net-3.0.1.jar" />
+		<copy todir="${webbuild.dir}/WEB-INF/classes">
+			<fileset dir="${classes.dir}">
+			</fileset>
+		</copy>
+		<copy todir="${dest.root}/conf">
+			<fileset dir="${config.dir}">
+			</fileset>
+		</copy>
+		<jar destfile="${sas.sarFile}" basedir="${webbuild.dir}" />
+				
+		<delete dir="${classes.dir}" />
+		<delete dir="${webbuild.dir}" />
+		<delete dir="${lib.dir}" />
+		<delete dir="${appbuild.dir}" />
+
+	</target>
+</project>

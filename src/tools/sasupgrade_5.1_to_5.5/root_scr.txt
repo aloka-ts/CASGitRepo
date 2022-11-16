@@ -1,0 +1,25 @@
+#/bin/ksh
+
+##########################################################################################
+#   Objective       : SAS upgradation propcess from SAS5.1.1 to SAS 5.5
+#   scripts			: creates the /LOGS/SAS directory for SAS logs
+#   Author          : Prashant Kumar
+#   Last Modified   : 10.03.2007
+##########################################################################################
+
+
+./TestRexec -host 0 -userId root -passwd $1 -cmd mkdir -p /LOGS/SAS
+if [ $? == 0 ]
+then
+echo "SUCCESS"
+else 
+echo "FAILURE"
+fi
+
+./TestRexec -host 0 -userId root -passwd $1 -cmd chown $2 /LOGS/SAS
+if [ $? == 0 ]
+then
+echo "SUCCESS"
+else 
+echo "FAILURE"
+fi

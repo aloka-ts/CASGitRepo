@@ -1,0 +1,355 @@
+#!/bin/ksh
+COMPONENT_VERSION=ASE_VERSION
+export COMPONENT_VERSION
+
+###############################################################################
+# Set the various environment variables used
+export JAVA_HOME=/usr/java
+export JRE_HOME=${JAVA_HOME}/jre
+
+DEBUG="true"
+GC_VERBOSE="false"
+# 64bit JVM mode is supported for Solaris only
+JVM_64BIT="false"
+SOL_X86="false"
+JAVA_VER="1.8"
+
+###############################################################################
+# Determine if it is one of the standard platforms
+# Currently Sun-Fire-V490 and Netra-T2000 are supported as standard platforms
+
+STANDARD_CONFIG="Default"
+SUN_FIRE_V490="Sun-Fire-V490"
+NETRA_T2000="Netra-T2000"
+SUN_FIRE_T200="Sun-Fire-T200"
+
+uname -a > /tmp/uname_a.$$ 2>&1
+if grep "Sun-Fire-V490" /tmp/uname_a.$$ > /dev/null
+then
+	export STANDARD_CONFIG=${SUN_FIRE_V490}
+	export JVM_64BIT="false"
+fi
+
+if grep "Sun-Fire-T200" /tmp/uname_a.$$ > /dev/null
+then
+	export STANDARD_CONFIG=${SUN_FIRE_T200}
+	export JVM_64BIT="false"
+fi
+
+if grep "Netra-T2000" /tmp/uname_a.$$ > /dev/null
+then
+	export STANDARD_CONFIG=${NETRA_T2000}
+	export JVM_64BIT="false"
+fi
+rm /tmp/uname_a.$$
+
+#### To overwrite set the STANDARD_CONFIG value here ####
+
+
+###############################################################################
+# Determine if it is 64 bit machine
+
+uname -i > /tmp/uname_i.$$ 2>&1
+if grep "x86_64" /tmp/uname_i.$$ > /dev/null
+then
+	export JVM_64BIT="true"
+fi
+rm /tmp/uname_i.$$
+
+###############################################################################
+# Determine Java version
+${JAVA_HOME}/bin/java -version > /tmp/java_ver.$$ 2>&1
+if grep "java version \"1.7.0" /tmp/java_ver.$$ > /dev/null
+then
+	export JAVA_VER="1.7.0"
+fi
+rm /tmp/java_ver.$$
+
+###############################################################################
+export INSTALLROOT=$INSTALLROOT
+export ASE_HOME=${INSTALLROOT}/ASESubsystem;rm -rf `find $ASE_HOME/tmp -name "unpacked_*" -mtime +30`
+cd ${INSTALLROOT}
+
+###############################################################################
+
+export INSTALLROOT=$INSTALLROOT
+export ASE_HOME=${INSTALLROOT}/ASESubsystem/
+if [ ! -z $ASE_HOME ]
+then
+        \rm -rf $ASE_HOME/tmp/* > /dev/null
+fi
+cd ${INSTALLROOT}
+
+###############################################################################
+# Determine OS type
+
+PLATFORM=`uname`
+if [ ! -d ${ASE_HOME}/lib/lib ]
+then
+	if [ ${PLATFORM} == "Linux" ]
+	then
+		PLATFORM_DIR="redhat80g"
+	else
+		PLATFORM_DIR="sol28g"
+	fi
+    ln -s ./${PLATFORM_DIR} ${ASE_HOME}/lib/lib
+fi
+
+
+###############################################################################
+## Determine the architecture of Solaris machine
+
+if [ ${PLATFORM} == "SunOS" ]
+then
+        uname -a > /tmp/uname_a.$$ 2>&1
+        if grep "i86pc" /tmp/uname_a.$$ > /dev/null
+        then
+                export SOL_X86="true"
+        fi
+fi
+
+
+###############################################################################
+# Create the lib links as per the JVM mode (32-bit/64-bit) (for Solaris only)
+
+if [ ${PLATFORM} == "SunOS" ]
+then
+        if [[ $JVM_64BIT == "true" ]]
+        then
+                \rm -f ${ASE_HOME}/lib/sol28g/libCPU.so
+		 \rm -f ${ASE_HOME}/lib/sol28g/libjavautil.so
+                if [[ $SOL_X86 == "true" ]]
+                then
+			   ln -s ./libCPU.so.X86.64bit ${ASE_HOME}/lib/sol28g/libCPU.so
+			   ln -s ./libjavautil.so.x86.64bit ${ASE_HOME}/lib/sol28g/libjavautil.so
+                else
+			   
+                        ln -s ./libCPU.so.64bit ${ASE_HOME}/lib/sol28g/libCPU.so
+		        ln -s ./libjavautil.so.64bit.jrockit ${ASE_HOME}/lib/sol28g/libjavautil.so
+
+                fi
+               
+           
+	 else
+                \rm -f ${ASE_HOME}/lib/sol28g/libCPU.so
+		  \rm -f ${ASE_HOME}/lib/sol28g/libjavautil.so
+                if [[ $SOL_X86 == "true" ]]
+                then
+			
+                       	ln -s ./libCPU.so.X86.32bit ${ASE_HOME}/lib/sol28g/libCPU.so
+			ln -s ./libjavautil.so.x86.32bit ${ASE_HOME}/lib/sol28g/libjavautil.so
+
+                else
+			
+                        ln -s ./libCPU.so.32bit ${ASE_HOME}/lib/sol28g/libCPU.so
+                	ln -s ./libjavautil.so.32bit ${ASE_HOME}/lib/sol28g/libjavautil.so
+		  	
+                fi
+        fi
+fi
+
+###############################################################################
+# Create the lib links as per the JVM mode (32-bit/64-bit) (for Linux only)
+
+if [ ${PLATFORM} == "Linux" ]
+then
+        if [[ $JVM_64BIT == "true" ]]
+        then
+                \rm -f ${ASE_HOME}/lib/redhat80g/libCPU.so
+                ln -s ./libCPU.so.64bit ${ASE_HOME}/lib/redhat80g/libCPU.so                
+		\rm -f ${ASE_HOME}/lib/redhat80g/libjavautil.so
+		ln -s ./libjavautil.so.64bit ${ASE_HOME}/lib/redhat80g/libjavautil.so
+               
+           
+	 else
+                \rm -f ${ASE_HOME}/lib/redhat80g/libCPU.so			
+                ln -s ./libCPU.so.32bit ${ASE_HOME}/lib/redhat80g/libCPU.so				
+		\rm -f ${ASE_HOME}/lib/redhat80g/libjavautil.so
+		ln -s ./libjavautil.so.32bit ${ASE_HOME}/lib/redhat80g/libjavautil.so
+
+        fi
+fi
+
+###############################################################################
+### Create the directories required.....
+mkdir -p ${ASE_HOME}/tmp/rulecomp
+export LOG_DIR=/LOGS/CAS/
+mkdir -p ${LOG_DIR}
+if [ $? != 0 ]
+then
+	echo "[ Permission denied to create directory /LOGS/CAS/ ]"
+	echo "[ Login as root ,Create the directory /LOGS/CAS/ ,give read, write and execute permission to the user and restart the CAS in user mode ]"
+	exit 1;
+fi
+
+mkdir -p ${ASE_HOME}/jndiprovider/fileserver
+
+### Set the env variables....
+export PATH=${PATH}:${JAVA_HOME}/bin:${JRE_HOME}/bin:/usr/bin
+export JACORB_HOME=${ASE_HOME}/Common/thirdParty/TAO/JacOrb/JacORB
+export HTTP_CONTAINER_HOME=${ASE_HOME}/Common/thirdParty/jakarta-tomcat
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ASE_HOME}/lib/lib
+
+### Set the value of Tcp ping flag. True will enable TCP Ping and false will enable icmp ping
+ENABLE_TCP_PING="true"
+
+### Setting this property as true results in CAS trying for new BayManager Connection if CAS is unable is report its status to BayManager.
+TRY_NEW_BM_CONN_ON_PING_FAIL="false"
+
+### Setting this property as true restarts the CAS if CAS is unable to reach BayManager on new AgentSession it received from BayManager
+EXIT_ON_BM_PING_FAIL="false"
+
+######### Entries for Oracle Client Home and Libraries #########
+export ORACLE_HOME=ORACLEHOME
+export ORACLE_BASE=$ORACLE_HOME
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$ORACLE_HOME/jdbc/lib:${LD_LIBRARY_PATH}
+####################################################
+### Set the log file....
+HOST_ADDR=`id | sed "s/uid=//g" | cut -d"(" -f2 | sed "s/).*//g"`
+#date_stamp=`date | awk '{ printf("%s_%s_%s", $2, $3, $4); }'`
+date_stamp=`date +%b_%d_%H_%M_%S`
+LOG_FILE_NAME="ASE_${HOST_ADDR}_${date_stamp}.rexec_out"
+USER_HOME=`cat /etc/passwd  | grep ${HOST_ADDR} | cut -d":" -f6`
+a=`grep -i LOG_FILE_NAME ${USER_HOME}/profile.cas.${HOST_ADDR} | wc -l`
+if [ 0 -ne $a ];
+then
+        cat ${USER_HOME}/profile.cas.${HOST_ADDR} | grep -v LOG_FILE_NAME > ${USER_HOME}/profile.cas.${HOST_ADDR}_tmp
+        rm ${USER_HOME}/profile.cas.${HOST_ADDR}
+        chmod 777 ${USER_HOME}/profile.cas.${HOST_ADDR}_tmp
+        mv ${USER_HOME}/profile.cas.${HOST_ADDR}_tmp ${USER_HOME}/profile.cas.${HOST_ADDR}
+fi
+echo "export LOG_FILE_NAME=$LOG_FILE_NAME" >>  ${USER_HOME}/profile.cas.${HOST_ADDR}
+echo "alias LS_STATUS='grep LS_STATUS \$LOG_FILE_NAME*'" >>  ${USER_HOME}/profile.cas.${HOST_ADDR}
+
+exec 1>${LOG_DIR}/${LOG_FILE_NAME} 2>&1
+
+echo "Standard Configuration is: " ${STANDARD_CONFIG}
+echo "Starting ASE Server at : " `date`
+
+### The following files are required in the CLASSPATH -
+for fileName in ${JAVA_HOME}/lib/tools.jar	\
+	${JRE_HOME}/lib/jsse.jar				\
+	${ASE_HOME}/bpjars/bootstrap.jar	
+do
+	CP=${CP}:${fileName}
+done
+# Add jibx jars in classpath
+for f1 in ${ASE_HOME}/tools/jibx/*.jar
+do
+    CP=${CP}:${f1}
+done
+
+export CLASSPATH=${CP}:${CLASSPATH}
+
+export ASE_OPTS="-Dbpdblib.config=${ASE_HOME}/conf/dblib.properties -Djava.security.auth.login.config=${ASE_HOME}/conf/jaas.config -Dase.home=${ASE_HOME} -Dhttp.container.home=${HTTP_CONTAINER_HOME} -DIsEmsManaged=$EMS_MANAGED -DIswEMSManaged=$WEMS_MANAGED -DREXEC_LOG_FILE_NAME=${LOG_FILE_NAME} -DIsTcpPingEnabled=${ENABLE_TCP_PING} -DTryNewBmConnOnPingFail=${TRY_NEW_BM_CONN_ON_PING_FAIL} -DExitOnBmPingFail=${EXIT_ON_BM_PING_FAIL} "
+
+export TOMCAT_OPTS="-Dcatalina.home=${HTTP_CONTAINER_HOME} -Dcatalina.base=${HTTP_CONTAINER_HOME}"
+
+### Check whether to start in the debug mode or not.
+### If yes add the debug parameters to the command line.
+export DEBUG_OPTS=""
+if [[ $DEBUG == "true" ]] then
+    export DEBUG_OPTS="-Xdebug -Xnoagent -debug \
+			-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n,stdalloc=y"
+fi
+
+###############################################################################
+### Set the VM Options for Heap Size and the Garbage Collector
+export MEM_OPTS="-Xmx4096m -Xms4096m"
+
+export GC1_OPTS="-XX:+UseShenandoahGC -XX:+AlwaysPreTouch -XX:+UseNUMA -XX:-UseBiasedLocking"
+export GC2_OPTS="-XX:+ExplicitGCInvokesConcurrent"
+
+### JAVA 7 GC OPTS 
+export G1_MEM_OPTS="-Xmx15g -Xms15g"
+export G1_GC_OPTS=" -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:InitiatingHeapOccupancyPercent=10 -XX:ConcGCThreads=4 -XX:ParallelGCThreads=15  -XX:G1ReservePercent=50"
+
+if [[ $STANDARD_CONFIG == ${SUN_FIRE_V490} ]]
+then
+	if [[ $JVM_64BIT == "false" ]]
+	then
+		export MEM_OPTS="-Xmx2g -Xms2g -XX:NewSize=256m -XX:MaxNewSize=256m -XX:+UseTLAB"
+	else
+		export MEM_OPTS="-Xmx16g -Xms16g -XX:NewSize=2g -XX:MaxNewSize=2g -XX:+UseTLAB"
+	fi
+fi
+
+if [[ $STANDARD_CONFIG == ${NETRA_T2000} ]]
+then
+	if [[ $JVM_64BIT == "false" ]]
+	then
+		export MEM_OPTS="-Xmx2g -Xms2g -XX:NewSize=256m -XX:MaxNewSize=256m -XX:+UseTLAB"
+	else
+		export MEM_OPTS="-Xmx16g -Xms16g -XX:NewSize=2g -XX:MaxNewSize=2g -XX:+UseTLAB"
+	fi
+fi
+
+if [[ $STANDARD_CONFIG == ${SUN_FIRE_T200} ]]
+then
+	if [[ $JVM_64BIT == "false" ]]
+	then
+		export MEM_OPTS="-Xmx2g -Xms2g -XX:NewSize=256m -XX:MaxNewSize=256m -XX:+UseTLAB"
+	else
+		export MEM_OPTS="-Xmx16g -Xms16g -XX:NewSize=2g -XX:MaxNewSize=2g -XX:+UseTLAB"
+	fi
+fi
+
+GC_VERBOSE_OPTS=""
+if [[ $GC_VERBOSE == "true" ]]
+then
+	export GC_VERBOSE_OPTS="-verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails"
+fi
+
+if [[ $JAVA_VER == "1.7.0" ]]
+then
+	export GC_OPTS="${G1_MEM_OPTS} ${G1_GC_OPTS} ${GC_VERBOSE_OPTS}"
+      sed  '/\[rt.jar\]/:${JRE_HOME}/lib/jsse.jar:' $JACORB_HOME/bin/jaco
+else
+	export GC_OPTS="${MEM_OPTS} ${GC1_OPTS} ${GC2_OPTS} ${GC_VERBOSE_OPTS}"
+fi
+###############################################################################
+### Set the SIP stack Options for buffer size
+export SIP_STACK_OPTS="-Dcom.dynamicsoft.DsLibs.DsSipLlApi.udpSendBufferSize=640000"
+export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.udpReceiveBufferSize=640000"
+export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.cleanup=true"
+export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.tcpSendBufferSize=16384"
+export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.tcpReceiveBufferSize=24576"
+export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.TCP_NODELAY=true"
+export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.x200Terminated=true"
+export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.MTU=1500"
+
+### Stack's threadpool size configuration
+if [[ $STANDARD_CONFIG == ${NETRA_T2000} ]]
+then
+	export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.dataIn=12"
+else
+	export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.dataIn=6"
+fi
+
+export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.clientCallback=2"
+export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Dcom.dynamicsoft.DsLibs.DsSipLlApi.serverCallback=2"
+#export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Djavax.net.ssl.keyStoreType=PKCS12"
+#export SIP_STACK_OPTS="${SIP_STACK_OPTS} -Djavax.net.ssl.trustStoreType=PKCS12"
+
+export JACORB_OPTS="-Djacorb.security.support_ssl=off \
+					-Djacorb.security.enforce_ssl=off \
+					-Djacorb.security.ssl.client.required_options=40 \
+					-Djacorb.security.ssl.client.supported_options=40 \
+					-DOAPort=5030"
+
+export JVM_OPTS="-server"
+if [[ $JVM_64BIT == "true" ]] then
+	export JVM_OPTS="$JVM_OPTS -d64"
+fi
+export JVM_OPTS="$JVM_OPTS -XX:+PrintClassHistogram"
+
+echo "Options :"
+echo ${JVM_OPTS} ${DEBUG_OPTS} ${GC_OPTS} ${JACORB_OPTS} ${ASE_OPTS} ${TOMCAT_OPTS}
+
+echo "Arguments :"
+echo "$@"
+
+echo $$> $INSTALLROOT/casPIDFile
+
+### Run the ASE Server
+exec $JACORB_HOME/bin/jaco ${JVM_OPTS} ${DEBUG_OPTS} ${GC_OPTS} ${SIP_STACK_OPTS} ${JACORB_OPTS} ${ASE_OPTS} ${TOMCAT_OPTS} com.baypackets.ase.startup.Bootstrap $@

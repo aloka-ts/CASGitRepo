@@ -1,0 +1,10 @@
+## This script is used to find the list of SAS registered with INC.
+## The output will show SAS IP, Port and Call ID if any SAS has registered 
+## itself with INC. Incase none of the SAS has registered, it will not show
+## any output.
+#/usr/bin/ksh
+
+. ~/profile.ingw
+. $INSTALLROOT/$SUBSYS_DIR/sol28g/conf/hssenv.sh
+
+$INSTALLROOT/$SUBSYS_DIR/sol28g/bin/INGwProbe -s $SIP_LISTENER_HOST -c "get registeredSAS"

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+   "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+<sip-app>
+  <display-name>A Simple UAS SIP servlet Application</display-name>
+  <distributable/>
+
+  <listener>
+    <listener-class>com.baypackets.testapps.UasServlet</listener-class>
+  </listener>
+  
+  <servlet>
+    <servlet-name>UasServlet</servlet-name>
+    <servlet-class>com.baypackets.testapps.UasServlet</servlet-class>
+    <init-param>
+        <param-name>callDuration</param-name>
+        <param-value>3000</param-value>
+    </init-param>
+    <init-param>
+        <param-name>finalResponse</param-name>
+        <param-value>200</param-value>
+    </init-param>
+    <init-param>
+        <param-name>100rel</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <init-param>
+        <param-name>provisionalContent</param-name>
+        <param-value>test</param-value>
+    </init-param>
+    <init-param>
+        <param-name>finalContent</param-name>
+        <param-value>test</param-value>
+    </init-param>
+    <load-on-startup/>
+  </servlet> 
+
+  <servlet-mapping>
+    <servlet-name>UasServlet</servlet-name>
+    <pattern>
+        <equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+    </pattern>
+  </servlet-mapping>
+
+  <session-config>
+    <session-timeout>5</session-timeout>
+  </session-config>
+</sip-app>

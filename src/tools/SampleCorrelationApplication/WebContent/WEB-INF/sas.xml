@@ -1,0 +1,13 @@
+<sas-app>
+	<name>SampleTestApp</name>
+
+	<version>1.0</version>
+	
+	<priority>5</priority>
+	
+	<main-servlet>SampleServlet</main-servlet>
+	<sbb/>
+	<enable-annotation>false</enable-annotation>
+    <enable-lib-annotation>false</enable-lib-annotation>
+	
+</sas-app>

@@ -1,0 +1,43 @@
+<%@ jet
+	package="com.genband.m5.maps.ide.model.template"
+	class="WebXML"
+	imports="com.genband.m5.maps.ide.CPFPlugin
+ 			 com.genband.m5.maps.ide.model.CPFScreen
+			 com.genband.m5.maps.ide.model.WebServiceInfo"
+%>
+<%
+	CPFScreen cpfScreen = (CPFScreen)argument;
+	WebServiceInfo webServiceInfo = cpfScreen.getWebServiceInfo();
+	String temp = webServiceInfo.getTargetNamespace();
+	temp = temp.substring(6, temp.lastIndexOf("/"));
+	boolean initialcall = false;
+	//TODO how to get url pattern if not then initialcall false
+		//TODO initial call check has to be done....
+		//Path is fixed in servlet-class
+	if(initialcall) {
+%>
+<?xml version="1.0" encoding="UTF-8"?>
+	<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  	<display-name><%= cpfScreen.getBaseEntity().getName() %></display-name>
+<%
+	}
+%>
+ <servlet>
+ 		<servlet-name><%= webServiceInfo.getWebServiceName() %></servlet-name>
+        <servlet-class>com.genband.m5.maps.services.<%= webServiceInfo.getWebServiceName() %>Impl</servlet-class>
+        <load-on-startup>1</load-on-startup>
+ </servlet>
+ <servlet-mapping>
+        <servlet-name><%= webServiceInfo.getWebServiceName() %></servlet-name>
+        <url-pattern><%= temp %></url-pattern>
+ </servlet-mapping>
+<%
+	if(initialcall) {
+%>
+    <session-config>
+        <session-timeout>300</session-timeout>
+    </session-config>
+</web-app>
+<%
+	}
+%>

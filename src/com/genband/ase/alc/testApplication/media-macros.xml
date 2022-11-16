@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application-logic-control xmlns:x0="http://www.w3.org/2001/XMLSchema">
+      <service name="media-menu">
+            <attribute name="loop-repeat"/>
+            <attribute name="prompt-uri"/>
+            <attribute name="invalid-entry-prompt"/>
+            <attribute name="valid-regex"/>
+            <attribute name="max-digits"/>
+
+            <condition if="${valid-regex}" equal-to="null">
+                  <set variable="valid-regex" equal-to="[0-9]+"/>
+            </condition>
+
+            <condition if="${prompt-uri}" not-equal-to="null">
+                  <add-to-playlist>
+                        <media-specification-list>
+                              <play-item>
+                                    <value>${prompt-uri}</value>
+                                    <media-content-type>${MediaType}Audio</media-content-type>
+                              </play-item>
+                        </media-specification-list>
+                  </add-to-playlist>
+            </condition> 
+
+
+            <print value="*************** ${MaxDigits} *******************"/>
+            <define-local variable="MaxDigits" equal-to="${MaxDigits}"/>
+            <condition if="${max-digits}" not-equal-to="null">
+                  <set variable="MaxDigits" equal-to="${max-digits}"/>
+            </condition>
+            
+            <loop count="${loop-repeat}">
+                  <play-collect clear-current-playlist="false">
+                        <results value="timeout">
+                              <next/>
+                        </results>
+                        <results value="/${valid-regex}/">
+                              <last/>
+                        </results>
+                        <default-action>
+                              <condition if="${invalid-entry-prompt}" not-equal-to="null">
+                                    <play use-current-playlist="false" prompt-uri="${invalid-entry-prompt}"/>
+                              </condition>
+                        </default-action>
+                  </play-collect>
+            </loop>
+            <clear-current-playlist/>
+            <set variable="return" equal-to="${MediaServiceCollectedInformation}"/>
+      </service>
+
+</application-logic-control>
+

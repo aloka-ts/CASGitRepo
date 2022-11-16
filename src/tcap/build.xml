@@ -1,0 +1,108 @@
+
+<!-- ==================================================== -->
+<!-- Build file: JAIN  TCAP -->
+<!-- ==================================================== -->
+
+<project name="JAIN TCAP" default="all" basedir=".">
+      <!-- ***************************************** -->
+      <!-- Main target -->
+      <target name="all" depends="compile">
+      </target>
+      <!-- ***************************************** -->
+
+      <!-- Set the variables used inside -->
+      <property name="app.name" value="tcap-provider"/>
+      <property name="app.src.dir" value="${PARENT_BASE}/tcap"/>
+      <property name="app.build.dir" Value="${INSTALLROOT}/TcapClasses"/>
+      <property name="bpjar.dir" Value="${INSTALLROOT}/bpjars"/>
+      <property name="otherjar.dir" Value="${INSTALLROOT}/otherjars"/>
+      <property name="sysapp.dir" Value="${INSTALLROOT}/sysapps"/>
+
+      <!-- Set the classpath for compiling the application -->
+      <path id="classpath">
+            <fileset dir="${bpjar.dir}" includes="*.jar" />
+            <fileset dir="${otherjar.dir}" includes="*.jar"/>
+      </path>
+
+      <target name="tcap-api" depends="cleanup">
+              <echo message ="Building the Tcapprovider-api "/>
+			  <echo message ="${app.src.dir}"/>
+			  <echo message ="${app.build.dir}"/>
+			  <echo message ="${app.name}"/>
+			  <echo message="${bpjar.dir}"/>
+			  <mkdir dir="${app.build.dir}"/>
+
+		<echo message=" Deleting API jar"/>
+			   <delete file="${bpjar.dir}/${app.name}-api.jar"/>
+			 
+			  
+             <javac srcdir="${app.src.dir}" destdir="${app.build.dir}" debug="true" >
+              <include name="jain/**/*.java"/>
+				<include name="com/genband/tcap/**/*.java"/>
+	             <exclude name="com/genband/jain/**/router/*.java"/>
+				  <exclude name="com/genband/jain/**/*.java"/>
+				<classpath refid="classpath"/>
+			
+             </javac>
+
+              <!-- Package the APIs into a .jar file -->
+              <jar update="true" jarfile="${bpjar.dir}/${app.name}-api.jar" basedir="${app.build.dir}">
+                  <include name="**/*.class"/>
+				   <exclude name="com/genband/jain/**/router/*.class"/>
+				  <exclude name="com/genband/jain/**/*.class"/>
+		       <exclude name="**/com/agnity/map/test/**/*.java"/>
+				</jar>
+			  <!--	clean up -->
+			  <delete dir="${app.build.dir}"/> 
+      </target>
+	  
+	  <target name="compile" depends="tcap-api">
+              <mkdir dir="${app.build.dir}"/>
+
+			  		<echo message=" Deleting IMPL jar"/>
+			   <delete file="${bpjar.dir}/${app.name}-impl.jar"/>
+
+              <javac srcdir="${app.src.dir}" destdir="${app.build.dir}" debug="true">
+                       <include name="**/*.java"/>
+                       <exclude name="cap/**/*.java"/>
+		       <exclude name="camel/**/*.java"/>
+	               <exclude name="servicedata/com/agnity/**/*.java"/> 	
+                       <exclude name="inap/**/*.java"/>
+		       <exclude name="com/genband/jain/**/router/*.java"/>
+		       <exclude name="**/com/agnity/map/test/**/*.java"/>
+                       <classpath refid="classpath"/>
+              </javac>
+
+              <!-- Package the APIs into a .jar file -->
+             <!-- <jar update="true" jarfile="${bpjar.dir}/${app.name}-api.jar" basedir="${app.build.dir}">
+                   <include name="jain/**/*.class"/>
+                   <include name="com/genband/tcap/**/*.class"/>
+              </jar>  -->
+
+            <!-- Package the Provider implementation into a .jar file -->
+            <jar update="true" jarfile="${bpjar.dir}/${app.name}-impl.jar" basedir="${app.build.dir}">
+                  <include name="com/genband/jain/**/*.class"/>
+				  <exclude name="com/genband/jain/**/router/*.class"/>
+            </jar>
+
+			<!-- Package the Service Data into a .jar file -->
+<!--            <jar update="true" jarfile="${bpjar.dir}/service-data.jar" basedir="${app.build.dir}">
+                  <include name="com/agnity/**/*.class"/>
+            </jar>-->
+
+            <!--  Package the Provider application into a .sar file -->
+            <mkdir dir="${app.build.dir}/${app.name}.sar/WEB-INF/classes"/>
+            <mkdir dir="${sysapp.dir}"/>
+            <copy todir="${app.build.dir}/${app.name}.sar/WEB-INF">
+                  <fileset dir="${app.src.dir}/com/genband/jain/protocol/ss7/tcap"
+                              includes="*.xml"/>
+            </copy>
+            <jar update="true" jarfile="${sysapp.dir}/${app.name}.sar" basedir="${app.build.dir}/${app.name}.sar"/>
+     </target>
+
+     <!-- Cleanup the build directory -->
+     <target name="cleanup">
+            <delete dir="${app.build.dir}"/>
+     </target>                           
+</project>  
+

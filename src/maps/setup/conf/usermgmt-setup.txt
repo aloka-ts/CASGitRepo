@@ -1,0 +1,91 @@
+// This bsh script setup the default content of the portal.
+// It is called when the SessionFactoryBinder service has created a schema and needs to populate it
+import org.jboss.portal.common.io.IOTools;
+import org.jboss.portal.common.util.Tools;
+import org.jboss.portal.identity.db.HibernateUserImpl;
+import org.jboss.portal.identity.db.HibernateRoleImpl;
+import com.genband.m5.maps.common.entity.Organization;
+
+try
+{
+
+   System.out.println ("Data insertion started");
+   session = SessionFactory.openSession();
+   tx = session.beginTransaction();
+
+   //
+   HibernateRoleImpl adminRole = new HibernateRoleImpl("Admin", "Administrators");
+   HibernateRoleImpl userRole = new HibernateRoleImpl("User", "User");
+   HibernateRoleImpl npaRole = new HibernateRoleImpl("NPA", "Network Admin");
+   HibernateRoleImpl npmRole = new HibernateRoleImpl("NPM", "NP Manager");
+   HibernateRoleImpl spaRole = new HibernateRoleImpl("SPA", "SP Admin");
+
+   //
+   HibernateUserImpl admin = new HibernateUserImpl("admin");
+   admin.setPassword(Tools.md5AsHexString("admin"));
+   admin.setRealEmail("admin@portal.com");
+   admin.setViewRealEmail(true);
+   admin.setEnabled(true);
+
+   //
+   admin.getRoles().add(adminRole);
+   adminRole.getUsers().add(admin);
+
+   //
+   HibernateUserImpl user = new HibernateUserImpl("user");
+   user.setPassword(Tools.md5AsHexString("user"));
+   user.setRealEmail("user@portal.com");
+   user.setViewRealEmail(true);
+   user.setEnabled(true);
+
+   //
+   user.getRoles().add(userRole);
+   userRole.getUsers().add(user);
+
+   //
+   HibernateUserImpl npa = new HibernateUserImpl("root");
+   npa.setPassword(Tools.md5AsHexString("1234"));
+   npa.setRealEmail("root@genband.com");
+   npa.setViewRealEmail(true);
+   npa.setEnabled(true);
+
+   //
+   npa.getRoles().add(npaRole);
+   npaRole.getUsers().add(npa);
+   npa.getRoles().add(npmRole);
+   npmRole.getUsers().add(npa);
+
+   //
+   Organization npaOrg = new Organization ();
+   npaOrg.setName ("NPA Organization");
+   npaOrg.setActivationDate (new java.sql.Date(System.currentTimeMillis()));
+   npaOrg.setStatus (1);
+   npaOrg.setAccount_Type('N');
+   npaOrg.setDomainName("genband.com");
+   npaOrg.setCustomerId("GENBAND");
+   npaOrg.setExpirationDate(new java.sql.Date(5*365*24*3600*1000 + System.currentTimeMillis()));
+   
+
+   //
+   npa.setMerchantAccount (npaOrg);
+   admin.setMerchantAccount (npaOrg);
+   user.setMerchantAccount (npaOrg);
+   npa.setMerchantAccount (npaOrg);
+
+   //
+   session.save(npaOrg);
+   session.save(adminRole);
+   session.save(userRole);
+   session.save(npaRole);
+   session.save(npmRole);
+   session.save(spaRole);
+   session.save(admin);
+   session.save(user);
+   session.save(npa);
+   tx.commit();
+   System.out.println ("Data insertion completed");
+}
+finally
+{
+   IOTools.safeClose(session);
+}

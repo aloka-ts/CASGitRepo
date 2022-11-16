@@ -1,0 +1,65 @@
+<component name="libraryTable">
+  <library name="bpjars">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/ain-codecs-0.1.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/alc_common.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/alc.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/alcml.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/appmsr.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/ar.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/ase.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/bootstrap.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/bpari.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/bpenum.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/bpenumif.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/bpresource.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/bpspi.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/capv2codecs.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/CheckPointingInterfaceALC.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/DatabaseServiceALC.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/ems.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/ExpressionsALC.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/gy-if.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/http-if.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/inapitutcS2.codecs.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/inapjapv2.2codecs.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/isup-codecs.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/JainTcapInterfaceALC.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/jetc.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/jmxide.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/jndids.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/map-codecs-0.1.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/MediaServiceALC.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/radius-if.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/rf-if.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/ro-if.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/RoutingInterfaceALC.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/sbb-if.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/service-data.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/sh-if.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/slee.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/snar.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/soa-iface.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/tcap-provider-api.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/tcap-provider-impl.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/tcap-routing.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/TelnetInterfaceALC.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/telnetssh-if.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/ThirdPartyInvocationALC.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/wincodecs.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/workmanager.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../opensmpp-core-3.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Jar_for_Cas/com.fasterxml.jackson.databind.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Jar_for_Cas/jackson-dataformat-yaml-2.9.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Jar_for_Cas/New folder/jackson-core-2.9.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Jar_for_Cas/New folder/jackson-dataformat-yaml-2.9.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Jar_for_Cas/New folder/snakeyaml-1.18.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../Jar_for_Cas/jackson-dataformat-xml-2.8.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/bpjars/ase.jar!/" />
+    </SOURCES>
+  </library>
+</component>

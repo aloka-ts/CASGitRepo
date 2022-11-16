@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * Copyright Notice ============================================*
+ * This file contains proprietary information of BayPackets, Inc.
+ * Copying or reproduction without prior written approval is prohibited.
+ * Copyright (c) 2004-2006 =====================================
+ *
+-->
+
+
+<!DOCTYPE sip-app
+  PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+  "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+<sip-app>
+  <display-name>A Simple back-to-back User Agent</display-name>
+  <distributable/>
+  <listener>
+     <listener-class>com.baypackets.ase.testapps.sbb.conf.ConferenceServlet</listener-class>
+  </listener>
+
+  <!--  The following sections list all the servlets in this application.-->
+  <!--
+  <servlet>
+    <servlet-name>ConferenceProxy</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.conf.ConferenceProxy</servlet-class>
+  </servlet>
+  -->
+  <servlet>
+    <servlet-name>ConferenceServlet</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.conf.ConferenceServlet</servlet-class>
+	<init-param>
+		<param-name>confId</param-name>
+		<param-value>12345</param-value>
+	</init-param>
+	<load-on-startup/>
+  </servlet>
+
+  <!-- The following section defines the Triggering Rules for this application.-->
+  <!--
+  <servlet-mapping>
+    <servlet-name>ConferenceProxy</servlet-name>
+   <pattern>
+		<and>
+        <equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+		<equal>
+          <var>request.uri.user</var>
+          <value>123456789</value>
+        </equal>
+		</and>
+    </pattern>
+
+  </servlet-mapping>
+  -->
+  
+  <servlet-mapping>
+    <servlet-name>ConferenceServlet</servlet-name>
+    <pattern>
+		<and>
+        <equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+		<equal>
+          <var>request.uri.user</var>
+          <value>12345</value>
+        </equal>
+		</and>
+    </pattern>
+  </servlet-mapping>
+  
+  <!-- The following section specifies the application session timeout value. -->
+  <session-config>
+    <session-timeout>5</session-timeout>
+  </session-config>
+</sip-app>

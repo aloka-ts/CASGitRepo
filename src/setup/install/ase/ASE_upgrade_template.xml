@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Subsystem Type="ASE Subsystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="K:\Installer\samples\schema\subsysUpgradeTemplate.xsd">
+        <!-- Use as template only..Add the required Macros manually. -->
+        <Macros>
+	</Macros>
+	<DefinedMacros>
+		<Macro name="SUBSYS_VERSION" value="ASE_VERSION"/>
+	</DefinedMacros>
+	<Package name="ase.tar" location="ASEASE_VERSION" type="upgrade" />
+        <!-- Modify the interface VERSION part manually before packaging -->
+        <Version thisVersion="ASE_VERSION" upgradeCompatibility="PREV_VERSION"/>
+	<Scripts>
+		<UserScript name="setup/ase/macroconfig.sh" />
+		<OSScript name="setup/ase/osconfig.sh"/>
+		<ExecutionScript name="ASESubsystem/scripts/ase" role="primary"/>
+		<ExecutionScript name="ASESubsystem/scripts/ase" role="secondary"/>
+	</Scripts>
+	<Oids>
+                <Oid name="1.11.1" defaultValue="ASE_VERSION">
+                        <extraString>ASE_VERSION</extraString>
+                </Oid>
+                <Oid name="1.11.2" defaultValue="">
+                        <alias>CURRENTDATE_STRING</alias>
+                </Oid>
+                <Oid name="1.11.3" defaultValue="">
+                        <alias>CURRENTDATE_STRING</alias>
+                </Oid>
+	</Oids>
+</Subsystem>

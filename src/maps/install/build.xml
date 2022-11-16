@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BuildNavigator SystemType="rsiAse" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="K:\Installer\samples\schema\build.xsd">
+	<Macros>
+                <Macro name="SAS_SIG_FIP" question="Please provide a Floating IP for FT setup : "/>
+		<Macro name="DB_USER" question="Please enter Database username : "/>
+		<Macro name="DB_PASSWD" question="Please enter Database user password : "/>
+		<Macro name="DB1_SID" question="Please enter primary Database SID :  "/>
+		<Macro name="DB2_SID" question=" Please enter secondary Database SID : "/>
+		<Macro name="DB1_HOST" question="Please enter primary Database hostname :  "/>
+	        <Macro name="DB2_HOST" question="Please enter secondary Database hostname :  "/>
+	        <Macro name="DB_LISTENER_PORT" question="Enter the Primary DB Listener Port for MAPS : "/> 
+                <Macro name="DB_LISTENER_PORT_2" question="Enter the Secondary DB Listener Port for MAPS : "/> 
+                <Macro name="DB_FT_REQD" question="Is DB Fault Tolerance required (0 for NFT/ 1 for FT/ 2 for DataGuard/ 3 for Oracle RAC) : " defaultValue="3" />
+</Macros>
+<PackageInformation>
+	<!-- 6.0.0 parameter will be replaced in packaging.  -->
+	<Subsystem type="MmAppProvServer" template="MmAppProvServer6.0.0/MAPS_template.xml" presence="mandatory"/>
+</PackageInformation>
+<PreConfiguration>
+	<DefinedMacros>
+		<Macro name="NONE_ANS" value="NONE"/>
+		<Macro name="SUBSYS_COMMON" value="Common"/>
+		<Macro name="SUBSYS_MAPS" value="MAPS"/>
+		<Macro name="SYSTEM_VERSION" value="6.0.0"/>
+		<Macro name="SYSTEM_DESCRIPTION" value="Genband Multimedia Application Provisioning Server"/>
+		<Macro name="PRODUCT_ID" value="MAPS"/>
+		<Macro name="CLEI_CODE" value="NOT SET"/>
+		<Macro name="ACCEPTANCE_DATE" value=" "/>
+			<Macro name="WARRANTY_PERIOD" value="180"/>
+			<Macro name="EXPIRY_DATE" value=" "/>
+			<Macro name="LICENSE_KEY" value=" "/>
+			<Macro name="VENDOR_NAME" value="GENBAND, Inc. "/>
+			<Macro name="BINARY_TYPE" value=" "/>
+                        <Macro name="INSTALL_SUFFIX" value=""/>
+                        <Macro name="SM_GENERIC_PORT" value="12000"/>
+                        <Macro name="SM_MSG_QUE_ID" value="919191929"/>
+		</DefinedMacros>
+		<AlwaysToBePromptedMacros>
+			<Macro name="DB_USER"/>
+			<Macro name="DB_PASSWD"/>
+			<Macro name="DB_FT_REQD">
+				<IF value="3">
+					<Macro name="DB1_HOST"/>
+                                        <Macro name="DB2_HOST"/>
+					<Macro name="DB1_SID"/>
+                                        <Macro name="DB2_SID"/>
+                                        <Macro name="DB_LISTENER_PORT"/>
+                                        <Macro name="DB_LISTENER_PORT_2"/>
+				</IF>
+				<IF value="2">
+					<Macro name="DB1_HOST"/>
+					<Macro name="DB2_HOST"/>
+					<Macro name="DB1_SID"/>
+					<Macro name="DB2_SID"/>
+                                        <Macro name="DB_LISTENER_PORT"/>
+                                        <Macro name="DB_LISTENER_PORT_2"/>
+				</IF>
+				<IF value="1">
+					<Macro name="DB1_HOST"/>
+					<Macro name="DB2_HOST"/>
+					<Macro name="DB1_SID"/>
+					<Macro name="DB2_SID"/>
+                                        <Macro name="DB_LISTENER_PORT"/>
+                                        <Macro name="DB_LISTENER_PORT_2"/>
+				</IF>
+				<IF value="0">
+					<Macro name="DB1_HOST"/>
+					<Macro name="DB1_SID"/>
+                                        <Macro name="DB_LISTENER_PORT"/>
+				</IF>
+			</Macro>
+                        <Macro name="FT_MODE">
+                                <IF value="2">
+                                        <Macro name="SAS_SIG_FIP"/>
+                                </IF>
+                        </Macro>
+		</AlwaysToBePromptedMacros>
+	</PreConfiguration>
+	<AliasMacros>
+			
+                <Macro name="DB1_HOST_IP" aliasMacroName="DB1_HOST" function="getIP"/>
+                <Macro name="DB2_HOST_IP" aliasMacroName="DB2_HOST" function="getIP"/>
+		
+        </AliasMacros>
+
+</BuildNavigator>
+

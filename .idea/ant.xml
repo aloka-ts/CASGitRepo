@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AntConfiguration">
+    <buildFile url="file://$PROJECT_DIR$/src/build/build.xml">
+      <properties>
+        <property name="INSTALLROOT" value="$PROJECT_DIR$/BuildDir/" />
+        <property name="JAVA_HOME" value="/Library/Java/JavaVirtualMachines/1.6.0_37-b06-434.jdk/Contents/Home" />
+        <property name="ANT_HOME" value="$USER_HOME$/Desktop/Softwares/apache-ant-1.9.6" />
+        <property name="DS_HOME" value="$PROJECT_DIR$/../CASStackGitRepo7.5/stacks/SIPStack/DySIPUAJava_6.4/src/dsua" />
+        <property name="CAP_HOME" value="$PROJECT_DIR$/src/tcap/cap" />
+        <property name="BN_HOME" value="$PROJECT_DIR$/../thirdPartyCASGitRepo7.5/BinaryNotes1.5.2" />
+        <property name="THIRDPARTY" value="$PROJECT_DIR$/../thirdPartyCASGitRepo7.5" />
+        <property name="CAS_STACK_ROOT" value="$PROJECT_DIR$/../CASStackGitRepo7.5" />
+        <property name="BAYPROCESSOR_ROOT" value="$PROJECT_DIR$/../BayProcessorGitRepo" />
+        <property name="EMS_COMMON_ROOT" value="$PROJECT_DIR$/../CommonEMSGitRepo" />
+        <property name="PARENT_BASE" value="$PROJECT_DIR$/src" />
+      </properties>
+    </buildFile>
+  </component>
+</project>

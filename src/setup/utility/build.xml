@@ -1,0 +1,336 @@
+<!-- ==================================================== -->
+<!-- Build file: UTILITY -->
+<!-- ==================================================== -->
+
+<project name="Utility" default="all" basedir=".">
+	<!-- ***************************************** -->
+    <!-- Main target -->
+    <target name="all" depends="cdrsftp-utility">
+    </target>
+    <!-- ***************************************** -->
+	
+	<!-- Set the variables used inside -->
+    <property name="utility.src.dir" value="."/>
+    <property name="utility.build.dir" Value="${INSTALLROOT}/utility"/>
+		
+	<target name="clean">
+		<delete dir="${cdrsftp.dest.dir}"/>
+	</target>
+	<target name="cdrsftp-utility" depends = "clean">
+    	<echo message ="Building the cdrsftp-utility "/>
+		
+		<property name="cdrsftp.src.dir" value="${utility.src.dir}"/>
+		<property name="cdrsftp.src.scripts.dir" value="${cdrsftp.src.dir}/scripts"/>
+		<property name="cdrsftp.src.dbscripts.dir" value="${cdrsftp.src.dir}/dbScripts"/>
+		
+		<property name="cdrsftp.dest.dir" value="${utility.build.dir}/cdrSftpUtility"/>
+		<property name="cdrsftp.dest.dbscripts.dir" value="${cdrsftp.dest.dir}/dbScripts"/>
+       
+		<echo message ="Utility SRc=${utility.src.dir}"/>
+		<echo message ="Utility build=${utility.build.dir}"/>
+		
+		<echo message ="cdrutil dest=${cdrsftp.dest.dir}"/>
+		<echo message ="cdrutil dbscript dest=${cdrsftp.dest.dbscripts.dir}"/>
+		
+		<echo message ="cdrutil src=${cdrsftp.src.dir}"/>
+		<echo message ="cdrutil scriptsrc =${cdrsftp.src.scripts.dir}"/>
+		<echo message ="cdrutil dbscriptsrc =${cdrsftp.src.dbscripts.dir}"/>
+						
+		<mkdir dir="${utility.build.dir}"/>
+		<mkdir dir="${cdrsftp.dest.dir}"/>
+		
+		<antcall target="dbpush"/>
+      	<antcall target="dbpull"/>
+	<antcall target="fileSftp"/>
+      	
+		<copy todir="${cdrsftp.dest.dbscripts.dir}/" file="${cdrsftp.src.dbscripts.dir}/TBL_CREATE_QRY.sql"/>
+		<copy todir="${cdrsftp.dest.dbscripts.dir}/" file="${cdrsftp.src.dbscripts.dir}/VW_CREATE_QUERY.sql"/>
+		<copy todir="${cdrsftp.dest.dbscripts.dir}/" file="${cdrsftp.src.dbscripts.dir}/ATTR_TBL_CREATE_QRY.sql"/>
+		<copy todir="${cdrsftp.dest.dbscripts.dir}/" file="${cdrsftp.src.dbscripts.dir}/SEQ_CREATE_QRY.sql"/>
+		<copy todir="${cdrsftp.dest.dbscripts.dir}/" file="${cdrsftp.src.dbscripts.dir}/TRIGGER_CREATE_QRY.sql"/>
+		<copy todir="${cdrsftp.dest.dbscripts.dir}/" file="${cdrsftp.src.dbscripts.dir}/applyDbPatch.sh"/>
+		<copy todir="${cdrsftp.dest.dbscripts.dir}/" file="${cdrsftp.src.dbscripts.dir}/rollbackDbPatch.sh"/>
+		<copy todir="${cdrsftp.dest.dir}/" file="${cdrsftp.src.scripts.dir}/applyCdrUtilityPatch.sh"/>
+		<copy todir="${cdrsftp.dest.dir}/" file="${cdrsftp.src.scripts.dir}/rollbackCdrUtilityPatch.sh"/>
+				
+    </target>
+	
+	
+	<target name="dbpush">
+		<echo message ="Building the cdrsftp-utility DB Push component"/>
+		
+		<property name="dbpush.src.dir" value="${cdrsftp.src.dir}"/>
+		<property name="dbpush.src.scripts.dir" value="${cdrsftp.src.scripts.dir}"/>
+		
+		<property name="dbpush.dest.dir" value="${cdrsftp.dest.dir}/dbPush"/>
+		<property name="dbpush.dest.lib.dir" value="${dbpush.dest.dir}/lib"/>
+		<property name="dbpush.dest.scripts.dir" value="${dbpush.dest.dir}/scripts"/>
+		
+		<property name="dbpush.tmp.dir" value="${INSTALLROOT}/dbPushClasses"/>
+		<property name="dbpush.tmp.class.dir" value="${dbpush.tmp.dir}/classes"/>
+		  
+		<echo message ="dbpush SRc=${dbpush.src.dir}"/>
+		<echo message ="dbpush scripts src=${dbpush.src.scripts.dir}"/>
+		<echo message ="dbpush dest=${dbpush.dest.dir}"/>
+		<echo message ="dbpush dest lib=${dbpush.dest.lib.dir}"/>
+		<echo message ="dbpush dest scripts=${dbpush.dest.scripts.dir}"/>
+		<echo message ="dbpush tmp=${dbpush.tmp.dir}"/>
+		<echo message ="dbpush classes tmp=${dbpush.tmp.class.dir}"/>
+		
+		<!--<echo message ="cdrutil src=${cdrsftp.src.dir}"/>
+		<echo message ="cdrutil scriptsrc =${cdrsftp.src.scripts.dir}"/> -->
+								
+		<mkdir dir="${dbpush.tmp.dir}"/>
+		<mkdir dir="${dbpush.tmp.class.dir}"/>
+		
+		<mkdir dir="${dbpush.dest.dir}"/>		
+		<mkdir dir="${dbpush.dest.lib.dir}"/>	
+		<mkdir dir="${dbpush.dest.scripts.dir}"/>	
+		
+		<copy todir="${dbpush.dest.lib.dir}" file="${THIRDPARTY}/otherjars/commons-logging-1.1.jar"/>    	
+		<copy todir="${dbpush.dest.lib.dir}" file="${THIRDPARTY}/otherjars/log4j-1.2.8.jar"/>    	
+		<copy todir="${dbpush.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-beans-2.5.6.jar"/>
+		<copy todir="${dbpush.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-context-2.5.6.jar"/>
+		<copy todir="${dbpush.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-core-2.5.6.jar"/>                
+		      	    
+		<!-- Define the classpath. Please make sure that all the jars available in the lib -->
+		<path id="cdrutilityclasspath">
+			<fileset dir="${dbpush.dest.lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+
+		<pathconvert property="libs.project" pathsep=" ">
+			<mapper>
+				<chainedmapper>
+		    		<!-- remove absolute path -->
+		    		<flattenmapper />
+		        	<!-- add lib/ prefix -->
+		        	<globmapper from="*" to="lib/*" />
+		        </chainedmapper>
+			</mapper>
+			<path>
+		    	<!-- lib.home contains all jar files, in several subdirectories -->
+		    	<fileset dir="${dbpush.dest.lib.dir}">
+		        	<include name="**/*.jar" />
+		        </fileset>
+			</path>
+		</pathconvert>
+
+
+		<javac srcdir="${dbpush.src.dir}" destdir="${dbpush.tmp.class.dir}" debug="true">
+			<include name="com/agnity/utility/cdrsftp/dbpush/**/*.java"/>
+			<classpath refid="cdrutilityclasspath"/>
+		</javac>
+
+		<copy todir="${dbpush.tmp.class.dir}" file="${dbpush.src.dir}/com/agnity/utility/cdrsftp/dbpush/CdrPushConfig.xml"/>
+
+		<echo message ="cdrpush jar=${dbpush.dest.dir}/cdrDbPush.jar"/>
+	
+		<jar jarfile="${dbpush.dest.dir}/cdrDbPush.jar" basedir="${dbpush.tmp.class.dir}" >
+			<include name="com/agnity/utility/cdrsftp/dbpush/**/*.class"/>
+			<include name="CdrPushConfig.xml"/>
+			<manifest >
+				<attribute name="Main-Class" value="com.agnity.utility.cdrsftp.dbpush.CDRDbPush"/>
+				<attribute name="Class-Path" value=". ${libs.project}" />
+			</manifest>
+		</jar>
+		<copy todir="${dbpush.dest.dir}/" file="${dbpush.src.dir}/com/agnity/utility/cdrsftp/dbpush/log4j.properties"/>
+		<copy todir="${dbpush.dest.dir}/" file="${dbpush.src.dir}/com/agnity/utility/cdrsftp/dbpush/CdrPushConfig.properties"/>
+		<copy todir="${dbpush.dest.dir}/" file="${dbpush.src.dir}/com/agnity/utility/cdrsftp/dbpush/dbPush.ctrl"/>
+		<copy todir="${dbpush.dest.scripts.dir}/" file="${dbpush.src.scripts.dir}/startDbPush.sh"/>
+		<copy todir="${dbpush.dest.scripts.dir}/" file="${dbpush.src.scripts.dir}/CDRPush.conf"/>
+		
+		<delete dir="${dbpush.tmp.dir}"/>
+		<delete dir="${dbpush.tmp.class.dir}"/>
+		      	                 
+	</target>
+
+	<target name="dbpull">
+		<echo message ="Building the cdrsftp-utility DB Pull component"/>
+		
+		<property name="dbpull.src.dir" value="${cdrsftp.src.dir}"/>
+		<property name="dbpull.src.scripts.dir" value="${cdrsftp.src.scripts.dir}"/>
+		
+		<property name="dbpull.dest.dir" value="${cdrsftp.dest.dir}/dbPull"/>
+		<property name="dbpull.dest.lib.dir" value="${dbpull.dest.dir}/lib"/>
+		<property name="dbpull.dest.scripts.dir" value="${dbpull.dest.dir}/scripts"/>
+		
+		<property name="dbpull.tmp.dir" value="${INSTALLROOT}/dbPullClasses"/>
+		<property name="dbpull.tmp.class.dir" value="${dbpull.tmp.dir}/classes"/>
+		  
+		<echo message ="dbpull SRc=${dbpull.src.dir}"/>
+		<echo message ="dbpull scripts src=${dbpull.src.scripts.dir}"/>
+		<echo message ="dbpull dest=${dbpull.dest.dir}"/>
+		<echo message ="dbpull dest lib=${dbpull.dest.lib.dir}"/>
+		<echo message ="dbpull dest scripts=${dbpull.dest.scripts.dir}"/>
+		<echo message ="dbpull tmp=${dbpull.tmp.dir}"/>
+		<echo message ="dbpull classes tmp=${dbpull.tmp.class.dir}"/>
+		
+		<!--<echo message ="cdrutil src=${cdrsftp.src.dir}"/>
+		<echo message ="cdrutil scriptsrc =${cdrsftp.src.scripts.dir}"/> -->
+								
+		<mkdir dir="${dbpull.tmp.dir}"/>
+		<mkdir dir="${dbpull.tmp.class.dir}"/>
+		
+		<mkdir dir="${dbpull.dest.dir}"/>		
+		<mkdir dir="${dbpull.dest.lib.dir}"/>	
+		<mkdir dir="${dbpull.dest.scripts.dir}"/>	
+		
+		<copy todir="${dbpull.dest.lib.dir}" file="${THIRDPARTY}/otherjars/commons-logging-1.1.jar"/>    	
+		<copy todir="${dbpull.dest.lib.dir}" file="${THIRDPARTY}/otherjars/log4j-1.2.8.jar"/>    	
+		<copy todir="${dbpull.dest.lib.dir}" file="${THIRDPARTY}/otherjars/jsch-0.1.44.jar"/>
+		<copy todir="${dbpull.dest.lib.dir}" file="${THIRDPARTY}/otherjars/ojdbc6.jar"/>
+		<copy todir="${dbpull.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-beans-2.5.6.jar"/>
+		<copy todir="${dbpull.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-context-2.5.6.jar"/>
+		<copy todir="${dbpull.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-core-2.5.6.jar"/>
+		<copy todir="${dbpull.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-dao.jar"/>
+		<copy todir="${dbpull.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-jdbc-2.5.6.jar"/> 
+		      	    
+		<!-- Define the classpath. Please make sure that all the jars available in the lib -->
+		<path id="cdrutilityclasspath">
+			<fileset dir="${dbpull.dest.lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+
+		<pathconvert property="libs.project" pathsep=" ">
+			<mapper>
+				<chainedmapper>
+		    		<!-- remove absolute path -->
+		    		<flattenmapper />
+		        	<!-- add lib/ prefix -->
+		        	<globmapper from="*" to="lib/*" />
+		        </chainedmapper>
+			</mapper>
+			<path>
+		    	<!-- lib.home contains all jar files, in several subdirectories -->
+		    	<fileset dir="${dbpull.dest.lib.dir}">
+		        	<include name="**/*.jar" />
+		        </fileset>
+			</path>
+		</pathconvert>
+
+
+		<javac srcdir="${dbpull.src.dir}" destdir="${dbpull.tmp.class.dir}" debug="true">
+			<include name="com/agnity/utility/cdrsftp/dbpull/**/*.java"/>
+			<classpath refid="cdrutilityclasspath"/>
+		</javac>
+
+		<copy todir="${dbpull.tmp.class.dir}" file="${dbpull.src.dir}/com/agnity/utility/cdrsftp/dbpull/CdrPullConfig.xml"/>
+
+		<echo message ="cdrpull jar=${dbpull.dest.dir}/cdrDbPull.jar"/>
+	
+		<jar jarfile="${dbpull.dest.dir}/cdrDbPull.jar" basedir="${dbpull.tmp.class.dir}" >
+			<include name="com/agnity/utility/cdrsftp/dbpull/**/*.class"/>
+			<include name="CdrPullConfig.xml"/>
+			<manifest >
+				<attribute name="Main-Class" value="com.agnity.utility.cdrsftp.dbpull.CDRDbPull"/>
+				<attribute name="Class-Path" value=". ${libs.project}" />
+			</manifest>
+		</jar>
+		<copy todir="${dbpull.dest.dir}/" file="${dbpull.src.dir}/com/agnity/utility/cdrsftp/dbpull/log4j.properties"/>
+		<copy todir="${dbpull.dest.dir}/" file="${dbpull.src.dir}/com/agnity/utility/cdrsftp/dbpull/CdrPullConfig.properties"/>
+		<copy todir="${dbpull.dest.dir}/" file="${dbpull.src.dir}/com/agnity/utility/cdrsftp/dbpull/CdrPullDBSchema.properties"/>
+		<copy todir="${dbpull.dest.scripts.dir}/" file="${dbpull.src.scripts.dir}/startDbPull.sh"/>
+		
+		<delete dir="${dbpull.tmp.dir}"/>
+		<delete dir="${dbpull.tmp.class.dir}"/>
+		      	                 
+	</target>
+
+	 <target name="fileSftp">
+                <echo message ="Building the cdrsftp-utility File Sftp component"/>
+
+                <property name="fileSftp.src.dir" value="${cdrsftp.src.dir}"/>
+                <property name="fileSftp.src.scripts.dir" value="${cdrsftp.src.scripts.dir}"/>
+
+                <property name="fileSftp.dest.dir" value="${cdrsftp.dest.dir}/fileSftp"/>
+                <property name="fileSftp.dest.lib.dir" value="${fileSftp.dest.dir}/lib"/>
+                <property name="fileSftp.dest.scripts.dir" value="${fileSftp.dest.dir}/scripts"/>
+
+                <property name="fileSftp.tmp.dir" value="${INSTALLROOT}/fileSftpClasses"/>
+                <property name="fileSftp.tmp.class.dir" value="${fileSftp.tmp.dir}/classes"/>
+
+                <echo message ="fileSftp SRc=${fileSftp.src.dir}"/>
+                <echo message ="fileSftp scripts src=${fileSftp.src.scripts.dir}"/>
+                <echo message ="fileSftp dest=${fileSftp.dest.dir}"/>
+                <echo message ="fileSftp dest lib=${fileSftp.dest.lib.dir}"/>
+                <echo message ="fileSftp dest scripts=${fileSftp.dest.scripts.dir}"/>
+                <echo message ="fileSftp tmp=${fileSftp.tmp.dir}"/>
+                <echo message ="fileSftp classes tmp=${fileSftp.tmp.class.dir}"/>
+
+                <!--<echo messfileSftpage ="cdrutil src=${cdrsftp.src.dir}"/>
+                <echo message ="cdrutil scriptsrc =${cdrsftp.src.scripts.dir}"/> -->
+
+                <mkdir dir="${fileSftp.tmp.dir}"/>
+                <mkdir dir="${fileSftp.tmp.class.dir}"/>
+
+                <mkdir dir="${fileSftp.dest.dir}"/>
+                <mkdir dir="${fileSftp.dest.lib.dir}"/>
+                <mkdir dir="${fileSftp.dest.scripts.dir}"/>
+
+                <copy todir="${fileSftp.dest.lib.dir}" file="${THIRDPARTY}/otherjars/commons-logging-1.1.jar"/>
+                <copy todir="${fileSftp.dest.lib.dir}" file="${THIRDPARTY}/otherjars/log4j-1.2.8.jar"/>
+                <copy todir="${fileSftp.dest.lib.dir}" file="${THIRDPARTY}/otherjars/jsch-0.1.44.jar"/>
+                <copy todir="${fileSftp.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-beans-2.5.6.jar"/>
+                <copy todir="${fileSftp.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-context-2.5.6.jar"/>
+		<copy todir="${fileSftp.dest.lib.dir}" file="${THIRDPARTY}/otherjars/spring-core-2.5.6.jar"/>
+		<copy todir="${fileSftp.dest.lib.dir}" file="${THIRDPARTY}/otherjars/commons-io-2.4.jar"/>
+
+                <!-- Define the classpath. Please make sure that all the jars available in the lib -->
+                <path id="cdrutilityclasspath">
+                        <fileset dir="${fileSftp.dest.lib.dir}">
+                                <include name="*.jar"/>
+                        </fileset>
+                </path>
+
+                <pathconvert property="libs.project" pathsep=" ">
+                        <mapper>
+                                <chainedmapper>
+                                <!-- remove absolute path -->
+                                <flattenmapper />
+                                <!-- add lib/ prefix -->
+                                <globmapper from="*" to="lib/*" />
+                        </chainedmapper>
+                        </mapper>
+                        <path>
+                        <!-- lib.home contains all jar files, in several subdirectories -->
+                        <fileset dir="${fileSftp.dest.lib.dir}">
+                                <include name="**/*.jar" />
+                        </fileset>
+                        </path>
+                </pathconvert>
+
+
+                <javac srcdir="${fileSftp.src.dir}" destdir="${fileSftp.tmp.class.dir}" debug="true">
+                        <include name="com/agnity/utility/cdrsftp/fileSftp/**/*.java"/>
+                        <classpath refid="cdrutilityclasspath"/>
+                </javac>
+
+                <copy todir="${fileSftp.tmp.class.dir}" file="${fileSftp.src.dir}/com/agnity/utility/cdrsftp/fileSftp/CdrSftpConfig.xml"/>
+
+                <echo message ="cdrSftp jar=${fileSftp.dest.dir}/cdrFileSftp.jar"/>
+
+                <jar jarfile="${fileSftp.dest.dir}/cdrFileSftp.jar" basedir="${fileSftp.tmp.class.dir}" >
+                        <include name="com/agnity/utility/cdrsftp/fileSftp/**/*.class"/>
+                        <include name="CdrSftpConfig.xml"/>
+                        <manifest >
+                                <attribute name="Main-Class" value="com.agnity.utility.cdrsftp.fileSftp.CDRFileSftp"/>
+                                <attribute name="Class-Path" value=". ${libs.project}" />
+                        </manifest>
+                </jar>
+                <copy todir="${fileSftp.dest.dir}/" file="${fileSftp.src.dir}/com/agnity/utility/cdrsftp/fileSftp/log4j.properties"/>
+                <copy todir="${fileSftp.dest.dir}/" file="${fileSftp.src.dir}/com/agnity/utility/cdrsftp/fileSftp/CdrSftpConfig.properties"/>
+                <copy todir="${fileSftp.dest.scripts.dir}/" file="${fileSftp.src.scripts.dir}/startFileSftp.sh"/>
+		<copy todir="${fileSftp.dest.scripts.dir}/" file="${fileSftp.src.scripts.dir}/CDRSftp.conf"/>
+		<copy todir="${fileSftp.dest.scripts.dir}/" file="${fileSftp.src.scripts.dir}/CDRSftp.service"/>
+
+                <delete dir="${fileSftp.tmp.dir}"/>
+	        <delete dir="${fileSftp.tmp.class.dir}"/>
+
+        </target>
+
+
+                                                                                                                   
+</project>

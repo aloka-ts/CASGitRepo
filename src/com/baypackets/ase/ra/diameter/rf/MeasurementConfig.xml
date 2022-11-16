@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementMgr minScanIntervalInSec="100" minAccumulationIntervalInSec="300">
+<!-- Measurement counters client mode-->
+ 
+    <MeasurementCounter id="Number of Accounting Request in Event based offline charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.201">
+          <param name="Number of Accounting Request in Event based offline charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of Accounting Request in SESSION based offline charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.202">
+          <param name="Number of Accounting Request in SESSION based offline charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 1xxx ACAs Event based charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.203">
+          <param name="Number of 1xxx ACAs Event based charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 2xxx ACAs Event based charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.204">
+          <param name="Number of 2xxx ACAs Event based charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 3xxx ACAs Event based charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.205">
+          <param name="Number of 3xxx ACAs Event based charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 4xxx ACAs Event based charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.206">
+          <param name="Number of 4xxx ACAs Event based charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 5xxx ACAs Event based charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.207">
+          <param name="Number of 5xxx ACAs Event based charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 1xxx ACAs Session based charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.208">
+          <param name="Number of 1xxx ACAs Session based charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 2xxx ACAs Session based charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.209">
+          <param name="Number of 2xxx ACAs Session based charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 3xxx ACAs Session based charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.210">
+          <param name="Number of 3xxx ACAs Session based charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 4xxx ACAs Session based charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.211">
+          <param name="Number of 4xxx ACAs Session based charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 5xxx ACAs Session based charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.212">
+          <param name="Number of 5xxx ACAs Session based charging IN"/>
+    </MeasurementCounter>
+    
+<!-- Measurement counters client mode ends --> 
+
+<!-- Measurement counters server mode  --> 
+
+<MeasurementCounter id="Number of Accounting Request in Event based offline charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.201">
+          <param name="Number of Accounting Request in Event based offline charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of Accounting Request in SESSION based offline charging IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.202">
+          <param name="Number of Accounting Request in SESSION based offline charging IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 1xxx ACAs Event based charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.203">
+          <param name="Number of 1xxx ACAs Event based charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 2xxx ACAs Event based charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.204">
+          <param name="Number of 2xxx ACAs Event based charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 3xxx ACAs Event based charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.205">
+          <param name="Number of 3xxx ACAs Event based charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 4xxx ACAs Event based charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.206">
+          <param name="Number of 4xxx ACAs Event based charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 5xxx ACAs Event based charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.207">
+          <param name="Number of 5xxx ACAs Event based charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 1xxx ACAs Session based charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.208">
+          <param name="Number of 1xxx ACAs Session based charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 2xxx ACAs Session based charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.209">
+          <param name="Number of 2xxx ACAs Session based charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 3xxx ACAs Session based charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.210">
+          <param name="Number of 3xxx ACAs Session based charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 4xxx ACAs Session based charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.211">
+          <param name="Number of 4xxx ACAs Session based charging OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Number of 5xxx ACAs Session based charging OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.212">
+          <param name="Number of 5xxx ACAs Session based charging OUT"/>
+    </MeasurementCounter>
+    <!-- Measurement counters server mode ends -->  
+
+    <!-- Measurement Set Definition client mode --> 
+    <MeasurementSet id="Rf Interface MeasurementSet" version="1"
+			    accumulationInterval="300" priority="0">
+		<MeasurementCounter id="Number of Accounting Request in Event based offline charging OUT"/> 
+		<MeasurementCounter id="Number of Accounting Request in Session based offline charging OUT"/>
+		<MeasurementCounter id="Number of 1xxx ACAs Event based charging IN"/> 
+		<MeasurementCounter id="Number of 2xxx ACAs Event based charging IN"/> 
+		<MeasurementCounter id="Number of 3xxx ACAs Event based charging IN"/> 
+		<MeasurementCounter id="Number of 4xxx ACAs Event based charging IN"/> 
+		<MeasurementCounter id="Number of 5xxx ACAs Event based charging IN"/> 
+		<MeasurementCounter id="Number of 1xxx ACAs Session based charging IN"/> 
+		<MeasurementCounter id="Number of 2xxx ACAs Session based charging IN"/> 
+		<MeasurementCounter id="Number of 3xxx ACAs Session based charging IN"/> 
+		<MeasurementCounter id="Number of 4xxx ACAs Session based charging IN"/> 
+		<MeasurementCounter id="Number of 5xxx ACAs Session based charging IN"/> 
+   
+    <!-- Measurement Set Definition client mode ends -->
+    
+     <!-- Measurement Set Definition server mode --> 
+     
+		<MeasurementCounter id="Number of Accounting Request in Event based offline charging IN"/> 
+		<MeasurementCounter id="Number of Accounting Request in SESSION based offline charging IN"/>
+		<MeasurementCounter id="Number of 1xxx ACAs Event based charging OUT"/> 
+		<MeasurementCounter id="Number of 2xxx ACAs Event based charging OUT"/> 
+		<MeasurementCounter id="Number of 3xxx ACAs Event based charging OUT"/> 
+		<MeasurementCounter id="Number of 4xxx ACAs Event based charging OUT"/> 
+		<MeasurementCounter id="Number of 5xxx ACAs Event based charging OUT"/> 
+		<MeasurementCounter id="Number of 1xxx ACAs Session based charging OUT"/> 
+		<MeasurementCounter id="Number of 2xxx ACAs Session based charging OUT"/> 
+		<MeasurementCounter id="Number of 3xxx ACAs Session based charging OUT"/> 
+		<MeasurementCounter id="Number of 4xxx ACAs Session based charging OUT"/> 
+		<MeasurementCounter id="Number of 5xxx ACAs Session based charging OUT"/> 
+    </MeasurementSet> 
+     <!-- Measurement Set Definition server mode ends -->
+</MeasurementMgr>

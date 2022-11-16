@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementMgr minScanIntervalInSec="100" minAccumulationIntervalInSec="300">
+ 
+ <MeasurementCounter id="Radius Access Request Count OUT"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.501">
+          <param name="Radius Access Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Accounting Request Count OUT"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.502">
+          <param name="Radius Accounting Request Count OUT"/>
+    </MeasurementCounter>
+ <MeasurementCounter id="Radius Accounting On Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.521">
+          <param name="Radius Accounting On Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Accounting Off Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.522">
+          <param name="Radius Accounting Off Request Count OUT"/>
+    </MeasurementCounter>
+    
+    <MeasurementCounter id="Radius Accounting Start Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.503">
+          <param name="Radius Accounting Start Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Accounting Update Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.504">
+          <param name="Radius Accounting Update Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Accounting Stop Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.505">
+          <param name="Radius Accounting Stop Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Access Accept Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.506">
+          <param name="Radius Access Accept Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Access Reject Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.507">
+          <param name="Radius Access Reject Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Access Challange Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.508">
+          <param name="Radius Access Challange Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Accounting Response Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.509">
+          <param name="Radius Accounting Response Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="RADIUS Request Send Error Count" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.510">
+          <param name="RADIUS Request Send Error Count"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="RADIUS Response Send Error Count" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.511">
+          <param name="RADIUS Response Send Error Count"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Access Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.512">
+          <param name="Radius Access Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Accounting Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.513">
+          <param name="Radius Accounting Request Count IN"/>
+    </MeasurementCounter>
+	
+	 <MeasurementCounter id="Radius Accounting On Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.523">
+          <param name="Radius Accounting On Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Accounting Off Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.524">
+          <param name="Radius Accounting Off Request Count IN"/>
+    </MeasurementCounter>
+    
+    <MeasurementCounter id="Radius Accounting Start Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.514">
+          <param name="Radius Accounting Start Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Accounting Update Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.515">
+          <param name="Radius Accounting Update Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Accounting Stop Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.516">
+          <param name="Radius Accounting Stop Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Access Accept Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.517">
+          <param name="Radius Access Accept Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Access Reject Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.518">
+          <param name="Radius Access Reject Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Access Challange Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.519">
+          <param name="Radius Access Challange Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Accounting Response Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.520">
+          <param name="Radius Accounting Response Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Radius Request Failed To Trigger An Application Count" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.525">
+          <param name="Radius Request Failed To Trigger An Application Count"/>
+    </MeasurementCounter>
+    
+    <!-- Measurement Set Definition client mode --> 
+ 
+    <MeasurementSet id="Radius Interface MeasurementSet" version="1"
+			    accumulationInterval="300" priority="0">
+		<MeasurementCounter id="Radius Access Request Count OUT"/> 
+		<MeasurementCounter id="Radius Accounting Request Count OUT"/> 
+		<MeasurementCounter id="Radius Accounting On Request Count OUT"/> 
+		<MeasurementCounter id="Radius Accounting Off Request Count OUT"/> 
+		<MeasurementCounter id="Radius Accounting Start Request Count OUT"/> 
+		<MeasurementCounter id="Radius Accounting Update Request Count OUT"/> 
+		<MeasurementCounter id="Radius Accounting Stop Request Count OUT"/> 
+		<MeasurementCounter id="Radius Access Accept Count IN"/> 
+		<MeasurementCounter id="Radius Access Reject Count IN"/> 
+		<MeasurementCounter id="Radius Access Challange Count IN"/> 
+		<MeasurementCounter id="Radius Accounting Response Count IN"/> 
+		 
+		<MeasurementCounter id="RADIUS Request Send Error Count"/>   
+  <!-- Measurement Set Definition client mode ends -->
+  <!-- Measurement Set Definition server mode --> 
+    	<MeasurementCounter id="RADIUS Response Send Error Count"/>   
+    	<MeasurementCounter id="Radius Request Failed To Trigger An Application Count"/>   
+		<MeasurementCounter id="Radius Access Request Count IN"/> 
+		<MeasurementCounter id="Radius Accounting Request Count IN"/> 
+		<MeasurementCounter id="Radius Accounting On Request Count IN"/> 
+		<MeasurementCounter id="Radius Accounting Off Request Count IN"/> 
+		<MeasurementCounter id="Radius Accounting Start Request Count IN"/> 
+		<MeasurementCounter id="Radius Accounting Update Request Count IN"/> 
+		<MeasurementCounter id="Radius Accounting Stop Request Count IN"/> 
+		<MeasurementCounter id="Radius Access Accept Count OUT"/> 
+		<MeasurementCounter id="Radius Access Reject Count OUT"/> 
+		<MeasurementCounter id="Radius Access Challange Count OUT"/> 
+		<MeasurementCounter id="Radius Accounting Response Count OUT"/> 
+		 
+    </MeasurementSet>
+	 <!-- Measurement Set Definition server mode ends -->
+   
+</MeasurementMgr>

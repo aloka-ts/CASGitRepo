@@ -1,0 +1,224 @@
+<%@ jet package="com.genband.m5.maps.ide.builder" 
+	class="ObjectXML"
+	imports="java.util.List 
+	java.util.StringTokenizer 
+	com.genband.m5.maps.ide.sitemap.model.Footer 
+	com.genband.m5.maps.ide.sitemap.model.Header
+	com.genband.m5.maps.ide.sitemap.model.MainPage
+	com.genband.m5.maps.ide.sitemap.model.PlaceHolder
+	com.genband.m5.maps.ide.sitemap.model.Portlet
+	com.genband.m5.maps.ide.sitemap.model.SiteMap
+	com.genband.m5.maps.ide.sitemap.model.SubPage
+	com.genband.m5.maps.ide.sitemap.util.SiteMapUtil
+	com.genband.m5.maps.ide.CPFPlugin"
+%>
+<%
+	//SiteMap object will come to this file as an argument
+	SiteMap siteMap = (SiteMap)argument;
+%>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************
+*	 GENBAND, Inc. Confidential and Proprietary
+*
+* This work contains valuable confidential and proprietary 
+* information.
+* Disclosure, use or reproduction without the written authorization of
+* GENBAND, Inc. is prohibited.  This unpublished work by GENBAND, Inc.
+* is protected by the laws of the United States and other countries.
+* If publication of the work should occur the following notice shall 
+* apply:
+* 
+* "Copyright 2007 GENBAND, Inc.  All rights reserved."
+**********************************************************************/
+-->
+
+<deployments>
+   <deployment>
+      <parent-ref/>
+      <if-exists>overwrite</if-exists>
+      <portal>
+         <portal-name><%= siteMap.getName().toString() %></portal-name>
+         <properties>
+            <property>
+               <name>layout.id</name>
+               <value><%= siteMap.getLayout().toString() %></value>
+            </property>
+            <property>
+               <name>theme.id</name>
+               <value><%= siteMap.getTheme().toString() %></value>
+            </property>
+            <property>
+               <name>theme.renderSetId</name>
+               <value>divRenderer</value>
+            </property>
+         </properties>
+         <supported-modes>
+            <mode>view</mode>
+            <mode>help</mode>
+         </supported-modes>
+         <supported-window-states>
+            <window-state>normal</window-state>
+            <window-state>minimized</window-state>
+            <window-state>maximized</window-state>
+         </supported-window-states>
+         <security-constraint>
+            <policy-permission>
+<%
+	StringTokenizer returnStrToken = new StringTokenizer(siteMap.getRoles(), "," );
+	while(returnStrToken.hasMoreTokens()){
+%>            
+               <role-name><%= returnStrToken.nextToken() %></role-name>
+               <action-name>view</action-name>
+<%
+	}
+%>               
+            </policy-permission>
+         </security-constraint>
+<%
+	for(int numChild=0 ; numChild < siteMap.getChildren().size() ; numChild++){
+								
+			if (siteMap.getChildren().get(numChild) instanceof MainPage){
+				MainPage objMainPage = (MainPage)siteMap.getChildren().get(numChild);
+				if (objMainPage.isDummy()==false){
+%>
+         <page>
+<%
+		if ( 1 == objMainPage.getPageNo() ) {
+%>
+		<page-name>default</page-name>
+<%
+		} else {
+%>
+         <page-name><%= objMainPage.getName() %></page-name>
+<%
+		}
+%>
+         <properties>
+            <property>
+               <name>order</name>
+               <value><%= objMainPage.getPageNo() %></value>
+            </property>
+            <property>
+               <name>layout.id</name>
+               <value><%= objMainPage.getLayout().toString() %></value>
+            </property>
+            <property>
+               <name>theme.id</name>
+               <value><%= objMainPage.getTheme().toString() %></value>
+            </property>
+            
+         </properties>
+         <security-constraint>
+            <policy-permission>	
+<%
+	StringTokenizer retStrToken = new StringTokenizer(objMainPage.getRoles(), "," );
+	while(retStrToken.hasMoreTokens()){
+%>            
+               <role-name><%= retStrToken.nextToken() %></role-name>
+               <action-name>view</action-name>
+<%
+	}
+%>               
+            </policy-permission>
+         </security-constraint>
+<%								
+				for(int num=0 ; num < objMainPage.getChildren().size() ; num++){
+					
+					//If child of MainPage is PlaceHolder
+					if (objMainPage.getChildren().get(num) instanceof PlaceHolder){
+						PlaceHolder objPlaceHolder = (PlaceHolder)objMainPage.getChildren().get(num);
+						CPFPlugin.getDefault().info(" In ObjectXML.java : In PlaceHolder object : "+objPlaceHolder.getName());
+						for(int numCh=0 ; numCh < objPlaceHolder.getChildren().size() ; numCh++){
+							Portlet objPortlet = (Portlet)objPlaceHolder.getChildren().get(numCh);
+%>
+         <window>
+            <window-name><%= objPortlet.getName().replace(" ","_").concat("_").concat(Integer.toString(objPlaceHolder.getPlaceHolderNo())).concat("_").concat(Integer.toString(objPortlet.getPortletNo())) %></window-name>
+            <instance-ref><%= objPortlet.getName().replace(" ","_").concat("_").concat(siteMap.getName()).concat("_").concat(Integer.toString(objMainPage.getPageNo())).concat("_").concat(Integer.toString(objPlaceHolder.getPlaceHolderNo())).concat("_").concat(Integer.toString(objPortlet.getPortletNo())).concat("Instance") %></instance-ref>
+            <region><%= objPlaceHolder.getName() %></region>
+            <height><%= objPortlet.getPortletNo() %></height>
+         </window>
+<%
+						}//end of closest for
+				}//end of if for placeholder		
+%>
+<%																											
+					//If child of MainPage is SubPage
+					else if (objMainPage.getChildren().get(num) instanceof SubPage){
+						SubPage objSubPage = (SubPage)objMainPage.getChildren().get(num);
+						if (objSubPage.isDummy()==false){
+						CPFPlugin.getDefault().info(" In ObjectXML.java : In non-dummy SubPage object : "+objSubPage.getName());
+%>
+               <page>
+               <page-name><%= objSubPage.getName() %></page-name>
+               <properties>
+		            <property>
+		               <name>order</name>
+		               <value><%= objSubPage.getPageNo() %></value>
+		            </property>
+		           	<property>
+               			<name>layout.id</name>
+               			<value><%= objSubPage.getLayout().toString() %></value>
+					</property>
+					<property>
+               			<name>theme.id</name>
+               			<value><%= objSubPage.getTheme().toString() %></value>
+            		</property>
+		       </properties>
+		       <security-constraint>
+		            <policy-permission>	
+<%
+	StringTokenizer retStr = new StringTokenizer(objSubPage.getRoles(), "," );
+	while(retStr.hasMoreTokens()){
+%>            
+               <role-name><%= retStr.nextToken() %></role-name>
+               <action-name>view</action-name>
+<%
+	}
+%>               
+                    </policy-permission>
+              </security-constraint>
+<%
+						for(int numCh2=0 ; numCh2 < objSubPage.getChildren().size() ; numCh2++){
+							
+							//Assuming children of SubPage can only be a PlaceHolder
+							PlaceHolder obPlaceHolder = (PlaceHolder)objSubPage.getChildren().get(numCh2);
+							for(int numC=0 ; numC < obPlaceHolder.getChildren().size() ; numC++){
+								
+								Portlet obPortlet = (Portlet)obPlaceHolder.getChildren().get(numC);
+%>
+				     <window>
+				        <window-name><%= obPortlet.getName().replace(" ","_").concat("_").concat(Integer.toString(obPlaceHolder.getPlaceHolderNo())).concat("_").concat(Integer.toString(obPortlet.getPortletNo())) %></window-name>
+				        <instance-ref><%= obPortlet.getName().replace(" ","_").concat("_").concat(siteMap.getName()).concat("_").concat(Integer.toString(objMainPage.getPageNo())).concat("_").concat(Integer.toString(objSubPage.getPageNo())).concat("_").concat(Integer.toString(obPlaceHolder.getPlaceHolderNo())).concat("_").concat(Integer.toString(obPortlet.getPortletNo())).concat("Instance") %></instance-ref>
+				        <region><%= obPlaceHolder.getName() %></region>
+				        <height><%= obPortlet.getPortletNo() %></height>
+				     </window>
+<%
+							}//end of closest for
+		
+						}//end of next for
+%>
+               </page>
+<%						
+						}//end of SubPage.isDummy
+					}//if instance of sub-page closes
+					}//mainPage() children for closes
+%>
+         </page>
+<%
+				}//if mainpage.dummy closes
+									
+			}else if (siteMap.getChildren().get(numChild) instanceof Header){
+				CPFPlugin.getDefault().info(" In ObjectXML.java : Page is instanceof Header");
+				//Child is Header 
+			}else if (siteMap.getChildren().get(numChild) instanceof Footer){
+				//Child is Main Page
+				CPFPlugin.getDefault().info(" In ObjectXML.java : Page is instanceof Footer");
+			}
+		}
+				
+%>      
+       </portal>
+    </deployment>
+</deployments>

@@ -1,0 +1,13 @@
+[Unit]
+Description=CDRSftp
+After=syslog.target
+
+[Service]
+Environment="JAR_PATH=<INSTALLROOT>/cdrSftpUtility/fileSftp/"
+ExecStart=<INSTALLROOT>/cdrSftpUtility/fileSftp/scripts/startFileSftp.sh $JAR_PATH
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application-logic-control xmlns:x0="http://www.w3.org/2001/XMLSchema">
+
+        <service name="database-initialization">
+            <attribute name="reload-schema"/>
+            <attribute name="reload-tuples"/>
+            
+            <condition if="${reload-schema}" equal-to="true">
+                  <!-- create voicemailserviceconfig table -->
+                  <execute-update>
+                        <update>
+                              drop table voicemailserviceconfig;
+                              commit work;
+                              CREATE TABLE voicemailserviceconfig
+                              (
+                                accessnumber character varying(64) NOT NULL,
+                                mainmenuprompt character varying(64) NOT NULL,
+                                mediatype character varying(64) NOT NULL,
+                                mediaserverip character varying(64) NOT NULL
+                              ) 
+                              WITHOUT OIDS;
+                              ALTER TABLE voicemailserviceconfig OWNER TO testuser;
+                              GRANT ALL ON TABLE voicemailserviceconfig TO testuser;
+                              GRANT ALL ON TABLE voicemailserviceconfig TO public;
+                              commit work;
+                        </update>
+                  </execute-update>
+
+                  <!-- create voicemailuser table -->
+                  <execute-update>
+                        <update>
+                              drop table voicemailuser;
+                              commit work;
+                              CREATE TABLE voicemailuser
+                              (
+                                number character varying(64) NOT NULL,
+                                firstname character varying(64),
+                                lastname character varying(64),
+                                greeting1 character varying(64),
+                                CONSTRAINT "vm_pkey" PRIMARY KEY (number)
+                              ) 
+                              WITHOUT OIDS;
+                              ALTER TABLE voicemailuser OWNER TO testuser;
+                              GRANT ALL ON TABLE voicemailuser TO testuser;
+                              GRANT ALL ON TABLE voicemailuser TO public;
+                              commit work;
+                        </update>
+                  </execute-update>
+            </condition>
+
+            <condition if="${reload-tuples}" equal-to="true">
+                  <!-- config service -->
+                  <execute-update>
+                        <update>
+                              delete from voicemailserviceconfig;
+                              insert into voicemailserviceconfig values(
+                                    '8005551212', 
+                                    'file://mnt/192.168.2.32/announcements/VoiceMail1_1.711.wav', 
+                                    'MSML',
+                                    '192.168.3.38'
+                                    );
+                              commit work;
+                        </update>
+                  </execute-update>
+
+
+                  <!-- create voicemailuser entries -->
+                  <execute-update>
+                        <update>
+                              delete from voicemailuser;
+                              insert into voicemailuser values('2145551100', 'Tekoa', 'Leinininger', null);
+                              insert into voicemailuser values('2145551101', 'Summer', 'James', null);
+                              insert into voicemailuser values('2145551102', 'Aidan', 'Bourne', null);
+                              commit work;
+                        </update>
+                  </execute-update>
+            </condition>
+
+        </service>
+
+</application-logic-control>

@@ -1,0 +1,8 @@
+## This script is used to disable SIP Message exchanged between INC & SAS.
+## SIP Messages are captured in /LOGS/INGw/ingwDebug.log file
+#!/usr/bin/ksh
+
+. ~/profile.ingw
+. $INSTALLROOT/$SUBSYS_DIR/sol28g/conf/hssenv.sh
+
+$INSTALLROOT/$SUBSYS_DIR/sol28g/bin/INGwProbe -s $SIP_LISTENER_HOST -c "set sip-debug-level 0"

@@ -1,0 +1,11 @@
+rules:
+  - Range : range1
+    AppName : appName1
+    Ton : top1
+    npi : npi1
+
+  - Range : range2
+    AppNmae : appName2
+    Ton : ton2
+    npi : npi2
+

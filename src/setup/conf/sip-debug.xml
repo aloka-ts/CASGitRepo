@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<debuginfo>
+	<debugconfig>
+		<session id="u01">
+			<start-trigger>
+                        	<to>sip:sut@10.32.4.100:5060</to>
+				<from>sip:sipper@10.32.4.5:5070</from>
+				<debug-id>MIL</debug-id>
+                        </start-trigger>
+            		<stop-trigger>
+				<time-period>T0H3M30S</time-period>
+           	        </stop-trigger>
+			<control>
+				<debug-id>1ADF</debug-id>
+			</control>
+       		 </session>
+	</debugconfig>
+</debuginfo>

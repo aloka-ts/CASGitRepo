@@ -1,0 +1,13 @@
+#### CAS Configuration properties
+###JMX PORT####
+PORT=14000
+###SIZE OF THE SAR FILE in BYTES (Right now it is configured 2 MB)###
+MAXSIZE=2000000
+#### CAS Startup time msecs###
+CASSTARTUPTIME=3000
+#### JMXURL (1---> jmxmp ,0---> rmiregistry)
+JMXURL=1
+###Debugging PORT
+DEBUGPORT=8000
+#### Service loading rate msecs(Refreshing time)
+DELAY=120000

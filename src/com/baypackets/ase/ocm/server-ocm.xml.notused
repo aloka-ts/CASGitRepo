@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<ocm>
+
+	<!--
+	-->
+
+	<!-- Overload control parameters -->
+	<parameter name="CPU Usage" id="0" type="float" weight="0.6" max="0.8"/>
+	<parameter name="Protocol Session Count" id="1" type="int" weight="0.3" max="50"/>
+	<parameter name="Application Session Count" id="2" type="int" weight="0.1" max="800"/>
+
+	<!-- OLF Serious Threshod -->
+	<olf_threshod name="protocol" value="0.8" />
+	<olf_threshod name="platform" value="0.9" />
+	<olf_threshod name="application" value="0.7" />
+	
+	<!-- Enable OCM -->
+	<enable value="true" />
+	
+	<!-- Scan Interval -->
+	<interval value="30000" />
+</ocm>		

@@ -1,0 +1,54 @@
+{
+	"site": "DR",
+	"peerSmsConfig" : {
+		"floatingEndpoint" : "http://10.32.17.66:8003",
+		"user" : "root",
+		"password" : "1234"
+	},
+	"emsConfig": {
+		"initDelayInSecs": 0,
+		"checkIntervalInSecs": 29,
+		"checkIntervalInSecsOnDown": 29,
+		"socketTimeoutInMillis" : 15000, 
+		"hconfigFile": "$INSTALLROOT/redhat80g/conf/HConfigFile.dat"
+	},
+	"refConfig": {
+		"initDelayInSecs": 0,
+		"checkIntervalInSecs": 59,
+		"checkIntervalInSecsOnDown": 15,
+		"socketTimeoutInMillis" : 5000,
+		"endPoints": [
+			{
+				"ip": "10.32.17.66",
+				"port": "22"
+			},
+			{
+				"ip": "10.32.17.66",
+				"port": "21"
+			}
+		]
+	},
+	"syncWriterConfig": {
+		"initDelayInSecs": 0,
+		"checkIntervalInSecs": 14
+	},
+	"syncMonitorConfig": {
+		"initDelayInSecs": 29,
+		"checkIntervalInSecs": 29,
+		"syncFailureTimeoutInMillis" : 120000
+	},
+	"siteMonitorConfig_SMS": {
+		"initDelayInSecs": 29,
+		"checkIntervalInSecs": 29
+	},
+	"siteMonitorConfig_CAS": {
+		"initDelayInSecs": 29,
+		"checkIntervalInSecs": 29
+	},
+	"smsDb": {
+		"driverClass": "oracle.jdbc.driver.OracleDriver",
+		"url": "jdbc:oracle:thin:@10.32.17.66:1521:dbprod",
+		"username": "sms",
+		"password": "sms"
+	}
+}

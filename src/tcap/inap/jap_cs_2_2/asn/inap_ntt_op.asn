@@ -1,0 +1,686 @@
+TTC-IN-CS2-SSF-SCF-ops {itu-t administration japan(440) isdn(102) inapl(3) jt-q1228-b(2) modules(0) in-cs2-ssf-scf-opsargs
+(5) version1(0)}
+DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+IMPORTS
+errortypes, datatypes, operationcodes, classes, ros-InformationObjects
+FROM TTC-IN-CS2-object
+{itu-t administration japan(440) isdn(102) inapl(3) jt-q1228-b(2) modules(0) in-cs2-objectidentifiers(7) version1(0)}
+OPERATION
+FROM Remote-Operations-Information-Objects ros-InformationObjects
+PARAMETERS-BOUND
+FROM TTC-IN-CS2-classes classes
+opcode-activityTest,
+opcode-connect,
+opcode-continue,
+opcode-disconnectForwardConnection,
+opcode-dFCWithArgument,
+opcode-entityReleased,
+opcode-establishTemporaryConnection,
+opcode-eventReportBCSM,
+opcode-initialDP,
+opcode-initiateTemporaryConnections,
+opcode-mergeCallSegments,
+opcode-moveLeg,
+opcode-releaseCall,
+opcode-requestReportBCSMEvent
+FROM TTC-IN-CS2-operationcodes operationcodes
+AssistingSSPIPRoutingAddress,
+BCSMEvent,
+BearerCapability ,
+CalledPartyNumber ,
+CallingPartyNumber ,
+CallingPartysCategory,
+CallingPartySubaddress,
+CallSegmentID ,
+Cause ,
+CorrelationID ,
+DestinationRoutingAddress ,
+EventSpecificInformationBCSM ,
+EventTypeBCSM,
+ExtensionField ,
+ForwardCallIndicators,
+GenericNumbers ,
+initialCallSegment,
+ITCParameters ,
+LegID,
+MiscCallInfo,
+Reason ,
+ScfID ,
+ServiceKey,
+TerminalType
+FROM TTC-IN-CS2-datatypes datatypes
+eTCFailed,
+iTCFailed,
+missingCustomerRecord,
+missingParameter,
+parameterOutOfRange,
+systemFailure,
+taskRefused,
+unexpectedComponentSequence,
+unexpectedDataValue,
+unexpectedParameter,
+unknownLegID
+FROM TTC-IN-CS2-errortypes errortypes
+;
+ActivityTest ::= OPERATION 
+--RETURN 
+RESULT ;
+--CODE opcode-activityTest
+
+-- Direction: SCF -> SSF, Timer: Tat
+-- This operation is used to check for the continued existence of a relationship between the SCF
+-- and SSF. If the relationship is still in existence, then the SSF will respond. If no reply is received,
+-- then the SCF will assume that the SSF has failed in some way and will
+-- action.
+Connect  ::= OPERATION
+ARGUMENT 
+	ConnectArg 
+--RETURN RESULT FALSE
+ERRORS {
+missingParameter,
+parameterOutOfRange,
+systemFailure ,
+taskRefused ,
+unexpectedComponentSequence ,
+unexpectedDataValue ,
+unexpectedParameter
+}
+--CODE opcode-connect
+
+-- Direction: SCF -> SSF, Timer: Tcon
+-- This operation is used to request the SSF to perform the call processing actions to route or
+-- forward a call to a specified destination. To do so, the SSF may or may not use destination
+-- information from the calling party (e.g. dialled digits) and existing call set-up information
+-- depending on the information provided by the SCF.
+-- When address information is only included in the Connect operation, call processing resumes at
+-- PIC3 in the O-BCSM.
+ConnectArg  ::= SEQUENCE {
+destinationRoutingAddress [0] DestinationRoutingAddress ,
+correlationID [2] CorrelationID  OPTIONAL,
+iSDNAccessRelatedInformation [5] ISDNAccessRelatedInformation OPTIONAL,
+scfID [8] ScfID  OPTIONAL,
+extensions [10] SEQUENCE SIZE(1..numOfExtensions) OF
+ExtensionField  OPTIONAL,
+genericNumbers [14] GenericNumbers  OPTIONAL,
+serviceInteractionIndicatorsTwo [15] ServiceInteractionIndicatorsTwo OPTIONAL
+}
+-- TTC Standard allows the connectExtension that is defined in Section 4.5 to be set
+-- the ExtentionField of the extensions parameter.
+Continue ::= OPERATION
+--RETURN RESULT FALSE
+--ALWAYS RESPONDS FALSE
+--CODE opcode-continue
+
+-- Direction: SCF -> SSF, Timer: Tcue
+-- This operation is used to request the SSF to proceed with call processing at the DP at which it
+-- previously suspended call processing to await SCF instructions (i.e. proceed to the next point in
+-- call in the BCSM).
+-- The SSF continues call processing without substituting new data from SCF.
+-- ? This operation is not valid for a single call segment CSA with more than two legs or a
+-- call segment CSA. ?
+--[?? is different in JT-Q1228-b]
+DisconnectForwardConnection ::= OPERATION
+--RETURN RESULT FALSE
+ERRORS {systemFailure ,
+taskRefused ,
+unexpectedComponentSequence }
+--CODE opcode-disconnectForwardConnection
+
+-- Direction: SCF -> SSF, Timer: Tdfc
+-- This operation is used to disconnect a forward temporary connection.
+-- Refer to Chapter 17 for a description of the procedures associated with this operation.
+-- This operation is not valid for a single call segment CSA with more than two legs or a
+-- call segment CSA.
+DisconnectForwardConnectionWithArgument  ::= OPERATION
+ARGUMENT DisconnectForwardConnectionWithArgumentArg 
+--RETURN RESULT FALSE
+ERRORS {missingParameter ,
+systemFailure ,
+taskRefused ,
+unexpectedComponentSequence ,
+unexpectedDataValue ,
+unexpectedParameter ,
+unknownLegID}
+--CODE opcode-dFCWithArgument
+
+-- Direction: SCF -> SSF, Timer: Tdfcwa
+-- This operation is used to disconnect a forward temporary connection.
+-- Refer to Chapter 17 for a description of the procedures associated with this operation.
+DisconnectForwardConnectionWithArgumentArg  ::= SEQUENCE {
+partyToDisconnect CHOICE {
+legID [0] LegID
+},
+extensions [2] SEQUENCE SIZE (1..numOfExtensions) OF
+ExtensionField  OPTIONAL
+}
+--? The extensions parameter is not allowed to be sent.?
+--[?? is not stipulated in JT-Q1228-b]
+EntityReleased  ::= OPERATION
+ARGUMENT EntityReleasedArg 
+--RETURN RESULT FALSE
+--ALWAYS RESPONDS FALSE
+--CODE opcode-entityReleased
+
+-- Direction: SSF -> SCF, Timer: Ter
+-- This operation is used by SSF to inform the SCF of an error/exception.
+EntityReleasedArg  ::= CHOICE {
+cSFailure [0] SEQUENCE{
+callSegmentID [0] CallSegmentID ,
+reason [1] Reason  OPTIONAL,
+cause [2] Cause  OPTIONAL
+}
+}
+-- The value of the network specific reason parameter shall be given in accordance with
+-- following areas:
+-- ‘00000001’B to ’01111111’B: TTC specific area
+-- ‘10000000’B to ’11111111’B: Network specific area
+-- ‘00000000’B: Not used
+-- TTC stipulates that the following values shall be set to the reason parameter
+-- ‘00000001’B: Application timer expired
+-- ‘00000010’B: Abnormal procedure
+-- ‘00000011’B: Other related resources released. (used to release the relevant
+-- call segment when the related leg is released in accordance with
+-- the Release condition (ReleaseCondition) of the ITC operation.)
+-- OPTIONAL for Cause parameter denotes that the value is set when the Cause parameter
+-- received from the external signal at the establishment of the leg or
+-- the temporary connection in the call segment notifying the EntityReleased.
+--? The network specific reason parameter is set in cases other than where the Cause parameter
+--is received
+-- from the external signal. Both the Cause parameter and network specific reason parameter shall
+-- not be set at the same time. ?
+--[?? is not stipulated in JT-Q1228-b]
+EstablishTemporaryConnection  ::= OPERATION
+ARGUMENT EstablishTemporaryConnectionArg 
+--RETURN RESULT FALSE
+ERRORS {eTCFailed ,
+missingParameter ,
+systemFailure ,
+taskRefused ,
+unexpectedComponentSequence ,
+unexpectedDataValue ,
+unexpectedParameter,
+unknownLegID}
+--CODE opcode-establishTemporaryConnection
+
+-- Direction: SCF -> SSF, Timer: Tetc
+-- This operation is used to create a connection to a resource for a limited period of time (e.g.
+-- play an announcement, to collect user information); it implies the use of the assist procedure.
+-- Refer to Chapter 17 for a description of the procedures associated with this operation.
+EstablishTemporaryConnectionArg  ::= SEQUENCE {
+assistingSSPIPRoutingAddress [0] AssistingSSPIPRoutingAddress ,
+correlationID [1] CorrelationID  OPTIONAL,
+partyToConnect CHOICE {
+legID [2] LegID
+} OPTIONAL,
+scfID [3] ScfID  OPTIONAL,
+extensions [4] SEQUENCE SIZE(1..numOfExtensions) OF
+ExtensionField  OPTIONAL
+}
+--? The extensions parameter is not allowed to be sent.?
+--[?? is not stipulated in JT-Q1228-b]
+EventReportBCSM  ::= OPERATION
+ARGUMENT EventReportBCSMArg 
+--RETURN RESULT FALSE
+--ALWAYS RESPONDS FALSE
+--CODE opcode-eventReportBCSM
+
+-- Direction: SSF -> SCF, Timer: Terb
+-- This operation is used to notify the SCF of a call-related event (e.g. BCSM events such as busy or
+-- no answer) previously requested by the SCF in a RequestReportBCSMEvent operation.
+EventReportBCSMArg  ::= SEQUENCE {
+eventTypeBCSM [0] EventTypeBCSM,
+eventSpecificInformationBCSM [2] EventSpecificInformationBCSM OPTIONAL,
+legID [3] LegID OPTIONAL,
+miscCallInfo [4] MiscCallInfo DEFAULT
+{messageType request},
+extensions [5] SEQUENCE SIZE(1..numOfExtensions) OF
+ExtensionField  OPTIONAL
+}
+-- ? No eventSpecificInformationBCSM parameter is transmitted in
+-- the Answer or No Answer event.?
+--[?? is not stipulated in JT-Q1228-b]
+InitialDP  ::= OPERATION
+ARGUMENT InitialDPArg 
+--RETURN RESULT FALSE
+ERRORS {missingCustomerRecord ,
+missingParameter ,
+parameterOutOfRange ,
+systemFailure ,
+taskRefused ,
+unexpectedComponentSequence ,
+unexpectedDataValue ,
+unexpectedParameter
+}
+--CODE opcode-initialDP
+
+-- Direction: SSF -> SCF, Timer: Tidp
+-- This operation is used after a TDP to indicate request for service.
+InitialDPArg  ::= SEQUENCE {
+serviceKey [0] ServiceKey OPTIONAL,
+dialledDigits [1] CalledPartyNumber  OPTIONAL,
+calledPartyNumber [2] CalledPartyNumber OPTIONAL,
+callingPartyNumber [3] CallingPartyNumber  OPTIONAL,
+callingPartysCategory [5] CallingPartysCategory OPTIONAL,
+callingPartySubaddress [6] CallingPartySubaddress OPTIONAL,
+miscCallInfo [11] MiscCallInfo OPTIONAL,
+terminalType [14] TerminalType OPTIONAL,
+extensions [15] SEQUENCE SIZE(1..numOfExtensions) OF
+ExtensionField  OPTIONAL,
+forwardCallIndicators [26] ForwardCallIndicators OPTIONAL,
+bearerCapability [27] BearerCapability  OPTIONAL,
+eventTypeBCSM [28] EventTypeBCSM OPTIONAL,
+genericNumbers [31] GenericNumbers  OPTIONAL
+}
+-- [?? is stipulated in JT-Q1228-b]
+-- ?OPTIONAL for miscCallInfo denotes network-operator specific use. ?
+-- OPTIONAL for dialledDigits, callingPartyNumber, and
+-- refer to Chapter 17 for the trigger detection point processing rules to specify when
+-- parameters are included in the message.
+-- OPTIONAL for terminalType indicates that this parameter applies only at originating or
+-- terminating local exchanges if the SSF has this information.
+-- TTC Standard allows the initialDPExtension that is defined in Section 4.5 to be set
+-- the ExtentionField of the extensions parameter.
+InitiateTemporaryConnections  ::= OPERATION
+ARGUMENT InitiateTemporaryConnectionsArg 
+--RETURN RESULT FALSE
+ERRORS {iTCFailed ,
+missingParameter ,
+parameterOutOfRange ,
+systemFailure ,
+taskRefused ,
+unexpectedComponentSequence ,
+unexpectedDataValue ,
+unexpectedParameter
+}
+--CODE opcode-initiateTemporaryConnections
+
+-- Diretion: SCF -> SSF, Timer: Titc
+-- This operation requests SSF to establish and secure a temporary connection between
+-- SSF and the assist SSF in Network B, or between initiating SSF and SRF in Network B.
+-- This operation creates a new call segment (CS) and establishes a temporary connection in the CS.
+InitiateTemporaryConnectionsArg  ::= SET SIZE
+(1..numOfInitiateTemporaryConnections) OF ITCParameters 
+-- The InitiateTemporaryConnections operation can establish and secure more than
+-- connection simultaneously if necessary. In this case, SSF transmits more than one ISUP-IAM
+-- message to establish more than one temporary connection depending on the number of ITC
+-- parameters. If the establishment of any of the temporary connections failed for some reason,
+-- a return error (ITCFailed) shall be transmitted and the rest of the requested
+-- connections shall be released.
+MergeCallSegments  ::= OPERATION
+ARGUMENT MergeCallSegmentsArg 
+--RETURN RESULT TRUE
+ERRORS {missingParameter ,
+systemFailure ,
+taskRefused ,
+unexpectedComponentSequence ,
+unexpectedDataValue ,
+unexpectedParameter
+}
+--CODE opcode-
+
+-- Direction: SCF -> SSF. Timer: Tmc
+-- This operation is issued by the SCF to merge two associated call segments (CS) with a
+-- controlling leg into one CS with that controlling leg.
+-- For additional information on this operation, refer to Part 2.
+MergeCallSegmentsArg  ::= SEQUENCE {
+sourceCallSegment [0] CallSegmentID ,
+targetCallSegment [1] CallSegmentID  DEFAULT initialCallSegment,
+extensions [2] SEQUENCE SIZE (1..numOfExtensions)
+OF ExtensionField  OPTIONAL
+}
+--? The extensions parameter is not allowed to be sent. ?
+--[?? is not stipulated in JT-Q1228-b]
+MoveLeg ::= OPERATION
+ARGUMENT MoveLegArg 
+--RETURN RESULT TRUE
+ERRORS {missingParameter ,
+systemFailure ,
+taskRefused ,
+unexpectedComponentSequence ,
+unexpectedDataValue ,
+unexpectedParameter,
+unknownLegID
+}
+--CODE opcode-moveLeg
+
+-- Direction: SCF -> SSF, Timer: Tml
+-- This operation is issued by the SCF to move a leg from one call segment (CS) to another with
+--which it is associated.
+MoveLegArg  ::=SEQUENCE {
+legIDToMove [0] LegID,
+targetCallSegment [1] CallSegmentID  DEFAULT 1,
+extensions [2] SEQUENCE SIZE (1..numOfExtensions) OF
+ExtensionField  OPTIONAL
+}
+--? The extensions parameter is not allowed to be sent. ?
+--[?? is not stipulated in JT-Q1228-b]
+ReleaseCall  ::= OPERATION
+ARGUMENT ReleaseCallArg 
+--RETURN RESULT FALSE
+--ALWAYS RESPONDS FALSE
+--CODE opcode-releaseCall
+
+-- Direction: SCF -> SSF, Timer: Trc
+-- ? This operation is used to tear down an existing call at any phase of the call or
+-- the specified call segment in the call for all parties involved in the call. ?
+-- [?? is different in JT-Q1228-b]
+ReleaseCallArg  ::= CHOICE {
+initialCallSegment Cause ,
+associatedCallSegment [1] SEQUENCE {
+callSegment [0] INTEGER (2..numOfCSs),
+releaseCause [1] Cause  OPTIONAL
+},
+allCallSegments [2] SEQUENCE {
+releaseCause [0] Cause  OPTIONAL
+}
+}
+-- A default value of decimal 31 (normal unspecified) should be coded appropriately.
+RequestReportBCSMEvent  ::= OPERATION
+ARGUMENT RequestReportBCSMEventArg 
+--RETURN RESULT FALSE
+ERRORS {missingParameter ,
+parameterOutOfRange ,
+systemFailure ,
+taskRefused ,
+unexpectedComponentSequence ,
+unexpectedDataValue ,
+unexpectedParameter
+}
+--CODE opcode-requestReportBCSMEvent
+
+-- Direction: SCF -> SSF, Timer: Trrb
+-- This operation is used to request the SSF to monitor for a call-related event (e.g. BCSM
+-- such as busy or no answer), then send a notification back to the SCF when the event is detected.
+-- It is proposed that Event Detection Point (EDP) processing is always initiated
+-- RequestReportBCSMEvent and the EDP
+--?acknowledged?
+-- with an EventReportBCSM operation.
+--[?? is different in JT-Q1228-b]
+-- NOTE : Every EDP must be explicitly armed by the SCF via a RequestReportBCSMEvent
+-- operation. No implicit arming of EDPs at the SSF after reception of any operation
+-- (different from RequestReportBCSMEvent) from the SCF is allowed.
+RequestReportBCSMEventArg  ::= SEQUENCE {
+bcsmEvents [0] SEQUENCE SIZE(1..numOfBCSMEvents) OF
+BCSMEvent ,
+extensions [2] SEQUENCE SIZE(1..numOfExtensions) OF
+ExtensionField  OPTIONAL
+}
+-- Indicates the BCSM related event for notification.
+--? The extensions parameter is not allowed to be sent. ?
+--[?? is not stipulated in JT-Q1228-b]
+
+SendChargingInformation  ::= OPERATION
+ARGUMENT SendChargingInformationArg 
+--RETURN RESULT FALSE
+ERRORS {missingParameter ,
+unexpectedComponentSequence ,
+unexpectedParameter ,
+parameterOutOfRange ,
+systemFailure ,
+taskRefused ,
+unknownLegID
+}
+--CODE opcode-sendChargingInformation
+
+-- Direction: SCF -> SSF, Timer: Tsci
+-- This operation is used to instruct the SSF on the charging information to be sent by the
+-- SSF.
+-- The charging information can be either sent back by a signal or internal if the SSF is
+-- located within the local exchange.
+-- In the local exchange, this information may be used to update the charge meter or to
+-- create a standard call record.
+SendChargingInformationArg ::= SEQUENCE {
+sCIBillingChargingCharacteristics [0] SCIBillingChargingCharacteristics ,
+partyToCharge [1] LegID,
+extensions [2] SEQUENCE SIZE(1..numOfExtensions)
+OF ExtensionField OPTIONAL
+}
+SCIBillingChargingCharacteristics  ::= OCTET STRING (SIZE ( minSCIBillingChargingLength..maxSCIBillingChargingLength))
+
+TTCSCIBillingChargingCharacteristics  ::=
+CHOICE {
+tTCNOSpecificParametersSCIBCC [15] TTCNOSpecificParametersSCIBCC
+}
+TTCNOSpecificParametersSCIBCC  ::= SET
+SIZE
+(1..numOfTTCNOSpecificParametersSCIBCC) OF
+TTCNOSpecificParameterSCIBCC
+TTCNOSpecificParameterSCIBCC ::= CHOICE {
+tTCSpecificSCIBCC [0] TTCSpecificSCIBCC
+-- nOSpecificSCIBCC [1] NOSpecificSCIBCC
+}
+TTCSpecificSCIBCC ::= SEQUENCE {
+noChargeIndicator [0] BOOLEAN OPTIONAL
+-- This shows the no-charge indicator. If this parameter is TRUE, no charge is levied.
+}
+-- NOSpecificSCIBCC ::= SEQUENCE { }
+--This data type is stipulated as network-operator-specific. The stipulation in the type is
+--only an example.
+
+
+EventNotificationCharging ::= OPERATION 
+ARGUMENT EventNotificationChargingArg 
+--RETURN RESULT FALSE
+--ALWAYS RESPONDS FALSE
+--CODE opcode-eventNotificationCharging
+
+EventNotificationChargingArg ::= SEQUENCE {
+eventTypeCharging [0] EventTypeCharging ,
+eventSpecificInformationCharging [1] EventSpecificInformationCharging OPTIONAL,
+legID [2] LegID OPTIONAL,
+extensions [3] SEQUENCE SIZE(1..numOfExtensions) OF
+ExtensionField  OPTIONAL,
+monitorMode [30] MonitorMode DEFAULT notifyAndContinue
+}
+
+EventSpecificInformationCharging ::= OCTET STRING (SIZE(minEventSpecificInformationChargingLength..maxEventSpecificInformationChargingLength))
+
+TTCEventSpecificInformationCharging  ::= CHOICE
+{
+tTCNOSpecificParametersESIC [15] TTCNOSpecificParametersESIC
+}
+TTCNOSpecificParametersESIC ::= SET SIZE
+(1..numOfTTCNOSpecificParametersESIC) OF
+TTCNOSpecificParameterESIC
+TTCNOSpecificParameterESIC ::= CHOICE {
+tTCSpecificEventSpecificInfo [0] TTCSpecificESIC
+-- nOSpecificEventSpecificInfo [1] NOSpecificESIC
+}
+TTCSpecificESIC ::= CHOICE {
+tTCSpecificChargeEvent [0] TTCSpecificChargeEvent
+}
+-- NOSpecificESIC ::= SEQUENCE { }
+-- This parameter is stipulated as network-operator-specific. The stipulation in the
+--SEQUENCE type is only an example.
+TTCSpecificChargeEvent  ::= SEQUENCE {
+ttcCarrierInformationTransfer [0] TtcCarrierInformationTransfer
+OPTIONAL,
+ttcAdditionalPartysCategory [1] TtcAdditionalPartysCategory 
+OPTIONAL,
+ttcBackwardCallIndicators [2] TtcBackwardCallIndicators OPTIONAL,
+ttcChargeAreaInformation [3] TtcChargeAreaInformation  OPTIONAL,
+ttcChargeInformationDelay [4] TtcChargeInformationDelay 
+OPTIONAL
+}
+TtcBackwardCallIndicators ::= OCTET STRING (SIZE(2))
+--This indicates the backward call indicator parameter. See TTC standard JT-Q763 for encoding.
+TtcChargeInformationDelay  ::= OCTET STRING
+(
+SIZE(1..maxTtcChargeInformationDelay
+))
+--This indicates the Charging Information Delay parameter. See TTC standard JT-Q763
+--for encoding.
+-- The following is the type definition of the value field ofEventTypeCharging type.
+
+EventTypeCharging ::= OCTET STRING (SIZE(minEventTypeChargingLength..maxEventTypeChargingLength))
+
+TTCEventTypeCharging  ::= CHOICE {
+tTCNOSpecificParametersETChg [15] TTCNOSpecificParametersETChg 
+}
+TTCNOSpecificParametersETChg  ::= SET SIZE
+(1..numOfTTCNOSpecificParametersETChg) OF
+TTCNOSpecificParameterETChg
+TTCNOSpecificParameterETChg ::= CHOICE {
+tTCSpecificETChg [0] TTCSpecificETChg
+-- nOSpecificETChg[1] NOSpecificETChg
+}
+TTCSpecificETChg::= CHOICE{
+tTCSpecificEventTypeCharging [0] TTCSpecificEventTypeCharging
+}
+TTCSpecificEventTypeCharging ::= SET SIZE (1..5) OF ENUMERATED {
+carrierInformationTransfer(0),
+additionalPartysCategory(1),
+backwardCallIndicators(2),
+chargeAreaInformation(3),
+chargeInformationDelay(4)
+}
+
+-- This indicates the TTC-specific charging event type.
+-- NOSpecificETChg ::= SEQUENCE { }
+MonitorMode ::= ENUMERATED {
+interrupted(0),
+notifyAndContinue(1),
+transparent(2)
+}
+
+RequestNotificationChargingEvent ::= OPERATION 
+ARGUMENT RequestNotificationChargingEventArg 
+--RETURN RESULT FALSE
+ERRORS {missingParameter ,
+parameterOutOfRange ,
+systemFailure ,
+taskRefused ,
+unexpectedComponentSequence ,
+unexpectedDataValue ,
+unexpectedParameter
+}
+--CODE opcode-requestNotificationChargingEvent
+
+RequestNotificationChargingEventArg  ::= SEQUENCE
+SIZE(1..numOfChargingEvents) OF ChargingEvent
+
+ChargingEvent ::= SEQUENCE {
+eventTypeCharging [0] EventTypeCharging ,
+monitorMode [1] MonitorMode,
+legID [2] LegID OPTIONAL
+}
+
+
+--initialDPExtension EXTENSION ::= {
+--EXTENSION-SYNTAX InitialDPExtension{bound}
+--CRITICALITY ignore
+--IDENTIFIED BY local : -2
+--}
+
+InitialDPExtension  ::= SEQUENCE {
+ttcContractorNumber [0] TtcContractorNumber OPTIONAL,
+ttcChargeAreaInformation [1] TtcChargeAreaInformation  OPTIONAL,
+ttcCalledINNumber [2] TtcCalledINNumber  OPTIONAL,
+ttcCarrierInformationTransfer [3] TtcCarrierInformationTransfer  OPTIONAL,
+ttcAdditionalPartysCategory [4] TtcAdditionalPartysCategory  OPTIONAL,
+ttcSSPChargeAreaInformation [5] TtcChargeAreaInformation  OPTIONAL
+}
+
+ConnectExtension ::= SEQUENCE {
+additionalCallingPartyNumber [0] AdditionalCallingPartyNumber  OPTIONAL,
+ttcCarrierInformation [1] TtcCarrierInformation  OPTIONAL,
+ttcCauseOfNoID [2] TtcCauseOfNoID  OPTIONAL
+}
+
+EstablishTemporaryConnectionExtension  ::= SEQUENCE {
+ttcCarrierInformation [0] TtcCarrierInformation  OPTIONAL
+}
+
+TtcContractorNumber  ::= OCTET STRING(SIZE(minTtcContractorNumberLength..maxTtcContractorNumberLength))
+TtcChargeAreaInformation ::= OCTET STRING (SIZE(minTtcChargeAreaInformationLength..maxTtcChargeAreaInformationLength))
+TtcCalledINNumber ::= OCTET STRING (SIZE(minCalledPartyNumberLength..maxCalledPartyNumberLength))
+TtcCarrierInformationTransfer ::= OCTET STRING (SIZE(minTtcCarrierInformationTransferLength..maxTtcCarrierInformationTransferLength))
+TtcAdditionalPartysCategory ::= OCTET STRING (SIZE(minTtcAdditionalPartysCategoryLength..maxTtcAdditionalPartysCategoryLength))
+
+
+
+RestartNotification ::= OPERATION
+ARGUMENT		 RestartNotificationArg
+--RETURN RESULT 	FALSE
+--ALWAYS RESPONDS 	FALSE
+--CODE 			opcode-restartNotification
+
+
+RestartNotificationArg ::= SEQUENCE {
+restartedNodeIDs			 [0] SET SIZE(1.. numOfRestartedNodeIDs) OF RestartedNodeID,
+extensions 			[1] SEQUENCE SIZE(1.. numOfExtensions) OF
+ExtensionField OPTIONAL
+}
+
+RestartNotificationAcknowledgement ::= OPERATION
+ARGUMENT 		RestartNotificationAcknowledgementArg
+--RETURN RESULT	 FALSE
+--ALWAYS RESPONDS 	FALSE
+--CODE			 opcode-restartNotificationAcknowledgement
+
+
+
+RestartNotificationAcknowledgementArg ::= SEQUENCE {
+carrierCode	 [0] CarrierCode,
+extensions 	[1] SEQUENCE SIZE(1..numOfExtensions) OF ExtensionField OPTIONAL
+}
+
+
+RestartedNodeID ::= OCTET STRING(SIZE(minRestartedNodeIDLength..maxRestartedNodeIDLength))
+
+CarrierCode ::= OCTET STRING(SIZE(2))
+
+
+--changed here... added constants
+numOfRestartedNodeIDs INTEGER ::= 10 -- NTT-Q931
+minRestartedNodeIDLength INTEGER ::= 5 -- NTT-Q931
+maxRestartedNodeIDLength INTEGER ::= 15 -- NTT-Q931
+maxBearerCapabilityLength INTEGER ::= 10 -- NTT-Q931
+minCalledPartyNumberLength INTEGER ::= 3 -- NTT-Q763
+maxCalledPartyNumberLength INTEGER ::= 15 -- NTT-Q763
+minCallingPartyNumberLength INTEGER ::= 2 -- NTT-Q763
+maxCallingPartyNumberLength INTEGER ::= 12 -- NTT-Q763
+minCallingPartySubaddressLength INTEGER ::= 1 -- NTT-Q763
+maxCallingPartySubaddressLength INTEGER ::= 21 -- NTT-Q763
+maxCauseLength INTEGER ::= 34
+minDigitsLength INTEGER ::= 2 -- NTT-Q763
+maxDigitsLength INTEGER ::= 13 -- NTT-Q763
+minEventSpecificInformationChargingLength INTEGER ::= 2 -- NTT-Q763
+maxEventSpecificInformationChargingLength INTEGER ::= 140 -- Example value
+minEventTypeChargingLength INTEGER ::= 2 -- NTT-Q763
+maxEventTypeChargingLength INTEGER ::= 21 -- Example value
+minGenericNumberLength INTEGER ::= 3 -- NTT-Q763
+maxGenericNumberLength INTEGER ::= 13 -- NTT-Q763
+minISDNAccessRelatedInformationLength INTEGER ::= 1
+maxISDNAccessRelatedInformationLength INTEGER ::= 80
+minReasonLength INTEGER ::= 1
+maxReasonLength INTEGER ::= 1
+minSCIBillingChargingLength INTEGER ::= 2 -- NTT-Q763
+maxSCIBillingChargingLength INTEGER ::= 100 -- Example value
+minScfIDLength INTEGER ::= 1
+maxScfIDLength INTEGER ::= 20
+numOfBCSMEvents INTEGER ::= 7
+numOfChargingEvents INTEGER ::= 2 -- Example value
+numOfCSs INTEGER ::= 4
+numOfExtensions INTEGER ::= 1
+numOfGenericNumbers INTEGER ::= 3
+numOfLegs INTEGER ::= 2
+-- TTC specific
+minTtcAdditionalPartysCategoryLength INTEGER ::= 2 -- NTT-Q763
+maxTtcAdditionalPartysCategoryLength INTEGER ::= 16 -- Example value
+minTtcCarrierInformationTransferLength INTEGER ::= 1 -- NTT-Q763
+maxTtcCarrierInformationTransferLength INTEGER ::= 97 -- Example value
+minTtcContractorNumberLength INTEGER ::= 2 -- NTT-Q763
+maxTtcContractorNumberLength INTEGER ::= 10
+minTtcChargeAreaInformationLength INTEGER ::= 1 -- NTT-Q763
+maxTtcChargeAreaInformationLength INTEGER ::= 4
+maxTtcCauseOfNoIDLength INTEGER ::= 1 -- NTT-Q763
+numOfInitiateTemporaryConnections INTEGER ::= 2
+numOfTTCNOSpecificParametersSCIBCC INTEGER ::= 1
+numOfTTCNOSpecificParametersESIC INTEGER ::= 1
+maxTtcChargeInformationDelay INTEGER ::= 2
+numOfTTCNOSpecificParametersETChg INTEGER ::= 1
+
+END
+

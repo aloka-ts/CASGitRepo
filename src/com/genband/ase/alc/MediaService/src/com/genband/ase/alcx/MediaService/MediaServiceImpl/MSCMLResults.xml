@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application-logic-control xmlns:x0="http://www.w3.org/2001/XMLSchema">
+	<service name="MSCMLPLAY_COLLECT_COMPLETED">
+
+		<regex applied-to="${content}" results-in="Match">
+			<pattern><![CDATA[reason="([a-z,A-Z,0-9,\*]+)"]]></pattern>
+		</regex>
+
+		<condition on-input="${Match}">
+			<match value="match">
+				<regex applied-to="${content}" results-in="Results">
+					<pattern><![CDATA[digits="([0-9,\*]+)"]]></pattern>
+				</regex>
+			</match>
+			<match value="returnkey">
+				<regex applied-to="${content}" results-in="Results">
+					<pattern><![CDATA[digits="([0-9,\*]+)"]]></pattern>
+				</regex>
+			     	<condition if="${Results}" equal-to="null">
+				       	<set variable="Results" equal-to="#"/>	
+			       	</condition> 
+			</match>
+			<match value="timeout">
+				<regex applied-to="${content}" results-in="Results">
+					<pattern><![CDATA[(digits)=""]]></pattern>
+				</regex>
+				<condition if="${Results}" equal-to="digits">
+					<then>
+						<set variable="Results" equal-to="timeout"/>
+					</then>
+					<else>
+						<regex applied-to="${content}" results-in="Results">
+							<pattern><![CDATA[digits="([0-9,\*]+)"]]></pattern>
+						</regex>
+					</else>
+				</condition>
+			</match>
+			<match value="escapekey">
+				<set variable="Results" equal-to="escapekey"/>
+			</match>
+		</condition>            
+		<!-- return value is in context at Results -->  
+	</service>
+</application-logic-control>

@@ -1,0 +1,19 @@
+[Unit]
+Description=zookeeper
+After=syslog.target network.target
+StartLimitBurst=5
+StartLimitInterval=500
+[Service]
+Type=forking
+User=aconyx
+TimeoutSec=300
+Environment=INSTALLROOT=/AGNITY/agnity/kafka
+#ExecStartPre=/bin/sleep 5
+ExecStart=/AGNITY/agnity/kafka/apache-zookeeper-3.6.1/bin/startZookeeper
+ExecStop=/AGNITY/agnity/kafka/apache-zookeeper-3.6.1/bin/stopZookeeper
+WorkingDirectory=/AGNITY/agnity/kafka/apache-zookeeper-3.6.1
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+[Install]
+WantedBy=multi-user.target

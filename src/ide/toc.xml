@@ -1,0 +1,48 @@
+<toc label="Agnity SIP Application  Development Guide">
+
+        <topic label="Getting Started" href="resources/help/gettingstarted/index.html">
+                <topic label="Introduction To Bay Packets IDE" href="resources/help/gettingstarted/intro.html"/>
+                <topic label="Bay Packets IDE Configuration Settings" href="resources/help/gettingstarted/config.html"/>
+                <topic label="Creating Project" href="resources/help/gettingstarted/create.html"/>
+                <topic label="BayPackets Deployment Descriptor editor" href="resources/help/gettingstarted/dd.html"/>
+        </topic>
+
+     <topic label="Service Management" href="resources/help/servicemanagement/servmgmt.html">
+                <topic label="Creating Service" href="resources/help/servicemanagement/createservice.html"/>
+                <topic label="Deploying Service" href="resources/help/servicemanagement/deployservice.html"/>
+                <topic label="Starting Service" href="resources/help/servicemanagement/startservice.html"/>
+                <topic label="Activating Service" href="resources/help/servicemanagement/activateservice.html"/>
+                <topic label="Deactivating Service" href="resources/help/servicemanagement/deactivateservice.html"/>
+                <topic label="Stopping Service" href="resources/help/servicemanagement/stopservice.html"/>
+                <topic label="undeploying Service" href="resources/help/servicemanagement/undeployservice.html"/>
+                <topic label="Service Information" href="resources/help/servicemanagement/serviceinfo.html"/>
+     </topic>
+
+
+        <topic label="CAS Management" href="resources/help/sasmanagement/sasmgmt.html">
+                <topic label="Attaching to CAS" href="resources/help/sasmanagement/attachsas.html"/>
+                <topic label="Detaching from a CAS" href="resources/help/sasmanagement/detachsas.html"/>
+                <topic label="Starting Embedded CAS" href="resources/help/sasmanagement/startembeddedsas.html"/>
+                <topic label="Status of Embedded CAS" href="resources/help/sasmanagement/statussas.html"/>
+                <topic label="Stopping Embedded CAS" href="resources/help/sasmanagement/stopsas.html"/>
+        </topic>
+
+
+        <topic label="Sample Applications" href="resources/help/sampleapps/index.html">
+                <topic label="User Agent Client" href="resources/help/sampleapps/uac.html"/>
+                <topic label="User Agent Server" href="resources/help/sampleapps/uas.html"/>
+                <topic label="Proxy Application" href="resources/help/sampleapps/proxy.html"/>
+                <topic label="Back to back User agent" href="resources/help/sampleapps/b2b.html"/>
+                <topic label="Click to Dial application" href="resources/help/sampleapps/clickodial.html"/>
+     </topic>
+
+        <topic label="References" href="resources/help/References.html">
+                <topic label="Servlet-2.4 API" href="resources/help/servlets/index.html"/>
+                <topic label="SIP Servlet API" href="resources/help/sipservlets/index.html"/>
+                <topic label="Agnity Service Building Blocks API" href="resources/help/sbb/index.html"/>
+                <!-- <topic label="Bay Packets resource Frame Work API" href="resources/help/spi/bpspi.html"/> -->
+
+        </topic>
+
+
+</toc>

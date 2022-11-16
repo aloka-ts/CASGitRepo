@@ -1,0 +1,59 @@
+RULES = lib
+
+TARGET=libINGwTcapProvider
+
+#EXTRA_RULES += oracle
+EXTRA_RULES += vbroker
+
+EXTRA_INCLUDES += $(XSD_HOME)
+EXTRA_INCLUDES += $(XERCES_HOME)/include
+
+# Comment it before final release
+#EXTRA_DEFINES +=STUB
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+EXTRA_DEFINES += TU 
+EXTRA_DEFINES += STU2 
+EXTRA_DEFINES += SS7_ANS96 
+EXTRA_DEFINES += CCPU_STUB
+#define SBTM_FLAG to enable/disable modification of outgoing GT 
+EXTRA_DEFINES += SBTM_FLAG 
+EXTRA_DEFINES += INC_DLG_AUDIT
+#EXTRA_DEFINES += INGW_LOOPBACK_SAS 
+#EXTRA_DEFINES   += __CCPU_CPLUSPLUS
+#EXTRA_DEFINES += INGW_TRACE_CALL_THREAD
+EXTRA_DEFINES += PK_UNPK_DEBUG_FLAG
+#EXTRA_DEFINES += MSG_FT_TEST
+
+#include ../INGwCommonDefs/telesys-stack.def
+#include ../INGwCommonDefs/trillium-ainstack.def
+include ../INGwCommonDefs/ccpu-stack.def
+
+SRCS = INGwTcapProvider/INGwTcapSession.C					\
+       INGwTcapProvider/INGwTcapFtHandler.C 			\
+			 INGwTcapProvider/INGwTcapIface.C						\
+			 INGwTcapProvider/INGwTcapIncMsgHandler.C	  \
+			 INGwTcapProvider/INGwSilRx.C        			  \
+			 INGwTcapProvider/INGwSilTx.C        			  \
+			 INGwTcapProvider/INGwTcapProvider.C				\
+			 INGwTcapProvider/INGwAppProtoParamDecoder.C  	\
+			 INGwTcapProvider/INGwTcapMsgLogger.C
+
+HDRS = INGwTcapProvider/INGwTcapProvider.h        \
+       INGwTcapProvider/INGwTcapStatParam.h       \
+       INGwTcapProvider/INGwTcapSession.h         \
+       INGwTcapProvider/INGwSil.h                 \
+       INGwTcapProvider/INGwTcapIncMsgHandler.h   \
+       INGwTcapProvider/INGwSilRx.h               \
+       INGwTcapProvider/INGwSilTx.h               \
+       INGwTcapProvider/INGwTcapDefine.h          \
+       INGwTcapProvider/INGwTcapFtHandler.h       \
+       INGwTcapProvider/INGwTcapIface.h           \
+       INGwTcapProvider/INGwTcapInclude.h         \
+       INGwTcapProvider/INGwTcapProvider.h        \
+       INGwTcapProvider/INGwTcapStatParam.h       \
+       INGwTcapProvider/INGwTcapWorkUnitMsg.h			\
+       INGwTcapProvider/INGwTcapUtil.h						\
+			 INGwTcapProvider/INGwTcapMsgLogger.h       \
+			 INGwTcapProvider/INGwAppProtoInclude.h       \
+			 INGwTcapProvider/INGwAppProtoParamDecoder.h

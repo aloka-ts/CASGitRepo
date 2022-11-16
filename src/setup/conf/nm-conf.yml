@@ -1,0 +1,77 @@
+nmThresholds:
+ 1:
+         survThreshold: 0
+         ctrlThreshold: 0
+         gapInterval: 7
+         gapDuration: 10
+ 2:
+         survThreshold: 85
+         ctrlThreshold: 185
+         gapInterval: 7
+         gapDuration: 10
+ 3:
+         survThreshold: 115
+         ctrlThreshold: 215
+         gapInterval: 7
+         gapDuration: 10
+ 4:
+         survThreshold: 155
+         ctrlThreshold: 255
+         gapInterval: 7
+         gapDuration: 10
+ 5:
+         survThreshold: 200
+         ctrlThreshold: 300
+         gapInterval: 7
+         gapDuration: 10
+ 6:
+         survThreshold: 250
+         ctrlThreshold: 350
+         gapInterval: 7
+         gapDuration: 10
+ 7:
+         survThreshold: 305
+         ctrlThreshold: 405
+         gapInterval: 7
+         gapDuration: 10
+ 8:
+         survThreshold: 375
+         ctrlThreshold: 475
+         gapInterval: 7
+         gapDuration: 10
+ 9:
+         survThreshold: 465
+         ctrlThreshold: 565
+         gapInterval: 7
+         gapDuration: 10
+ 10:
+         survThreshold: 575
+         ctrlThreshold: 675
+         gapInterval: 7
+         gapDuration: 10
+ 11:
+         survThreshold: 710
+         ctrlThreshold: 810
+         gapInterval: 7
+         gapDuration: 10
+ 12:
+         survThreshold: 875
+         ctrlThreshold: 975
+         gapInterval: 7
+         gapDuration: 10
+ 13:
+         survThreshold: 1085
+         ctrlThreshold: 1085
+         gapInterval: 7
+         gapDuration: 10
+ 14:
+         survThreshold: 0
+         ctrlThreshold: 2
+         gapInterval: 7
+         gapDuration: 10
+
+ 15:
+         survThreshold: 60
+         ctrlThreshold: 5000
+         gapInterval: 7
+         gapDuration: 10

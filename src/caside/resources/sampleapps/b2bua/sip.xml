@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sip-app PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN" "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+<sip-app>
+	
+	<display-name>B2bUserAgent</display-name>
+
+	<servlet>
+		<servlet-name>B2bUAServlet</servlet-name>
+		<display-name>B2bUserAGentApplication</display-name>
+		<servlet-class>com.baypackets.sampleapps.b2bua.B2bUAServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>B2bUAServlet</servlet-name>
+		<pattern>
+			<equal>
+				<var>request.uri.scheme</var>
+				<value>sip</value>
+			</equal>
+		</pattern>
+	</servlet-mapping>
+	
+</sip-app>

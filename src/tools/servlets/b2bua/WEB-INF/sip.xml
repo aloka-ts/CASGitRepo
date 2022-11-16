@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+   "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+<sip-app>
+  <display-name>A Simple back-to-back UA SIP servlet Application</display-name>
+  <distributable/>
+  
+    <context-param>
+        <param-name>callee_ip</param-name>
+        <param-value>192.168.2.172</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>callee_port</param-name>
+        <param-value>6060</param-value>
+    </context-param>
+    
+  <servlet>
+    <servlet-name>B2BUA Servlet</servlet-name>
+    <servlet-class>com.baypackets.testapps.B2BUAServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>B2BUA Servlet</servlet-name>
+    <pattern>
+        <equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+    </pattern>
+  </servlet-mapping>
+
+  <session-config>
+    <session-timeout>5</session-timeout>
+  </session-config>
+</sip-app>

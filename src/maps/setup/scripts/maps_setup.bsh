@@ -1,0 +1,108 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+import javax.naming.NamingException;
+import javax.naming.NameNotFoundException;
+
+    String dataSource = "PortalDS";
+    //String sql = "select * from dual";
+    String[] sql = new String[] {
+				"INSERT into GB_ORGANIZATION (ORG_ID, ORG_NAME, ORG_DOMAIN_NAME, ORG_STATUS, ORG_ACTIVATION_DATE, ORG_EXPIRATION_DATE, MERCHANT_ID, ORG_CUSTOMER_ID, ORG_LAST_UPDATED_DATE, ORG_ACCOUNT_TYPE) values (-1, 'Shared Entity', 'shared', 1, sysdate, sysdate+5*365, null, 'SHARED', sysdate, 'C') ",
+				"INSERT into GB_COUNTRY (COUNTRY_ID, COUNTRY_ISO_CODE, COUNTRY_NAME, MERCHANT_ID) values (1, 'IND', 'India', -1) ",
+				"INSERT into GB_COUNTRY (COUNTRY_ID, COUNTRY_ISO_CODE, COUNTRY_NAME, MERCHANT_ID) values (2, 'USA', 'United States', -1) ",
+				"INSERT into GB_COUNTRY (COUNTRY_ID, COUNTRY_ISO_CODE, COUNTRY_NAME, MERCHANT_ID) values (3, 'CHN', 'China', -1) ",
+				"INSERT into HIBERNATE_SEQUENCES (SEQUENCE_NAME, SEQUENCE_NEXT_HI_VALUE) values ('gb_country', 4) ",
+"INSERT INTO GB_DEPLOYED_APPS (ID,APP_ID,APP_DESC,APP_DEPLOY_DATE,APP_DEPLOYER,MERCHANTID) VALUES (-1,'gb-core','gb-core.jar',TO_DATE('1/3/2008','DD/MM/YYYY'),'ROOT',1)",
+"DELETE FROM PERMISSION WHERE ID IN (-1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -16, -17, -18, -19)",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-1,270,269,'SPA','Organization','LIST','Organization.customerId,Organization.name,Organization.domainName,Organization.activationDate,Organization.expirationDate,Organization.status,Organization.lastUpdated','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-2,270,269,'NPM','Organization','LIST','Organization.customerId,Organization.name,Organization.domainName,Organization.activationDate,Organization.expirationDate,Organization.status,Organization.lastUpdated','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE,APP_NUM) values (-3,270,269,'SPA','Organization','DELETE','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE,APP_NUM) values (-4,270,269,'NPM','Organization','DELETE','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE,APP_NUM) values (-5,270,273,'SPA','Organization','CREATE','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE,APP_NUM) values (-6,270,273,'NPM','Organization','CREATE','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-7,270,273,'SPA','Organization','MODIFY','customerId,name,displayName,domainName,description,activationDate,expirationDate,lastUpdated,timezone,status,,address2.streetAddress1,address2.streetAddress2,address2.city,address2.state,address2.country,address2.zip,contactInfo1.contactPerson,contactInfo1.emailId1,contactInfo1.emailId2,contactInfo1.phoneNumber,contactInfo1.alternatePhoneNumber,contactInfo1.mobileNumber,contactInfo1.faxNumber,contactInfo2.contactPerson,contactInfo2.emailId1,contactInfo2.emailId2,contactInfo2.phoneNumber,contactInfo2.alternatePhoneNumber,contactInfo2.mobileNumber,contactInfo2.faxNumber,address1.streetAddress1,address1.streetAddress2,address1.city,address1.state,address1.country,address1.zip','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-8,270,273,'NPM','Organization','MODIFY','customerId,name,displayName,domainName,description,activationDate,expirationDate,lastUpdated,timezone,status,,address2.streetAddress1,address2.streetAddress2,address2.city,address2.state,address2.country,address2.zip,contactInfo1.contactPerson,contactInfo1.emailId1,contactInfo1.emailId2,contactInfo1.phoneNumber,contactInfo1.alternatePhoneNumber,contactInfo1.mobileNumber,contactInfo1.faxNumber,contactInfo2.contactPerson,contactInfo2.emailId1,contactInfo2.emailId2,contactInfo2.phoneNumber,contactInfo2.alternatePhoneNumber,contactInfo2.mobileNumber,contactInfo2.faxNumber,address1.streetAddress1,address1.streetAddress2,address1.city,address1.state,address1.country,address1.zip','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-9,270,273,'SPA','Organization','VIEW','customerId,name,displayName,domainName,description,activationDate,expirationDate,lastUpdated,timezone,status,,address2.streetAddress1,address2.streetAddress2,address2.city,address2.state,address2.country.isoCode,address2.zip,contactInfo1.contactPerson,contactInfo1.emailId1,contactInfo1.emailId2,contactInfo1.phoneNumber,contactInfo1.alternatePhoneNumber,contactInfo1.mobileNumber,contactInfo1.faxNumber,contactInfo2.contactPerson,contactInfo2.emailId1,contactInfo2.emailId2,contactInfo2.phoneNumber,contactInfo2.alternatePhoneNumber,contactInfo2.mobileNumber,contactInfo2.faxNumber,address1.streetAddress1,address1.streetAddress2,address1.city,address1.state,address1.country.isoCode,address1.zip','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-10,270,273,'NPM','Organization','VIEW','customerId,name,displayName,domainName,description,activationDate,expirationDate,lastUpdated,timezone,status,,address2.streetAddress1,address2.streetAddress2,address2.city,address2.state,address2.country.isoCode,address2.zip,contactInfo1.contactPerson,contactInfo1.emailId1,contactInfo1.emailId2,contactInfo1.phoneNumber,contactInfo1.alternatePhoneNumber,contactInfo1.mobileNumber,contactInfo1.faxNumber,contactInfo2.contactPerson,contactInfo2.emailId1,contactInfo2.emailId2,contactInfo2.phoneNumber,contactInfo2.alternatePhoneNumber,contactInfo2.mobileNumber,contactInfo2.faxNumber,address1.streetAddress1,address1.streetAddress2,address1.city,address1.state,address1.country.isoCode,address1.zip','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-11,277,276,'SPA','Organization','MODIFY','name,displayName,domainName,description,status,timezone,customerId,activationDate,expirationDate,lastUpdated,account_Type,,contactInfo2.contactPerson,contactInfo2.emailId1,contactInfo2.emailId2,contactInfo2.phoneNumber,contactInfo2.alternatePhoneNumber,contactInfo2.mobileNumber,contactInfo2.faxNumber,contactInfo1.contactPerson,contactInfo1.emailId1,contactInfo1.emailId2,contactInfo1.phoneNumber,contactInfo1.alternatePhoneNumber,contactInfo1.mobileNumber,contactInfo1.faxNumber,address2.streetAddress1,address2.streetAddress2,address2.city,address2.state,address2.country,address2.zip,address1.streetAddress1,address1.streetAddress2,address1.city,address1.state,address1.country,address1.zip','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-12,277,276,'NPM','Organization','MODIFY','name,displayName,domainName,description,status,timezone,customerId,activationDate,expirationDate,lastUpdated,account_Type,,contactInfo2.contactPerson,contactInfo2.emailId1,contactInfo2.emailId2,contactInfo2.phoneNumber,contactInfo2.alternatePhoneNumber,contactInfo2.mobileNumber,contactInfo2.faxNumber,contactInfo1.contactPerson,contactInfo1.emailId1,contactInfo1.emailId2,contactInfo1.phoneNumber,contactInfo1.alternatePhoneNumber,contactInfo1.mobileNumber,contactInfo1.faxNumber,address2.streetAddress1,address2.streetAddress2,address2.city,address2.state,address2.country,address2.zip,address1.streetAddress1,address1.streetAddress2,address1.city,address1.state,address1.country,address1.zip','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-13,277,276,'SPA','Organization','VIEW','name,displayName,domainName,description,status,timezone,customerId,activationDate,expirationDate,lastUpdated,account_Type,,contactInfo2.contactPerson,contactInfo2.emailId1,contactInfo2.emailId2,contactInfo2.phoneNumber,contactInfo2.alternatePhoneNumber,contactInfo2.mobileNumber,contactInfo2.faxNumber,contactInfo1.contactPerson,contactInfo1.emailId1,contactInfo1.emailId2,contactInfo1.phoneNumber,contactInfo1.alternatePhoneNumber,contactInfo1.mobileNumber,contactInfo1.faxNumber,address2.streetAddress1,address2.streetAddress2,address2.city,address2.state,address2.country.countryName,address2.zip,address1.streetAddress1,address1.streetAddress2,address1.city,address1.state,address1.country.countryName,address1.zip','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-14,277,276,'NPM','Organization','VIEW','name,displayName,domainName,description,status,timezone,customerId,activationDate,expirationDate,lastUpdated,account_Type,,contactInfo2.contactPerson,contactInfo2.emailId1,contactInfo2.emailId2,contactInfo2.phoneNumber,contactInfo2.alternatePhoneNumber,contactInfo2.mobileNumber,contactInfo2.faxNumber,contactInfo1.contactPerson,contactInfo1.emailId1,contactInfo1.emailId2,contactInfo1.phoneNumber,contactInfo1.alternatePhoneNumber,contactInfo1.mobileNumber,contactInfo1.faxNumber,address2.streetAddress1,address2.streetAddress2,address2.city,address2.state,address2.country.countryName,address2.zip,address1.streetAddress1,address1.streetAddress2,address1.city,address1.state,address1.country.countryName,address1.zip','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-15,109,108,'NPA','DeployedApp','LIST','DeployedApp.appId,DeployedApp.appDescription,DeployedApp.deployDate,DeployedApp.appDeployer','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE,APP_NUM) values (-16,109,108,'NPA','DeployedApp','DELETE','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE,APP_NUM) values (-17,109,110,'NPA','DeployedApp','CREATE','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-18,109,110,'NPA','DeployedApp','MODIFY','appId,appDescription,deployDate','gb-core')",
+"INSERT into PERMISSION (ID, PORTLETID, OPID, ROLE, ROOTENTITY, OPTYPE, ATTRIBUTES,APP_NUM) values (-19,109,110,'NPA','DeployedApp','VIEW','appId,appDescription,deployDate','gb-core')"
+
+				};
+
+    DataSource ds = null;
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet resultSet;
+
+    try {
+        ds = (DataSource) (new InitialContext()).lookup("java:/" + dataSource);
+        connection = ds.getConnection();
+
+    	for (int i = 0; i < sql.length; i++) {
+    	try {
+			String s = sql [i];
+        	statement = connection.prepareStatement(s);
+
+        	if (statement.execute()) {  // result set is available 
+            	resultSet = statement.getResultSet();
+            	if (resultSet != null) {
+                	ResultSetMetaData rsmd = resultSet.getMetaData();
+                	// print("<br>Columns in result set: " + rsmd.getColumnCount());
+                
+                	print ("<br>Space names: ");
+                	while (resultSet.next()) {
+                    	print("<br>&nbsp;&nbsp;" + resultSet.getString("spacename"));
+                	}
+            	}    
+        	} else { // only update count available
+            	print("Update count: " + statement.getUpdateCount()); 
+        	}
+    	}
+    	catch (SQLException e) { 
+        	print(e.toString());
+    	}
+    	finally {
+			try {
+	    		if (resultSet != null) {
+				resultSet.close();
+	    		}
+	    		if (statement != null) {
+				statement.close();
+	    		}
+        	}
+			catch(Exception discard) {
+        	}
+        }
+    	}
+
+    }
+    catch (NameNotFoundException exception) {
+        print(exception.toString());
+    } 
+    catch (NamingException exception) { 
+        print(exception.toString());
+    } 
+    catch (SQLException exception) { 
+        print(exception.toString());
+    }
+    finally {
+	try {
+	    if (connection != null) {
+		connection.close();
+            }
+        }
+	catch(Exception discard) {
+        }
+    }
+

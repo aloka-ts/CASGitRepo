@@ -1,0 +1,61 @@
+#!/bin/ksh
+
+# This script will be called at runtime to export required environment variables.
+# Installroot,Classpath,LD_LIBRARY_PATH,PATH,JBOSS_HOME
+
+echo "### Running setup.sh ###"
+
+PLTFRM=`uname`
+export PLTFRM
+
+export INSTALLROOT=INSTALL_ROOT
+export SETUP_DIR=$INSTALLROOT/MmAppProvServer
+export GB_JARS=$SETUP_DIR/gbjars
+export JACORB_HOME=$INSTALLROOT/MmAppProvServer/thirdParty/JACVERSION
+export ORACLE_BASE=/usr/local/10gclient
+export ORACLE_HOME=/usr/local/10gclient
+
+if test $PLTFRM = "Linux"
+then
+  JAVA_HOME=/usr/java
+  SNMP_ROOT_DIR=/user/linux/thirdParty/emante/snmp15.4.1.4
+  JAVA_DEBUG_LIB=/usr/java/lib/i386
+else
+  JAVA_HOME=/usr/java
+  SNMP_ROOT_DIR=/net/stallone/opt/local/snmp/snmp15.2.1.20
+  JAVA_DEBUG_LIB=/usr/java/lib/sparc
+fi
+
+export JAVA_HOME
+export SNMP_ROOT_DIR
+export JAVA_DEBUG_LIB
+
+export PATH=/bin:/usr/bin:/usr/ucb:/usr/sbin:$PATH
+
+if test $PLTFRM = "Linux"
+then
+  CLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$ORACLE_HOME/jdbc/lib/jndi.zip:$ORACLE_HOME/jdbc/lib/jta.zip:$ORACLE_HOME/jdbc/lib/nls_charset11.zip:.:$JACORB_HOME/lib/idl.jar:$JACORB_HOME/lib/jacorb.jar
+
+  LD_LIBRARY_PATH=$JAVA_DEBUG_LIB:/usr/local/lib:/usr/lib:$ORACLE_HOME/lib:$ORACLE_HOME/jdbc/lib:$SETUP_DIR/lib:$LD_LIBRARY_PATH
+else
+  CLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$ORACLE_HOME/jdbc/lib/nls_charset12.zip:.:$JACORB_HOME/lib/idl.jar:$JACORB_HOME/lib/jacorb.jar:$JAVA_HOME/jre/lib/resources.jar
+
+  LD_LIBRARY_PATH=$JAVA_DEBUG_LIB:/opt/SUNWspro/lib:/usr/local/lib:/usr/openwin/lib:/usr/lib:/opt/SUNWspro/WS6U1/lib:$ORACLE_HOME/lib32:$ORACLE_HOME/jdbc/lib:$SETUP_DIR/lib:$LD_LIBRARY_PATH
+fi
+
+export LD_LIBRARY_PATH
+export CLASSPATH
+
+if test $PLTFRM = "Linux"
+then
+  ulimit -c 100000
+else
+  coreadm -p core.%f.%p $$
+fi
+
+#MAPS specific exports
+export JBOSS_HOME=$SETUP_DIR/jboss
+export TMP_LOCATION=TEMP_LOC
+
+echo "### Exiting setup.sh ###"
+

@@ -1,0 +1,18 @@
+
+[Unit]
+Description=kafka
+After=syslog.target network.target
+StartLimitBurst=5
+StartLimitInterval=100
+[Service]
+Type=simple
+User=aconyx
+Environment=INSTALLROOT=/AGNITY/agnity/kafka
+#ExecStartPre=/bin/sleep 5
+ExecStart=/AGNITY/agnity/kafka/kafka_2.12-2.3.1/bin/startKafka
+ExecStop=/AGNITY/agnity/kafka/kafka_2.12-2.3.1/bin/stopKafka
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+[Install]
+WantedBy=multi-user.target

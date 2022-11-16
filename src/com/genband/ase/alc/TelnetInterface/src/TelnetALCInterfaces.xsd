@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+        <xs:complexType name="optiontype">
+                <xs:annotation>
+                        <xs:documentation>
+                                Type that contains command line option information.
+                        </xs:documentation>
+                        <xs:appinfo>
+                                <source>Telnet ALC Extensions</source>
+                        </xs:appinfo>
+                </xs:annotation>
+                <xs:sequence>
+                        <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1">
+                              <xs:annotation>
+                                    <xs:documentation>
+                                          This is a description for this interface provided to the user 
+                                          through the help and/or getUsage interfaces.
+                                    </xs:documentation>
+                              </xs:annotation>
+                        </xs:element>                             
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:string" use="required">
+                        <xs:annotation>
+                              <xs:documentation>      
+                                    This indicates the name of the option.
+                              </xs:documentation>
+                        </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="use" type="xs:string" default="optional">
+                        <xs:annotation>
+                              <xs:documentation>
+                                    This indicates whether this option is optional.
+                                    Values are optional or required.
+                              </xs:documentation>
+                        </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="takes-argument" type="xs:boolean" default="true">
+                        <xs:annotation>
+                              <xs:documentation>
+                                    This indicates whether this option takes an argument.
+                                    If this option does not take an argument, the form taken
+                                    will be -&lt;argumentName&gt; OR -no&lt;argumentName&gt;, with corresponding
+                                    values in the service context being opt_&lt;argumentName&gt; equals true
+                                    or false, respectively.
+                              </xs:documentation>
+                        </xs:annotation>
+                </xs:attribute>
+        </xs:complexType>
+
+        <xs:complexType name="options-listtype">
+                <xs:annotation>
+                        <xs:documentation>
+                                List of Optiontype items. 1-n
+                        </xs:documentation>
+                        <xs:appinfo>
+                                <source>Telnet ALC Extensions</source>
+                        </xs:appinfo>
+                </xs:annotation>
+                <xs:sequence>
+                        <xs:element name="option" type="optiontype" minOccurs="1" maxOccurs="unbounded">
+                              <xs:annotation>
+                                    <xs:documentation>
+                                          This is the formal definition of an option.  It will result in
+                                          a service context variable set of the form opt_&lt;argumentName&gt;
+                                    </xs:documentation>
+                              </xs:annotation>
+                        </xs:element>                             
+                </xs:sequence>
+                <xs:attribute name="auto-abbreviate" type="xs:boolean" default="true">
+                        <xs:annotation>
+                              <xs:documentation>
+                                    This indicates whether this command will allow for auto abbreviations for options.
+                              </xs:documentation>
+                        </xs:annotation>
+                </xs:attribute>
+        </xs:complexType>
+
+</xs:schema>

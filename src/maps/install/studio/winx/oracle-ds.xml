@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<datasources>
+  <local-tx-datasource>
+    <jndi-name>PortalDS</jndi-name>
+    <connection-url>jdbc:oracle:thin:!USERID/!PASSWORD@!DB_IP:!DB_PORT:!DB_SERVICE</connection-url>
+                                       
+														
+	<driver-class>oracle.jdbc.driver.OracleDriver</driver-class>
+  </local-tx-datasource>
+</datasources>

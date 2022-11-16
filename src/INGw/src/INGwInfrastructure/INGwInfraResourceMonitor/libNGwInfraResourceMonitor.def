@@ -1,0 +1,8 @@
+RULES = lib
+TARGET = libINGwInfraResourceMonitor
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+SRCS= INGwInfraResourceMonitor/INGwIfrResMonResourceMonitor.C
+
+HDRS = $(wildcard */*.h)

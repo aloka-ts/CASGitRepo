@@ -1,0 +1,39 @@
+#!/bin/ksh
+
+. env.sh
+
+if [[ $# == "0" ]]
+then
+	echo "No Arguments! Exiting..."
+	exit 1
+fi
+
+while true
+do
+	file=$1
+	if [[ $file == "" ]]
+	then
+		echo "Test Suite finished."
+		exit 0
+	fi
+	shift
+
+	export FQ_CLASS_NAME=com.baypackets.ase.sipconnector.${file}
+	echo "Running Tests for class: $FQ_CLASS_NAME"
+
+	index=1
+#	cat $file | while read argument 
+	grep -v "^#" $file | while read line 
+	do
+#		export ARGUMETS=$argument
+		export ARGUMETS="$line"
+		echo "Test Case [$index] : $ARGUMETS"
+		$JAVA_HOME/bin/java -cp $ASE_CLASSPATH $FQ_CLASS_NAME $ARGUMETS
+		echo ""
+		index=`expr $index + 1`
+		#echo "$FQ_CLASS_NAME"
+		#echo "$ARGUMETS"
+
+	done
+done
+

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="ISUPCodec">
+
+<!--
+	<property name="THIRDPARTY" value="/vob/thirdParty" />
+	<property name="ISUP_HOME" value="/vob/Sipservlet/src/isup" />
+--> 
+	<target name="clean" description="Clean the build directory">
+		<delete dir="${INSTALLROOT}/isup"/>
+		<delete file="${INSTALLROOT}/bpjars/isup-codecs.jar"/>
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${INSTALLROOT}/isup/codecClasses"/>
+	</target>
+
+	<path id="lib.dir">
+      <fileset dir="${THIRDPARTY}/otherjars">
+            <include name="log4j-1.2.8.jar"/>
+      </fileset>
+    </path>
+	
+	<target name="build" depends="init">
+			<echo message="THIRDPARTY: ${THIRDPARTY}"/>
+			<javac srcdir="${ISUP_HOME}/codec/src" destdir="${INSTALLROOT}/isup/codecClasses" debug="true">
+				  <include name="**/*.java"/>
+				  <classpath refid="lib.dir"/>
+			</javac>
+			<jar update="true" jarfile="${INSTALLROOT}/bpjars/isup-codecs.jar" basedir="${INSTALLROOT}/isup/codecClasses"/>
+			<delete dir="${INSTALLROOT}/isup"/>
+	  </target>
+	  
+</project>	  

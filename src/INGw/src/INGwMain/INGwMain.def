@@ -1,0 +1,59 @@
+TARGET = INGw
+RULES = bin
+
+EXTRA_RULES += vbroker 
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+#INGwInfraManager INGwFtPacket INGwInfraStreamManager stub_INGwIwf libstub_INGwIwf
+ifdef USE_IWF_STUB
+
+EXTRA_LIBS += EmsAgent EmsCommon Util EmsIdl \
+						  INGwInfraUtil INGwLoadDistributor INGwInfraTelnetIface \
+						  INGwFtTalk INGwFtMessenger INGwSipMsgHandler \
+						  INGwInfraParamRepository INGwInfraResourceMonitor INGwSipProvider \
+						  INGwInfraManager INGwFtPacket INGwInfraStreamManager \
+							INGwInfraMsrMgr stub_INGwIwf TcapMessage INGwStackManager INGwTcapProvider INGwInfraStatMgr
+
+else
+
+EXTRA_LIBS += EmsAgent EmsCommon Util EmsIdl \
+						  INGwInfraUtil INGwLoadDistributor INGwInfraTelnetIface \
+						  INGwFtTalk INGwFtMessenger INGwSipMsgHandler \
+						  INGwInfraParamRepository INGwInfraResourceMonitor INGwSipProvider \
+						  INGwInfraManager INGwFtPacket INGwInfraStreamManager \
+							INGwInfraMsrMgr INGwIwf TcapMessage INGwStackManager INGwTcapProvider INGwInfraStatMgr
+endif
+
+include ../INGwCommonDefs/hss-sipstack.def
+#include ../INGwCommonDefs/telesys-stack.def
+#include ../INGwCommonDefs/trillium-ainstack.def
+include ../INGwCommonDefs/ccpu-stack.def
+
+#EXTRA_LIBDIRS += $(TELESYS_ROOT)/INAP/TCAPU/lib
+#EXTRA_LIBDIRS += /vob/thirdParty/stacks/ss7Stack/trillium/lib
+#EXTRA_LIBDIRS += /vob/thirdParty/stacks/ss7Stack/ag_ccpu/lib
+EXTRA_LIBDIRS += /home/mriganka/ccpu_20Oct_Base_Build_Mriganka/ag_ccpu_ANSI/lib
+#EXTRA_LIBDIRS += /user/ind_builds/INCV2/CCPU_SBTM_VOB/ag_ccpu_ansi/lib
+
+EXTRA_LIBS += ua sipapi sipcore uaha sipserialize
+#EXTRA_LIBS += tcapusr cmclient gipc timer ss
+#EXTRA_LIBS += BpAin_sol BpMtp_sol BpAinIphase
+EXTRA_LIBS += stk_ftha
+
+EXTRA_LIBDIRS += $(XERCES_HOME)/lib
+EXTRA_LIBS += xerces-c
+
+ifdef LINUX
+EXTRA_LIBS += nsl elf
+else
+EXTRA_LIBS += nsl elf kstat rt
+endif
+
+ifdef LINUX
+else
+EXTRA_DEFINES += SOLARIS _REENTRANT
+EXTRA_FLAGS += pic
+endif
+
+SRCS = INGwMain.C

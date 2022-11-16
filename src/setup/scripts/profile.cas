@@ -1,0 +1,36 @@
+#!/bin/ksh
+
+export INSTALLROOT=INSTALL_ROOT
+
+export EDITOR=vi
+
+set -o vi
+
+export PS1="< BP-CAS ==> `hostname` !>"
+
+export PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/java/bin:.:$PATH
+
+alias scr="cd ${INSTALLROOT}/ASESubsystem/scripts"
+alias db="cd ${INSTALLROOT}/ASESubsystem/conf"
+#alias logs="cd ${INSTALLROOT}/LOGS"
+alias logs="cd /LOGS/CAS"
+alias home="cd ${INSTALLROOT}/ASESubsystem/"
+alias bpjars="cd ${INSTALLROOT}/ASESubsystem/bpjars"
+
+alias start-cas="sudo service cas start"
+alias stop-cas="sudo service cas stop"
+alias status-cas="sudo service cas status"
+
+export ORACLE_HOME=ORACLEHOME
+export ORACLE_BASE=$ORACLE_HOME
+export PATH=$ORACLE_HOME/bin:$PATH
+LD_LIBRARY_PATH=$ORACLE_HOME/lib:$ORACLE_HOME/rdbms/lib:$ORACLE_HOME/jdbc/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH
+
+export ProductId=CAS
+export DB_USER=ems
+export DB_PASSWD=ems
+export CONN_STRING=dbprod
+export DBFT_STATUS=0
+export MIRROR_DB=
+

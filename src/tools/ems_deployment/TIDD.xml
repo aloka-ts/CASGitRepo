@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Agility-Application>
+   <name>APPNAME</name>
+   <display-name>APPNAME</display-name>
+   <version>APP_VERSION</version>
+   <os>DEPLOYED_ON</os> 
+   <product-id>PRODUCT-ID</product-id>
+   <compatibility>
+     <EMS-version>7.0.3</EMS-version>
+   </compatibility>
+     
+   <tar-bundles>
+     <install-bundle>
+    <name>service.tar</name>
+     </install-bundle>
+     <upgrade-bundles></upgrade-bundles>
+     <deinstall-bundle>
+     </deinstall-bundle>
+   </tar-bundles>
+</Agility-Application>
+

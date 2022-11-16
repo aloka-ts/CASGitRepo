@@ -1,0 +1,482 @@
+<?xml version="1.0"?>
+<!-- ==================================================== -->
+<!-- Build file : maps -->
+<!-- build.xml, Saturday, March 8, 2008 -->
+<!-- Author : Arpana -->
+<!-- ==================================================== -->
+<project name="GENBAND MAPS" default="all" basedir=".">
+
+    	
+    	<!-- ************* Target : all **************** -->
+		<target name="all" depends="init,server,maps-core,cleanup"/> 
+
+		<target name="server" depends="server-config, ems, slee, maps-ha, mgmt"/>
+
+		<!-- Set the variables used inside -->
+		
+		<property file="ant.properties"/>
+		<condition property="javac.target" value="5" else="5">
+			<istrue value="${STUDIO}"/>
+		</condition>
+
+		<condition property="javac.source" value="5" else="5">
+			<istrue value="${STUDIO}"/>
+		</condition>
+
+		<condition property="server.conf" value="default" else="maps">
+			<istrue value="${STUDIO}"/>
+		</condition>
+
+    	<property name="src" value="/vob/Sipservlet/src/maps"/>
+		<property name="JBoss" value="jboss-4.2.0.GA"/>
+		<property name="buildDir" Value="${INSTALLROOT}"/>
+		<property name="JBOSS_HOME" value="/vob/thirdParty/JBoss/jboss-4.2.0.GA"/>
+		<property name="JBOSS_PORTAL_HOME" value="/vob/thirdParty/JBoss/jboss-portal-2.6"/>
+		<property name="SUBSYS_NAME" value="MmAppProvServer"/>
+		<property name="PORTAL" value="jboss-portal.sar"/>
+    	<property name="gb-src" value="/vob/Sipservlet/src/maps/ide/src"/>
+    	<property name="misc-src" value="/vob/Sipservlet/src/maps/ide/others"/>
+		<property name="OTHERJARS" value="/vob/thirdParty/otherjars"/>
+		<property name="JBossDeployDest" value="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy"/>
+		<property name="PortalDest" value="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}"/>
+
+		<!-- Define the classpath -->
+		<path id="classpath">
+
+			<fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/lib">
+				<include name="*.jar"/>
+         	</fileset>
+
+			<fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/lib">
+				<include name="*.jar"/>
+			</fileset>
+
+			<fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/lib">
+				<include name="*.jar"/>
+			</fileset>
+
+			<fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/jboss-web.deployer/jsf-libs">
+				<include name="jsf-api.jar"/>
+			</fileset>
+
+			<fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/ejb3.deployer">
+				<include name="jboss-annotations-ejb3.jar"/>
+			</fileset>
+
+    		<pathelement path="${buildDir}/gb-core"/>
+		</path>
+
+		 <!-- Define the classpath for mgmt compilation -->
+            <path id="mgmt.classpath">
+
+                <!-- <fileset dir="${JACORB_HOME}/lib">
+                        <include name="jacorb.jar"/>
+            	</fileset>
+
+            	<fileset dir="${JACORB_HOME}/lib">
+                        <include name="idl.jar"/>
+                  </fileset> -->
+
+                  <fileset dir="${buildDir}/bpjars">
+                        <include name="*.jar"/>
+                  </fileset>
+
+                  <!-- <fileset dir="${buildDir}/otherjars">
+                        <include name="*.jar"/>
+                  </fileset> -->
+
+				<fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/bin">
+					<include name="run.jar"/>
+				</fileset>
+
+				<fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/client">
+					<include name="jbossall-client.jar"/>
+					<include name="log4j.jar"/>
+				</fileset>
+
+            	<pathelement path="${buildDir}/mgmt"/>
+            </path>
+
+    <!-- ************* Target : INIT **************** -->
+    <target name="init" >
+		
+		<echo message="Copying configuration files and scripts..."/>
+
+    	<mkdir dir="${buildDir}/${SUBSYS_NAME}"/>
+        
+        <copy todir="${buildDir}/${SUBSYS_NAME}/scripts">
+            <fileset dir="${src}/setup/scripts">
+            	<exclude name="**/*contrib*"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${buildDir}/${SUBSYS_NAME}/${JBoss}">
+            <fileset dir="${JBOSS_HOME}"/>
+        </copy>
+        
+		<echo message="Configuring JBoss for MAPS ..."/>
+    
+
+        <copy todir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/lib">
+            <fileset dir="${OTHERJARS}">
+				<include name="ojdbc14.jar"/>
+				<include name="orai18n.jar"/>
+            </fileset>
+        </copy>
+   
+        <copy todir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}">
+            <fileset dir="${JBOSS_PORTAL_HOME}/jboss-portal.sar"/>
+        </copy>
+        
+		<echo message="Taking care of JBoss WS on Java 6 ..."/>
+        <copy todir="${buildDir}/${SUBSYS_NAME}/${JBoss}/lib/endorsed">
+            <fileset dir="${OTHERJARS}/jbossws2.0.4">
+				<include name="jaxb-api.jar"/>
+				<include name="jboss-jaxrpc.jar"/>
+				<include name="jboss-jaxws-ext.jar"/>
+				<include name="jboss-jaxws.jar"/>
+				<include name="jboss-saaj.jar"/>
+            </fileset>
+        </copy>
+        
+
+        <copy todir="${buildDir}/install">
+            <fileset dir="${src}/install">
+            <exclude name="**/*contrib*"/>
+            </fileset>
+        </copy>
+
+		<!-- PR 51582 -->
+		<chmod perm="755">
+			<fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/bin">
+				<include name="*.sh"/>
+			</fileset>
+		</chmod>
+
+		<echo message="Done with copying of configuration files and scripts."/>
+	</target>
+
+    <!-- ************* Target : check-server-config **************** -->
+
+	<target name="check-server-config">
+
+		<condition property="production.setup">
+			<equals arg1="${server.conf}" arg2="maps"/>
+		</condition>
+
+
+	</target>
+
+
+    <!-- ************* Target : server-config  **************** -->
+
+	<target name="server-config" depends="init, check-server-config" if="production.setup">
+
+		<move todir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}">
+    			<fileset dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/default"/>
+   		</move>
+
+        <copy todir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/conf" overwrite="true">
+            <fileset dir="${src}/setup/conf">
+				<include name="jboss-log4j.xml"/>
+				<include name="jboss-service.xml"/>
+                <exclude name="**/*contrib*"/>
+            </fileset>
+        </copy>
+
+		<copy file="${src}/setup/conf/maps-ds.xml" todir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy" overwrite="true"/>
+
+		<copy file="${src}/setup/conf/server.xml" todir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/jboss-web.deployer" overwrite="true"/>
+
+		 <mkdir dir="${buildDir}/${SUBSYS_NAME}/lib"/>
+		 <mkdir dir="${buildDir}/${SUBSYS_NAME}/bin"/>
+		 <mkdir dir="${buildDir}/${SUBSYS_NAME}/conf"/>
+		 <mkdir dir="${buildDir}/${SUBSYS_NAME}/thirdParty"/>
+
+        <copy todir="${buildDir}/${SUBSYS_NAME}/conf">
+            <fileset dir="${src}/setup/conf">
+				<include name="*_template"/>
+                <exclude name="**/*contrib*"/>
+            </fileset>
+            <fileset dir="${src}/fthandler/conf">
+				<include name="*"/>
+                <exclude name="**/*contrib*"/>
+            </fileset>
+        </copy>
+
+		<copy file="${src}/fthandler/scripts/fthandler.sh" todir="${buildDir}/${SUBSYS_NAME}/scripts/"/>
+
+		<echo message="copying jacorb dir..."/>
+
+		<copy todir="${buildDir}/${SUBSYS_NAME}/thirdParty/Jacorb1_4_1">
+    		<fileset dir="/vob/thirdParty/TAO/JacOrb/Jacorb1_4_1">
+				<include name="lib/*"/>
+				<include name="bin/*"/>
+            </fileset>
+   		</copy>
+
+	</target>
+
+
+	<target name="maps-ha" depends="server-config" if="production.setup">
+
+		<exec executable="/vob/thirdParty/TAO/imake/bin/imake" dir="/vob/Common/src/libUtil"/>
+		<copy file="${buildDir}/sol28g/lib/libUtil.so" todir="${buildDir}/${SUBSYS_NAME}/lib/"/>
+		
+		<exec executable="/vob/thirdParty/TAO/imake/bin/imake" dir="/vob/Sipservlet/src/maps/fthandler"/>
+		<copy file="${buildDir}/sol28g/bin/fthandler" todir="${buildDir}/${SUBSYS_NAME}/bin/"/>
+
+		<echo message="Done from fthandler build."/>
+
+	</target>
+    
+	<!-- ************ compiling mgmt classes***************************** -->
+	<target name="mgmt-compile" depends="init" if="production.setup">
+
+    	<mkdir dir="${buildDir}/mgmt"/>
+
+		<exec dir="${src}/build"
+			executable="sh"
+			output="${buildDir}/mgmt/config-specs">
+			<arg line="${src}/../build/get_config_specs.sh"/>
+		</exec>
+        
+		<echo message="compiling mgmt classes with source compatibility of JAVA ${javac.source}."/>
+		<javac srcdir="${gb-src}/com/genband/m5/maps/mgmt" destdir="${buildDir}/mgmt" debug="true" target="${javac.target}" source="${javac.source}">
+			<include name="**/*.java"/>
+			<classpath refid="mgmt.classpath"/>
+		</javac>
+
+	</target>
+
+	<!-- ************ packaging mgmt module ***************************** -->
+	<target name="mgmt" depends="mgmt-compile" if="production.setup">
+
+		<jar jarfile="${buildDir}/mgmt.jar">	
+			<fileset dir="${buildDir}/mgmt">
+				<include name="**/*"/>
+				<exclude name="**/jmx/*"/>
+			</fileset>
+		</jar>
+
+		<jar jarfile="${buildDir}/gb-jmx-client.jar">	
+			<fileset dir="${buildDir}/mgmt">
+				<include name="**/jmx/*"/>
+			</fileset>
+		</jar>
+
+		<move file="${buildDir}/mgmt.jar" todir="${buildDir}/bpjars"/>
+
+		<move file="${buildDir}/gb-jmx-client.jar" todir="${buildDir}/bpjars"/>
+
+		<copy file="${buildDir}/lib/sol28g/libjavautil.so.32bit" todir="${buildDir}/${SUBSYS_NAME}/lib/"/>
+		<copy file="${buildDir}/lib/sol28g/libjavautil.so.64bit" todir="${buildDir}/${SUBSYS_NAME}/lib/"/>
+
+		<echo message="Done with pkg of mgmt."/>
+
+	</target>
+
+	<!-- ************ compiling ***************************** -->
+	<target name="compile" depends="init">
+
+    	<mkdir dir="${buildDir}/gb-core"/>
+
+		<exec dir="${src}/build"
+			executable="sh"
+			output="${buildDir}/gb-core/config-specs">
+			<arg line="${src}/../build/get_config_specs.sh"/>
+		</exec>
+        
+		<echo message="compiling jboss identity and core ui classes."/>
+		<!--<javac srcdir="${misc-src}/org/jboss/portal" destdir="${buildDir}/gb-core" debug="true" target="${javac.target}" source="${javac.source}">
+			<include name="**/*.java"/>
+			<classpath refid="classpath"/>
+		</javac>-->
+
+		<echo message="compiling gb core classes with source of ${javac.source}."/>
+		<javac srcdir="${src}/ide" destdir="${buildDir}/gb-core" debug="true" target="${javac.target}" source="${javac.source}">
+			<include name="src/**/common/*.java"/>
+			<include name="src/**/common/entity/*.java"/>
+			<include name="src/**/interfaces/*.java"/>
+			<include name="src/**/session/*.java"/>
+			<include name="src/**/identity/*.java"/>
+			<include name="src/**/security/*.java"/>
+			<include name="src/**/sp/mbeans/*.java"/>
+			<include name="others/**/*.java"/>
+         	<exclude name="src/**/ide/**"/>
+			<classpath refid="classpath"/>
+		</javac>
+
+	</target>
+
+	<!-- ************ Building core module ***************************** -->
+	<target name="maps-core" depends="maps-security,admin-portal">
+
+		<echo message="packaging and copying conf for jar."/>
+     	<mkdir dir="${buildDir}/gb-core/META-INF"/>
+		<copy file="${src}/ide/WebContent/conf/sp/ejb-jar.xml" todir="${buildDir}/gb-core/META-INF"/>
+		<copy file="${src}/ide/WebContent/conf/sp/persistence.xml" todir="${buildDir}/gb-core/META-INF"/>
+
+		<jar jarfile="${buildDir}/gb-core.jar">	
+			<fileset dir="${buildDir}/gb-core" >
+				<include name="**/config-specs"/>
+				<include name="META-INF/*.xml"/>
+				<include name="com/genband/m5/maps/**/*.class"/>
+				<exclude name="com/genband/m5/maps/session/EntityManagerWrapper*.class"/>
+				<exclude name="com/genband/m5/maps/session/CPFSessionFacade*.class"/>
+				<exclude name="com/genband/m5/maps/security/CPFDataLoaderBean*.class"/>
+				<exclude name="com/genband/m5/maps/security/CPFSecurityManager*.class"/>
+				<exclude name="com/genband/m5/maps/security/CPFListener*.class"/>
+				<exclude name="com/genband/m5/maps/sp/**/*.class"/>
+				<exclude name="com/genband/m5/maps/common/MgmtPortletUtil.class"/>
+				<exclude name="com/genband/m5/maps/mgmt/**/*.class"/>
+				<exclude name="com/genband/m5/maps/common/CPFManager.class"/>
+			</fileset>
+		</jar>
+
+		<move file="${buildDir}/gb-core.jar" todir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/lib"/>
+
+	</target>
+
+	<!-- ************ Building admin portal module ***************************** -->
+	<target name="admin-portal" depends="compile">
+
+		<echo message="packaging and copying conf for jar."/>
+     	<mkdir dir="${buildDir}/gb-admin/WEB-INF/jsf"/>
+     	<mkdir dir="${buildDir}/gb-admin/WEB-INF/classes/bundle"/>
+        <copy todir="${buildDir}/gb-admin/js">
+            <fileset dir="${src}/ide/resources/misc/sitemap/js"/>
+        </copy>
+        <copy todir="${buildDir}/gb-admin/images">
+            <fileset dir="${src}/ide/resources/misc/sitemap/images"/>
+        </copy>
+        <copy todir="${buildDir}/gb-admin/WEB-INF/classes/bundle">
+            <fileset dir="${src}/ide/WebContent/bundle/sp"/>
+        </copy>
+        <copy todir="${buildDir}/gb-admin/WEB-INF/classes">
+            <fileset dir="${buildDir}/gb-core">
+				<include name="com/genband/m5/maps/sp/**/*.class"/>
+				<include name="com/genband/m5/maps/common/MgmtPortletUtil.class"/>
+            </fileset>
+        </copy>
+        <copy todir="${buildDir}/gb-admin/WEB-INF/jsf">
+            <fileset dir="${src}/ide/WebContent/jsf">
+				<include name="*.xhtml"/>
+            </fileset>
+        </copy>
+        <copy todir="${buildDir}/gb-admin/WEB-INF">
+            <fileset dir="${src}/ide/WebContent/conf/sp">
+				<include name="portlet.xml"/>
+				<include name="web.xml"/>
+				<include name="portlet-instances.xml"/>
+				<include name="jboss-portlet.xml"/>
+				<include name="faces-config.xml"/>
+            </fileset>
+        </copy>
+
+		<jar jarfile="${buildDir}/gb-admin.war">	
+			<fileset dir="${buildDir}/gb-admin" />
+		</jar>
+
+		<move file="${buildDir}/gb-admin.war" todir="${JBossDeployDest}"/>
+		<copy file="${src}/setup/scripts/maps_setup.bsh" todir="${JBossDeployDest}"/>
+		<copy file="${src}/setup/conf/ejb-deployer.xml" todir="${JBossDeployDest}" overwrite="true"/>
+
+	</target>
+
+	<!-- ************ Building security module ***************************** -->
+	<target name="maps-security" depends="compile">
+
+		<unjar src="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/lib/portal-identity-lib.jar" dest="${buildDir}/portal-identity-lib"/>
+
+        <copy todir="${buildDir}/portal-identity-lib">
+            <fileset dir="${buildDir}/gb-core">
+				<include name="org/jboss/portal/identity/**/*.class"/>
+            </fileset>
+        </copy>
+		<jar jarfile="${buildDir}/portal-identity-lib.jar">	
+			<fileset dir="${buildDir}/portal-identity-lib">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+
+		<move file="${buildDir}/portal-identity-lib.jar" todir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/lib"/>
+
+		<unjar src="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/lib/portal-core-lib.jar" dest="${buildDir}/portal-core-lib"/>
+
+        <copy todir="${buildDir}/portal-core-lib">
+            <fileset dir="${buildDir}/gb-core">
+				<include name="org/jboss/portal/core/**/*.class"/>
+            </fileset>
+        </copy>
+		<jar jarfile="${buildDir}/portal-core-lib.jar">	
+			<fileset dir="${buildDir}/portal-core-lib">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+
+		<move file="${buildDir}/portal-core-lib.jar" todir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/lib"/>
+
+
+		<echo message="Adding user mgmt portlet jsp."/>
+        <copy todir="${PortalDest}/portal-core.war/WEB-INF/jsp/user" overwrite="true">
+            <fileset dir="${src}/ide/WebContent/jsp/user">
+				<include name="*.jsp"/>
+            </fileset>
+        </copy>
+        <copy todir="${PortalDest}/portal-core.war/WEB-INF/jsp/role" overwrite="true">
+            <fileset dir="${src}/ide/WebContent/jsp/role">
+				<include name="*.jsp"/>
+            </fileset>
+        </copy>
+		<copy file="${src}/ide/WebContent/conf/core-portlet.xml" tofile="${PortalDest}/portal-core.war/WEB-INF/portlet.xml" overwrite="true"/>
+		<copy file="${src}/ide/WebContent/conf/core-portlet-instances.xml" tofile="${PortalDest}/portal-core.war/WEB-INF/portlet-instances.xml" overwrite="true"/>
+		<copy file="${src}/ide/WebContent/conf/admin-portlet-instances.xml" tofile="${PortalDest}/portal-admin.sar/portal-admin.war/WEB-INF/portlet-instances.xml" overwrite="true"/>
+
+		<echo message="configuring portal for user/role/organization."/>
+		<copy file="../setup/conf/usermgmt.hbm.xml" tofile="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/conf/hibernate/user/domain.hbm.xml" overwrite="true"/>
+		<copy file="../setup/conf/usermgmt-setup.txt" tofile="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/conf/hibernate/user/setup.txt" overwrite="true"/>
+		<copy file="../setup/conf/usermgmt-object.xml" tofile="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/conf/data/default-object.xml" overwrite="true"/>
+
+	</target>
+
+    <!-- ************** Target : Cleanup ************ -->
+
+    <target name="post-process" if="production.setup">
+
+		<move todir="${buildDir}/${SUBSYS_NAME}/gbjars">
+    			<fileset dir="${buildDir}/bpjars"/>
+   		</move>
+
+	</target>
+
+    <target name="cleanup" depends="post-process">
+
+    <echo message="Performing Cleanup ..."/>
+        <delete dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/all"/>
+        <delete dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/minimal"/>
+        <delete dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/portal-ajax.war"/>
+        <delete dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/portal-cms.sar"/>
+        <delete dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/portal-wsrp.sar"/>
+        <delete dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/samples"/>
+        <delete dir="${buildDir}/${SUBSYS_NAME}/${JBoss}/server/${server.conf}/deploy/${PORTAL}/widget.war"/>
+        <!-- <delete dir="${buildDir}/gb-core"/> -->
+        <!-- <delete dir="${buildDir}/portal-identity-lib"/> -->
+
+		<echo message="Done with Building of MAPS."/>
+    </target>
+
+	<target name="maps-ide" depends="compile">
+        <ant dir="../ide/build"/>
+	</target>        
+
+	<target name="ems" depends="server-config" if="production.setup">
+        <ant dir="../../build" target="ems" inheritAll="false"/>
+	</target>        
+
+	<target name="slee" depends="server-config" if="production.setup">
+        <ant dir="../../build" target="slee" inheritAll="false"/>
+	</target>        
+
+</project>
+

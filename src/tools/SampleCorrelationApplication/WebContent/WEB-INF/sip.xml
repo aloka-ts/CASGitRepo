@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+  PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+  "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+<sip-app>
+	<display-name>SampleServlet</display-name>
+	<listener>
+        <listener-class>com.agnity.sas.apps.SampleTestApp</listener-class>
+     </listener>
+    <servlet>
+            <servlet-name>SampleServlet</servlet-name>
+            <servlet-class>com.agnity.sas.apps.SampleTestApp</servlet-class>
+            <load-on-startup>1</load-on-startup>
+      </servlet>
+	<!-- The following section specifies the application session timeout value. -->
+	<session-config>
+		<session-timeout>5</session-timeout>
+	</session-config> 
+</sip-app>

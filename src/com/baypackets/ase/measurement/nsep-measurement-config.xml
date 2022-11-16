@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementMgr minScanIntervalInSec="100" minAccumulationIntervalInSec="300">
+
+	<!--1. Number of NSEP INVITES In -->
+
+    <MeasurementCounter id="Priority INVITEs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.253">
+          <param name="Priority INVITEs IN"/>
+    </MeasurementCounter>
+	
+	<!--2. Number of NSEP INVITES OUT -->
+
+    <MeasurementCounter id="Priority INVITEs OUT"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.254">
+          <param name="Priority INVITEs OUT"/>
+    </MeasurementCounter>
+    
+    <!--3. Number of Priority INVITEs Queued but dropped -->
+
+    <MeasurementCounter id="Priority INVITEs Queued But Dropped" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.255">
+          <param name="Priority INVITEs Queued But Dropped"/>
+    </MeasurementCounter>
+    
+    <!--4. Number of Unsuccessful Priority Sessions --> 
+
+    <MeasurementCounter id="Priority Unsuccessful Sessions"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.256">
+          <param name="Priority Unsuccessful Sessions"/>
+    </MeasurementCounter>
+    
+    <!--5. Number of Priority INVITEs Rejected by OCM -->
+
+    <MeasurementCounter id="Priority INVITEs Dropped Due To M/C Cngn"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.259">
+          <param name="Priority INVITEs Dropped Due To M/C Cngn"/>
+    </MeasurementCounter>
+    
+    <!--6. Total Number of Priority Messages --> 
+
+    <MeasurementCounter id="Priority SIP Messages"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.258">
+          <param name="Priority SIP Messages"/>
+    </MeasurementCounter>
+    
+    <!--7. Total Number of Priority INVITEs Exempted from Congestion -->
+
+    <MeasurementCounter id="Priority INVITEs Exempted Frm Cngn Ctrl"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.257">
+          <param name="Priority INVITEs Exempted Frm Cngn Ctrl"/>
+    </MeasurementCounter>
+    
+    <!--8. Total Number of Priority INVITEs Exempted from Network Congestion -->
+
+    <MeasurementCounter id="Priority INVITEs Exempted Frm N/W Mgmt Ctrl"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.260">
+          <param name="Priority INVITEs Exempted Frm N/W Mgmt Ctrl"/>
+    </MeasurementCounter>
+
+
+    
+	<MeasurementSet id="CAS MeasurementSet Priority Calls" version="2"
+				accumulationInterval="1800" priority="0">
+		<MeasurementCounter id="Priority INVITEs IN"/> 
+    	<MeasurementCounter id="Priority INVITEs OUT"/>
+	    <MeasurementCounter id="Priority INVITEs Queued But Dropped"/>
+		<MeasurementCounter id="Priority Unsuccessful Sessions"/>
+    	<MeasurementCounter id="Priority INVITEs Dropped Due To M/C Cngn"/>
+		<MeasurementCounter id="Priority SIP Messages"/>
+    	<MeasurementCounter id="Priority INVITEs Exempted Frm Cngn Ctrl"/>
+		<MeasurementCounter id="Priority INVITEs Exempted Frm N/W Mgmt Ctrl"/>
+	</MeasurementSet>
+</MeasurementMgr>

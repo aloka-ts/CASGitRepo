@@ -1,0 +1,10 @@
+RULES=lib
+
+include ../INGwCommonDefs/ccpu-stack.def
+
+EXTRA_DEFINES += STU2 
+
+HDRS = INGwCommonTypes/INCCommons.h \
+       INGwCommonTypes/INCJainConstants.h \
+       INGwCommonTypes/INCTagLengths.h \
+       INGwCommonTypes/INCTags.h   

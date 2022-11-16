@@ -1,0 +1,15 @@
+MmAppProvServer/jboss-4.2.0.GA/bin/wsrunclient.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/twiddle.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/wsprovide.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/wstools.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/wsconsume.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/probe.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/classpath.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/jboss_init_suse.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/jboss_init_redhat.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/jboss_init_hpux.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/run.sh
+MmAppProvServer/jboss-4.2.0.GA/bin/shutdown.sh
+MmAppProvServer/jboss-4.2.0.GA/server/maps/deploy/jboss-portal.sar/lib/gb-core.jar
+
+

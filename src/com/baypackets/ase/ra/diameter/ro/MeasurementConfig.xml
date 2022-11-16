@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementMgr minScanIntervalInSec="100" minAccumulationIntervalInSec="300">
+ 
+ <!-- Measurement counters client mode-->
+ 
+ <MeasurementCounter id="Credit Control Event Request Count OUT"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.301">
+          <param name="Credit Control Event Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Session Request Count OUT"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.302">
+          <param name="Credit Control Session Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Direct Debit Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.303">
+          <param name="Credit Control Direct Debit Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Direct Debit Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.304">
+          <param name="Credit Control Direct Debit Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Account Refund Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.305">
+          <param name="Credit Control Account Refund Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Balance Check Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.306">
+          <param name="Credit Control Balance Check Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Price Enquiry Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.307">
+          <param name="Credit Control Price Enquiry Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control First Interogation Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.308">
+          <param name="Credit Control First Interogation Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Interim Interogation Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.309">
+          <param name="Credit Control Interim Interogation Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Final Interogation Request Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.310">
+          <param name="Credit Control Final Interogation Request Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 1xxx Event Answer Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.311">
+          <param name="Credit Control 1xxx Event Answer Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 2xxx Event Answer Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.312">
+          <param name="Credit Control 2xxx Event Answer Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 3xxx Event Answer Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.313">
+          <param name="Credit Control 3xxx Event Answer Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 4xxx Event Answer Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.314">
+          <param name="Credit Control 4xxx Event Answer Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 5xxx Event Answer Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.315">
+          <param name="Credit Control 5xxx Event Answer Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 1xxx Session Answer Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.316">
+          <param name="Credit Control 1xxx Session Answer Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 2xxx Session Answer Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.317">
+          <param name="Credit Control 2xxx Session Answer Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 3xxx Session Answer Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.318">
+          <param name="Credit Control 3xxx Session Answer Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 4xxx Session Answer Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.319">
+          <param name="Credit Control 4xxx Session Answer Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 5xxx Session Answer Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.320">
+          <param name="Credit Control 5xxx Session Answer Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Request Send Error Count" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.321">
+          <param name="Credit Control Request Send Error Count"/>
+    </MeasurementCounter>
+    
+    <!-- Measurement counters client mode ends --> 
+
+	<!-- Measurement counters server mode  --> 
+	
+ <MeasurementCounter id="Credit Control Event Request Count IN"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.301">
+          <param name="Credit Control Event Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Session Request Count IN"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.302">
+          <param name="Credit Control Session Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Direct Debit Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.303">
+          <param name="Credit Control Direct Debit Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Direct Debit Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.304">
+          <param name="Credit Control Direct Debit Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Account Refund Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.305">
+          <param name="Credit Control Account Refund Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Balance Check Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.306">
+          <param name="Credit Control Balance Check Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Price Enquiry Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.307">
+          <param name="Credit Control Price Enquiry Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control First Interogation Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.308">
+          <param name="Credit Control First Interogation Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Interim Interogation Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.309">
+          <param name="Credit Control Interim Interogation Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control Final Interogation Request Count IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.310">
+          <param name="Credit Control Final Interogation Request Count IN"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 1xxx Event Answer Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.311">
+          <param name="Credit Control 1xxx Event Answer Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 2xxx Event Answer Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.312">
+          <param name="Credit Control 2xxx Event Answer Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 3xxx Event Answer Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.313">
+          <param name="Credit Control 3xxx Event Answer Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 4xxx Event Answer Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.314">
+          <param name="Credit Control 4xxx Event Answer Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 5xxx Event Answer Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.315">
+          <param name="Credit Control 5xxx Event Answer Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 1xxx Session Answer Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.316">
+          <param name="Credit Control 1xxx Session Answer Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 2xxx Session Answer Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.317">
+          <param name="Credit Control 2xxx Session Answer Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 3xxx Session Answer Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.318">
+          <param name="Credit Control 3xxx Session Answer Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 4xxx Session Answer Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.319">
+          <param name="Credit Control 4xxx Session Answer Count OUT"/>
+    </MeasurementCounter>
+
+    <MeasurementCounter id="Credit Control 5xxx Session Answer Count OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.21.320">
+          <param name="Credit Control 5xxx Session Answer Count OUT"/>
+    </MeasurementCounter>
+
+  
+	<!-- Measurement counters server mode ends -->  
+
+    <!-- Measurement Set Definition client mode --> 
+ 
+    <MeasurementSet id="Ro Interface MeasurementSet" version="1"
+			    accumulationInterval="300" priority="0">
+		<MeasurementCounter id="Credit Control Event Request Count OUT"/> 
+		<MeasurementCounter id="Credit Control Session Request Count OUT"/> 
+		<MeasurementCounter id="Credit Control Direct Debit Request Count OUT"/> 
+		<MeasurementCounter id="Credit Control Account Refund Request Count OUT"/> 
+		<MeasurementCounter id="Credit Control Balance Check Request Count OUT"/> 
+		<MeasurementCounter id="Credit Control Price Enquiry Request Count OUT"/> 
+		<MeasurementCounter id="Credit Control First Interogation Request Count OUT"/> 
+		<MeasurementCounter id="Credit Control Interim Interogation Request Count OUT"/> 
+		<MeasurementCounter id="Credit Control Final Interogation Request Count OUT"/> 
+		<MeasurementCounter id="Credit Control 1xxx Event Answer Count IN"/> 
+		<MeasurementCounter id="Credit Control 2xxx Event Answer Count IN"/> 
+		<MeasurementCounter id="Credit Control 3xxx Event Answer Count IN"/> 
+		<MeasurementCounter id="Credit Control 4xxx Event Answer Count IN"/> 
+		<MeasurementCounter id="Credit Control 5xxx Event Answer Count IN"/> 
+		<MeasurementCounter id="Credit Control 1xxx Session Answer Count IN"/> 
+		<MeasurementCounter id="Credit Control 2xxx Session Answer Count IN"/> 
+		<MeasurementCounter id="Credit Control 3xxx Session Answer Count IN"/> 
+		<MeasurementCounter id="Credit Control 4xxx Session Answer Count IN"/> 
+		<MeasurementCounter id="Credit Control 5xxx Session Answer Count IN"/> 
+		
+		<MeasurementCounter id="Credit Control Request Send Error Count"/> 
+  
+    
+     <!-- Measurement Set Definition client mode ends -->
+    
+     <!-- Measurement Set Definition server mode --> 
+   
+		<MeasurementCounter id="Credit Control Event Request Count IN"/> 
+		<MeasurementCounter id="Credit Control Session Request Count IN"/> 
+		<MeasurementCounter id="Credit Control Direct Debit Request Count IN"/> 
+		<MeasurementCounter id="Credit Control Account Refund Request Count IN"/> 
+		<MeasurementCounter id="Credit Control Balance Check Request Count IN"/> 
+		<MeasurementCounter id="Credit Control Price Enquiry Request Count IN"/> 
+		<MeasurementCounter id="Credit Control First Interogation Request Count IN"/> 
+		<MeasurementCounter id="Credit Control Interim Interogation Request Count IN"/> 
+		<MeasurementCounter id="Credit Control Final Interogation Request Count IN"/> 
+		<MeasurementCounter id="Credit Control 1xxx Event Answer Count OUT"/> 
+		<MeasurementCounter id="Credit Control 2xxx Event Answer Count OUT"/> 
+		<MeasurementCounter id="Credit Control 3xxx Event Answer Count OUT"/> 
+		<MeasurementCounter id="Credit Control 4xxx Event Answer Count OUT"/> 
+		<MeasurementCounter id="Credit Control 5xxx Event Answer Count OUT"/> 
+		<MeasurementCounter id="Credit Control 1xxx Session Answer Count OUT"/> 
+		<MeasurementCounter id="Credit Control 2xxx Session Answer Count OUT"/> 
+		<MeasurementCounter id="Credit Control 3xxx Session Answer Count OUT"/> 
+		<MeasurementCounter id="Credit Control 4xxx Session Answer Count OUT"/> 
+		<MeasurementCounter id="Credit Control 5xxx Session Answer Count OUT"/> 
+		 
+    </MeasurementSet>
+	 <!-- Measurement Set Definition server mode ends -->
+   
+</MeasurementMgr>

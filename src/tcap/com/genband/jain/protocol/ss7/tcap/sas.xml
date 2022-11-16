@@ -1,0 +1,35 @@
+<sas-app>
+	<name>tcap-provider</name>
+
+	<version>1.0</version>
+	
+	<priority>5</priority>
+	
+	
+	<message-handler>
+       <handler-name>tcap1</handler-name>
+       <handler-class>com.genband.jain.protocol.ss7.tcap.JainTcapProviderImpl</handler-class>
+	</message-handler>
+	
+	<message-handler-mapping>
+        <handler-name>tcap1</handler-name>
+        <resource-name>http-ra</resource-name>
+    </message-handler-mapping>
+    <message-handler-mapping>
+        <handler-name>tcap1</handler-name>
+        <resource-name>telnetssh-ra</resource-name>
+    </message-handler-mapping>
+    <message-handler-mapping>
+        <handler-name>tcap1</handler-name>
+        <resource-name>sh-ra</resource-name>
+    </message-handler-mapping>
+    <message-handler-mapping>
+        <handler-name>tcap1</handler-name>
+        <resource-name>rf-ra</resource-name>
+    </message-handler-mapping>
+    <message-handler-mapping>
+        <handler-name>tcap1</handler-name>
+        <resource-name>ro-ra</resource-name>
+    </message-handler-mapping>
+
+</sas-app>

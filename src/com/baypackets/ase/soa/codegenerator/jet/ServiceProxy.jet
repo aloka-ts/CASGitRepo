@@ -1,0 +1,365 @@
+<%@ jet package = "com.baypackets.ase.soa.codegenerator " imports = "java.util.* java.lang.reflect.* org.apache.log4j.*;" class = "ServiceProxyGenerator" %>
+
+<% 	
+	Map argsMap = (HashMap)argument;
+    ClassInspector classInspector = (ClassInspector)argsMap.get("ClassInspector");
+    String implClassName = (String)argsMap.get("ImplClass");	
+	String parentClassPkg= classInspector.getPackageName();
+ 	String parentClassName= classInspector.getClassName();
+	String fqdn = parentClassPkg+"."+parentClassName;
+	StringBuffer strBuf = new StringBuffer();
+	strBuf.append("\"");
+	strBuf.append(parentClassPkg);
+	strBuf.append(".");
+	strBuf.append(parentClassName);
+	strBuf.append("\"");
+	String interfaceClassName =  strBuf.toString();
+ 	
+%>
+
+package <%= parentClassPkg %>;
+
+import com.baypackets.ase.soa.codegenerator.proxy.BaseProxy;
+import com.baypackets.ase.soa.ServiceMap;
+import com.baypackets.ase.soa.util.ReflectiveClone;
+import com.baypackets.ase.soa.SoaMeasurementUtil;
+import com.baypackets.ase.soa.fw.SoaFrameworkContext;
+import com.baypackets.ase.common.Registry;
+import com.baypackets.ase.util.Constants;
+import java.util.*;
+import java.lang.reflect.*;
+import org.apache.log4j.*;
+
+public class <%= parentClassName %>Proxy implements BaseProxy {
+	private static Logger m_logger = Logger.getLogger(<%= parentClassName %>Proxy.class);
+	private <%= parentClassName %> impl = null;
+	private String m_uri;
+
+	public <%= parentClassName %>Proxy()	{
+
+	}
+
+	public <%= parentClassName %>Proxy(<%= parentClassName %> svcImpl)	{
+		impl = svcImpl;
+
+	}
+	public void setImpl(Object implObj)	{
+		if(implObj instanceof <%= parentClassName %>)	{
+			impl = (<%= parentClassName %>)implObj;
+		}
+	}
+	
+	public void setURI(String uri)	{
+		m_uri = uri;
+	}
+	
+	public Object getImpl()	{
+		return impl;
+	}
+
+	 public String getInterface()    {
+		return <%= interfaceClassName %>;
+
+   	 }
+
+
+	public Object clone() throws CloneNotSupportedException	{
+		try	{
+			return super.clone();
+		}catch(CloneNotSupportedException exp)	{
+			throw exp;
+		}
+	}
+<%	
+	String name = "";
+	String returnType = "";
+	boolean isPrimitive = false;
+	String modifiers = "";
+	Method[] methods = classInspector.getMethods();
+	for(int i=0;i<methods.length;i++)	{
+		Method m = methods[i];
+		name = m.getName();
+		Class retType = m.getReturnType();
+		isPrimitive = retType.isPrimitive();
+		modifiers = Modifier.toString((m.getModifiers()));
+		returnType = retType.getName();
+		Class[] params = m.getParameterTypes();
+		int paramNum = params.length;
+		StringBuffer methodArguments = new StringBuffer();
+		StringBuffer implArguments = new StringBuffer();
+		StringBuffer parameterTypes = new StringBuffer();
+		for(int j=0;j<params.length;j++)	{
+			Class paramType = params[j];
+			if(paramType.isPrimitive())	{	
+				methodArguments.append(paramType.getName());
+				parameterTypes.append(paramType.getName());
+				parameterTypes.append(".class");
+			}else if(!(paramType.isArray())) {
+				methodArguments.append(paramType.getName());
+				parameterTypes.append(paramType.getName());
+				parameterTypes.append(".class");
+			}else if(paramType.isArray())	{
+				methodArguments.append(paramType.getComponentType().getName());
+				parameterTypes.append(paramType.getComponentType().getName());
+				methodArguments.append("[]");
+				parameterTypes.append("[]");
+				parameterTypes.append(".class");
+			}
+			methodArguments.append(" arg"+j);
+            implArguments.append(" arg"+j);
+			methodArguments.append(",");
+			implArguments.append(",");
+			parameterTypes.append(",");
+		}
+		int index = methodArguments.length();
+		if(index > 0)
+        	methodArguments.deleteCharAt(index -1);
+        index = implArguments.length();
+		if(index > 0)	{
+        	implArguments.deleteCharAt(index -1);
+		}
+		index = parameterTypes.length();
+       	if(index > 0)   {
+       		parameterTypes.deleteCharAt(index -1);
+       	}
+		Class[] exps = m.getExceptionTypes();
+		StringBuffer exceptions = new StringBuffer();
+		if(exps.length > 0)	{
+			exceptions.append("throws ");
+			for(int k=0;k<exps.length;k++)	{
+				exceptions.append(exps[k].getName());
+				exceptions.append(",");
+			}
+			index = exceptions.length();
+        	if(index > 0)   {
+            	exceptions.deleteCharAt(index -1);
+        	}
+
+		}
+
+%>
+	public <%= returnType %> <%= name %> (<%= methodArguments.toString() %> ) <%= exceptions.toString() %> {
+		String methodName = "<%= name %>"; 
+		Object implObject = null;
+		Object retValue = null;
+        Method implMethod = null;
+		String currentMethodName = null;
+		Method method = null;
+		<%
+		if(!isPrimitive) {
+		%>
+			<%= returnType %> retVal = null;
+		<%
+		}
+		%>
+		<%
+        if(returnType.equals("int"))  {
+        %>
+        	<%= returnType %> retVal = 0;
+        <%
+       	}
+		%> 
+		<%
+        if(returnType.equals("short"))  {
+        %>
+        	<%= returnType %> retVal = 0;
+        <%
+       	}
+		%> 
+		<%
+        if(returnType.equals("long"))  {
+        %>
+        	<%= returnType %> retVal = 0;
+        <%
+       	}
+		%> 
+		<%
+        if(returnType.equals("float"))  {
+        %>
+        	<%= returnType %> retVal = 0.0f;
+        <%
+       	}
+		%> 
+		<%
+        if(returnType.equals("double"))  {
+        %>
+        	<%= returnType %> retVal = 0.0;
+        <%
+       	}
+		%> 
+		<%
+        if(returnType.equals("boolean"))  {
+        %>
+        	<%= returnType %> retVal = false;
+        <%
+       	}
+		%> 
+		<%
+        if(returnType.equals("char"))  {
+        %>
+        	<%= returnType %> retVal = 	'\u0000';
+        <%
+       	}
+		%> 
+		<%
+        if(returnType.equals("byte"))  {
+        %>
+        	<%= returnType %> retVal = 0;
+        <%
+       	}
+		%> 
+
+		SoaMeasurementUtil.incrementIncomingInvocations();
+		if(impl == null)	{
+
+			if(m_logger.isDebugEnabled())	{
+				m_logger.debug("Invocation by Remote application");
+				m_logger.debug("Impl object  is null so Retrieve it from Service Map");
+			}
+			SoaFrameworkContext soaFw = (SoaFrameworkContext)Registry.lookup(Constants.NAME_SOA_FW_CONTEXT);
+			ServiceMap servMap = soaFw.getServiceMap();
+			implObject = servMap.getImplObject(<%= interfaceClassName %>);
+			if(m_logger.isDebugEnabled())	{
+				m_logger.debug("Impl object Retrieved from Service Map: "+ implObject);
+			}
+			if(implObject != null)	{
+				try	{
+					Class[] parameters = new Class[]{<%= parameterTypes.toString() %>};
+					Class c = implObject.getClass();
+            		implMethod = c.getMethod(methodName, parameters);
+            		Object[] arguments = new Object[]{<%= implArguments.toString() %>};
+            		retValue = implMethod.invoke(implObject,arguments);
+        		} catch (NoSuchMethodException e) {
+					SoaMeasurementUtil.incrementIncomingInvocationsFailed();
+            		m_logger.error("NoSuchMethodException: " +e.getMessage(),e);
+        		} catch (IllegalAccessException e) {
+					SoaMeasurementUtil.incrementIncomingInvocationsFailed();
+            		m_logger.error("IllegalAccessException: " +e.getMessage(),e);
+        		} catch (InvocationTargetException e) {
+					SoaMeasurementUtil.incrementIncomingInvocationsFailed();
+            		m_logger.error("InvocationTargetException: " +e.getMessage(),e);
+        		}catch(Exception e) {
+					SoaMeasurementUtil.incrementIncomingInvocationsFailed();
+					m_logger.error("Exception: " +e.getMessage(),e);
+				}
+				if(m_logger.isDebugEnabled())	{
+					m_logger.debug("ClassLoader of object retValue returned by method invocation: "+retValue.getClass().getClassLoader());
+					m_logger.debug("ClassName of object retValue: "+retValue.getClass().getName());
+				}
+
+			}
+			<%
+        	if(!isPrimitive &&(!returnType.equals("void"))) {
+        	%>
+				Object retObj = ReflectiveClone.clone(retValue,this.getClass().getClassLoader());
+				if(m_logger.isDebugEnabled())	{
+					m_logger.debug("ClassLoader of Proxy object: " + this.getClass().getClassLoader());
+					m_logger.debug("ClassLoader of object retObj returned by ReflectiveClone: "+retObj.getClass().getClassLoader());
+					m_logger.debug("Class name for object retObj: " + retObj.getClass().getName());
+				}
+            	retVal = (<%= returnType %>)retObj;
+        	<%
+        	}
+			%>
+			
+		}else	{
+			if(m_logger.isDebugEnabled())	{
+				m_logger.debug("Invocation by Co-resident application");
+			}
+			try {
+        		<%
+        		if(!returnType.equals("void"))  {
+        		%>
+            			retVal = impl.<%= name %>(<%= implArguments.toString() %>);
+        		<%
+        		}else   {
+        		%>
+            		impl.<%= name %>(<%= implArguments.toString() %>);
+        		<%
+        		}
+        		%>
+        	}catch(Exception e) {
+            	SoaMeasurementUtil.incrementIncomingInvocationsFailed();
+            	m_logger.error("Exception: " +e.getMessage(),e);
+        	}
+	
+		}
+		<%
+		if(isPrimitive)	{
+		%>
+		if(impl == null)    {
+        <%
+        if(returnType.equals("int"))  {
+        %>
+             retVal = new Integer(retValue.toString()).intValue();
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("short"))  {
+        %>
+             retVal = new Short(retValue.toString()).shortValue();
+        <%
+        }
+        %>
+		 <%
+        if(returnType.equals("long"))  {
+        %>
+             retVal = new Long(retValue.toString()).longValue();
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("float"))  {
+        %>
+             retVal = new Float(retValue.toString()).floatValue();
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("double"))  {
+        %>
+             retVal = new Double(retValue.toString()).doubleValue();
+        <%
+        }
+        %>
+		<%
+        if(returnType.equals("boolean"))  {
+        %>
+             retVal = new Boolean(retValue.toString()).booleanValue();
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("char"))  {
+        %>
+             retVal =  new Character(retValue.toString()).charValue();
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("byte"))  {
+        %>
+             retVal = new Byte(retValue.toString()).byteValue();
+        <%
+        }
+        %>
+		}
+		<%
+		}
+		%>
+		<%
+        if(!returnType.equals("void"))   {
+        %>
+				return retVal;
+		<%
+		}
+		%>
+	
+
+    	}
+	<%
+   }
+	%>
+}
+

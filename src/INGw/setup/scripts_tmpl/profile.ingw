@@ -1,0 +1,50 @@
+#
+# @(#)local.profile 1.6	98/02/06 SMI
+#
+
+PLTFRM=`uname`
+export PLTFRM
+echo "platform is $PLTFRM"
+
+PLTFRM=`uname`
+export PLTFRM
+echo "platform is : $PLTFRM"
+if test $PLTFRM = "Linux"
+then
+  PLTFRM_DIR=redhat80g
+else
+  PLTFRM_DIR=sol28g
+fi
+export PLTFRM_DIR
+
+PLTFRM_DIR=sol28g
+
+# PATH
+PATH=/usr/bin:/usr/ucb:/etc:/usr/dt/bin:/usr/openwin/bin:/usr/ccs/bin:/usr/xpg4/bin:/usr/java1.1/bin:/usr/java1.2/jre/bin:/usr/java1.2/bin:/bin:/sbin:/usr/sbin:/usr/platform/sun4u/sbin:INSTALL_ROOT/$PLTFRM_DIR/bin:.:EXPECTBIN:$PATH:~/utils
+
+export PATH 
+
+EDITOR=vi
+export EDITOR
+
+#
+set -o vi
+export SUBSYS_DIR=SUBSYS_INGW
+export INSTALLROOT=INSTALL_ROOT
+export PATH=$PATH:$INSTALLROOT/$SUBSYS_DIR/$PLTFRM_DIR/scripts:$INSTALLROOT/$SUBSYS_DIR/$PLTFRM_DIR/bin
+
+PS1="< BayP ==> `hostname` ! >"
+export PS1
+
+alias log="cd /LOGS/$SUBSYS_DIR"
+alias ibin="cd INSTALL_ROOT/$SUBSYS_DIR/$PLTFRM_DIR/bin"
+alias ilib="cd INSTALL_ROOT/$SUBSYS_DIR/$PLTFRM_DIR/lib"
+alias scr="cd INSTALL_ROOT/$SUBSYS_DIR/$PLTFRM_DIR/scripts"
+
+LD_LIBRARY_PATH=/lib:/usr/lib:/usr/ucblib:INSTALL_ROOT/$SUBSYS_DIR/$PLTFRM_DIR/lib:INSTALL_ROOT/$SUBSYS_DIR/$PLTFRM_DIR/CommonLib/EmsLib:INSTALL_ROOT/$SUBSYS_DIR/$PLTFRM_DIR/CommonLib/Ss7StackLib:INSTALL_ROOT/$SUBSYS_DIR/$PLTFRM_DIR/CommonLib/OtherLib:INSTALL_ROOT/$SUBSYS_DIR/$PLTFRM_DIR/CommonLib/TaoLib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH
+
+if [ ! $DISPLAY ]
+then
+    export DISPLAY=DISP_MACHINE:0.0
+fi

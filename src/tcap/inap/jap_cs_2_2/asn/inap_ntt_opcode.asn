@@ -1,0 +1,78 @@
+NTT-INAP-1998-operationcodes 
+DEFINITIONS ::=
+BEGIN
+IMPORTS
+ros-InformationObjects
+FROM NTT-INAP-1998-object-identifiers
+
+Code
+FROM Remote-Operations-Information-Objects ros-InformationObjects
+;
+-- Operations are grouped in each operation package.
+-- SCF invoking package
+opcode-initialDP Code ::= local : 0
+-- Basic BCP DP package
+-- Advanced BCP DP package
+-- SCF/SRF assist active package
+-- Assist connection-establishing package
+-- General resource disconnecting package
+-- NTT-INAP-1998-Genral resource disconnecting package
+opcode-disconnectForwardConnectionWithParameter Code ::= local : -30
+-- Non-assist connection-establishing package
+opcode-connectToResource Code ::= local : 19
+-- Connection package (Basic SSF function)
+opcode-connect Code ::= local : 20
+-- Call processing package (Basic SSF function)
+-- NTT-INAP-1998 call processing package (Basic SSF function)
+opcode-releaseCall Code ::= local : 22
+-- BCSM event processing package
+opcode-requestReportBCSMEvent Code ::= local : 23
+opcode-eventReportBCSM Code ::= local : 24
+-- Charging event processing package
+-- SSF call processing package
+-- NTT-INAP-1998 SSF call processing package
+opcode-continue Code ::= local : 31
+-- NTT-INAP-1998 extended SSF call processing package
+opcode-authorizeOrigination Code ::= local : -27
+-- SCF call invoking package
+-- Timer package
+-- Charge recording package
+opcode-furnishChargingInformation Code ::= local : 34
+-- Charging package
+opcode-applyCharging Code ::= local : 35
+opcode-applyChargingReport Code ::= local : 36
+-- Status reporting package
+-- Traffic managing package
+-- Service managing package
+-- Call reporting package
+-- Signal controlling package
+opcode-sendChargingInformation Code ::= local : 46
+-- Special resource controlling package
+opcode-playAnnouncement Code ::= local : 47
+opcode-promptAndCollectUserInformation Code ::= local : 48
+opcode-specializedResourceReport Code ::= local : 49
+-- Cancel package
+opcode-cancel Code ::= local : 53
+opcode-cancelStatusReportRequest Code ::= local : 54
+-- Activity test package
+opcode-activityTest Code ::= local : 55
+-- CPH response package
+-- Exception notifying package
+-- NTT-INAP-1998 exception notifying package
+opcode-callSegmentCleared Code ::= local : -1
+-- Trigger managing package
+-- USI processing package
+-- Facility information element processing package
+opcode-sendFacilityInformation Code ::= local : 102
+opcode-requestReportFacilityEvent Code ::= local : 103
+opcode-eventReportFacility Code ::= local : 104
+-- SRF/SCF interface
+-- SCF/SCF interface
+-- CUSF/SCF interface
+-- NTT-INAP-1998 CUSF/SCF interface
+opcode-activationReceivedAndAuthorized Code ::= local : -8
+opcode-componentReceived Code ::= local : -28
+opcode-releaseAssociation Code ::= local : -10
+opcode-requestReportBCUSMEvent Code ::= local : -29
+opcode-sendComponent Code ::= local : -9
+END

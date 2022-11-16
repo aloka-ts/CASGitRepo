@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- ======================================================================= -->
+<!-- ======= Diameter Protocol Dictionary for the 3GPP Ro interface ======== -->
+<!-- =================== Based on 3GPP TS32.299 V14.6.0 ==================== -->
+<!-- ======================================================================= -->
+
+<dictionary>
+
+ <vendor id="193" name="Ericsson">
+    <!-- =================================================================== -->
+    <!-- ===================== Ro ETSI Specific AVP's ====================== -->
+    <!-- =================================================================== -->
+
+    <!-- Ref = [ETSI - ES283.034] 7.3.3 -->
+    <avp name="Announcement-Instructions" code="1441" mandatory="may" may-encrypt="yes"
+      vendor-specific="yes" >
+       <grouped>
+        <gavp name="Announcement-Number"/>
+        <gavp name="Announcement-Order"/>
+        <gavp name="Announcement-Type"/>
+      </grouped>
+    </avp>
+	
+	<!-- Ref = [ETSI - ES283.034] 7.3.3 -->
+    <avp name="Announcement-Number" code="1442" mandatory="may" may-encrypt="yes"
+      vendor-specific="yes" >
+       <type type-name="Unsigned32" />
+    </avp>
+
+    <!-- Ref = [ETSI - ES283.034] 7.3.14 -->
+    <avp name="Announcement-Order" code="1443" mandatory="may" may-encrypt="yes"
+      vendor-specific="yes" >
+       <type type-name="Unsigned32" />
+    </avp>
+
+   <avp name="Announcement-Type" code="1448" mandatory="may" may-encrypt="yes"
+      vendor-specific="yes" >
+      <type type-name="Unsigned32" />
+    </avp>
+
+  </vendor>
+
+</dictionary>

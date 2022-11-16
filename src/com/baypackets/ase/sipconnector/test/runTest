@@ -1,0 +1,6 @@
+#!/bin/ksh
+
+. env.sh
+
+$JAVA_HOME/bin/java -cp $ASE_CLASSPATH $@
+

@@ -1,0 +1,20 @@
+RULES  = lib
+
+CXXFLAGS.debug:=-g
+
+EXTRA_RULES += vbroker
+
+TARGET = libINGwInfraParamRepository
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+#include ../commondefs/ccm-config.def
+
+SRCS = INGwInfraParamRepository/INGwIfrPrParamRepository.C   \
+			 INGwInfraParamRepository/INGwIfrPrConfigMgr.C
+
+HDRS = INGwInfraParamRepository/INGwIfrPrConfigMgr.h			\
+			 INGwInfraParamRepository/INGwIfrPrIncludes.h				\
+			 INGwInfraParamRepository/INGwIfrPrParamOid.h				\
+			 INGwInfraParamRepository/INGwIfrPrParamRepository.h\
+			 INGwInfraParamRepository/INGwIfrPrParamRepository.icc

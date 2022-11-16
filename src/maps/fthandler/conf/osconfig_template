@@ -1,0 +1,5 @@
+#!/bin/ksh
+ 
+echo "ft:2345:respawn:INSTALL_ROOT/MmAppProvServer/scripts/fthandler.sh > LOG_LOCATION/fth.log" >> /etc/inittab
+#init q
+echo "SUCCESS"

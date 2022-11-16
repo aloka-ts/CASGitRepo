@@ -1,0 +1,14 @@
+RULES  = lib
+TARGET = libstub_INGwIwf
+
+CXXFLAGS.debug:=-O5
+
+#include ../INGwCommonDefs/telesys-stack.def
+#include ../INGwCommonDefs/trillium-ainstack.def
+include ../INGwCommonDefs/ccpu-stack.def
+include ../INGwCommonDefs/hss-sipstack.def
+
+SRCS = stub_INGwIwf/stub_INGwIwfIface.C				 \
+       stub_INGwIwf/stub_INGwIwfProvider.C
+
+HDRS = $(wildcard */*.h)

@@ -1,0 +1,151 @@
+BUILD INFORMATION
+
+######## STANDARD VERSION ########
+
+SunOS gbidcsun29_1 5.10 Generic_125100-07 sun4v sparc SUNW,Sun-Fire-T200
+java version "1.6.0_17"
+Java(TM) SE Runtime Environment (build 1.6.0_17-b04)
+Java HotSpot(TM) Server VM (build 14.3-b01, mixed mode)
+uid=10242(reeta) gid=10(staff)
+gbidcsun29_1
+Fri Sep  5 15:17:07 IST 2014
+
+----CONFIG SPECS----
+
+element * CHECKEDOUT
+element * .../Sipservlet_reeta_jcom_2/LATEST
+
+
+element * THIRDPARTY_SIMPLE_RAC_FAN
+element * THIRDPARTY_PPD_PROD_00122610
+element * THIRDPARTY_AXIS_WAR_UPGRADE
+element * THIRDPARTY_MYSQL_DB_FT
+element * THIRDPARTY_JARS
+element * THIRDPARTY_OPENBLOX3.2.2
+element * THIRDPARTY_TOMCAT_7.0.30
+element * THIRDPARTY_PAC
+element * THIRDPARTY_MYSQL5.1_SUPPORT
+element * THIRDPARTY_MYSQL_POOLED_DATASOURCE
+element * THIRDPARTY_SR_100_INVITE
+element * THIRDPARTY_DEV_BUG_FIX_160413
+element * THIRDPARTY_DISABL_NOTIFY_REJECT_SHUTDOWN_VER2
+element * THIRDPARTY_DISABL_NOTIFY_REJECT_SHUTDOWN
+element * THIRDPARTY_SAS_WARMUP
+element * THIRDPARTY_DEV_TIMER_WAIT
+element * THIRDPARTY_DEV_STACK_PERF
+element * THIRDPARTY_STACK_CODE_OPT
+element * THIRDPARTY_JGROUPS2.6
+element * THIRDPARTY_CALLBACK_THREAD_CHANGES
+element * THIRDPARTY_DEV_DATAI_LOG
+element * THIRDPARTY_DEV_SIP_TORTURE
+element * THIRDPARTY_DEV_ACTIVEMQ_LOG
+element * THIRDPARTY_DEV_ACTIVEMQ
+element * THIRDPARTY_DATAI_THREAD_CHANGES
+element * THIRDPARTY_PRIORITY_THREAD_CHANGES
+element * THIRDPARTY_SPRING_3.0.6
+element * THIRDPARTY_MINEXPIRES
+element * THIRDPARTY_SPRING_CONTEXT_2.5.6
+element * THIRDPARTY_FT_CHANGES
+element * THIRDPARTY_REL40_P65
+element * THIRDPARTY_APACHE_COMMONS_NET_3.0.1
+element * THIRDPARTY_JAVAMAIL_1.4
+element * THIRDPARTY_JCRAFT_SSH_0.1.44
+element * THIRDPARTY_SPRING_JDBC_2.5.6
+element * THIRDPARTY_HEADERFORM
+element * THIRDPARTY_IPv6
+element * THIRDPARTY_ACTIVEMQ_MGMT
+element * THIRDPARTY_NSN_SCE
+element * THIRDPARTY_MULTIHOME
+element * THIRDPARTY_LATENCY
+element * THIRDPARTY_OPENBLOX
+element * THIRDPARTY_SAS7.0_JMS
+element * THIRD_PARTY_SIP_SERVLET_1.1
+element * THIRDPARTY_SAS60_P03
+element * THIRDPARTY_SAS68_SCEB01
+element * ALC_SCE_SPRINT1
+element * THIRDPARTY_SAS60_P02
+element * THIRDPARTY_SAS60_P01
+element * THIRDPARTY_SAS60
+element * BASELINE_THIRDPARTY_100407
+
+element * COM7.5.6.20
+element * COM7.5.6.19
+element * COM7.5.6.18
+element * COM7.5.6.17
+element * COM7.5.6.16
+element * COM7.5.6.15
+element * COM7.5.6.14
+element * COM7.5.6.13
+element * COM7.5.6.12
+element * COM7.5.6.11
+element * COM7.5.6.10
+element * COM7.5.6.9
+element * COM7.5.6.8
+element * COM7.5.6.7
+element * COM7.5.6.6
+element * COM7.5.6.5
+element * COM7.5.6.4
+element * COM7.5.6.3
+element * COM7.5.6.2
+element * COM7.5.6.1
+element * COM7.5.6
+element * COM7.5.4.1
+element * COM7.5.4
+element * COM7.5.3
+element * COM7.5.2
+element * COM7.5.1
+element * COM7.0.12
+element * COM7.0.11
+element * COM7.0.10
+element * COM7.0.9
+element * COM7.0.8
+element * COM7.0.5
+element * COM7.0.4
+element * COM7.0.3
+element * COM7.0.2
+element * COM7.0.1
+element * COM7.0.0
+
+element * DEV_wEMS_COMPONENT_VERSION_CHANGES
+element * MEAS_MGR_COUNTER
+element * DEV_wEMS_LOG_CHANGES
+element * DEV_WEB_EMS_BRANDING 
+element * EMS_LITE_CHANGES
+element * EMSLITE_CALL_TRACE_CHANGES
+element * NSP_SAS7.5.19
+element * NSP_SAS7.5.18
+element * NSP_SAS7.5.17
+element * NSP_SAS7.5.16
+element * NSP_SAS7.5.15
+element * NSP_SAS7.5.14
+element * NSP_SAS7.5.13
+element * NSP_SAS7.5.12
+element * NSP_SAS7.5.11
+element * NSP_SAS7.5.10
+element * NSP_SAS7.5.3
+element * NSP_SAS7.5.2
+element * NSP_SAS7.5.1
+element * NSP_SAS7.5.0.2
+element * NSP_SAS7.0.0.16
+element * NSP_SAS7.5.0.1
+element * NSP_SAS7.0.0.13
+element * NSP_SAS6.0.0.14
+element * NSP_SAS6.0.0.9_HOT_FIX
+element * NSP_SAS6.0.0.9
+element * NSP_SAS6.0.0.6
+element * NSP_SAS6.0.0.5
+
+element * CAS8.0.15.3
+element * CAS8.0.15.2
+element * CAS8.0.15.1
+element * CAS8.0.15.0
+
+
+
+element * .../del_dev_sbtm/LATEST -mkbranch Sipservlet_reeta_jcom_2
+element * BASELINE_FOR_SAS8.0 -mkbranch del_dev_8.0
+element * .../del_dev_sbtm/0 -mkbranch del_dev_8.0
+element * .../del_dev_7.0/BASELINE_FOR_SAS8.0  -mkbranch del_dev_sbtm
+element * .../del_dev_7.0/0 -mkbranch del_dev_sbtm
+element * /main/BASELINE_SBTM -mkbranch del_dev_sbtm
+element * /main/LATEST -mkbranch del_dev_sbtm

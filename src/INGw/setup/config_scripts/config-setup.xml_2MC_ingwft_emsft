@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Config_Setup>
+
+<ConfigSection>
+
+	<!--We are dividing the host attributes into two sets of information, first one 
+containing the physical host information while the second part contain the inter face 
+information on the host.-->
+
+	<!--Following is the physical information of the HOST. Here the HOSTID will 
+identify a host in the network, while CPU specifies the no of CPUs the host will have. 
+RAM will specify the RAM size, in MB, on this host. OS_VER will specify the version of 
+the OS, which is installed on the host.-->
+
+	<Hosts>
+		<Host HostId="H1">
+                <AttributeList>
+                   <Attribute Name="CPU" Value="2"/>
+                   <Attribute Name="RAM" Value="3200"/>
+                   <Attribute Name="OS_VER" Value="5.10"/>
+                   <Attribute Name="OS_TYPE" Value="SunOS"/>
+                   <Attribute Name="DisplayName" Value="agidcsun11"/>
+                </AttributeList>
+                </Host>
+		<Host HostId="H2">
+                <AttributeList>
+                   <Attribute Name="CPU" Value="1"/>
+                   <Attribute Name="RAM" Value="3200"/>
+                   <Attribute Name="OS_VER" Value="5.10"/>
+                   <Attribute Name="OS_TYPE" Value="SunOS"/>  
+                   <Attribute Name="DisplayName" Value="agidcsun12"/>
+                </AttributeList>
+                </Host> 
+		<Host HostId="H3">
+                <AttributeList>
+                   <Attribute Name="CPU" Value="1"/>
+                   <Attribute Name="RAM" Value="500"/>
+                   <Attribute Name="OS_VER" Value="5.10"/>
+                   <Attribute Name="OS_TYPE" Value="SunOS"/>  <!-- Can be Linux or 
+SunOS-->
+                   <Attribute Name="DisplayName" Value="bpsun76"/>
+                </AttributeList>
+            </Host>
+		<Host HostId="H4">
+                <AttributeList>
+                   <Attribute Name="CPU" Value="1"/>
+                   <Attribute Name="RAM" Value="500"/>
+                   <Attribute Name="OS_VER" Value="5.10"/>
+                   <Attribute Name="OS_TYPE" Value="SunOS"/>  <!-- Can be Linux or 
+SunOS-->
+                   <Attribute Name="DisplayName" Value="bpsun103"/>
+                </AttributeList>
+            </Host>
+	</Hosts>
+
+	<!--In the following description we assume that the two hosts H1 and H2 have one 
+interface each (IF11 and IF12). The interface IF11 and IF21 are for accessing EMS from 
+the outside world (e.g. OSS, SNMP), signaling (SIP, MGCP), mgmt-s (i.e. for connectivity 
+bw EMS and other component), messaging and provisioning traffic, i.e. LDAP, IMAP and 
+HTTP traffic. The Enums are like
+	0- None
+	1- Management North
+	2- Management South
+	3- Signaling
+	4- Messaging
+	5- Provisioning -->
+	
+	<Interfaces>
+		<Interface IFID="IF11" HostId="H1" Name="agidcsun11" IP="10.32.10.11" 
+Intf="0" Intf_Type=",1,2,3,5"/>
+                <Interface IFID="IF21" HostId="H2" Name="agidcsun12" IP="10.32.10.16" 
+Intf="0" Intf_Type=",1,2,3,5"/>
+		<Interface IFID="IF31" HostId="H3" Name="bpsun76" IP="10.32.8.31" 
+Intf="0" Intf_Type="0,3"/>
+                <Interface IFID="IF41" HostId="H4" Name="bpsun103" IP="10.32.8.32" 
+Intf="0" Intf_Type="0,3"/>
+	</Interfaces>
+
+	<!--Following is the database machine details with the Service Name (SVCNAME). 
+Here we are keeping reference to the HOSTID. All the parameters are self-explanatory.-->
+
+	<!--Here again, we can keep the oracle passwords with DB HOST info. For the same 
+reason we haven't done so, these passwords will be prompted to the user.-->
+
+	<Databases>
+	  <Database DBID="DB1" HOSTID="H3" SVCNAME="n1db.idc.genband.com"  
+VERSION="10.2.0.4.0" ADMIN_PASSWD="oracle123" USER_PASSWD="USER_PASSWD" />
+          <Database DBID="DB2" HOSTID="H4" SVCNAME="n1db.idc.genband.com"  
+VERSION="10.2.0.4.0" ADMIN_PASSWD="oracle123" USER_PASSWD="USER_PASSWD" />
+	</Databases>
+
+        <DB_USERS>
+          <DB_USER UserId="EMS" Name="EMSCAMEL20" Passwd="ems"/>
+          <DB_USER UserId="SAS" Name="SASCAMEL20" Passwd="sas"/> 
+        </DB_USERS>
+
+	<!--Following is the info related to the IVRs, here we are keeping all the 
+necessary information about the IVR.-->
+	<!--TYPE can be one of the following 
+	COG - 1
+	IPUNITY - 2
+	SS - 3
+	AIN - 4
+	CONVEDIA/SIP - 5
+	CONVEDIA/MGCP - 6
+	AUDIOCODES - 7
+
+	MSG_TYPE could be one of the following
+	NONE - 0
+	URL - 1
+	TRACK - 2
+	CONVERGENCE - 3 -->
+
+   	 <IVRS>
+		<IVR IVRID="IVR1" MSG_TYPE="CONVERGENCE" BASE_DIR="/home/ngin/Ann/bpfs" 
+TYPE="5" IP="192.168.12.50" PORT="5060" URL_PREFIX="file://"/>
+   	 </IVRS>
+
+	<ANNOUNCEMENT_SERVERS>
+		<ANNOUNCEMENT_SERVER SERVER_ID="ANN1" STORAGE_PATH="/export/bpfs/ekcAnn" 
+SERVER_IP="192.168.12.33" USER="root" PASSWORD="abc123" />
+	</ANNOUNCEMENT_SERVERS>
+
+	<!--Following are the entries for AIN signaling gateways. The attributes are 
+self-explanatory.-->
+	<AIN_SGS>
+		<AIN_SG SGID="SG1" IP="0.0.0.0" PORT="SGP1" TRANSPORT_TYPE="1"/>
+		<AIN_SG SGID="SG2" IP="0.0.0.0" PORT="SGP2" TRANSPORT_TYPE="1"/>
+	</AIN_SGS>
+
+	<!--Following are the entries for outbound SIP gateways. The attributes are 
+self-explanatory.-->
+        <OB_SIP_GWS>
+                <OB_SIP_GW GWID="OB1" IP="10.32.4.97" PORT="5060"/>
+                <OB_SIP_GW GWID="OB2" IP="10.32.4.98" PORT="5060"/>
+        </OB_SIP_GWS>
+
+	<!--Following are some miscellaneous entries required for the installation. 
+These entries are such that the user might wish to change them but not necessarily-->
+
+	<Misc>
+		<UnixUser UserName="sas" Passwd="sas" Group="other" HomeDir="/home/sas" 
+Shell="bash"/>
+
+		<OracleClientInfo ORACLE_HOME="/AGNITY/Aconyx/11gclient/client32/" 
+ORACLE_VERSION="11.2.0.1.0"/>
+
+		<JDK>
+			<JDKInfo JDK_ID="JDK1.6" VERSION="1.6.0_21" 
+JDK_HOME="/usr/java"/>
+		</JDK>
+
+		<REF_IPS>
+			<REF_IP REF_IP_ID="REF_IP1" IP="10.32.10.1"/>
+		</REF_IPS>
+
+		<FIPS>
+			<FIP FIP_ID="FIP_EMS" TYPE="EMS" IP="10.32.10.102"/>
+			<FIP FIP_ID="FIP_SAS" TYPE="SAS" IP="10.32.10.110"/>
+			<FIP FIP_ID="FIP_INGW" TYPE="INGW" IP="10.32.10.53"/>
+		</FIPS>
+		
+		<MULTICAST_IPS>
+			<MULTICAST_IP MULTICAST_IP_ID="MULTICAST_IP1" TYPE="SMS" 
+IP="228.1.2.172"/>			
+		</MULTICAST_IPS>
+                
+		<REPORT_SERVERS>
+	         <REPORT_SERVER REPORT_SERVER_ID="REPORT_SERVER1" TYPE="SMS" 
+IP="0.0.0.0" port="7777"/>
+           <REPORT_SERVER REPORT_SERVER_ID="REPORT_SERVER2" TYPE="SMS" IP="0.0.0.0" 
+port="7777"/> 
+    </REPORT_SERVERS>
+
+
+<CLUSTERS>
+     <CLUSTER CLU_ID="CLU1" NAME="EMS" REGION="INDIA"/>
+     <CLUSTER CLU_ID="CLU2" NAME="SAS" REGION="INDIA"/>
+     <CLUSTER CLU_ID="CLU3" NAME="INGW" REGION="INDIA"/> 
+</CLUSTERS>
+
+		<CONTACT_INFO>
+			<INFO CON_INFO_ID="CON1" Name="CONTACT PERSON" 
+Phone_Number="2598772" Mail_Id="contact.person@xyz.com" Address="C-42 XYZ Inc, INDIA"/>
+		</CONTACT_INFO>
+	</Misc>
+
+</ConfigSection>
+
+<SetupSection>
+
+	<!--The values of different parameters will refer the above section (SECTION-1), 
+until/unless specified, here only the Ids will be mentioned for the corresponding 
+section. For details please refer the example section.-->
+
+	<!--This is the first cluster that will contain EMS only-->
+ 
+	<Cluster value="CLU1">
+		 <System Name="EMS" Type="rsiEms" BuildDir="EMS_BUILD">                  
+                   
+			<CONTACT_INFO value="CON1"/>
+			<INSTALLATION_TYPE value="FT"/>
+			<INSTALL_ROOT value="/home/sas/Installer/EMS_INSTALL"/>
+			<HOSTS value="H1,H2"/>
+			<DB_USER value="EMS"/>
+			<DBS value="DB1,DB2"/>
+			<SNMP_AGENT_PORT value="5161"/>        
+			<DB_HOST_SNMP_PORT value="5161"/>     
+			<DB_SNMP_PORT value="3161"/>         
+			<LICENSE_KEY value="99819C31N3788949"/>
+			<AIN_FEATURE value="enabled"/>
+			<ANSI_ENABLED value="false"/>
+			<ITU_ENABLED value="true"/>
+			<DBFT_STATUS value="3"/>
+			<FIP value="FIP_EMS"/>
+			<REF_IPS value="REF_IP1"/>
+			<CREATE_NEW_TABLES value="Y"/> 
+		</System>
+	</Cluster>
+
+ 
+  <Cluster value="CLU2">
+          <System Name="SAS" Type="rsiAse" BuildDir="SAS_BUILD/SipServlet7.5.7">
+            <INSTALLATION_TYPE value="FT"/>
+            <INSTALL_ROOT value="/home/sas/Installer/SAS_INSTALL"/>
+            <HOSTS value="H1,H2"/>
+            <DB_USER value="SAS"/>
+            <DBS value="DB1,DB2"/>
+            <REF_IPS value="REF_IP1"/>
+            <INGW_LIST value="FIP_INGW:5070"/>
+            <DBFT_STATUS value="3"/>  
+         <Subsystems>
+          <Subsystem Type="ASE Subsystem" Hosts="H1,H2" Fips="FIP_SAS" Jdk_Ver="JDK1.6" 
+/>
+         </Subsystems>
+        </System>
+       </Cluster>
+
+    
+<Cluster value="CLU3">
+                <System Name="INGW" Type="rsiIngw" BuildDir="INGW_BUILD/INGw7.5.2">
+                <INSTALLATION_TYPE value="FT"/>
+                <INSTALL_ROOT value="/home/sas/Installer/INGW_INSTALL"/>
+                <HOSTS value="H1,H2"/>
+                <REF_IPS value="REF_IP1"/>
+                <SAS_FIP_LIST value="FIP_SAS"/>
+                <Subsystems>
+                   <Subsystem Type="INGw" Hosts="H1,H2" Fips="FIP_INGW" Jdk_Ver="JDK1.6" 
+/>
+                </Subsystems>
+                <!-- The format of data for corresponding OID 32.2.5 should be as 
+follows OPC,OSSN,ApplicationId,ProtocolVariant Sample data: 0-15-0,146,1,JAPAN -->
+                  <Ss7AppInfo checkString="opc,ssn,Id,protocol_variant">
+                      <App opc="0-3-25" ssn="146" Id="1" protocol_variant="JAPAN" />
+                   </Ss7AppInfo>
+                   <SS7_STACK_FT_MODE value="2"/>
+                <SIP_FIREWALL_ADDRESS value="FIP_SAS"/>
+                </System>
+        </Cluster>
+</SetupSection>
+</Config_Setup>

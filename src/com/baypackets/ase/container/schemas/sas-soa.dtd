@@ -1,0 +1,77 @@
+<!-- The soa element is the root of the 
+deployment descriptor for SOA Framework -->
+<!ELEMENT soa ( display-name, description?, service*,
+	application?, init-param* )>
+
+<!-- name specifies the Display Name of the SOA Service.
+Name should not have any white spaces in it. -->
+<!ELEMENT display-name ( #PCDATA ) >
+
+<!-- description specifies the textual information.-->
+<!ELEMENT description ( #PCDATA ) >
+
+<!-- Service specifies the SOA service which is part of the DD.
+A SOA Service archive can have more than one services in the same package.
+If one service wants to expose more then one interface to its clients,
+its declares it using different service element in the DD. -->
+<!ELEMENT service ( service-name?, service-api,
+	service-impl, notification-api ) >
+
+
+<!-- It indicates the service name.-->
+<!ELEMENT service-name ( #PCDATA ) >
+
+
+<!-- Describes the fully qualified name of the Service interface exposed by the Service.
+This interface will be visible to the clients of this perticular service. -->
+<!ELEMENT service-api ( #PCDATA ) >
+
+<!-- Describes the fully qualified name of the implementation 
+class of the service. Service developer may not provide the 
+implementation class in the DD and may wish to register itself. -->
+<!ELEMENT service-impl ( #PCDATA ) >
+
+<!-- This is fully qualified name of the notification interface.
+All the clients who are interested on notification will implement 
+this interface. -->
+<!ELEMENT notification-api ( #PCDATA ) >
+
+<!ELEMENT application ( app-name?, main-class, main-method?, listener*) >
+
+<!-- name of the application-->
+<!ELEMENT app-name ( #PCDATA ) >
+
+<!-- main-class which will be used in case of pure application -->
+<!ELEMENT main-class ( #PCDATA ) >
+
+<!-- main method which will be used in case of pure application.
+SOA framework will invoke this method of the main-class in a 
+separate thread to launch the application. -->
+<!ELEMENT main-method ( #PCDATA ) >
+
+<!-- fully qualified name of all the listener interfaces used by application -->
+<!ELEMENT listener ( listener-api, listener-impl, listener-uri ) >
+
+<!--name of the listener api exposed by application-->
+<!ELEMENT listener-api ( #PCDATA ) >
+
+<!--name of listener impl class given by app-->
+<!ELEMENT listener-impl ( #PCDATA ) >
+
+<!--uri as string -->
+<!ELEMENT listener-uri ( #PCDATA ) >
+
+<!-- Describes the init parameters-->
+<!ELEMENT init-param ( param-name, param-value ) >
+
+<!-- name of the parameter-->
+<!ELEMENT param-name (#PCDATA ) >
+
+<!-- value of the parameter-->
+<!ELEMENT param-value (#PCDATA ) >
+
+<!-- Fully qualified name of the Custom listener type -->
+<!ELEMENT listener-class ( #PCDATA ) >
+
+<!ATTLIST service-api annotated (true | false) "false" >
+

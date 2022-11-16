@@ -1,0 +1,615 @@
+/*******************************************************************************
+ *   Copyright (c) 2014 Agnity, Inc. All rights reserved.
+ *   
+ *   This is proprietary source code of Agnity, Inc. 
+ *   
+ *   Agnity, Inc. retains all intellectual property rights associated 
+ *   with this source code. Use is subject to license terms.
+ *   
+ *   This source code contains trade secrets owned by Agnity, Inc.
+ *   Confidentiality of this computer program must be maintained at 
+ *   all times, unless explicitly authorized by Agnity, Inc.
+ *******************************************************************************/
+package com.agnity.ain.operations;
+
+import jain.protocol.ss7.SignalingPointCode;
+import jain.protocol.ss7.tcap.ComponentIndEvent;
+import jain.protocol.ss7.tcap.TcapConstants;
+import jain.protocol.ss7.tcap.component.ErrorIndEvent;
+import jain.protocol.ss7.tcap.component.InvokeIndEvent;
+import jain.protocol.ss7.tcap.component.Operation;
+import jain.protocol.ss7.tcap.component.RejectIndEvent;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.bn.CoderFactory;
+import org.bn.IDecoder;
+import org.bn.IEncoder;
+import org.bn.exceptions.IndefiniteLengthNotSupportedException;
+
+import com.agnity.ain.asngenerated.AnalyzeRouteArg;import com.agnity.ain.asngenerated.AuthorizeTerminationArg;
+import com.agnity.ain.asngenerated.CloseArg;
+import com.agnity.ain.asngenerated.ConnectToResourceArg;import com.agnity.ain.asngenerated.ContinueArg;import com.agnity.ain.asngenerated.DisconnectArg;import com.agnity.ain.asngenerated.FailureOutcomeArg;import com.agnity.ain.asngenerated.ForwardCallArg;
+import com.agnity.ain.asngenerated.InfoAnalyzedArg;import com.agnity.ain.asngenerated.InfoCollectedArg;import com.agnity.ain.asngenerated.NetworkBusyArg;import com.agnity.ain.asngenerated.OAbandonArg;
+import com.agnity.ain.asngenerated.OAnswerArg;import com.agnity.ain.asngenerated.ODisconnectArg;
+import com.agnity.ain.asngenerated.ONoAnswerArg;import com.agnity.ain.asngenerated.OTermSeizedArg;
+import com.agnity.ain.asngenerated.RequestReportBCMEventArg;import com.agnity.ain.asngenerated.ResourceClearArg;
+import com.agnity.ain.asngenerated.SendToResourceArg;//import com.agnity.ain.asngenerated.ConnectArg;//import com.agnity.ain.asngenerated.FCIBillingChargingCharacteristics;//import com.agnity.ain.asngenerated.FurnishChargingInformationArg;
+import com.agnity.ain.asngenerated.TerminationAttemptArg;
+
+//import com.agnity.inapitutcs2.asngenerated.ConnectExtension;
+//import com.agnity.ain.asngenerated.DisconnectForwardConnectionWithArgumentArg;
+//import com.agnity.ain.asngenerated.EntityReleasedArg;
+//import com.agnity.ain.asngenerated.EstablishTemporaryConnectionArg;
+//import com.agnity.inapitutcs2.asngenerated.EstablishTemporaryConnectionExtension;
+//import com.agnity.ain.asngenerated.EventNotificationChargingArg;
+//import com.agnity.ain.asngenerated.EventReportBCSMArg;
+//import com.agnity.ain.asngenerated.InitialDPArg;
+//import com.agnity.inapitutcs2.asngenerated.InitialDPExtension;
+//import com.agnity.ain.asngenerated.ReleaseCallArg;
+//import com.agnity.ain.asngenerated.RequestNotificationChargingEventArg;
+//import com.agnity.ain.asngenerated.RequestReportBCSMEventArg;
+//import com.agnity.inapitutcs2.asngenerated.RestartNotificationAcknowledgementArg;
+//import com.agnity.inapitutcs2.asngenerated.RestartNotificationArg;
+//import com.agnity.ain.asngenerated.SendChargingInformationArg;
+//import com.agnity.ain.datatypes.ErrorRejectTypeArg;
+//import com.agnity.ain.datatypes.RestartNodeId;
+import com.agnity.ain.enumdata.ErrorRejectEnum;
+import com.agnity.ain.util.Util;
+
+/**
+ * This class contains methods for decoding and encoding of 
+ * AIN operations (i.e. Info-Analyze,Analyze-Route, etc.). 
+ * @author nishantsharma
+ *
+ */
+public class AinOperationsCoding {
+
+	private static Logger logger = Logger.getLogger(AinOperationsCoding.class);
+
+	public static byte[] hexStringToByteArray(String s) {    
+		int len = s.length();    
+		byte[] data = new byte[len / 2];     
+		for (int i = 0; i < len; i += 2) {        
+			data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)  + Character.digit(s.charAt(i+1), 16));    
+		}    
+		return data;
+	}
+
+	static public void warmup() {
+
+		try {
+			logger.error("AinOperationsCoding...starting warmup.");
+			String bufferIDP = "306680012c82078610219091330783078313535515110185010aab068001008101028e0100af3530330201fea12e302c810481230000820783142190913307830f02fb05fe03000231f805fe030022538404fd01fc088504812300009a022001bb038101009c0103";
+			String bufferSCI = "300e8007af05a003800101a103800101";
+			String bufferRNCE = "301b3019800faf0da00ba0090a01000a01020a0103810101a203800102";
+			String bufferRRBE = "3039a0373006800107810101300b800106810100be03810114300b800109810101a203800101300b800109810101a203800102300680010a810101";
+			String bufferConnect = "302da009040703108999999999aa1830160201ff0a0100a10e300ca10a800802fa05fe03000231af068701008b0100";
+			String bufferENC = "3042800faf0da00ba0090a01000a01020a0103812aaf28a026a024801800fc05fe03000231fe0efe03002253fd0480230000fc010282021604830481230000a203810102";
+			String bufferERB = "3018800109a209a7078002849081017da303810101a403800101";
+			//String bufferRC = "01060D020010C930";
+			//String bufferER = "60a003800101";
+
+
+			Object objLinkListIDP = decodeOperationsForOpCode(hexStringToByteArray(bufferIDP), AinOpCodes.IDP);			Object objLinkListSCI = decodeOperationsForOpCode(hexStringToByteArray(bufferSCI), AinOpCodes.SCI);
+			Object objLinkListRNCE = decodeOperationsForOpCode(hexStringToByteArray(bufferRNCE), AinOpCodes.RNCE);
+			Object objLinkListRRBE = decodeOperationsForOpCode(hexStringToByteArray(bufferRRBE), AinOpCodes.RRBE);
+			Object objLinkListCONNECT = decodeOperationsForOpCode(hexStringToByteArray(bufferConnect), AinOpCodes.CONNECT);
+			Object objLinkListENC = decodeOperationsForOpCode(hexStringToByteArray(bufferENC), AinOpCodes.ENC);
+			Object objLinkListERB = decodeOperationsForOpCode(hexStringToByteArray(bufferERB), AinOpCodes.ERB);
+			//Object objLinkListRC = decodeOperationsForOpCode(hexStringToByteArray(bufferRC), AinOpCodes.RELEASE_CALL);
+			//Object objLinkListER = decodeOperationsForOpCode(hexStringToByteArray(bufferER), AinOpCodes.ER);
+
+			LinkedList<Object> opObjLinkList =  new LinkedList<Object>();
+			opObjLinkList.add(objLinkListIDP);
+			opObjLinkList.add(objLinkListSCI);
+			opObjLinkList.add(objLinkListRNCE);
+			opObjLinkList.add(objLinkListRRBE);
+			opObjLinkList.add(objLinkListCONNECT);
+			opObjLinkList.add(objLinkListENC);
+			opObjLinkList.add(objLinkListERB);
+			//opObjLinkList.add(objLinkListRC);
+			//opObjLinkList.add(objLinkListER);
+
+			LinkedList<String> opCodesLinkList =  new LinkedList<String>();
+			opCodesLinkList.add(AinOpCodes.IDP);
+			opCodesLinkList.add(AinOpCodes.SCI);
+			opCodesLinkList.add(AinOpCodes.RNCE);
+			opCodesLinkList.add(AinOpCodes.RRBE);
+			opCodesLinkList.add(AinOpCodes.CONNECT);
+			opCodesLinkList.add(AinOpCodes.ENC);
+			opCodesLinkList.add(AinOpCodes.ERB);
+			//opCodesLinkList.add(AinOpCodes.RELEASE_CALL);
+			//opCodesLinkList.add(AinOpCodes.ER);
+
+			LinkedList<byte []> byteArrayLinkList = encodeOperations(opObjLinkList, opCodesLinkList);
+			logger.error("AinOperationsCoding...leaving warmup.");
+		} catch (Exception e) {
+			logger.error("ISUPOperationsCoding...inside warmup..." , e);
+		}
+	}
+	/**
+	 * Method is used to decode operation
+	 * @param opBuffer
+	 * @param eventObject
+	 * @return
+	 * @throws Exception
+	 */
+	public static Object decodeOperation(byte[] opBuffer, EventObject eventObject) throws Exception
+	{
+		if (logger.isInfoEnabled()) {
+			logger.info("decodeOperation:Enter");
+		}
+		Object out = null;
+		ComponentIndEvent cmpReqEvent = (ComponentIndEvent)eventObject ;
+		if (logger.isDebugEnabled()) {
+			logger.debug("decodeOperation:Primitive: " + cmpReqEvent.getPrimitiveType());		
+		}
+		try {
+			switch (cmpReqEvent.getPrimitiveType()) {
+			case TcapConstants.PRIMITIVE_INVOKE: {
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("decodeOperation:PRIMITIVE_INVOKE");
+				}
+				InvokeIndEvent receivedInvoke = (InvokeIndEvent) cmpReqEvent;
+				Operation opr = receivedInvoke.getOperation();
+				byte[] opCode = opr.getOperationCode();
+				String opCodeStr = Util.formatBytes(opCode);
+				out = decodeOperationsForOpCode(opBuffer, opCodeStr);
+				break;
+			}
+			case TcapConstants.PRIMITIVE_ERROR: {
+				if (logger.isDebugEnabled()) {
+					logger.debug("decodeOperation:PRIMITIVE_ERROR");
+				}
+				// casting to ErrorIndEvent for future purpose
+				ErrorIndEvent errorInd = (ErrorIndEvent) cmpReqEvent;
+				byte[] errorCode = errorInd.getErrorCode();
+				int errorType = errorInd.getErrorType();
+				if (logger.isDebugEnabled()) {
+					logger.debug("decodeOperation:PRIMITIVE_ERROR1");
+				}
+				break;
+			}
+			case TcapConstants.PRIMITIVE_REJECT: {
+				if (logger.isDebugEnabled()) {					logger.debug("decodeOperation:PRIMITIVE_REJECT");
+				}
+				// casting to RejectIndEvent for future purpose
+				RejectIndEvent rejectInd = (RejectIndEvent) cmpReqEvent;
+				int rejectProblem = rejectInd.getProblem();
+				int rejectProblemType = rejectInd.getProblemType();
+				break;
+			}
+			}
+		} catch (IndefiniteLengthNotSupportedException e) {
+			logger.error("Indefinite length" + e);
+			out = decodeOperation(createClassForDefiniteBuffer(opBuffer), eventObject);
+		}
+		return out;
+	}
+
+	interface DefiniteBuffer{
+		public byte[] createDefiniteBuffer(byte[] opBuffer) throws IOException;
+		public void handleIndefiniteLength(InputStream stream,int pos,byte[] opBuffer) throws IOException;
+	}
+
+	private static byte[] createClassForDefiniteBuffer(byte[] opBuffer) throws IOException{
+
+		DefiniteBuffer definiteBuffer = new DefiniteBuffer(){
+			List<Integer> delimiterIndexList = new ArrayList<Integer>();
+			int recursionCount = 0;
+			int messageLength=0;
+			boolean needToModifyMsgLength = true;
+			int indefiniteLengthCounter = 0;
+			int[] delimiterIndexes = new int[200];
+			int[] indefiniteLengthCounters = new int[200];
+			int countIndefinite =0;
+
+			public byte[] createDefiniteBuffer(byte[] opBuffer) throws IOException{
+				InputStream stream = new ByteArrayInputStream(opBuffer);
+				int adjustMsgLength=1;
+				int newMessageLength=0;
+
+				handleIndefiniteLength(stream,0,opBuffer);
+				if (needToModifyMsgLength){
+					adjustMsgLength = adjustMsgLength * (delimiterIndexList.size() * 2);
+					newMessageLength = messageLength - adjustMsgLength;
+				}
+				byte[] finalBuffer = new byte[opBuffer.length-(delimiterIndexList.size()*2)];
+				int j=0;
+				for (int i = 0; i < opBuffer.length; i++) {
+					if (delimiterIndexList.contains(i)){
+						i++;
+					}else{
+						if (i==1 && needToModifyMsgLength){
+							finalBuffer[j] = (byte) (opBuffer[i] - adjustMsgLength);
+							if (newMessageLength < 128 && messageLength > 128){
+								//if before adjustment the length of the message is greater than 128 
+								//and after adjustment less than 128 then remove additional byte from the 
+								//original array
+								i++;
+							}else if (newMessageLength > 128 && newMessageLength <256 && messageLength > 128 && messageLength < 256){
+								//no need just apply the adjustment on the first byte of the length and copy the second one as it is 
+								continue;
+							} else if(newMessageLength < 256 && messageLength > 256){
+								j++;
+								finalBuffer[j]= (byte) 129;
+								i = i+2;
+							}
+						}else{
+							finalBuffer[j] = opBuffer[i];	
+						}
+						j++;
+					}
+				}
+				return finalBuffer;
+
+			}
+			public void handleIndefiniteLength(InputStream stream,int pos,byte[] opBuffer) throws IOException {
+
+				while (stream.available() != 0) {
+					recursionCount++;
+					int tag = stream.read();
+					pos++;
+					int length = stream.read();
+					pos++;
+
+					if (tag == 0 && length == 0) {
+						//This is done to ensure that the 00(delimiters) encountered is corresponding to the last 80 indefinite length received.
+						//For instance following is the order of receiving the 80s and 00s 80 -> 80-> 00-> 80 -->80--> 00-->80 --> 00 -->00 -->00
+						// at if block for length check indefiniteLengthCounters[countIndefinite] = indefiniteLengthCounter; this ensures that 
+						//1st index has 1, 2nd index has second and the counter (countIndefinite) would be at 2 when first 00 is received and 
+						//hence the index for this delimiter would be saved corresponding to its position.
+						delimiterIndexes[indefiniteLengthCounters[countIndefinite]] =  pos - 2;
+						countIndefinite--;
+						continue;
+					}
+					if (length == 128) {
+						if (recursionCount == 1) {
+							messageLength = length;
+							//This boolean would be true in case message length is finite
+							//as it is a possibility that message with definite length can
+							//have indefinite parameters
+							needToModifyMsgLength= false;
+						}
+						indefiniteLengthCounter++;
+						countIndefinite++;
+						indefiniteLengthCounters[countIndefinite] = indefiniteLengthCounter;				
+						handleIndefiniteLength(stream, pos,opBuffer);
+
+						if (delimiterIndexList.size() == 0){
+							//only initialization at first recursion out
+							for (int i:delimiterIndexes){
+								if (i==0){
+									continue;
+								}else{
+									delimiterIndexList.add(i);
+								}
+							}
+						}
+
+						System.out.println((pos-1) + "==" + delimiterIndexes[indefiniteLengthCounter]);
+						System.out.println("indefiniteLengthCounter" + indefiniteLengthCounter);
+						int countOfInterimDelim = 0;
+						//This loop is needed to count the interim delims for the purpose of calcating the number of octets to
+						//minus while calculating the length to replace each 80
+						for (int i: delimiterIndexList){
+							if (i > pos && i < delimiterIndexes[indefiniteLengthCounter]){
+								countOfInterimDelim++;
+							}
+						}
+
+						//idpUAT1441_4[tempPos-1] = (byte) ((delimiterIndexes[indefiniteLengthCounter]-(tempPos-1)) - (count ==0 ? 0 :(count-indefiniteLengthCounter)*2));
+						opBuffer[pos - 1] = (byte) ((delimiterIndexes[indefiniteLengthCounter] - pos) - (countOfInterimDelim * 2));
+						//first recursion out has maximum delimiter value and at each recursion out it would be decremented till the time it is 1.
+						//8 --> 7 --> ...1
+						indefiniteLengthCounter--;
+
+					} else if (length > 128){
+						int result = 0;
+						int len =0;
+						for (int i = length - 128; i > 0; i--) {
+							int fBt = stream.read();
+							pos++;
+							if (fBt == -1)
+								throw new IllegalArgumentException(
+										"Unexpected EOF when decoding!");
+							result = result << 8;
+							result = result | fBt;
+							len++;
+						}
+						if (recursionCount == 1) {
+							//do not skip the buffer if the length of the idp buffer is definate
+							messageLength = length; 
+							continue;
+						}else{
+							stream.skip(result);
+							pos = pos + result;
+						}
+
+					}else{
+						if (recursionCount == 1) {
+							messageLength = length;
+							//do not skip the buffer if the whole length of the message buffer is definite
+							continue;
+						}else{
+							stream.skip(length);
+							pos = pos + length;
+						}
+					}
+				}
+
+			}
+		};
+
+		return definiteBuffer.createDefiniteBuffer(opBuffer);
+	}
+
+	/**
+	 * Metod is called to decode received event. 
+	 * @param eventObject
+	 * @return
+	 * @throws Exception
+	 */
+	public static Object decodeOperation(EventObject eventObject) throws Exception
+	{
+		if (logger.isInfoEnabled()) {
+			logger.info("decodeOperation:Enter");
+		}
+		Object out = null;
+		byte[] opBuffer = null;
+		ComponentIndEvent cmpReqEvent = (ComponentIndEvent)eventObject ;
+		if (logger.isDebugEnabled()) {
+			logger.debug("decodeOperation:Primitive: " + cmpReqEvent.getPrimitiveType());		
+		}
+		if(cmpReqEvent.getPrimitiveType() == TcapConstants.PRIMITIVE_INVOKE) {
+			InvokeIndEvent receivedInvoke = (InvokeIndEvent)cmpReqEvent; 
+			opBuffer = receivedInvoke.getParameters().getParameter();
+		}
+		return AinOperationsCoding.decodeOperation(opBuffer, eventObject);
+	}
+
+	/**
+	 * This method will decode the AIN operations and will return the 
+	 * object (of class generated from ASN) as per operation code. 
+	 * @param singleOpBuffer
+	 * @param singleOpCode
+	 * @return Object
+	 * @throws Exception 
+	 */
+	public static Object decodeOperationsForOpCode(byte[] singleOpBuffer, String singleOpCode) throws Exception
+	{
+		if (logger.isInfoEnabled()) {
+			logger.info("decodeOperationsForOpCode:Enter");
+		}
+		if(logger.isDebugEnabled()){
+			logger.debug("decodeOperationsForOpCode:Input ---> opCode:" + singleOpCode);
+		}	
+		Object out = null;
+		IDecoder decoder;
+		decoder = CoderFactory.getInstance().newDecoder("BER");
+		if (logger.isInfoEnabled()) {
+			logger.info("decodeOperationsForOpCode:decoder");
+		}
+		InputStream ins = new ByteArrayInputStream(singleOpBuffer);			
+		if(singleOpCode.equalsIgnoreCase(AinOpCodes.RESTART_NOTIFICATION)){				
+			if (logger.isInfoEnabled()) {
+				logger.info("decodeOperationsForOpCode:decoding RESTART_NOTIFICATION");
+			}
+		}
+		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.RESTART_NOTIFICATION_ACK)){				
+			if (logger.isInfoEnabled()) {
+				logger.info("decodeOperationsForOpCode:decoding RESTART_NOTIFICATION_ACK");
+			}
+		}
+		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.RELEASE_CALL)){				
+			if (logger.isInfoEnabled()) {
+				logger.info("decodeOperationsForOpCode:decoding Release Call");
+			}
+		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.FAILURE_OUTCOME)){							if (logger.isInfoEnabled()) {				logger.info("decodeOperationsForOpCode:decoding Failure Outcome");			}			out = decoder.decode(ins, FailureOutcomeArg.class);		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.INFO_ANALYZED)){							if (logger.isInfoEnabled()) {				logger.info("decodeOperationsForOpCode:decoding Info Analyze");			}			out = decoder.decode(ins, InfoAnalyzedArg.class);		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.ANALYZE_ROUTE)){							if (logger.isInfoEnabled()) {				logger.info("decodeOperationsForOpCode:decoding ANALYZE_ROUTE");			}			out = decoder.decode(ins, AnalyzeRouteArg.class);		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.INFO_COLLECTED)){							if (logger.isInfoEnabled()) {				logger.info("decodeOperationsForOpCode:decoding Info Collected");			}			out = decoder.decode(ins, InfoCollectedArg.class);		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.SEND_TO_RESOURCE)){							if (logger.isInfoEnabled()) {				logger.info("decodeOperationsForOpCode:decoding SEND_TO_RESOURCE");			}			out = decoder.decode(ins, SendToResourceArg.class);		}
+		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.TERMINATION_ATTEMPT)){				
+
+			if (logger.isInfoEnabled()) {
+				logger.info("decodeOperationsForOpCode:decoding TERMINATION_ATTEMPT");
+			}
+
+			out = decoder.decode(ins, TerminationAttemptArg.class);
+
+		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.REQUEST_REPORT_BCSM_EVENT)){							if (logger.isInfoEnabled()) {				logger.info("decodeOperationsForOpCode:decoding REQUEST_REPORT_BCSM_EVENT");			}			out = decoder.decode(ins, RequestReportBCMEventArg.class);		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.NETWORK_BUSY)){							if (logger.isInfoEnabled()) {				logger.info("decodeOperationsForOpCode:decoding Network Busy");			}			out = decoder.decode(ins, NetworkBusyArg.class);		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.DISCONNECT)){							if (logger.isInfoEnabled()) {				logger.info("decodeOperationsForOpCode:decoding DISCONNECT");			}			out = decoder.decode(ins, DisconnectArg.class);		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.O_ANSWER)){							if (logger.isInfoEnabled()) {				logger.info("decodeOperationsForOpCode:decoding O_ANSWER");			}			out = decoder.decode(ins, OAnswerArg.class);		}
+		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.O_DISCONNECT)){				
+
+			if (logger.isInfoEnabled()) {
+				logger.info("decodeOperationsForOpCode:decoding O_DISCONNECT");
+			}
+
+			out = decoder.decode(ins, ODisconnectArg.class);
+
+		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.O_NO_ANSWER)){							if (logger.isInfoEnabled()) {				logger.info("decodeOperationsForOpCode:decoding O_NO_ANSWER");			}			out = decoder.decode(ins, ONoAnswerArg.class);		}
+		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.O_ABANDON)){				
+
+			if (logger.isInfoEnabled()) {
+				logger.info("decodeOperationsForOpCode:decoding O_ABANDON");
+			}
+
+			out = decoder.decode(ins, OAbandonArg.class);
+
+		}
+		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.O_TERM_SIZED)){				
+
+			if (logger.isInfoEnabled()) {
+				logger.info("decodeOperationsForOpCode:decoding O_TERM_SIZED");
+			}
+
+			out = decoder.decode(ins, OTermSeizedArg.class);
+
+		}		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.RESOURCE_CLEAR)){				
+
+			if (logger.isInfoEnabled()) {
+				logger.info("decodeOperationsForOpCode:decoding RESOURCE_CLEAR");
+			}
+
+			out = decoder.decode(ins, ResourceClearArg.class);
+
+		}
+		else if(singleOpCode.equalsIgnoreCase(AinOpCodes.CLOSE)){				
+
+			if (logger.isInfoEnabled()) {
+				logger.info("decodeOperationsForOpCode:decoding CLOSE");
+			}
+
+			out = decoder.decode(ins, CloseArg.class);
+
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info("decodeOperationsForOpCode:Exit");
+		}
+		return out;
+	}
+
+	/**
+	 * This method will encode the AIN operations and will return the list of encoded byte[]. 
+	 * Operation codes are needed as input to get to know the type of incoming object.
+	 * @param opObjects
+	 * @param opCodes
+	 * @return LinkedList<byte[]>
+	 * @throws Exception 
+	 */
+	public static LinkedList<byte[]> encodeOperations(LinkedList<Object> opObjects, LinkedList<String> opCodes) throws Exception
+	{
+		if (logger.isInfoEnabled()) {
+			logger.info("encodeOperations:Enter");
+		}
+		if(logger.isDebugEnabled()){
+			logger.debug("encodeOperations:Input ---> opCodes:" + opCodes);
+		}
+
+		LinkedList<byte[]> outList = new LinkedList<byte[]>();
+
+		for(int i=0; i<opCodes.size(); i++)
+		{
+			Object singleOpObj = opObjects.get(i); 
+			String singleOpCode = opCodes.get(i);
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();			if(singleOpCode.equalsIgnoreCase(AinOpCodes.INFO_ANALYZED)){				if (logger.isInfoEnabled()) {					logger.info("encodeOperations:encoding INFO_ANALYZED");				}				IEncoder<InfoAnalyzedArg> encoder = CoderFactory.getInstance().newEncoder("BER");				encoder.encode((InfoAnalyzedArg)singleOpObj, outputStream);				outList.add(outputStream.toByteArray());			}			else if(singleOpCode.equalsIgnoreCase(AinOpCodes.ANALYZE_ROUTE)){				if (logger.isInfoEnabled()) {					logger.info("encodeOperations:encoding ANALYZE_ROUTE");				}				IEncoder<AnalyzeRouteArg> encoder = CoderFactory.getInstance().newEncoder("BER");				encoder.encode((AnalyzeRouteArg)singleOpObj, outputStream);				outList.add(outputStream.toByteArray());			}			else if(singleOpCode.equalsIgnoreCase(AinOpCodes.SEND_TO_RESOURCE)){				if (logger.isInfoEnabled()) {					logger.info("encodeOperations:encoding SEND_TO_RESOURCE");				}				IEncoder<SendToResourceArg> encoder = CoderFactory.getInstance().newEncoder("BER");				encoder.encode((SendToResourceArg)singleOpObj, outputStream);				outList.add(outputStream.toByteArray());			}			else if(singleOpCode.equalsIgnoreCase(AinOpCodes.CONTINUE)){				if (logger.isInfoEnabled()) {					logger.info("encodeOperations:encoding CONTINUE");				}				IEncoder<ContinueArg> encoder = CoderFactory.getInstance().newEncoder("BER");				encoder.encode((ContinueArg)singleOpObj, outputStream);				outList.add(outputStream.toByteArray());			}			else if(singleOpCode.equalsIgnoreCase(AinOpCodes.CONNECT_TO_RESOURCE)){				if (logger.isInfoEnabled()) {					logger.info("encodeOperations:encoding CONNECT_TO_RESOURCE");				}				IEncoder<ConnectToResourceArg> encoder = CoderFactory.getInstance().newEncoder("BER");				encoder.encode((ConnectToResourceArg)singleOpObj, outputStream);				outList.add(outputStream.toByteArray());			}			else if(singleOpCode.equalsIgnoreCase(AinOpCodes.REQUEST_REPORT_BCSM_EVENT)){				if (logger.isInfoEnabled()) {					logger.info("encodeOperations:encoding REQUEST_REPORT_BCM_EVENT");				}				IEncoder<RequestReportBCMEventArg> encoder = CoderFactory.getInstance().newEncoder("BER");				encoder.encode((RequestReportBCMEventArg)singleOpObj, outputStream);				outList.add(outputStream.toByteArray());			}			else if(singleOpCode.equalsIgnoreCase(AinOpCodes.DISCONNECT)){				if (logger.isInfoEnabled()) {					logger.info("encodeOperations:encoding DISCONNECT");				}				IEncoder<DisconnectArg> encoder = CoderFactory.getInstance().newEncoder("BER");				encoder.encode((DisconnectArg)singleOpObj, outputStream);				outList.add(outputStream.toByteArray());			}			else if(singleOpCode.equalsIgnoreCase(AinOpCodes.O_NO_ANSWER)){				if (logger.isInfoEnabled()) {					logger.info("encodeOperations:encoding O_NO_ANSWER");				}				IEncoder<ONoAnswerArg> encoder = CoderFactory.getInstance().newEncoder("BER");				encoder.encode((ONoAnswerArg)singleOpObj, outputStream);				outList.add(outputStream.toByteArray());			}
+			else if(singleOpCode.equalsIgnoreCase(AinOpCodes.O_ABANDON)){
+
+				if (logger.isInfoEnabled()) {
+
+					logger.info("encodeOperations:encoding O_ABANDON");
+
+				}
+
+				IEncoder<OAbandonArg> encoder = CoderFactory.getInstance().newEncoder("BER");
+
+				encoder.encode((OAbandonArg)singleOpObj, outputStream);
+
+				outList.add(outputStream.toByteArray());
+
+			}
+			else if(singleOpCode.equalsIgnoreCase(AinOpCodes.NETWORK_BUSY)){
+
+				if (logger.isInfoEnabled()) {
+
+					logger.info("encodeOperations:encoding NETWORK_BUSY");
+
+				}
+
+				IEncoder<NetworkBusyArg> encoder = CoderFactory.getInstance().newEncoder("BER");
+
+				encoder.encode((NetworkBusyArg)singleOpObj, outputStream);
+
+				outList.add(outputStream.toByteArray());
+
+			}
+			else if(singleOpCode.equalsIgnoreCase(AinOpCodes.CLOSE)){
+
+				if (logger.isInfoEnabled()) {
+
+					logger.info("encodeOperations:encoding CLOSE");
+
+				}
+
+				IEncoder<CloseArg> encoder = CoderFactory.getInstance().newEncoder("BER");
+
+				encoder.encode((CloseArg)singleOpObj, outputStream);
+
+				outList.add(outputStream.toByteArray());
+
+			}else if(singleOpCode.equalsIgnoreCase(AinOpCodes.AUTHORIZED_TERMINATION)){
+
+				if (logger.isInfoEnabled()) {
+
+					logger.info("encodeOperations:encoding AUTHORIZED_TERMINATION_BYTE");
+
+				}
+
+				IEncoder<AuthorizeTerminationArg> encoder = CoderFactory.getInstance().newEncoder("BER");
+
+				encoder.encode((AuthorizeTerminationArg)singleOpObj, outputStream);
+
+				outList.add(outputStream.toByteArray());
+
+			}else if(singleOpCode.equalsIgnoreCase(AinOpCodes.FORWARD_CALL)){
+
+				if (logger.isInfoEnabled()) {
+
+					logger.info("encodeOperations:encoding Forward Call");
+
+				}
+
+				IEncoder<ForwardCallArg> encoder = CoderFactory.getInstance().newEncoder("BER");
+
+				encoder.encode((ForwardCallArg)singleOpObj, outputStream);
+
+				outList.add(outputStream.toByteArray());
+
+			}
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info("encodeOperations:Exit");
+		}
+		return outList;
+	}
+
+	/**LinkedList<byte[]>
+	 * Method for decoding INAP operation
+	 */
+	/**	private Object decode(byte[] opBuffer, String opCode)
+	{
+		logger.info("decode:Enter");
+		if(logger.isDebugEnabled()){
+			logger.debug("decode:Input ---> opBuffer:" + opBuffer + ", opCode:" + opCode);
+		}
+
+		Object opObj = null;
+
+		logger.info("decode:Exit");
+		return opObj;
+	}**/
+
+	/**
+	 * Method for encoding INAP operation
+	 */
+	/**private byte[] encode(Object opObject, String opCode)
+	{
+		logger.info("encode:Enter");
+		if(logger.isDebugEnabled()){
+			logger.debug("encode:Input ---> opObject:" + opObject + ", opCode:" + opCode);
+		}
+
+		byte[] opBuffer = null;
+
+		logger.info("encode:Exit");
+		return opBuffer;
+	}**/
+}

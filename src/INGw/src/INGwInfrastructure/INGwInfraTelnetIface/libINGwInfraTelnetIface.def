@@ -1,0 +1,22 @@
+TARGET=libINGwInfraTelnetIface
+RULES=lib
+include ../../INGwCommonDefs/hss-sipstack.def
+#include ../../INGwCommonDefs/telesys-stack.def
+#include ../../INGwCommonDefs/trillium-ainstack.def
+include ../../INGwCommonDefs/ccpu-stack.def
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+EXTRA_DEFINES += CCPU_STUB 
+EXTRA_DEFINES += PK_UNPK_DEBUG_FLAG 
+EXTRA_DEFINES += INC_ASP_SNDDAUD
+
+EXTRA_INCLUDES += $(INSTALLROOT)/sol28g/include
+EXTRA_LIBS += INGwInfraUtil Util nsl elf kstat rt
+
+SRCS=INGwInfraTelnetIface/INGwIfrTlIfTelnetIntf.C \
+		 INGwInfraTelnetIface/INGwIfrTlIfTCPServer.C
+
+HDRS=INGwInfraTelnetIface/INGwIfrTlIfTelnetIntf.h \
+		 INGwInfraTelnetIface/INGwIfrTlIfTCPServer.h \
+		 INGwInfraTelnetIface/INGwIfrTlIfIncludes.h

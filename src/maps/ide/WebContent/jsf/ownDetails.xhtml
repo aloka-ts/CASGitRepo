@@ -1,0 +1,247 @@
+ 
+<div
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:pfc="http://www.jboss.com/portal/facelet/common"
+   xmlns:c="http://java.sun.com/jstl/core">
+	
+   <!-- <f:loadBundle basename="bundle.resources" var="bundle"/> -->
+   <f:view locale="#{facesContext.externalContext.request.locale}">
+	
+<h:form>
+	<table width="100%">
+   		<tbody>
+   			<c:choose>
+				<c:when test='${createMBean277.mode == "2"}'>		
+   			<c:set var="jmode" value="${createMBean277.initial}"/>
+   			<c:if test="${jmode == null}">
+   				<thead class="portlet-section-header">
+				<th colspan="2" align="center">
+						<h:outputText style="font-weight:italic; color:blue" value="Welcome to Genband Portal"/>
+				</th>
+				</thead>
+			</c:if>
+			</c:when>
+			</c:choose>
+			<tr class="portlet-section-alternate">
+				<th colspan="2" style="color:white; background:#869286">
+					<h:outputText  value="#{bundle.D277_Organization_Group_BAR1}"/>
+				</th>
+			</tr>
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_Name}:
+            	</td>
+            	<td width="80%">
+					<h:outputText id="D277_Organization_Name" value="#{createMBean277.name}">
+					</h:outputText>
+	    	</td>
+         	</tr>
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_DisplayName}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_Organization_DisplayName" value="#{createMBean277.displayName}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_Organization_DisplayName" value="#{createMBean277.displayName}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_Organization_DisplayName"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_DomainName}:
+            	</td>
+            	<td width="80%">
+					<h:outputText id="D277_Organization_DomainName" value="#{createMBean277.domainName}">
+					</h:outputText>
+	    		</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_Description}:
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:inputText id="D277_Organization_Description" value="#{createMBean277.description}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D277_Organization_Description" value="#{createMBean277.description}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_Organization_Description"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_Status}:
+            	</td>
+            	<td width="80%">
+					<h:outputText id="D277_Organization_Status" value="#{createMBean277.status}">
+						<f:convertNumber pattern="#"/>
+					</h:outputText>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D277_Organization_Status"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_Timezone}:
+            	</td>
+            	<td width="80%">
+					<h:outputText id="D277_Organization_Timezone" value="#{createMBean277.timezone}">
+					</h:outputText>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_CustomerId}:
+            	</td>
+            	<td width="80%">
+					<h:outputText id="D277_Organization_CustomerId" value="#{createMBean277.customerId}">
+					</h:outputText>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_ActivationDate}:
+            	</td>
+            	<td width="80%">
+					<h:outputText id="D277_Organization_ActivationDate" value="#{createMBean277.activationDate}">
+						<f:convertDateTime dateStyle="short"/>
+					</h:outputText>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_ExpirationDate}:
+            	</td>
+            	<td width="80%">
+					<h:outputText id="D277_Organization_ExpirationDate" value="#{createMBean277.expirationDate}">
+						<f:convertDateTime dateStyle="short"/>
+					</h:outputText>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_LastUpdated}:
+            	</td>
+            	<td width="80%">
+					<h:outputText id="D277_Organization_LastUpdated" value="#{createMBean277.lastUpdated}">
+						<f:convertDateTime dateStyle="long"/>
+					</h:outputText>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_Organization_Account_Type}:
+            	</td>
+            	<td width="80%">
+            		<c:choose>
+            			<c:when test="${createMBean277.account_Type == 'N'}">
+            				<h:outputText id="D277_Organization_Account_Type" value="Network Provider">
+							</h:outputText>
+            			</c:when>
+            			<c:when test="${createMBean277.account_Type == 'S'}">
+            				<h:outputText id="D277_Organization_Account_Type" value="Service Provider"/>
+            			</c:when>
+            			<c:when test="${createMBean277.account_Type == 'A'}">
+            				<h:outputText id="D277_Organization_Account_Type" value="Agent"/>
+            			</c:when>
+            		</c:choose>
+					
+	    	</td>
+         	</tr>
+
+			<tr class="portlet-section-alternate">
+				<th colspan="2" style="color:white; background:#869286">
+					<h:outputText  value="#{bundle.D277_Organization_Group_BAR2}"/>
+				</th>
+			</tr>
+			
+			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_merchantAccount_Name}:
+            	</td>
+            	<td width="80%">
+					<h:outputText id="D277_merchantAccount_Name" value="#{createMBean277.merchantAccountName}">
+					</h:outputText>
+	    		</td>
+         	</tr>
+         	
+         	<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D277_merchantAccount_Domain_Name}:
+            	</td>
+            	<td width="80%">
+					<h:outputText id="D277_merchantAccount_Domain_Name" value="#{createMBean277.merchantAccountDomainName}">
+					</h:outputText>
+	    		</td>
+         	</tr>
+						
+   			<tr class="portlet-section-body" colspan="2">
+	     	<td align="left">
+				<h:panelGroup> 
+					<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:commandButton style="height:21px; width:51px" action="viewDetails" actionListener="#{createMBean277.saveAction}" value="#{bundle.Save}"/>
+						</c:when>
+						<c:otherwise>
+							<h:commandButton style="height:21px; width:51px" action="viewDetails" actionListener="#{createMBean277.modifyAction}" value="#{bundle.Modify}"/>
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test='${createMBean277.mode == "1"}'>
+							<h:commandButton style="height:21px; width:51px" action="#{createMBean277.cancelAction}" value="#{bundle.Cancel}" immediate="true"/>
+						</c:when>
+					</c:choose>
+	      		 </h:panelGroup>
+            </td>
+            <td align="right">
+             		<h:panelGroup> 				
+						<h:commandButton style="height:21px; width:51px" id="PREVIOUS" action="#{createMBean277.previousPage}" disabled="true" value="Back">
+						</h:commandButton>
+						<h:commandButton style="height:21px; width:51px" id="NEXT" action="#{createMBean277.nextPage}" value="Next">
+						</h:commandButton>
+	     			  </h:panelGroup>
+	     	</td>
+        	</tr>
+   		
+   		</tbody>
+   	</table>
+</h:form>
+</f:view> 
+</div>

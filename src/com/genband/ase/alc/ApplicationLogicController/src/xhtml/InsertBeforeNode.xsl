@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns="">
+        <xsl:output method="xml" indent="yes"/>
+
+        <xsl:template match="//NodeDescriptor[@action = 'insertafter']">
+                <xsl:element name="NodeDescriptor">
+                        <xsl:attribute name="action">display</xsl:attribute>
+                        <xsl:attribute name="display"><xsl:value-of select="@display"/></xsl:attribute>
+                        <NodeOptions>
+                                <Selection>apple</Selection>
+                        </NodeOptions>
+                </xsl:element>     
+                <xsl:copy>
+                        <xsl:apply-templates select="*|comment()|text()|@*"/>
+                </xsl:copy>
+        </xsl:template>
+
+        <xsl:template match="*|comment()|text()|@*">
+                <xsl:copy>
+                        <xsl:apply-templates select="*|comment()|text()|@*"/>
+                </xsl:copy>
+        </xsl:template>
+</xsl:stylesheet>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ JBoss, a division of Red Hat                                              ~
+  ~ Copyright 2006, Red Hat Middleware, LLC, and individual                   ~
+  ~ contributors as indicated by the @authors tag. See the                    ~
+  ~ copyright.txt in the distribution for a full listing of                   ~
+  ~ individual contributors.                                                  ~
+  ~                                                                           ~
+  ~ This is free software; you can redistribute it and/or modify it           ~
+  ~ under the terms of the GNU Lesser General Public License as               ~
+  ~ published by the Free Software Foundation; either version 2.1 of          ~
+  ~ the License, or (at your option) any later version.                       ~
+  ~                                                                           ~
+  ~ This software is distributed in the hope that it will be useful,          ~
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of            ~
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU          ~
+  ~ Lesser General Public License for more details.                           ~
+  ~                                                                           ~
+  ~ You should have received a copy of the GNU Lesser General Public          ~
+  ~ License along with this software; if not, write to the Free   n           ~
+  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA        ~
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.                   ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+ 
+<web-app
+   xmlns="http://java.sun.com/xml/ns/j2ee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee  http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+   version="2.4">
+ 
+   <!-- MyFaces specific configuration -->
+   <context-param>
+      <param-name>org.apache.myfaces.ALLOW_JAVASCRIPT</param-name>
+      <param-value>true</param-value>
+   </context-param>
+   <context-param>
+      <param-name>org.apache.myfaces.DETECT_JAVASCRIPT</param-name>
+      <param-value>false</param-value>
+   </context-param>
+   <context-param>
+      <param-name>org.apache.myfaces.AUTO_SCROLL</param-name>
+      <param-value>false</param-value>
+   </context-param>
+   <context-param>
+      <param-name>org.apache.myfaces.CHECK_EXTENSIONS_FILTER</param-name>
+      <param-value>false</param-value>
+   </context-param>
+   <context-param>
+      <param-name>org.apache.myfaces.PRETTY_HTML</param-name>
+      <param-value>true</param-value>
+   </context-param>
+
+   <!-- Facelet configuration -->
+   <context-param>
+      <param-name>facelets.DEVELOPMENT</param-name>
+      <param-value>false</param-value>
+   </context-param>
+   <context-param>
+      <param-name>facelets.SKIP_COMMENTS</param-name>
+      <param-value>true</param-value>
+   </context-param>
+   <context-param>
+      <param-name>facelets.LIBRARIES</param-name>
+      <param-value>/WEB-INF/portal.taglib.xml</param-value>
+   </context-param>
+
+   <!-- JSF configuration -->
+   <context-param>
+      <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+      <param-value>.xhtml</param-value>
+   </context-param>
+   <context-param>
+      <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+      <param-value>server</param-value>
+   </context-param>
+
+   <!-- The JSF servlet -->
+   <servlet>
+       <servlet-name>Faces Servlet</servlet-name>
+       <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+       <load-on-startup>1</load-on-startup>
+   </servlet>
+   
+   <!-- The JSF meta bridge bootstrap -->
+   <listener>
+      <display-name> Faces Meta Bridge Bootstrap</display-name>
+      <listener-class>org.jboss.portal.faces.portlet.JSFMetaBridgeBootstrap</listener-class>
+   </listener>
+</web-app>
+

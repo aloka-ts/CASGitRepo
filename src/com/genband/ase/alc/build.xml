@@ -1,0 +1,86 @@
+<project name="ALCProject" default="rebuild" basedir=".">
+
+      <target name="check-for-cleanliness">
+	<echo message="${alc.build.dir}/build.current"/>
+            <available file="${alc.build.dir}/build.current" property="build-alcml-exists"/>
+      </target>
+      
+      <target name="make-real-clean" depends="check-for-cleanliness" unless="build-alcml-exists">    
+            <subant verbose="true" target="make-real-clean">
+                  <property name="alcml.dir" value="${basedir}/ApplicationLogicController"/>
+                  <fileset dir=".">
+                        <include name="**/build.xml"/>
+                        <exclude name="build.xml"/>
+                  </fileset>
+            </subant>
+            <touch file="${alc.build.dir}/build.current"/>
+      </target>
+      
+      <target name="contribute-alcml" depends="make-real-clean">
+		<echo message="${JAVA_HOME}"/>
+
+            <ant antfile="${basedir}/ApplicationLogicController/build.xml" target="build-alcml-annotation-compiler" inheritAll="false">
+                  <property name="alcml.dir" value="${basedir}/ApplicationLogicController"/>
+                <!-- FIX ME, Chip -->
+                 <property name="JAVA_HOME" value="${JAVA_HOME}"/>
+            </ant>
+            <subant verbose="true" target="contribute-alcml">
+                  <property name="alcml.dir" value="${basedir}/ApplicationLogicController"/>
+                  <property name="JAVA_HOME" value="${JAVA_HOME}"/>
+                  <property name="JAVA_HOME" value="${JAVA_HOME}"/>
+                  <fileset dir=".">
+                        <include name="**/build.xml"/>
+                        <exclude name="build.xml"/>
+                  </fileset>
+            </subant>
+            <dependset>
+                  <sources>
+                      <fileset dir="${basedir}">
+                        <include name="**/alcmltemp/*.*"/>
+                      </fileset>
+                  </sources>
+                  <targets>
+                      <fileset dir="${basedir}">
+                        <include name="ApplicationLogicController/src/com/genband/ase/alc/alcml/jaxb/xjc/*.*"/>
+                        <include name="build.current"/>
+                      </fileset>
+                  </targets>
+            </dependset>  
+            <available file="${basedir}/build.current" property="no-contribution-alcml"/>
+      </target>
+      
+      <target name="generate-alcml-bindings" depends="contribute-alcml" unless="no-contribution-alcml">
+            <ant antfile="${basedir}/ApplicationLogicController/build.xml" target="generate-alcml-bindings" inheritAll="false">
+                  <property name="alcml.dir" value="${basedir}/ApplicationLogicController"/>
+                <!-- FIX ME, Chip -->
+                <property name="JAVA_HOME" value="${JAVA_HOME}"/>
+            </ant>
+            <touch file="${basedir}/build.current"/>
+      </target>
+
+      <target name="all" depends="generate-alcml-bindings">
+            <subant verbose="true" target="buildapp">
+                  <property name="alcml.dir" value="${basedir}/ApplicationLogicController"/>
+                  <!-- FIX ME, Chip -->
+                  <property name="JAVA_HOME" value="${JAVA_HOME}"/>
+                  <fileset dir="${basedir}">
+                        <include name="**/build.xml"/>
+                        <exclude name="**/ServiceDefinitionApp/**"/>
+                        <exclude name="build.xml"/>
+                  </fileset>
+            </subant>
+            <subant verbose="true" target="buildapp">
+                  <property name="alcml.dir" value="${basedir}/ApplicationLogicController"/>
+                  <fileset dir="${basedir}">
+                        <include name="**/ServiceDefinitionApp/build.xml"/>
+                  </fileset>
+            </subant>
+      </target>
+
+      <target name="buildapp">
+      </target>
+      
+      <target name="clean">
+      </target>
+
+</project>

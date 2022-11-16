@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<!-- ==================================================== -->
+<!-- Build file: Application Logic Controller -->
+<!-- ==================================================== -->
+
+<project name="Application Logic Controller" default="all" basedir=".">
+      <property name="alcml.dir" value="${basedir}"/>
+
+      <import file="${alcml.dir}/src/alcml-macros.xml"/>
+
+        <!-- ***************************************** -->
+        <!-- Main target -->
+        <target name="all" depends="buildapp">
+        </target>
+        <!-- ***************************************** -->
+
+      <target name="init" >
+            <!-- Set the variables used inside -->
+            <property name="app.name" value="alc"/>
+            <property name="app.src.dir" value="${basedir}/src"/>
+            <property name="app.build.dir" Value="${alc.build.dir}/ApplicationLogicController/build"/>
+
+            <!-- Set the classpath for compiling the application -->
+            <path id="classpath">
+                  <fileset dir="${app.build.dir}/../../../">
+                        <include name="**/*.jar"/>
+                  </fileset>
+            </path>
+            <property name="additionalclasspath" refid="classpath"/>
+      </target>
+
+      <target name="compiler-exists" depends="alc-compilation-setup">
+            <available file="${jar.dest}/${app.name}.jar" property="alc.compiler.built"/>
+      </target>
+        
+      <target name="build-alcml-annotation-compiler" unless="alc.compiler.built" depends="compiler-exists">
+            <antcall target="remove_all_alc_bindings"/>
+            <mkdir dir="${alc.build.dir}/ApplicationLogicController/build"/>
+            <javac srcdir="${app.src.dir}" destdir="${app.build.dir}" debug="true">
+                  <include name="com/genband/ase/alc/alcml/jaxb/GenerateALCMLxsdApFactory.java"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ALCMLActionClass.java"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ALCMLActionMethod.java"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ALCMLDefaults.java"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ALCMLMethodParameter.java"/>
+                  <classpath refid="classpath"/>
+            </javac>
+            <!-- Package the application into a .jar file -->
+            <jar update="true" jarfile="${jar.dest}/${app.name}.jar" basedir="${app.build.dir}">
+                  <exclude name="**/ALCServiceInterface/MediaServiceImpl/**"/>
+                  <exclude name="com/genband/ase/alc/alcml/jaxb/xjc/**"/>
+            	  <exclude name="com/genband/ase/alc/config/**"/>
+            	  <exclude name="com/genband/ase/alc/common/**"/>
+            </jar>
+      </target>
+        
+      <target name="contribute-alcml">
+      </target>
+      
+      <target name="remove_all_alc_bindings" depends="alc-compilation-setup">
+            <copy overwrite="true" file="${app.src.dir}/EmptyRegistry.xml" tofile="${app.src.dir}/RegisteredImplementors.xml"/>
+      </target>
+       
+      <target name="generate-alcml-bindings" depends="alc-compilation-setup">
+              <alcmlc classpath="${additionalclasspath}"
+                   destdir="${app.src.dir}/alcmltemp/"
+                   srcdir="${app.src.dir}/"
+                   internalUseCompileOnly="false"/>
+            <javac srcdir="${app.src.dir}/com/genband/ase/alc/alcml/jaxb/" destdir="${app.build.dir}" debug="true">
+                  <include name="CmdlineTransform.java"/>
+                  <classpath refid="classpath"/>
+            </javac>
+            <xsltc source="${app.src.dir}/tmpApplicationLogicControl.xsd"
+                  transform="${app.src.dir}/documentation/GenerateXSD.xsl"
+                  appbuilddir="${app.build.dir}"
+                  output="${app.build.dir}/_Generated.xsd"/>
+      </target>
+
+      <target name="make-real-clean" depends="remove_all_alc_bindings">
+              <delete dir="${app.src.dir}/com/genband/ase/alc/alcml/jaxb/xjc/"/>
+              <delete file="${jar.dest}/${app.name}.jar"/>
+              <delete file="${alc.jar.dest}/${app.name}_JAXB.jar"/>
+              <delete file="${bp.jar.dest}/${app.name}-compiler.jar"/>
+      </target>
+
+      <target name="buildapp" depends="alc-compilation-setup">
+            <mkdir dir="${app.build.dir}"/>
+
+            <!-- Copy the resource files -->
+            <copy todir="${app.build.dir}">
+                  <fileset dir="${app.src.dir}">
+                        <include name="**/*.xml"/>
+                        <include name="**/*.xsd"/>
+                  </fileset>
+            </copy>
+              
+            <copy file="${app.src.dir}/com/genband/ase/alc/alcml/jaxb/ServiceDefinitionLocator.xml" tofile="${app.build.dir}/ServiceDefinitionLocator.xml"/>
+
+            <!-- Compile the Source Code -->
+            <javac srcdir="${app.src.dir}" destdir="${app.build.dir}" debug="true">
+                  <include name="**/*.java"/>
+                  <!-- excluded but kept in place for now -->
+                  <exclude name="**/ALCServiceInterface/MediaServiceImpl/*.java"/>
+                  <exclude name="**/ALCServiceInterface/MediaService.java"/>
+                  <exclude name="**/ServiceActionExpression.java"/>
+                  <exclude name="**/ServiceActionServiceDefinitionImpl.java"/>
+                  <exclude name="**/GenerateALCMLxsdApFactory.java"/>
+                  <exclude name="**/Expression.java"/>
+                  <classpath refid="classpath"/>
+            </javac>
+
+            <javac srcdir="${app.src.dir}/com/genband/ase/alc/alcml/jaxb/" destdir="${app.build.dir}" debug="true">
+                  <include name="GenerateALCMLxsdApFactory.java"/>
+                  <classpath refid="classpath"/>
+            </javac>
+            
+            <!-- Package the application into a .jar file -->
+            <jar update="true" jarfile="${jar.dest}/${app.name}.jar" basedir="${app.build.dir}">
+                  <exclude name="**/ALCServiceInterface/MediaServiceImpl/**"/>
+                  <exclude name="com/genband/ase/alc/alcml/jaxb/xjc/**"/>
+                  <exclude name="**/*.xsd"/>
+                  <exclude name="**/alc-compiler.jar"/>
+            </jar>
+      	
+      	<!-- Package the common ALCcontext into a .jar file -->
+           	<jar update="true" jarfile="${jar.dest}/${app.name}_common.jar" basedir="${app.build.dir}">
+           		<include name="com/genband/ase/alc/config/**"/>
+           		<include name="com/genband/ase/alc/common/**"/>
+      	     </jar>
+            
+            <!-- Package the application into a .jar file -->
+            <jar update="true" jarfile="${alc.jar.dest}/${app.name}_JAXB.jar" basedir="${app.build.dir}">
+                  <include name="com/genband/ase/alc/alcml/jaxb/xjc/**"/>
+            </jar>
+            
+            <!-- Package a compiler application into a .jar file -->
+            <copy file="${app.src.dir}/build-macros.xml" tofile="${app.build.dir}/src/build-macros.xml"/>
+            <copy file="${app.src.dir}/com/genband/ase/alc/alcml/jaxb/alcmlc" tofile="${app.build.dir}/src/com/genband/ase/alc/alcml/jaxb/alcmlc"/>
+            <copy file="${app.build.dir}/_Generated.xsd" tofile="${app.build.dir}/src/ApplicationLogicControl.xsd"/>
+            <jar update="true" jarfile="${app.build.dir}/${app.name}-compiler.jar" basedir="${app.build.dir}">
+                  <include name="GenerateALCMLxsdApFactory*.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ServiceContext.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ServiceDefinition.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ServiceUserAction.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ServiceAction.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ServiceBlockListener.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ServiceContextProvider.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ServiceActionCreationException.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/LocalServiceContextProvider.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ServiceActionExecutionException.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ALCMLExpression.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ALCMLActionClass.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ALCMLActionMethod.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ALCMLDefaults.class"/>
+                  <include name="com/genband/ase/alc/alcml/jaxb/ALCMLMethodParameter.class"/>
+                  <include name="com/genband/ase/alc/alcml/ALCServiceInterface/ALCServiceInterfaceImpl.class"/>
+                  <include name="com/genband/ase/alc/alcml/ALCServiceInterface/ALCServiceInterface.class"/>
+                  <include name="src/build-macros.xml"/>
+                  <include name="src/com/genband/ase/alc/alcml/jaxb/alcmlc"/>
+                  <include name="src/ApplicationLogicControl.xsd"/>
+            </jar>
+
+            <!-- Copy the resource files -->
+            <!--copy todir="${app.src.dir}">
+                  <fileset dir="${app.build.dir}">
+                        <include name="**/*.html"/>
+                        <include name="**/*.xhtml"/>
+                  </fileset>
+            </copy-->
+
+      </target>
+
+      <target name="doc-exists" depends="init">
+            <mkdir dir="${app.build.dir}/javadoc"/>
+            <dependset>
+                  <sources>
+                        <fileset dir="${app.build.dir}/"> 
+                              <include name="**/**"/>
+                        </fileset> 
+                  </sources>
+                  <targets>
+                      <fileset dir="${app.build.dir}/javadoc">
+                        <include name="build.current"/>
+                      </fileset>
+                  </targets>
+            </dependset>  
+            <available file="${app.build.dir}/javadoc/build.current" property="doc-upToDate"/>
+      </target>
+
+      <target name="document" unless="doc-upToDate" depends="doc-exists"> 
+              <copy todir="${app.build.dir}">
+                    <fileset dir="${app.src.dir}/documentation" />
+              </copy>
+            <xsltc      source="${app.src.dir}/tmpApplicationLogicControl.xsd"
+                  transform="${app.src.dir}/documentation/GenerateXSD.xsl"
+                  appbuilddir="${app.build.dir}"
+                  output="${app.build.dir}/_Generated.xsd"/>
+                  
+            <xsltc source="${app.build.dir}/_Generated.xsd"
+                  transform="${app.src.dir}/documentation/TransformXSD.xsl"
+                  appbuilddir="${app.build.dir}"
+                  output="${app.build.dir}/Document.html"/>
+
+            <xsltc source="${app.build.dir}/_Generated.xsd"
+                  transform="${app.src.dir}/documentation/TransformFlatHTML.xsl"
+                  appbuilddir="${app.build.dir}"
+                  output="${app.build.dir}/XMLSchemaDocumentation.html"/>
+
+              <delete dir="${app.build.dir}/javadoc"/>
+              <mkdir dir="${app.build.dir}/javadoc"/>
+            <javadoc destdir="${app.build.dir}/javadoc">
+                  <classpath>
+                   <pathelement path="${additionalclasspath}"/>
+                   </classpath>
+                <packageset dir="src" defaultexcludes="yes">
+                  <include name="com/genband/ase/alc/alcml/**"/>
+                  <exclude name="com/genband/ase/alc/alcml/ALCServiceInterface/**"/>
+                  <exclude name="com/genband/ase/alc/alcml/MediaServiceImpl/**"/>
+                  <exclude name="**/GenerateALCMLxsdApFactory.java"/>
+                </packageset>
+            </javadoc>
+            <touch file="${app.build.dir}/javadoc/build.current"/>
+            <!--copy todir="${app.src.dir}">
+                  <fileset dir="${app.build.dir}">
+                        <include name="**/*.html"/>
+                        <include name="**/*.xhtml"/>
+                        <include name="**/*.js"/>
+                  </fileset>
+            </copy-->
+      </target>   
+      
+</project>
+
+

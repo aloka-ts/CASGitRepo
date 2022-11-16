@@ -1,0 +1,962 @@
+package com.genband.jain.protocol.ss7.tcap;
+
+import jain.MandatoryParameterNotSetException;
+import jain.ParameterNotSetException;
+import jain.protocol.ss7.SccpUserAddress;
+import jain.protocol.ss7.SignalingPointCode;
+import jain.protocol.ss7.SubSystemAddress;
+import jain.protocol.ss7.tcap.ComponentIndEvent;
+import jain.protocol.ss7.tcap.ComponentReqEvent;
+import jain.protocol.ss7.tcap.DialogueIndEvent;
+import jain.protocol.ss7.tcap.JainTcapListener;
+import jain.protocol.ss7.tcap.TcapConstants;
+import jain.protocol.ss7.tcap.component.InvokeIndEvent;
+import jain.protocol.ss7.tcap.component.InvokeReqEvent;
+import jain.protocol.ss7.tcap.component.Operation;
+import jain.protocol.ss7.tcap.component.Parameters;
+import jain.protocol.ss7.tcap.dialogue.UnidirectionalIndEvent;
+import jain.protocol.ss7.tcap.dialogue.UnidirectionalReqEvent;
+import jain.protocol.ss7.tcap.GlobalTitle;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.servlet.ServletContext;
+import javax.servlet.sip.ServletParseException;
+import javax.servlet.sip.ServletTimer;
+import javax.servlet.sip.SipApplicationSession;
+import javax.servlet.sip.SipFactory;
+import javax.servlet.sip.SipServlet;
+import javax.servlet.sip.SipServletRequest;
+import javax.servlet.sip.SipServletResponse;
+import javax.servlet.sip.SipURI;
+import javax.servlet.sip.TimerService;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+import com.baypackets.ase.common.Registry;
+import com.baypackets.ase.util.Constants;
+import com.baypackets.bayprocessor.slee.common.ConfigRepository;
+import com.baypackets.bayprocessor.slee.threadmonitor.MonitoredThread;
+import com.genband.inap.asngenerated.CarrierCode;
+import com.genband.inap.asngenerated.RestartNotificationAcknowledgementArg;
+import com.genband.inap.datatypes.CarrierIdentificationCode;
+import com.genband.inap.datatypes.RestartNodeId;
+import com.genband.inap.exceptions.InvalidInputException;
+import com.genband.inap.operations.InapOpCodes;
+import com.genband.inap.operations.InapOperationsCoding;
+import com.genband.tcap.parser.TcapContentReaderException;
+import com.genband.tcap.parser.TcapContentWriterException;
+import com.genband.tcap.parser.TcapParser;
+import com.genband.tcap.parser.TcapType;
+import com.genband.tcap.parser.Util;
+
+
+
+
+public class RSNHandler {
+
+	static private Logger logger = Logger.getLogger(RSNHandler.class.getName());
+	
+	//private List<String> seqIds = new ArrayList<String>();
+	
+	Boolean processingRSN = false;
+	
+	private static ConfigRepository _configRepository;
+	
+	private static Long offset;
+	
+	private static Long selfCarrierCode;
+	
+	private static boolean dontIgnoreTwoBytes;
+	
+    public static String useGT;
+
+    static{
+		_configRepository = (ConfigRepository)Registry.lookup(Constants.NAME_CONFIG_REPOSITORY);
+		offset = Long.valueOf(_configRepository.getValue(Constants.OFFSET_TCAP_NOTIFY_COUNTER));
+		if (_configRepository.getValue(Constants.SELF_CARRIER_CODE) != null && _configRepository.getValue(Constants.SELF_CARRIER_CODE).trim() != ""){
+			selfCarrierCode = Long.valueOf(_configRepository.getValue(Constants.SELF_CARRIER_CODE).trim());
+		}
+		dontIgnoreTwoBytes = Boolean.parseBoolean(_configRepository.getValue(Constants.RSN_DONT_IGNORE_TWO_BYTES));
+		useGT = (String) _configRepository.getValue(Constants.USE_GT_FOR_LISTENER);
+		//offset = Long.valueOf(1);
+	}
+	
+	private Long notifySeqId = offset;
+
+	//will handle all Slave SAS and master SAS
+	private SasManager sasManager = null ;
+		
+	//contain key as slave SAS IP and value will be map having key spc of origSua coming in UnidirEvent and value will be object having list of SUA in RSN and state.
+	private Map<String, HashMap<String,RSNStatus>> rsnMap = new ConcurrentHashMap <String, HashMap<String,RSNStatus>>();
+	
+	//will use for RSA message 
+	transient private ServletTimer rsaTimer = null;
+	private int rsaTimerCount = 0 ;
+	
+	private final String 	RSNSTATUS 			= "RSN_STATUS";
+	
+	//This is dummy appSession for rsa timer
+	private SipApplicationSession appSessionForRsaTimer = null ;
+	
+	final String ListenerApp 		= "ListenerApp";
+	
+	private SipFactory factory = null;
+	private ServletContext servletCtx = null ;
+	private TcapSessionReplicator replicator = null;
+	private INGatewayManagerImpl ingwManager = null;
+	
+	//added by -vidhu
+	private int dialogId;
+	
+	private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	
+	public void init(ServletContext ctx, INGatewayManagerImpl ingw, TcapSessionReplicator replicator){
+		this.servletCtx = ctx ;
+		this.ingwManager = ingw ;
+		this.replicator = replicator ;
+		factory = (SipFactory)ctx.getAttribute(SipServlet.SIP_FACTORY);
+		sasManager = new SasManager();
+		sasManager.init();
+	}
+
+	
+	/**This function will handle RestartNotificationAcknowledgement received from slave SAS. 
+	 * This function will be called on master SAS.
+	 * @param dlgReqevent
+	 * @param req
+	 * @throws IOException
+	 * @throws TcapContentReaderException
+	 * @throws MandatoryParameterNotSetException
+	 */
+	public void handleRSA(DialogueIndEvent die,SipServletRequest req) throws IOException, TcapContentReaderException, MandatoryParameterNotSetException{
+
+		SignalingPointCode origSpc = null ;
+		UnidirectionalIndEvent uniIndEvent = null;
+		SccpUserAddress origSua = null;
+		SccpUserAddress destSua = null;
+		if(die.getPrimitiveType()== TcapConstants.PRIMITIVE_UNIDIRECTIONAL){
+			logger.error("Dlg rcvd is PRIMITIVE_UNIDIRECTIONAL" );
+			uniIndEvent = (UnidirectionalIndEvent)die ;
+			origSua = uniIndEvent.getOriginatingAddress();
+			destSua = uniIndEvent.getDestinationAddress();
+			try {
+				origSpc = origSua.getSubSystemAddress().getSignalingPointCode();
+			}catch(ParameterNotSetException e){
+				logger.log(Level.ERROR, e.getMessage());
+				throw new MandatoryParameterNotSetException(e.getMessage());
+			}
+		}
+
+		String from = ((SipURI)(req.getFrom().getURI())).getHost();
+		if (logger.isDebugEnabled()) {
+			logger.log(Level.DEBUG,"RSA recvd from SAS :" + from );
+		}
+		HashMap rsnStatusMap = rsnMap.get(from);
+		if(rsnStatusMap != null){
+			RSNStatus rsnstatus = (RSNStatus)rsnStatusMap.get(origSpc.toString());
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG,"updating the rsnstatus" );
+			}
+			if(rsnstatus !=null && rsnstatus.getStatus() == Status.IN_PROGRESS){
+				rsnstatus.setStatus(Status.COMPLETED);
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG,"updating the rsnstatus to completed" );
+				}
+			}
+		}
+		if (allRsaRecevied(origSpc.toString())){
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG, "All RSA recvd except from unrechable SAS") ;
+			}
+			rsaTimer.cancel();
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG, "RSA Timer Cancelled") ;
+			}
+			//encode RSA
+			//String content = encodeRSA(origSua, destSua, req,restartedNodeCICMap);
+			//This is with the assumption that RSA would be received only from Slave SAS
+			byte[] content = (byte[]) req.getContent();
+			//send req to INGW	
+			Iterator<INGateway> it1 = ingwManager.getAllINGateways();
+			while(it1.hasNext()){
+				INGateway ingw = it1.next();
+				SipURI destinationUri = factory.createSipURI("TcapProvider", ingw.getHost());
+				destinationUri.setPort(ingw.getPort());
+				//destinationUri.setTransportParam("tcp");
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG, "Sending RSA to destinationUri:" + destinationUri.toString());
+				}
+				//send RSA to INGW
+				sendRSA(content, "Master", destinationUri);
+			}
+			//clean-up the rsnMap
+			rsnMap.clear();
+			appSessionForRsaTimer.invalidate();
+			synchronized (this.processingRSN) {
+				processingRSN = false;	
+			}	
+		}else{
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG,"Still waiting for RSAs ");
+			}
+		}
+	}
+	
+	/** This function will handle RSN message received in UnidirectionalEvent dialogue.
+	 * This function will call masterRSNHandling or slaveRSNHanndling based on the sipURI.
+	 * @param tt
+	 * @param req
+	 * @throws TcapContentReaderException
+	 * @throws IOException
+	 * @throws MandatoryParameterNotSetException
+	 */
+	public boolean handleRSN(TcapType tt,SipServletRequest req) throws TcapContentReaderException, IOException, MandatoryParameterNotSetException  {
+
+		DialogueIndEvent dialogueIndEvent = tt.getDialogueIndEvent();
+		SccpUserAddress destSua  = null ;
+		SccpUserAddress origSua = null ;
+		SignalingPointCode origSpc = null ;
+		UnidirectionalIndEvent uniIndEvent = null ;
+		
+		//boolean result = this.checkForRetransmission(req);
+		
+		synchronized (this.processingRSN) {
+			if (processingRSN){
+				if (logger.isInfoEnabled()) {
+					logger.info("One RSN message is already in processing state ");
+				}
+				SipServletResponse resp = req.createResponse(499);
+				if (logger.isInfoEnabled()) {
+					logger.log(Level.INFO, "Sending response:\n" + resp);
+				}
+				try{
+					resp.send();	
+				}catch (IOException e) {
+					logger.log(Level.ERROR, e.getMessage());
+				}
+				return false;
+			}
+		}
+		
+		//added by -vidhu
+		dialogId = dialogueIndEvent.getDialogueId();
+
+		if (dialogueIndEvent != null)
+		{
+			
+			if(dialogueIndEvent.getPrimitiveType()== TcapConstants.PRIMITIVE_UNIDIRECTIONAL){
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dlg rcvd is PRIMITIVE_UNIDIRECTIONAL" );
+				}
+				uniIndEvent = (UnidirectionalIndEvent)dialogueIndEvent ;
+				destSua = uniIndEvent.getDestinationAddress();
+				origSua = uniIndEvent.getOriginatingAddress();
+				//SipServletResponse resp = req.createResponse(200, "OK");
+				//logger.log(Level.DEBUG, "Sending response:\n" + resp);
+				//resp.send();
+			}
+			try{
+				origSpc = origSua.getSubSystemAddress().getSignalingPointCode();
+			}catch(ParameterNotSetException e){
+				logger.log(Level.ERROR, e.getMessage());
+				throw new MandatoryParameterNotSetException(e.getMessage());
+			}
+			SipURI sipUri = (SipURI)req.getFrom().getURI();
+			String user = sipUri.getUser();
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG, "user in sipreq is:"+ user + "and sipURI is: "+ sipUri.toString());
+			}
+			//List<SccpUserAddress> suaList = parseRSN(tt,origSua,destSua);
+			//List<SccpUserAddress> suaList = parseRSN(tt);
+			Map<RestartNodeId,byte[]> restartedNodeCICMap = parseRSN(tt,origSua,destSua);
+//			Set<Map.Entry<RestartNodeId,byte[]>> entries = restartedNodeCICMap.entrySet();
+//			for (Map.Entry<String,String> entry : entries){
+//				System.out.println(entry.getKey());
+//				System.out.println(entry.getValue());
+//			}
+			Set<RestartNodeId> restartNodeIds = restartedNodeCICMap.keySet();
+			List<SccpUserAddress> suaList = new ArrayList<SccpUserAddress>();
+			for (RestartNodeId restartNodeId : restartNodeIds){
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG, "member:cluster:zone " + restartNodeId.getSignalingPointCode().getMember() +":"+restartNodeId.getSignalingPointCode().getCluster() +":" + restartNodeId.getSignalingPointCode().getZone());
+				}
+				SccpUserAddress sua = new SccpUserAddress(new SubSystemAddress(restartNodeId.getSignalingPointCode(), (short)restartNodeId.getSsn()));
+				sua.setProtocolVariant(destSua.getProtocolVariant());
+				suaList.add(sua);	
+			}
+			
+			synchronized (this.processingRSN) {
+				processingRSN = true;
+			}
+			//@TODO: Need to remove this code
+//			SignalingPointCode spc = new SignalingPointCode(24, 3, 0);
+//			SubSystemAddress subSystemAddress = new SubSystemAddress(spc, (short) 146);
+//			SccpUserAddress address =new SccpUserAddress(subSystemAddress);
+//			address.setSuaStatus(SccpConstants.USER_IN_SERVICE);
+//			address.setProtocolVariant(7);
+//			SubSystemAddress subSystemAddress1 = new SubSystemAddress(spc, (short) 190);
+//			SccpUserAddress address1 = new SccpUserAddress(subSystemAddress1);
+//			address1.setProtocolVariant(7);
+//			address1.setSuaStatus(SccpConstants.USER_IN_SERVICE);
+//			List<SccpUserAddress> suaList = new ArrayList<SccpUserAddress>();
+//			suaList.add(address);
+//			suaList.add(address1);
+			//End removal
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG, "handleRSN: suaList in RSN message:" + suaList);
+			}
+			//If master then send NOTIFY to all cluster  
+			if(user.equalsIgnoreCase("ingw")||user.equalsIgnoreCase("sipper")||user.equalsIgnoreCase("TcapListener")){
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG, "Calling masterRSNHandling");
+				}
+				logger.log(Level.ERROR, "Received RSN from ingw at : " + dateFormat.format(new Date()));
+				masterRSNHandling(origSpc,restartedNodeCICMap,req,uniIndEvent,suaList);
+			}else if("MasterSAS".equalsIgnoreCase(user.trim())) {
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG, "Calling slaveRSNhandling");
+				}
+				logger.log(Level.ERROR, "Received RSN from peer SAS at : " + dateFormat.format(new Date()));
+				slaveRSNhandling(origSpc,suaList,uniIndEvent,req,restartedNodeCICMap);
+			}
+		}
+		return true;
+	}
+
+
+	/**
+	 * It will handle RSN on master SAS
+	 *  
+	 **/
+	private void masterRSNHandling(SignalingPointCode origSpc, Map<RestartNodeId,byte[]> restartedNodeCICMap,SipServletRequest req,UnidirectionalIndEvent uniEvent,List suaList) throws TcapContentReaderException, MandatoryParameterNotSetException, IOException{
+		
+		rsnMap.clear();
+		Iterator<Sas> it = sasManager.getAllSas();
+		//sending notfy to cluster sas and take care of retransmission 
+		while(it.hasNext()){			
+			Sas sas = it.next();
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG,"sending RSN to sas:"+ sas.getHost());
+			}
+			if(sas.getHost().equals(InetAddress.getLocalHost().getHostAddress())){
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG,"Not sending RSN as it is master sas");
+				}
+				continue ;
+			}
+
+			HashMap rsnAndStatus = rsnMap.get(sas.getHost());
+			if(rsnAndStatus != null){
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG,"Found entry in rsnMap for sas and origPC:" + origSpc.toString());
+				}
+				RSNStatus rsn = (RSNStatus) rsnAndStatus.get(origSpc.toString());
+				if(rsn == null){
+					if (logger.isDebugEnabled()) {
+						logger.log(Level.DEBUG,"Not found entry for origSpc");
+					}
+					RSNStatus rsnStaus = new RSNStatus();
+					rsnStaus.setSuaList(suaList);
+					rsnStaus.setStatus(Status.IN_PROGRESS);
+					rsnAndStatus.put(origSpc.toString(), rsnStaus);					
+					sendRSN(req, sas,rsnStaus);					
+				}
+				else if(rsn.getStatus() == Status.UNREACHABLE){
+					if (logger.isDebugEnabled()) {
+						logger.log(Level.DEBUG,"found entry for origSpc");
+					}
+					rsn.setStatus(Status.IN_PROGRESS);
+					sendRSN(req, sas,rsn);						
+				}
+			}
+			else {
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG," Not Found entry in rsnMap for sas");
+				}
+				HashMap<String,RSNStatus> rsnStatusMap = new HashMap<String,RSNStatus>();
+				RSNStatus rsnStaus = new RSNStatus();
+				rsnStaus.setSuaList(suaList);
+				rsnStaus.setStatus(Status.IN_PROGRESS);
+				rsnStatusMap.put(origSpc.toString(), rsnStaus);	
+				rsnMap.put(sas.getHost(), rsnStatusMap);
+				sendRSN(req, sas,rsnStaus);				
+			}			
+		}
+		HashMap rsnStatusMap = rsnMap.get(InetAddress.getLocalHost().getHostAddress());
+		if(rsnStatusMap == null || rsnStatusMap.get(origSpc)== null){				
+			//cleaning the dialogues and send TC_END for each dialogue to INGW		
+			cleanUpDlgForRSN(restartedNodeCICMap,uniEvent,origSpc);	
+		}
+		SccpUserAddress destSua = uniEvent.getDestinationAddress();
+		SccpUserAddress origSua = uniEvent.getOriginatingAddress();
+		sendMasterRSA(origSua, destSua, req,restartedNodeCICMap);
+	}
+
+	/** This will handle RSN on slave SAS. */
+	private void slaveRSNhandling(SignalingPointCode origSpc, List suaList,UnidirectionalIndEvent uniEvent,SipServletRequest req, Map<RestartNodeId,byte[]> restartedNodeCICMap) throws IOException, TcapContentReaderException, MandatoryParameterNotSetException{
+
+		if (logger.isDebugEnabled()) {
+			logger.log(Level.DEBUG, "slaveRSNhandling:Calling cleanUpDlgForRSN");
+		}
+		//clean up the dialogues and send TC_END for each dialogue to INGW
+		cleanUpDlgForRSN(restartedNodeCICMap,uniEvent,origSpc);		
+		//encode RSA
+		String content = encodeRSA(uniEvent.getOriginatingAddress(), uniEvent.getDestinationAddress(), req,restartedNodeCICMap);
+		//sending notify to master sas in other cluster
+		Sas masterSas = sasManager.getMasterSas();
+		SipURI destinationUri = factory.createSipURI("tcapProvider", masterSas.getHost());
+		destinationUri.setPort(masterSas.getPort());
+		destinationUri.setTransportParam("tcp");
+		//send RSA to Master SAS
+		sendRSA(content,"Slave",destinationUri);
+		synchronized (this.processingRSN) {
+			processingRSN = false;	
+		}	
+	}
+
+	/** This will handle RSA on master SAS. */
+	private void sendRSA(Object content, String masterOrSlave,SipURI destURI) throws IOException, TcapContentReaderException{
+
+		if (logger.isDebugEnabled()) {
+			logger.log(Level.DEBUG, "destinationUri:" + destURI.toString());
+		}
+		SipURI sourceUri = null ;
+		//boolean rsaToINC = false;
+		if(masterOrSlave.equalsIgnoreCase("Master")){
+			sourceUri = source("sip:tcapProvider@");
+			//rsaToINC = true;
+		}else{
+			sourceUri = source("sip:SlaveSAS@");
+			sourceUri.setTransportParam("tcp");
+		}		 
+		//This is done to enable the flow going from SAS to INC
+		SipServletRequest ssr = factory.createRequest(factory.createApplicationSession(), "NOTIFY", sourceUri, destURI);
+		ssr.setAttribute("DISABLE_OUTBOUND_PROXY", "1");
+		ssr.addHeader("Event", "tcap-event");
+		ssr.addHeader("Subscription-State", "active");
+		/*if (rsaToINC){
+			ssr.addHeader("TC-Seq", String.valueOf(this.notifySeqId++));
+		}*/
+		//removed \r\n as Tcap parse code expects one \r\n
+		//content = content + "\r\n";
+		//ssr.setContent(content.getBytes(), "application/tcap+xml");
+		if (content instanceof String)
+			ssr.setContent(((String)content).getBytes(), "application/tcap");
+		else if (content instanceof byte[])
+			ssr.setContent((byte[])content, "application/tcap");
+		if (logger.isDebugEnabled()) {
+			logger.log(Level.DEBUG, "Sending request:\n" + ssr);
+		}
+		if(masterOrSlave.equalsIgnoreCase("Master")){
+			logger.log(Level.ERROR, "Sending RSA to ingw at : " + dateFormat.format(new Date()));
+		}else{
+			logger.log(Level.ERROR, "Received RSA peer SAS at : " + dateFormat.format(new Date()));
+		}
+		ssr.send();
+	}
+
+	//added to send RSN Inap message to another active SAS in another cluster 
+	private void sendRSN(SipServletRequest req, Sas sas, RSNStatus rsnStatus) throws TcapContentReaderException{
+		try{
+			//sending notify to another sas in other cluster
+			SipURI destinationUri = factory.createSipURI("tcapProvider", sas.getHost());
+			destinationUri.setPort(sas.getPort());
+			destinationUri.setTransportParam("tcp");
+			logger.log(Level.ERROR, "destinationUri:" + destinationUri.toString());
+
+			SipURI sourceUri = source("sip:MasterSAS@");
+			sourceUri.setTransportParam("tcp");
+			SipApplicationSession appSession = factory.createApplicationSession();
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG, "App session object for sending RSN to Slave SAS:"+ appSession);
+			}
+			SipServletRequest ssr = factory.createRequest(appSession, "NOTIFY", sourceUri, destinationUri);
+			ssr.setAttribute("DISABLE_OUTBOUND_PROXY", "1");
+			ssr.addHeader("Event", "tcap-event");
+			ssr.addHeader("Subscription-State", "active");
+			ssr.addHeader(JainTcapProviderImpl.DIALOG_ID, req.getHeader(JainTcapProviderImpl.DIALOG_ID));
+			ssr.setContent((byte[])(req.getContent()), "application/tcap+xml");
+			logger.log(Level.ERROR, "Sending request:\n" + ssr);
+			appSession.setAttribute(RSNSTATUS, rsnStatus);
+			ssr.send();
+		}catch(IOException e){
+			rsnStatus.setStatus(Status.UNREACHABLE);
+			logger.log(Level.ERROR, "Not reachable:" , e) ;			
+		}
+	}
+
+	private SipURI source(String masterOrSlave) throws TcapContentReaderException{
+		String fromAddress = null;
+		try
+		{
+			fromAddress = masterOrSlave + InetAddress.getLocalHost().getHostAddress();
+			logger.log(Level.ERROR, "fromAddress:" + fromAddress);
+		}
+		catch (Exception e)
+		{
+			logger.log(Level.ERROR, "cannot find Inet address for host.");
+		}
+		SipURI sourceUri =null;
+		try {
+			sourceUri = (SipURI)factory.createURI(fromAddress);
+		} catch (ServletParseException e) {
+			logger.log(Level.ERROR, "cannot find Inet address for host.",e);
+			throw new TcapContentReaderException(e);
+		}
+		return sourceUri ;
+	}
+
+	private void sendMasterRSA(SccpUserAddress origSua, SccpUserAddress destSua,SipServletRequest req,Map<RestartNodeId,byte[]> restartedNodeCICMap) throws MandatoryParameterNotSetException, IOException, TcapContentReaderException{
+		SignalingPointCode origSpc = null ;
+		try {
+			origSpc = origSua.getSubSystemAddress().getSignalingPointCode();
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG,":origSPC:" + origSpc.toString());
+			}
+		}catch(ParameterNotSetException e){
+			logger.log(Level.ERROR, e.getMessage());
+			throw new MandatoryParameterNotSetException(e.getMessage());
+		}
+
+		boolean allRSARcvd = allRsaRecevied(origSpc.toString());
+		if(allRSARcvd){
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG, "All RSA recvd except from unrechable SAS") ;
+			}
+			//encode RSA
+			String content = encodeRSA(origSua, destSua,req,restartedNodeCICMap);
+			//send req to INGW	
+			Iterator<INGateway> it1 = ingwManager.getAllINGateways();
+			while(it1.hasNext()){
+				INGateway ingw = it1.next();
+				SipURI destinationUri = factory.createSipURI("TcapProvider", ingw.getHost());
+				destinationUri.setPort(ingw.getPort());
+				//destinationUri.setTransportParam("tcp");
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG, "Sending RSA to destinationUri:" + destinationUri.toString());
+				}
+				//send RSA to INGW
+				sendRSA(content, "Master", destinationUri);
+			}
+			//clean-up the rsnMap
+			rsnMap.clear();
+			synchronized (this.processingRSN) {
+				processingRSN = false;	
+			}
+		}else{
+			//start timer for waiting RSA from Slave SAS
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG, "Starting timer for RSA waiting") ;
+			}
+			appSessionForRsaTimer = factory.createApplicationSession() ;
+			appSessionForRsaTimer.setAttribute("ORIGSUA", origSua);
+			appSessionForRsaTimer.setAttribute("DESTSUA", destSua);
+			appSessionForRsaTimer.setAttribute("ORIGSPC", origSpc);
+			appSessionForRsaTimer.setAttribute("RESTART_NODE_MAP", restartedNodeCICMap);
+			appSessionForRsaTimer.setAttribute("RSN_REQ", req);
+			rsaTimer = ((TimerService)servletCtx.getAttribute(SipServlet.TIMER_SERVICE)).createTimer(appSessionForRsaTimer, sasManager.getRsaTimerVal(), false, "RSNTimeout");
+		}
+	}
+
+
+	public void timeout(ServletTimer timer){
+
+		if (logger.isDebugEnabled()) {
+			logger.log(Level.DEBUG, "RSA timer expired..");
+		}
+		rsaTimerCount++ ;
+		if (logger.isDebugEnabled()) {
+			logger.log(Level.DEBUG, "RSA timer count value:" + rsaTimerCount);
+		}
+		SignalingPointCode origSpc = (SignalingPointCode)appSessionForRsaTimer.getAttribute("ORIGSPC");
+
+		if(rsaTimerCount == sasManager.getRsaTimerCountVal() || allRsaRecevied(origSpc.toString())){
+			//send RSA
+			appSessionForRsaTimer = timer.getApplicationSession();
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG, "appSessionForRsaTimer:" + appSessionForRsaTimer);
+			}
+			SccpUserAddress origSua = (SccpUserAddress)appSessionForRsaTimer.getAttribute("ORIGSUA");
+			SccpUserAddress destSua = (SccpUserAddress)appSessionForRsaTimer.getAttribute("DESTSUA");
+			Map<RestartNodeId,byte []> restartedNodeCICMap = (Map<RestartNodeId,byte []>) appSessionForRsaTimer.getAttribute("RESTART_NODE_MAP");
+			SipServletRequest req = (SipServletRequest)appSessionForRsaTimer.getAttribute("RSN_REQ");
+			try{
+				
+				String content = encodeRSA(origSua, destSua, req,restartedNodeCICMap);
+				//String content = encodeRSA(origSua, destSua, "Master");
+				//send req to INGW	
+				Iterator<INGateway> it1 = ingwManager.getAllINGateways();
+				while(it1.hasNext()){
+					INGateway ingw = it1.next();
+					SipURI destinationUri = factory.createSipURI("TcapProvider", ingw.getHost());
+					destinationUri.setPort(ingw.getPort());
+					//destinationUri.setTransportParam("tcp");
+					if (logger.isDebugEnabled()) {
+						logger.log(Level.DEBUG, "Sending RSA to destinationUri:" + destinationUri.toString());
+					}
+					//send RSA to INGW
+					sendRSA(content, "Master", destinationUri);
+				}
+			}catch(Exception e){
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG,"Can't send RSA", e);
+				}
+			}
+			//clean-up the rsnMap
+			rsnMap.clear();
+			rsaTimerCount = 0 ;
+			appSessionForRsaTimer.invalidate();
+			synchronized (this.processingRSN) {
+				processingRSN = false;	
+			}
+		}else{
+			//again create timer
+			rsaTimer = ((TimerService)servletCtx.getAttribute(SipServlet.TIMER_SERVICE)).createTimer(appSessionForRsaTimer, sasManager.getRsaTimerVal(), false, "RSNTimeout");
+		}
+	}
+	
+	
+	private String encodeRSA(SccpUserAddress origSua, SccpUserAddress destSua,String masterOrSlave) throws IOException{
+
+		try{
+			List<ComponentReqEvent> compList = null ;
+			if(masterOrSlave.equals("Master")){
+				RestartNotificationAcknowledgementArg rna = new RestartNotificationAcknowledgementArg();
+				CarrierCode cc = new CarrierCode();		
+				cc.setValue(CarrierIdentificationCode.encodeCarrierIdentCode("12"));
+				rna.setCarrierCode(cc);
+
+				LinkedList<Object> objLL1 = new LinkedList<Object>();
+				LinkedList<String> opCode1 = new LinkedList<String>();
+				objLL1.add(rna);
+				opCode1.add(InapOpCodes.RESTART_NOTIFICATION_ACK);
+
+				LinkedList<byte[]> encode1 = InapOperationsCoding.encodeOperations(objLL1, opCode1);
+
+				byte[] rsnaOpcode =  { 0x02 };
+				Operation rsnaOp = new Operation(Operation.OPERATIONTYPE_LOCAL, rsnaOpcode);
+				InvokeReqEvent ire = new InvokeReqEvent(this);
+				ire.setOperation(rsnaOp);
+				ire.setInvokeId(1);
+				ire.setParameters(new Parameters(Parameters.PARAMETERTYPE_SINGLE, encode1.get(0)));
+				ire.setClassType(1);
+				compList = new ArrayList<ComponentReqEvent>();
+				compList.add(ire);
+			}
+
+			UnidirectionalReqEvent uniReqEvent = new UnidirectionalReqEvent(this,origSua,destSua);
+			//uniReqEvent.setDialogueId(new Integer(s));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			//TcapContentWriter.marshal(uniReqEvent, compList, baos);
+			byte [] encodedRSA = TcapParser.encode(uniReqEvent, compList);
+			//String content = new String(baos.toByteArray());
+			String content = new String(encodedRSA);
+			return content ;
+		}catch(InvalidInputException e){
+			logger.log(Level.ERROR, "TcapContentWriterException encoutered during sendDialogueReqEvent.", e);
+			throw new IOException("TcapContentWriterException encoutered during sendDialogueReqEvent. " + e.getMessage());
+		}catch(TcapContentWriterException e){
+			logger.log(Level.ERROR, "TcapContentWriterException encoutered during sendDialogueReqEvent.", e);
+			throw new IOException("TcapContentWriterException encoutered during sendDialogueReqEvent. " + e.getMessage());
+		}catch(Exception e){
+			logger.log(Level.ERROR, "TcapContentWriterException encoutered during sendDialogueReqEvent.", e);
+			throw new IOException("TcapContentWriterException encoutered during sendDialogueReqEvent. " + e.getMessage());
+		}
+	}
+
+	
+
+	private String encodeRSA(SccpUserAddress origSua, SccpUserAddress destSua,SipServletRequest req,Map<RestartNodeId,byte[]> restartedNodeCICMap) throws IOException{
+
+		try{
+			List<ComponentReqEvent> compList = null ;
+			RestartNotificationAcknowledgementArg rna = new RestartNotificationAcknowledgementArg();
+			//Iterator<byte[]> iter = restartedNodeCICMap.values().iterator();
+			CarrierCode cc = new CarrierCode();		
+			if (selfCarrierCode != null){
+				cc.setValue(encodeCCInBCD(String.valueOf(selfCarrierCode)));
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG, "selfCarrierCode is not null");
+				}
+			}else {
+				cc.setValue(encodeCCInBCD("2013"));	
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG, "selfCarrierCode is null");
+				}
+			}
+			//cc.setValue(iter.next());
+			rna.setCarrierCode(cc);
+
+			LinkedList<Object> objLL1 = new LinkedList<Object>();
+			LinkedList<String> opCode1 = new LinkedList<String>();
+			objLL1.add(rna);
+			opCode1.add(InapOpCodes.RESTART_NOTIFICATION_ACK);
+
+			LinkedList<byte[]> encode1 = InapOperationsCoding.encodeOperations(objLL1, opCode1);
+			
+			byte[] rsnaOpcode =  { 0x02 };
+			Operation rsnaOp = new Operation(Operation.OPERATIONTYPE_LOCAL, rsnaOpcode);
+			InvokeReqEvent ire = new InvokeReqEvent(this);
+			ire.setOperation(rsnaOp);
+			ire.setInvokeId(1);
+			ire.setParameters(new Parameters(Parameters.PARAMETERTYPE_SINGLE, encode1.get(0)));
+			ire.setClassType(1);
+			compList = new ArrayList<ComponentReqEvent>();
+			compList.add(ire);
+
+			UnidirectionalReqEvent uniReqEvent = new UnidirectionalReqEvent(this,origSua,destSua);
+			String val = req.getHeader(JainTcapProviderImpl.DIALOG_ID);
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG, "val of dialog id.......>>>> "+val);
+			}
+			uniReqEvent.setDialogueId(new Integer(val));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			//TcapContentWriter.marshal(uniReqEvent, compList, baos);
+			byte [] encodedRSA = TcapParser.encode(uniReqEvent, compList);
+			//String content = new String(baos.toByteArray());
+			String content = new String(encodedRSA);
+			return content ;
+		}/*catch(InvalidInputException e){
+			logger.log(Level.ERROR, "TcapContentWriterException encoutered during sendDialogueReqEvent.", e);
+			throw new IOException("TcapContentWriterException encoutered during sendDialogueReqEvent. " + e.getMessage());
+		}*/catch(TcapContentWriterException e){
+			logger.log(Level.ERROR, "TcapContentWriterException encoutered during sendDialogueReqEvent.", e);
+			throw new IOException("TcapContentWriterException encoutered during sendDialogueReqEvent. " + e.getMessage());
+		}catch(Exception e){
+			logger.log(Level.ERROR, "TcapContentWriterException encoutered during sendDialogueReqEvent.", e);
+			throw new IOException("TcapContentWriterException encoutered during sendDialogueReqEvent. " + e.getMessage());
+		}
+	}
+	
+	
+	private Map<RestartNodeId,byte[]> parseRSN(TcapType tcapType,SccpUserAddress origSua,SccpUserAddress destSua) throws TcapContentReaderException, MandatoryParameterNotSetException{
+		if (logger.isDebugEnabled()) {
+			logger.log(Level.DEBUG, "parseRSN enter");
+		}
+		//List<SccpUserAddress> suaList = new ArrayList<SccpUserAddress>();
+		//parse the RSN message
+		List<ComponentIndEvent> compList = tcapType.getComponentIndEvent();
+		Map<RestartNodeId,byte[]> restartedNodeCICMap = null;
+		//assuming here only one component will come in RSN
+		if(compList.size()> 0){
+			ComponentIndEvent component = compList.get(0);
+			InvokeIndEvent receivedInvoke = (InvokeIndEvent)component; 
+//			Operation opr = receivedInvoke.getOperation();												
+			byte[] parms = null ;
+			try{
+				parms = receivedInvoke.getParameters().getParameter();
+				if (logger.isDebugEnabled()) {
+					logger.log(Level.DEBUG, "parseRSN PARMS:" + Util.formatBytes(parms));
+				}
+			}catch(ParameterNotSetException e){
+				logger.log(Level.ERROR, e.getMessage());
+				throw new MandatoryParameterNotSetException(e.getMessage());
+			}
+			//call inap library to parse this byte array
+			try{
+				//LinkedList<RestartNodeId> restartNodeIds = InapOperationsCoding.decodeRSNOperation(parms);
+				restartedNodeCICMap = InapOperationsCoding.decodeRSNOperation(parms,!dontIgnoreTwoBytes);
+				
+				
+//				for (RestartNodeId restartNodeId : restartedNodeCICMap.){
+//					logger.log(Level.DEBUG, "parseRSN member:cluster:zone " + restartNodeId.getSignalingPointCode().getMember() +":"+restartNodeId.getSignalingPointCode().getCluster() +":" + restartNodeId.getSignalingPointCode().getZone());
+//					SccpUserAddress sua = new SccpUserAddress(new SubSystemAddress(restartNodeId.getSignalingPointCode(), (short)restartNodeId.getSsn()));
+//					sua.setProtocolVariant(destSua.getProtocolVariant());
+//					suaList.add(sua);	
+//				}
+//				RestartNotificationArg restartArg= (RestartNotificationArg)InapOperationsCoding.decodeOperation(parms, receivedInvoke);
+//				Iterator<RestartedNodeID> restratIterator = restartArg.getRestartedNodeIDs().iterator();
+//				while(restratIterator.hasNext()){
+//					RestartedNodeID restartNodeId = restratIterator.next();
+//					logger.log(Level.DEBUG, "Calling ScfId decode" );
+//					ScfId scfId = ScfId.decodeScfId(restartNodeId.getValue());
+//					int net = scfId.getNet_PC();
+//					int sp = scfId.getSp_PC();
+//					int zone = scfId.getZone_PC();
+//					int ssn = scfId.getSSN();
+//					logger.log(Level.DEBUG, "parseRSN net:sp:zone " + net +":"+sp +":" + zone);
+//					SccpUserAddress sua = new SccpUserAddress(new SubSystemAddress(new SignalingPointCode(net, sp, zone), (short)ssn));
+//					suaList.add(sua);
+//				}
+			}catch(Exception e){
+				logger.log(Level.ERROR, e);
+				throw new TcapContentReaderException(e);
+			}
+		}
+		if (logger.isDebugEnabled()) {
+			logger.log(Level.DEBUG, "parseRSN exit");
+		}
+		return restartedNodeCICMap ;
+	}
+	
+	
+	private void cleanUpDlgForRSN(Map<RestartNodeId,byte[]> restartedNodeCICMap,UnidirectionalIndEvent uniEvent,SignalingPointCode origPC) throws UnknownHostException,MandatoryParameterNotSetException{
+
+		List<TcapSessionImpl> tcapSessionList = replicator.getAllTcapSessions();
+		logger.error("cleanUpDlgForRSN :: Number of active tcap sessions :  "+tcapSessionList.size());
+		boolean listenerFound = false;
+		Thread currentThread = Thread.currentThread();
+		MonitoredThread mt = null;
+		if (MonitoredThread.class.isInstance(currentThread)) {
+			mt = (MonitoredThread) currentThread;
+		}
+		byte[] signalingPointCodeBytes = null;
+		byte[] addressInformation = null;
+		GlobalTitle gt = null;
+		SccpUserAddress sua = null;
+		for(RestartNodeId restartNodeId: restartedNodeCICMap.keySet()){
+			for(TcapSessionImpl tcapsession: tcapSessionList){
+				if (mt != null) {
+					mt.updateTimeStamp();
+				}
+				try {
+					tcapsession.acquire();
+					SccpUserAddress suaInSession = (SccpUserAddress) tcapsession
+							.getAttribute(JainTcapProviderImpl.getImpl().SccpUserAddressAttr);
+					signalingPointCodeBytes = restartNodeId.getSignalingPointCodeBytes();
+					if (suaInSession != null){
+						gt = suaInSession.getGlobalTitle();
+						if (gt != null && useGT != null && useGT.equals("true")){
+							addressInformation = gt.getAddressInformation();
+							//This is assumed that address information 
+							int length = addressInformation.length;
+							if(addressInformation[length - 2] == signalingPointCodeBytes[0] &&
+									addressInformation[length - 1] == signalingPointCodeBytes[1]){
+								/*
+								 * EndReqEvent end = new EndReqEvent(this,
+								 * tcapsession.getDialogueId());
+								 * end.setTermination(DialogueConstants.TC_BASIC_END);
+								 * sendDialogueReqEvent(end);
+								 */
+								if (logger.isInfoEnabled()) {
+									logger.log(Level.INFO,
+											"GT: Found listener corresponding to sua"
+													+ suaInSession);
+								}
+								JainTcapListener jtl = (JainTcapListener) tcapsession
+										.getAttribute(ListenerApp);
+								// uniEvent.setDialogueId(tcapsession.getDialogueId());
+								jtl.processRSNUniDirIndEvent(tcapsession, uniEvent);
+								listenerFound = true;
+							}
+						}else{
+							sua = new SccpUserAddress(new SubSystemAddress(
+									restartNodeId.getSignalingPointCode(), (short)restartNodeId.getSsn()));
+							sua.setProtocolVariant(uniEvent.getDestinationAddress().getProtocolVariant());
+							//UAT-840 Changes
+							if(suaInSession.getString().equals(sua.getString())){
+								/*
+								 * EndReqEvent end = new EndReqEvent(this,
+								 * tcapsession.getDialogueId());
+								 * end.setTermination(DialogueConstants.TC_BASIC_END);
+								 * sendDialogueReqEvent(end);
+								 */
+								if (logger.isInfoEnabled()) {
+									logger.log(Level.INFO,
+											"Found listener corresponding to sua"
+													+ suaInSession);
+								}
+								JainTcapListener jtl = (JainTcapListener) tcapsession
+										.getAttribute(ListenerApp);
+								// uniEvent.setDialogueId(tcapsession.getDialogueId());
+								jtl.processRSNUniDirIndEvent(tcapsession, uniEvent);
+								listenerFound = true;
+							}
+						}
+					}
+				} catch (ParameterNotSetException pe) {
+					logger.log(Level.ERROR, pe);
+				}finally {
+					tcapsession.release();
+				}
+				logger.error("cleanUpDlgForRSN :: Dialog ID of cleaned up transaction : "+ tcapsession.getDialogueId());
+			}
+		}
+		if (!listenerFound){
+			if (logger.isInfoEnabled()) {
+				logger.log(Level.INFO, "No listener found corresponding to any SUA" );
+			}
+		}
+	}
+	
+	private boolean allRsaRecevied(String origSPC){
+		if (logger.isDebugEnabled()) {
+			logger.log(Level.DEBUG,"allRsaRecevied enter with origSPC:" + origSPC);
+		}
+		boolean allRSARcvd = true ;
+		Iterator it = rsnMap.keySet().iterator();
+		while(it.hasNext()){
+			String sasFIP = (String)it.next();
+			HashMap rsnStatusMap = rsnMap.get(sasFIP);
+			RSNStatus rsnStatus = (RSNStatus)rsnStatusMap.get(origSPC);
+			if (logger.isDebugEnabled()) {
+				logger.log(Level.DEBUG,"RSNStatus:" + rsnStatus.getStatus()+ "for FIP:"+ sasFIP);
+			}
+			if(rsnStatus !=null && rsnStatus.getStatus() == Status.IN_PROGRESS){
+				allRSARcvd = false ;
+				break;
+			}
+		}
+		if (logger.isDebugEnabled()) {
+			logger.log(Level.DEBUG,"allRsaRecevied exit with allRSARcvd:" + allRSARcvd);
+		}
+		return allRSARcvd ;
+	}
+	private static byte[] encodeCCInBCD(String str){
+		int len = str.length();
+		int size = ( len + 1) / 2;
+		byte[] out = new byte[size];
+
+		for (int i = 0, j = 0; i < len; i += 2, j++) {
+			byte b1 = (byte) (str.charAt(i) - '0');
+			byte b2 = 0;
+			if ((i + 1) < len) {
+				b2 = (byte) (str.charAt(i + 1) - '0');
+			}
+
+			out[j] = (byte) ((b2 << 4) | b1);
+		}
+		return out;
+	}
+	/*private boolean checkForRetransmission(SipServletRequest req){
+		synchronized(this.seqIds){
+			if (this.seqIds.size() == 0){
+				this.seqIds.add((String)req.getHeader("TC-Seq"));
+			}else if (seqIds.contains(req.getHeader("TC-Seq"))){
+				logger.log(Level.ERROR,"Duplicate Notify containing RSN Received");
+				SipServletResponse resp = req.createResponse(499);
+				resp.addHeader("TC-Seq", req.getHeader("TC-Seq"));
+				logger.log(Level.INFO, "Sending response:\n" + resp);
+				try{
+					resp.send();	
+				}catch (IOException e) {
+					logger.log(Level.ERROR, e.getMessage());
+				}
+				
+				return true;
+			} else{
+				seqIds.add(req.getHeader("TC-Seq"));
+			}
+		}
+		return false;
+	}*/
+
+
+
+}

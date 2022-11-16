@@ -1,0 +1,160 @@
+<%@ jet package="com.genband.m5.maps.ide.builder" 
+	class="ApplicationXML"
+	imports="
+	com.genband.m5.maps.ide.sitemap.model.SiteMap
+	java.util.List
+	java.net.URL
+	java.net.URLClassLoader
+	com.genband.m5.maps.ide.model.CPFScreen
+	com.genband.m5.maps.ide.MyObjectInputStream
+	java.net.MalformedURLException
+	org.eclipse.core.resources.IFile
+	java.io.ObjectInputStream
+	org.eclipse.core.runtime.CoreException
+	org.eclipse.core.resources.IProject
+	com.genband.m5.maps.ide.sitemap.util.SiteMapUtil
+	java.io.File
+	org.eclipse.core.runtime.Platform
+	com.genband.m5.maps.ide.CPFPlugin
+	org.eclipse.core.resources.ResourcesPlugin
+	java.io.IOException"
+%>
+<%
+	//SiteMap object will come to this file as an argument
+	//List<IFile> siteMapFiles = (List<IFile>)argument;
+	IProject app_project = (IProject)argument;
+	List<IFile> siteMapFiles = SiteMapUtil.getSiteMapFiles(app_project.getName());
+	IFile sitemapFile = null;
+	SiteMap siteMap = null;
+	String sepChar = File.separator;
+
+	String projectName = app_project.getName();
+
+	String platformPath="";
+	String projectPath="";
+			
+	if(null != Platform.getLocation()){
+		platformPath = Platform.getLocation().toOSString();
+	}
+	if(null != ResourcesPlugin.getWorkspace() && ( null != ResourcesPlugin.getWorkspace().getRoot()) 
+			&& (null!=ResourcesPlugin.getWorkspace().getRoot().getProject(projectName))){
+		projectPath = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName).getFullPath().toOSString();
+	}
+	CPFPlugin.getDefault().info("getProjectPath() : Project Path : "+platformPath+""+projectPath);
+	CPFPlugin.getDefault().info("getProjectPath() : Exiting getProjectPath()");
+	String absProjPath = platformPath.concat(projectPath).concat(sepChar);
+%>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************
+*	 GENBAND, Inc. Confidential and Proprietary
+*
+* This work contains valuable confidential and proprietary 
+* information.
+* Disclosure, use or reproduction without the written authorization of
+* GENBAND, Inc. is prohibited.  This unpublished work by GENBAND, Inc.
+* is protected by the laws of the United States and other countries.
+* If publication of the work should occur the following notice shall 
+* apply:
+* 
+* "Copyright 2007 GENBAND, Inc.  All rights reserved."
+**********************************************************************/
+-->
+<application version="1">
+  <description>Common Provisioning Framework</description>
+  <display-name>CPF</display-name>
+  <module>
+        <java>common.jar</java>
+  </module>
+  <module>
+    <ejb>CPF_EJB.jar</ejb>
+  </module>
+<%
+					// Changes related to PR 49914 (ClassLoading issue) starts
+					List<String> externalJarsPath = SiteMapUtil.getExtrnalJars(app_project.getName());
+					File gbFile = new File (CPFPlugin.fullPath("library/gb-common.jar"));
+					ClassLoader parentLoader = 	CPFScreen.class.getClassLoader();
+					URLClassLoader loader = null;
+					try {
+						loader = new URLClassLoader(new URL[] { new URL(
+								"file:///" + gbFile.getAbsolutePath()) }, parentLoader);
+					} catch (MalformedURLException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+						CPFPlugin.getDefault().log("MalformedURLException gb-common");
+						//success = false;
+					}
+					//URLClassLoader loader = (URLClassLoader)Thread.currentThread().getContextClassLoader();
+
+					
+					URL urls[]= new URL[30];
+					for ( int i = 0 ; i < externalJarsPath.size() ; i++ ) {
+						File jarFile = new File (externalJarsPath.get(i));
+						try {
+							urls[i] = new URL("file:///" + jarFile.getAbsolutePath());
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							CPFPlugin.getDefault().log("MalformedURLException " + jarFile.getName());
+							e.printStackTrace();
+						}
+						
+					}
+					
+					loader = new URLClassLoader(urls, parentLoader);
+
+for ( int i = 0 ; i < siteMapFiles.size() ; i++ ) {
+	sitemapFile = siteMapFiles.get(i);
+	ObjectInputStream in = null;
+				
+	try {
+			//in = new ObjectInputStream(sitemapFile.getContents());
+			in = new MyObjectInputStream(loader,sitemapFile.getContents());
+			// Changed due to PR 49914 (ClassLoading issue)
+			} catch (IOException e) {
+					e.printStackTrace();
+			} catch (CoreException e) {
+					e.printStackTrace();
+			}
+			try {
+				
+				String fileLoc="";
+				siteMap = (SiteMap)in.readObject();
+%>
+  <module>
+        <web>
+            <web-uri><%= siteMap.getName().concat(".war") %></web-uri>
+            <context-root><%= siteMap.getName().concat(".war") %></context-root>
+        </web>
+  </module>        
+<%
+		} catch (IOException e) {
+				e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			
+		}
+						
+		try {
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+
+}
+	String webXMLFileLoc = absProjPath+sepChar+"WebContent"+sepChar+"WEB-INF"+sepChar+"web.xml";
+	File webXMLFile = new File(webXMLFileLoc);
+	if(webXMLFile.exists()){
+%>
+  <module>
+        <web>
+            <web-uri><%= app_project.getName().concat("-WS.war") %></web-uri>
+            <context-root><%= app_project.getName().concat("-WS") %></context-root>
+        </web>
+  </module>
+<%
+	}
+	
+	
+%>      
+</application> 

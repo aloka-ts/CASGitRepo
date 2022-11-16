@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * Copyright Notice ============================================*
+ * This file contains proprietary information of BayPackets, Inc.
+ * Copying or reproduction without prior written approval is prohibited.
+ * Copyright (c) 2004-2006 =====================================
+ *
+-->
+
+
+<!DOCTYPE b2b-config 
+   PUBLIC "-//Baypackets SIP Application Server//DTD B2B Test Servlet Config//EN"
+   "http://www.baypackets.com/dtd/b2b-config.dtd">
+
+<b2b-config>
+
+	<sleep-intervals>
+		<request method="INVITE" type="initial">5000</request>
+	</sleep-intervals>
+	
+	<request-forwardings>
+		<request-forwarding>
+			<incoming-ip>*</incoming-ip>
+			<outbound-ip>192.168.3.251</outbound-ip>
+			<outbound-port>5060</outbound-port>
+		</request-forwarding>
+	</request-forwardings>
+	
+	<cdr/>
+
+</b2b-config>

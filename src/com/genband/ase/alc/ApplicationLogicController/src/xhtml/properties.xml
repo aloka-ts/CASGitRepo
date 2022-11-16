@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties xmlns=""> 
+	<ActionDefinition>
+		<Class display="true">
+			<label>Java Method Invocation</label>
+		</Class>			
+		<Method display="true">
+			<label>Method</label>
+		</Method>
+		<create>Java Method Invocation</create>
+	</ActionDefinition>
+	<Condition>
+		<OnInput display="true">
+			<label>Table </label>
+		</OnInput>
+		<EqualTo display="true">
+			<label>Equals </label>
+		</EqualTo>
+		<If display="true">
+			<label>If </label>
+		</If>
+	</Condition>
+	<Loop>
+		<RetryExhaust display="true">
+				<label>Retry Exhaust Label: </label>
+		</RetryExhaust>
+		<Count display="true">
+				<label>Loop Count </label>
+		</Count>
+	</Loop>
+	<Execute>
+		<Function display="true">
+				<label>Function </label>
+		</Function>
+	</Execute>
+	<begOfContainer display="true">
+		<label>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</label>
+	</begOfContainer>
+	<endOfContainer display="true">
+		<label>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</label>
+	</endOfContainer>
+</properties>

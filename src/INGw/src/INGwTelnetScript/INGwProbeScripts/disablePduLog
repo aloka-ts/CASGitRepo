@@ -1,0 +1,7 @@
+## This script is used to disable INAP Message exchanged between INC & 
+## stack AND INC & SAS. 
+#!/usr/bin/ksh
+
+. ~/profile.ingw
+. $INSTALLROOT/$SUBSYS_DIR/sol28g/conf/hssenv.sh
+$INSTALLROOT/$SUBSYS_DIR/sol28g/bin/INGwProbe -s $SIP_LISTENER_HOST -c "set pdu-debug-level 0"

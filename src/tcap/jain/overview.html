@@ -1,0 +1,435 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en]C-{C-UDP; EBM-SONY1}  (Windows NT 5.0; U) [Netscape]">
+   <title>Jain Tcap API</title>
+</head>
+<body bgcolor="#FFEEDD">
+
+<hr width="100%">
+<p><b><font size=-1>Copyrights</font></b>
+<p><font size=-1>Copyright - 1999 Sun Microsystems, Inc. All rights reserved.</font>
+<br><font size=-1>901 San Antonio Road, Palo Alto, California 94043, U.S.A.</font>
+<p><font size=-1>This product and related documentation are protected by
+copyright and distributed under licenses restricting its use, copying,
+distribution, and decompilation. No part of this product or related documentation
+may be reproduced in any form by any means without prior written authorization
+of Sun and its licensors, if any.</font>
+<p><font size=-1>RESTRICTED RIGHTS LEGEND: Use, duplication, or disclosure
+by the United States Government is subject to the restrictions set forth
+in DFARS 252.227-7013 (c)(1)(ii) and FAR 52.227-19.</font>
+<p><font size=-1>The product described in this manual may be protected
+by one or more U.S. patents, foreign patents, or pending applications.</font>
+<p><b><font size=-1>TRADEMARKS</font></b>
+<p><font size=-1>Sun, the Sun logo, Sun Microsystems, Java, Java Compatible,
+JavaBeans, Solaris,Write Once, Run Anywhere, JDK, Java Development Kit,
+and JavaStation are trademarks or registered trademarks of Sun Microsystems,
+Inc. in the U.S. and certain other countries. UNIX is a registered trademark
+in the United States and other countries, exclusively licensed through
+X/Open Company, Ltd. All other product names mentioned herein are the trademarks
+of their respective owners.</font>
+<p><font size=-1>THIS PUBLICATION IS PROVIDED AS IS WITHOUT WARRANTY OF
+ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+OR NON-INFRINGEMENT.</font>
+<p><font size=-1>THIS PUBLICATION COULD INCLUDE TECHNICAL INACCURACIES
+OR TYPOGRAPHICAL ERRORS. CHANGES ARE PERIODICALLY ADDED TO THE INFORMATION
+HEREIN; THESE CHANGES WILL BE INCORPORATED IN NEW EDITIONS OF THE PUBLICATION.
+SUN MICROSYSTEMS, INC. MAY MAKE IMPROVEMENTS AND/OR CHANGES IN THE PRODUCT(S)
+AND/OR THE PROGRAM(S) DESCRIBED IN THIS PUBLICATION AT ANY TIME.</font>
+<hr width="100%">
+<h2>
+&nbsp;Overview of JAIN TCAP API v1.1</h2>
+This document provides an overview of the JAIN TCAP API v1.1, which is
+part of the
+<a href="../index.html">JAIN
+TCAP 1.1 Specification</a>. It is not a tutorial, readers should have a
+good understanding of TCAP and be comfortable reading the JAIN TCAP API.
+This document, combined with the JAIN TCAP Reference Implementation (RI)
+Specification v1.1, the JAIN TCAP Technology Compatability Kit (TCK) Specification
+v1.1 and the JAIN TCAP API Requirements Specification v1.3 complete the
+JAIN TCAP 1.1 Specification.
+<p>The implementation of this API focuses around the <a href="/jain/protocol/ss7/tcap/JainTcapListener.html">JainTcapListener</a>,
+<a href="/jain/protocol/ss7/tcap/JainTcapProvider.html">JainTcapProvider</a>,
+<a href="/jain/protocol/ss7/tcap/JainTcapStack.html">JainTcapStack</a>
+interfaces and the <a href="/jain/protocol/ss7/JainSS7Factory.html">JainSS7Factory</a>.
+A JainTcapListener can be any TCAP User application that implements the
+JainTcapListener Java Interface, a JainTcapProvider and a JainTcapStack
+can be any TCAP Layer of an SS7 stack that implements the JainTcapProvider
+and JainTcapStack Java Interfaces, see <a href="#Figure1">Figure 1</a>.
+The JainTcapStack is the management encapsulation of a Tcap Layer, which
+also manages and exposes the JainTcapProvider Interfaces, which encapsulate
+the messaging features of the Tcap Layer. A JainTcapListener would then
+use a JainTcapProvider to send dialogue and component primitives into the
+TCAP layer. In order to send a TCAP message, a Listener would have to register
+with a JainTcapProvider and send component events to a JainTcapProvider,
+interspersed with dialogue events based on the JavaBean Event model, see
+<a href="#Figure2">Figure 2</a>.
+<p>The JAIN SS7 factory is a central repositary from which a JainTcapListener
+application can obtain a proprietary JainTcapStack implemenation cast to
+the JainTcapStack Java Interface. This is achieved by setting the path
+to the vendors proprietary implementation and calling the create SS7 object
+functionality implemented within the Jain SS7 Factory.
+<center>
+<p><a NAME="Figure1"></a><img SRC="doc-files/figure1.gif" BORDER=1 >
+<p><b><i>Figure 1 - JAIN TCAP Architecture</i></b></center>
+
+<p><br>
+<p>The JAIN TCAP Event model is based on the JavaBean Event model as outlined
+in <a href="#Figure2">Figure 2</a>. The JAIN TCAP API architecture is JavaBean
+compliant, however it not mandated that an implementation of the JAIN TCAP
+API must be JavaBean compliant.
+<center>
+<p><a NAME="Figure2"></a><img SRC="doc-files/figure2.gif" BORDER=1 height=206 width=405>
+<p><b><i>Figure 2 - Jain Tcap Event delivery based on the JavaBean Event
+Model</i></b></center>
+
+<p>Each JainTcapProvider and JainTcapStack implementation will be SS7 vendor
+specific. The JainTcapStack implementation will maintain the list JainTcapProviders
+for that SS7 stack <a href="#Figure3">see Figure 3</a>, as well as providing
+the hooks for the proprietary management of subsystems for that TCAP Layer.
+The JainTcapProvider implementation acts as a messaging proxy for the TCAP
+layer of that vendors SS7 Stack. It listens for incoming TCAP messages
+from the TCAP layer of the SS7 stack and encapsulates these messages as
+a combination of <a href="/jain/protocol/ss7/tcap/dialogue/package-summary.html">dialogue</a>
+and <a href="/jain/protocol/ss7/tcap/component/package-summary.html">component</a>
+events and fires them to the appropraite JainTcapListener. As the JainTcapProvider
+has the methods required to maintain a list of JainTcapListeners, it can
+inspect the messages' destination addess and match this to the SccpUserAddress
+of the various JainTcapListeners maintained by that JainTcapProvider, <a href="#Figure4">see
+Figure 4</a>.
+<center>
+<p><a NAME="Figure3"></a><img SRC="doc-files/figure3.gif" BORDER=1 >
+<p><b><i>Figure 3 - JainTcapStack with managing multiple JainTcapProviders</i></b></center>
+
+<p>The JainTcapListener interface defines the methods required to process
+any of the Events sent from a JainTcapProvider.&nbsp; An object implementing
+the JainTcapListener interface (a Listener) would register as an Event
+Listener of a Provider with a SccpUserAddress and would subsequently be
+able to receive Events from that Provider for that address. The current
+JAIN TCAP architecture enables:
+<ul>
+<li>
+One or more Event Listeners to register with any JainTcapProvider, as well
+as providing the ability to limit the number of JainTcapListeners that
+may register&nbsp; at any one time with a specific JainTcapProvider.</li>
+
+<li>
+A single JainTcapListener to register with one or more JainTcapProviders
+at any time, see <a href="#Figure3">Figure 3</a>.</li>
+
+<li>
+More than one JainTcapListener to register with a JainTcapPovider with
+the same SccpUserAddress. This area is for further study but is aimed at
+providing a mechanism of load-sharing and failover in the application space.</li>
+</ul>
+<a href="#Figure4">Figure 4</a> illustrates how an Event is distributed
+to a specific Listener, when mulitple Listeners are registered with the
+one Provider. In order to send JainTcapEvents a JainTcapListener application
+would create new <a href="/jain/protocol/ss7/tcap/dialogue/package-summary.html">dialogue</a>
+and <a href="/jain/protocol/ss7/tcap/component/package-summary.html">component</a>
+events and pass these events to the send methods defined in the JainTcapProvider
+Interface. It is important to note that the JainTcapProvider is not listening
+for these Events, as the JainTcapListener application is the initiating
+entity which usually waits on a undefined response.
+<center>
+<p><a NAME="Figure4"></a><img SRC="doc-files/figure4.gif" BORDER=1 >
+<p><b><i>Figure 4 - JainTcapEvent distribution between multiple JainTcapListeners</i></b></center>
+
+<hr WIDTH="100%">
+<h2>
+A JAIN TCAP example</h2>
+The following points illustrate how the JAIN TCAP API can be used to send
+and receive TCAP Messages. The example looks at the code of a Jain Tcap
+User application and the steps the User application will use to create
+a JainTcapProvider for communicating with the proprietary TCAP stack.
+<br>&nbsp;
+<ul>
+<li>
+<b>Any TCAP User application interested in receiving dialogue and component
+Events must implement the <a href="/jain/protocol/ss7/tcap/JainTcapListener.html">JainTcapListener</a>
+interface:</b></li>
+
+<p><br><tt><b>public class</b> JainTcapListenerImpl<b> implements</b> JainTcapListener,
+Runnable{</tt> // start of Listener Implemenation class
+<p>&nbsp;<b>public</b> JainTcapListenerImpl () { // start of constructor
+<blockquote><tt>// set this JainTcapListener for this address</tt>, only
+one for simplicity
+<br><tt>//Signaling Point Code number</tt>
+<br><tt>int SPCode = 2300193;</tt>
+<br><tt>short ownSSn = 10;</tt>
+<br><tt>int[] spc = SignalingPointCode.convertSPCToMemberClusterZone(SPCode,
+variant);</tt>
+<br><tt>SignalinPointCode signalingPointCode = <b>new</b> SignalingPointCode(spc[0],
+spc[1], spc[2]);</tt>
+<br><tt>SubSystemAdress subSystemAddress = <b>new</b> SubSystemAddress(signalingPointCode,
+ownSSn);</tt>
+<br><tt>SccpUserAddress senderAddress = <b>new</b> SccpUserAddress(subSystemAddress);</tt>
+<br>&nbsp;</blockquote>
+
+<li>
+<b><tt>Use the <a href="/jain/protocol/ss7/JainSS7Factory.html">JainSS7Factory</a>
+to set the desired <a href="/jain/protocol/ss7/JainSS7Factory.html#setPathName(java.lang.String)">PathName</a>
+and obtain a reference to a <a href="/jain/protocol/ss7/tcap/JainTcapStack.html">JainTcapStack</a>
+object and set its Stack Name if an appropriate stack does not already
+exist</tt></b><tt></tt></li>
+</ul>
+
+<blockquote>
+<blockquote><tt>// use the Stack Factory to establish if there are any
+stacks available</tt>
+<br><tt>// If there is, select a suitable stack, if not create a Peer TcapStack</tt></blockquote>
+
+<blockquote><tt>JainSS7Factory myFactory = JainSS7Factory.getInstance();</tt>
+<br><tt>Vector availableStacks = myFactory.getJainObjectList();</tt></blockquote>
+
+<blockquote><tt><b>if</b> (availableStacks != <b>null</b>) {</tt></blockquote>
+
+<blockquote>
+<blockquote><tt>// There are stacks available, select a stack with the
+signaling point code</tt>
+<br><tt>// that supports the required protocol</tt>
+<p><tt><b>for</b> (<b>int</b> i=0; i&lt;availableStacks.size(); i++){</tt>
+<blockquote><tt><b>try</b> {</tt>
+<blockquote><tt>JainTcapStack tmpStack = (JainTcapStack)availableStacks.elementAt(i);</tt></blockquote>
+<tt>} <b>catch</b> (Exception e) {</tt>
+<blockquote><tt>// Do nothing not at a JainTcapStack Object</tt></blockquote>
+<tt>}</tt></blockquote>
+
+<blockquote><tt><b>if</b> ( tmpStack.getVendorName() == "com.sun") {</tt>
+<blockquote><tt>// this is the stack we want to use</tt>
+<br><tt>myStack = tmpStack;</tt></blockquote>
+<tt>}</tt></blockquote>
+<tt>}</tt>
+<p><tt><b>if</b> (myStack == null){</tt>
+<blockquote><tt>// we haven't found a suitable stack so create one</tt>
+<br><tt>myFactory.setPathName("com.sun");</tt>
+<p><tt><b>try</b> {</tt>
+<blockquote><tt>myStack = (JainTcapStack)myFactory.createSS7Object("jain.protocol.ss7.tcap.JainTcapStackImpl");</tt>
+<br><tt>// Set Vendor name to enable Listeners to <br>
+<tt>// differentiate between vendors<br>
+<tt>// when using previously created stacks</tt>
+<br><tt>myStack.setVendorName("com.sun");</tt></blockquote>
+<tt>} <b>catch</b> (SS7PeerUnavailableException e) {</tt>
+<blockquote><tt>// Couldn't find the class com.sun.jain.protocol.ss7.tcap.JainTcapStackImpl</tt>
+<br><tt>System.err.println("The specified class could not be found in the
+CLASSPATH");</tt></blockquote>
+<tt>}</tt></blockquote>
+<tt>}</tt></blockquote>
+<tt>}</tt></blockquote>
+</blockquote>
+
+<ul>
+<li>
+<b><tt>Use the <a href="/jain/protocol/ss7/tcap/JainTcapStack.html">JainTcapStack</a>
+Object to obtain a new <a href="/jain/protocol/ss7/tcap/JainTcapProvider.html">JainTcapProvider</a></tt></b><tt>.
+<b>The JainTcapProvider class will be used to send TCAP Component and Dialogue
+handling primitives into the SS7 protocol stack, and will be used to listen
+for TCAP messages from the SS7 protocol stack. The User Application should
+register as a listener of the JainTcapProvider with an User Address. Once
+a TCAP message arrives, the Provider should inspect the Destination User
+Address of the message and send the message as Component and Dialogue handling
+Events to the JainTcapListener registered with the Provider with that User
+Address.</b></tt></li>
+
+<blockquote><tt>// create a new Provider attached to the stack</tt>
+<br><tt>// and register with it as an EventListener</tt></blockquote>
+
+<blockquote><tt>myprovider = myStack.createProvider();</tt></blockquote>
+
+<blockquote><tt><b>try</b> {</tt>
+<blockquote><tt>myProvider.addJainTcapListener(this, myUserAddressList[0]);</tt></blockquote>
+<tt>} <b>catch</b> (TooManyListenersException tooManyListeners) {</tt>
+<blockquote><tt>System.err.println("tooManyListeners.getMessage()");</tt></blockquote>
+<tt>}</tt></blockquote>
+<tt>} // End of constructor</tt>
+<br>&nbsp;
+<li>
+<tt><b>Receiving TCAP messages</b>:- <b>This class will use the <a href="/jain/protocol/ss7/tcap/JainTcapListener.html#processDialogueIndEvent(jain.protocol.ss7.tcap.DialogueIndEvent)">processDialogueIndEvent()</a>
+method to process the incoming dialogue indication primitives, and <a href="/jain/protocol/ss7/tcap/JainTcapListener.html#processComponentIndEvent(jain.protocol.ss7.tcap.ComponentIndEvent)">processComponentIndEvent()</a>method
+to process the incoming component indication primitives.</b></tt></li>
+</ul>
+
+<blockquote><tt>/**</tt>
+<br><tt>* Processing of the ComponentIndEvent passed.</tt>
+<br><tt>*/</tt></blockquote>
+
+<blockquote><tt><b>public void</b> processComponentIndEvent(ComponentIndEvent
+event){</tt></blockquote>
+
+<blockquote>
+<blockquote><tt>JainTcapProvider eventSource = (JainTcapProvider)event.getSource();</tt>
+<p><tt>// At this stage we only that the event is a ComponentIndEvent</tt>
+<br><tt>// therfore we find out the primitive type.</tt>
+<br><tt><b>switch</b> (event.getPrimitiveType()) {</tt></blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote>
+<blockquote><tt><b>case</b> TcapConstants.PRIMITIVE_INVOKE : {</tt>
+<blockquote><tt>// cast to an Invoke Indication Event</tt>
+<br><tt>InvokeIndEvent receivedInvoke = (InvokeIndEvent)event;</tt>
+<p><tt>// now we can access the methods within the Invoke Indication Primitive.</tt>
+<p><tt><b>try</b> {</tt>
+<blockquote><tt><b>int</b> dialogueId = receivedInvoke.getDialogueId();</tt>
+<br><tt><b>int</b> invokeId = receivedInvoke.getInvokeId();</tt></blockquote>
+<tt>} <b>catch</b> (ParameterNotSetException exception) {</tt>
+<blockquote><tt>// Access the error Message</tt>
+<br><tt>System.err.println("exception.getMessage()");</tt></blockquote>
+<tt>}</tt></blockquote>
+
+<blockquote><tt><b>try</b> {</tt>
+<blockquote><tt>Operation op = receivedInvoke.getOperation();</tt>
+<br><tt><b>if</b> (op.getOperationType() == Operation.OPERATIONTYPE_LOCAL)
+{</tt>
+<p><tt>// this is a local/private operation</tt>
+<p><tt>}<b> else</b> {</tt>
+<blockquote><tt>// this is a global/national operation</tt></blockquote>
+<tt>} <b>catch</b> (ParameterNotSetException exception) {</tt>
+<blockquote><tt>// Access the error Message</tt>
+<br><tt>System.err.println("exception.getMessage()");</tt></blockquote>
+<tt>}</tt></blockquote>
+<tt>// Execute the Invoke primitive</tt>
+<p><tt>}</tt></blockquote>
+<tt>}</tt>
+<p><tt><b>case</b> TcapConstants.PRIMITIVE_ERROR : {......};</tt>
+<br><tt><b>case</b> TcapConstants.PRIMITIVE_REJECT : {......};</tt>
+<br><tt><b>case</b> TcapConstants.PRIMITIVE_RESULT : {......};</tt>
+<br><tt><b>case</b> TcapConstants.PRIMITIVE_LOCAL_CANCEL : {......};</tt>
+<br><tt><b>case</b> TcapConstants.PRIMITIVE_USER_CANCEL : {......};</tt>
+<p><tt><b>default :</b> // not a recognised component</tt></blockquote>
+<tt>}</tt></blockquote>
+<tt>} // end of processComponentIndEvent() method</tt></blockquote>
+
+<blockquote><tt>/**</tt>
+<br><tt>*Processing of DialogueIndEvent</tt>
+<br><tt>*/</tt></blockquote>
+
+<blockquote><tt><b>public void</b> processDialogueIndEvent(DialogueIndEvent
+event){</tt></blockquote>
+
+<blockquote>
+<blockquote><tt>// Processing a Dialogue Indication Event is similiar to</tt>
+<br><tt>// the processing of Component Indication Event</tt></blockquote>
+<tt>}</tt></blockquote>
+
+<ul>
+<li>
+<tt><b>Methods to manage the Sccp User Addresse of this JainTcapListener</b></tt></li>
+</ul>
+
+<blockquote><tt>/**</tt>
+<br><tt>* Adds a SccpUserAddress to the list of User Addresses used by
+this JainTcapListener. This</tt>
+<br><tt>* JainTcapProvider can then choose to register as an Event Listener</tt>
+<br><tt>* of the a JainTcapProvider for this set of User Addresses. Any
+Events addressed to one of the User Addresses</tt>
+<br><tt>* belonging to the User Application will be passed to this JainTcapListener
+by</tt>
+<br><tt>* the JainTcapProvider.</tt>
+<br><tt>*/</tt></blockquote>
+
+<blockquote><tt><b>public void</b> addUserAddress(SccpUserAddress userAddress)
+<b>throws</b>
+UserAddressLimitException{</tt>
+<blockquote><tt><b>if</b> (null == myUserAddressList[0]) {</tt>
+<blockquote><tt>myUserAddressList[0] = userAddress;</tt></blockquote>
+<tt>} <b>else</b> {</tt>
+<blockquote><tt><b>throw new</b> UserAddressLimitException();</tt></blockquote>
+<tt>}</tt></blockquote>
+<tt>}</tt></blockquote>
+
+<blockquote><tt>/**</tt>
+<br><tt>* Removes a Jain User Address from the list of User Addresses used
+by this JainTcapListener.</tt>
+<br><tt>*/</tt></blockquote>
+
+<blockquote><tt><b>public void</b> removeUserAddress(SccpUserAddress userAddress)
+<b>throws</b>
+NoSuchUserAddressException{</tt>
+<blockquote><tt><b>if</b> (userAddress == myUserAddressList[0]) {</tt>
+<blockquote><tt>myUserAddressList[0] = null;</tt></blockquote>
+<tt>} <b>else</b> {</tt>
+<blockquote><tt><b>throw new</b> NoSuchUserAddressException();</tt></blockquote>
+</blockquote>
+<tt>}</tt></blockquote>
+
+<blockquote><tt>/**</tt>
+<br><tt>* Returns the list of User Addresses used by this JainTcapListener.</tt>
+<br><tt>*/</tt></blockquote>
+
+<blockquote><tt><b>public </b>SccpUserAddress[] getUserAddressList(){</tt>
+<blockquote><tt>return(myUserAddressList);</tt></blockquote>
+<tt>}</tt></blockquote>
+
+<ul>
+<li>
+<tt><b>To send TCAP messages:</b>- <b>Component Request Events are created
+and sent to the Provider, interspersed with Dialogue Request Events. First
+a component request is created as an Event, setting the Listener (this)
+as the Event source.</b> <b>Parameters of the component primitive may be
+set using the appropriate 'set' method.</b></tt></li>
+
+<p><br><tt><b>public void</b> run() {</tt>
+<blockquote><tt>// get a new Dialogue Id for use in this Dialogue</tt>
+<br><tt>int myNewDialogueId = myProvider.getNewDialogueId();</tt></blockquote>
+
+<blockquote><tt>// get a new Invoke Id for use within the Dialogue</tt>
+<br><tt>int myNewInvokeId = myProvider.getNewInvokeId(myNewDialogueId);</tt>
+<p><tt>byte[] operationCode = {1, 1, 1};</tt>
+<br><tt>Operation myOperation = new Operation(Operation.OPERATIONTYPE_GLOBAL,
+operationCode);</tt>
+<p><tt><a href="/jain/protocol/ss7/tcap/component/InvokeReqEvent.html">InvokeReqEvent</a>
+myInvokeReqEvent = new InvokeReqEvent(this, myNewDialogueId, myOperation);</tt></blockquote>
+
+<blockquote><tt>// set the JAIN TCAP optional parameters of the Invoke
+Event</tt></blockquote>
+
+<blockquote><tt>myInvokeReqEvent.setInvokeId(myNewInvokeId);</tt>
+<br><tt>myInvokeReqEvent.setTimeout(INVOKE_TIMER_1);</tt>
+<br><tt>myInvokeReqEvent.setLastInvokeEvent(true); // this is the last
+Invoke (ANSI Flag to show this is an INVOKE_L component)</tt></blockquote>
+<b><tt>The component request primitive is then sent to the Provider, the
+implementation of the JainTcapProvider send method can ensure all the mandatory
+paramters are set for that ANSI 92 specification.</tt></b>
+<blockquote><tt><b>try</b> {</tt>
+<blockquote><tt>myProvider.sendComponentReqEvent(myInvokeReqEvent);</tt></blockquote>
+<tt>} <b>catch</b> (MandatoryParameterNotSetException e){</tt>
+<blockquote><tt>System.err.println("Some of the required parameters were
+not set");</tt></blockquote>
+<tt>}</tt></blockquote>
+<b><tt>Then a dialogue request Event is created in a similar manner and
+sent to the Provider.</tt></b>
+<blockquote><tt><a href="/jain/protocol/ss7/tcap/dialogue/BeginReqEvent.html">BeginReqEvent</a>
+myBeginRequestEvent = new BeginReqEvent(this, myNewDialogueId, myUserAddressList[0],
+destinationAddress);</tt>
+<br>&nbsp;</blockquote>
+<tt><b>JAIN TCAP optional Parameters may then be set using the appropriate
+'set' methods and</b> <b>the dialogue request primitive is then sent to
+the Provider. Once again the implementation of the JainTcapProvider send
+method can ensure all the mandatory paramters are set for that ANSI 92
+specification.</b></tt>
+<blockquote><tt>myBeginRequestEvent.setQualityOfService(QOS_1);</tt></blockquote>
+
+<blockquote><tt><b>try</b> {</tt>
+<blockquote><tt>myProvider.sendDialogueReqEvent(myBeginRequestEvent);</tt></blockquote>
+<tt>} <b>catch</b> (MandatoryParameterNotSetException e){</tt>
+<blockquote><tt>System.err.println("Some of the required parameters were
+not set");</tt></blockquote>
+<tt>}</tt></blockquote>
+<tt>} // end of run method</tt></ul>
+
+<ul>
+<li>
+<b><tt>Initialize all variables</tt></b></li>
+</ul>
+
+<blockquote><tt><b>private</b> JainTcapStack myStack = null;</tt>
+<br><tt><b>private</b> SccpUserAddress[] myUserAddressList = null;</tt>
+<br><tt><b>private</b> JainTcapProvider myProvider = null;</tt>
+<br><tt><b>public static final</b> int INVOKE_TIMER_1 = 5000;</tt>
+<br><tt><b>public static final</b> int QOS_1 = 1;</tt></blockquote>
+<tt>} // End of Listener implementation class</tt>
+</body>
+</html>

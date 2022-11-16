@@ -1,0 +1,352 @@
+ 
+<div
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:pfc="http://www.jboss.com/portal/facelet/common"
+   xmlns:c="http://java.sun.com/jstl/core">
+   
+ <!--  <f:loadBundle basename="bundle.resources" var="bundle"/> -->
+ 	<f:view locale="#{facesContext.externalContext.request.locale}">
+	
+	<h:form id="SP">
+		<table width="50%">
+			<h:panelGroup>
+			<tr colspan="2">
+					<td>
+						<h:outputText value="#{bundle.Search}:  " styleClass="portlet-msg-info-m-contentText" style="font-weight: bold"/>
+					
+						<h:selectBooleanCheckbox id="SC" value="#{listMBean270.searechCaseSensitive}"/>
+						<h:outputLabel for="SC" rendered="true">
+							<h:outputText value="#{bundle.Case_Sensitive}"/>
+						</h:outputLabel> 
+					</td>
+			</tr>
+			<tr>
+				<td>
+					<h:selectOneMenu value="#{listMBean270.searchKey}" onchange="submit()" immediate="true">
+						<f:selectItems value="#{listMBean270.attbs}" />
+					</h:selectOneMenu>
+				
+					<h:selectOneMenu id="Operator" value="#{listMBean270.searchOperator}">
+						<f:selectItem value="#{listMBean270.operators}"/>
+					</h:selectOneMenu>
+				
+					<h:inputText id="value" value="#{listMBean270.searchValue}">
+						<c:choose>
+							<c:when test="${listMBean270.searchKey == 'childOrgnizationAccounts.customerId'}">
+							</c:when>
+							<c:when test="${listMBean270.searchKey == 'childOrgnizationAccounts.name'}">
+							</c:when>
+							<c:when test="${listMBean270.searchKey == 'childOrgnizationAccounts.domainName'}">
+							</c:when>
+							<c:when test="${listMBean270.searchKey == 'childOrgnizationAccounts.activationDate'}">
+									<f:convertDateTime dateStyle="short"/>
+							</c:when>
+							<c:when test="${listMBean270.searchKey == 'childOrgnizationAccounts.expirationDate'}">
+									<f:convertDateTime dateStyle="short"/>
+							</c:when>
+							<c:when test="${listMBean270.searchKey == 'childOrgnizationAccounts.status'}">
+							</c:when>
+							<c:when test="${listMBean270.searchKey == 'childOrgnizationAccounts.lastUpdated'}">
+									<f:convertDateTime dateStyle="medium"/>
+							</c:when>
+						</c:choose>
+					</h:inputText>
+				
+					<h:commandButton action="#{listMBean270.search}" value="#{bundle.Search}"/>
+				</td>
+			</tr>
+			</h:panelGroup>
+		</table>
+	</h:form>	
+	<h:form id="RP">
+		<c:set var="listing" value="${listMBean270.collec}"/>
+		<c:if test="${listing == null}">
+			<br/>
+			<h:outputText value="You Have No Data Rite Now"/>
+		</c:if>
+		<c:if test="${listing != null}">
+		<br/>
+		<br/>
+
+		<table width="100%">
+			<thead class="portlet-section-header">
+				<th>
+					<h:outputText value=" "/>
+	  			</th>
+				<c:choose>
+				  	<c:when test="${listMBean270.listVisibility[1]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean270.sort}" value="#{bundle.L270_Organization_CustomerId}">
+								<f:param name="sortBy" value="childOrgnizationAccounts.customerId"/>
+							</h:commandLink>
+							<c:if test="${listMBean270.orderBy == 'childOrgnizationAccounts.customerId'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean270.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean270.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+				<c:choose>
+				  	<c:when test="${listMBean270.listVisibility[2]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean270.sort}" value="#{bundle.L270_Organization_Child_Org_Name}">
+								<f:param name="sortBy" value="childOrgnizationAccounts.name"/>
+							</h:commandLink>
+							<c:if test="${listMBean270.orderBy == 'childOrgnizationAccounts.name'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean270.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean270.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+				<c:choose>
+				  	<c:when test="${listMBean270.listVisibility[3]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean270.sort}" value="#{bundle.L270_Organization_Child_Org_DomainName}">
+								<f:param name="sortBy" value="childOrgnizationAccounts.domainName"/>
+							</h:commandLink>
+							<c:if test="${listMBean270.orderBy == 'childOrgnizationAccounts.domainName'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean270.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean270.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+				<c:choose>
+				  	<c:when test="${listMBean270.listVisibility[4]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean270.sort}" value="#{bundle.L270_Organization_ActivationDate}">
+								<f:param name="sortBy" value="childOrgnizationAccounts.activationDate"/>
+							</h:commandLink>
+							<c:if test="${listMBean270.orderBy == 'childOrgnizationAccounts.activationDate'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean270.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean270.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+				<c:choose>
+				  	<c:when test="${listMBean270.listVisibility[5]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean270.sort}" value="#{bundle.L270_Organization_ExpirationDate}">
+								<f:param name="sortBy" value="childOrgnizationAccounts.expirationDate"/>
+							</h:commandLink>
+							<c:if test="${listMBean270.orderBy == 'childOrgnizationAccounts.expirationDate'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean270.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean270.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+				<c:choose>
+				  	<c:when test="${listMBean270.listVisibility[6]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean270.sort}" value="#{bundle.L270_Organization_Child_Org_Status}">
+								<f:param name="sortBy" value="childOrgnizationAccounts.status"/>
+							</h:commandLink>
+							<c:if test="${listMBean270.orderBy == 'childOrgnizationAccounts.status'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean270.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean270.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+				<c:choose>
+				  	<c:when test="${listMBean270.listVisibility[7]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean270.sort}" value="#{bundle.L270_Organization_LastUpdated}">
+								<f:param name="sortBy" value="childOrgnizationAccounts.lastUpdated"/>
+							</h:commandLink>
+							<c:if test="${listMBean270.orderBy == 'childOrgnizationAccounts.lastUpdated'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean270.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean270.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+			</thead>
+
+			<tbody>
+				<c:choose>
+	    				<c:when test="${listMBean270.listVisibility[0]}">
+							<td rowspan="11">
+							<h:selectOneRadio value="#{listMBean270.primaryKeyValue}" layout="pageDirection" immediate="true">
+								<f:selectItems value="#{listMBean270.radio}"/>
+							</h:selectOneRadio>
+  				 			</td>
+  						</c:when>
+  				 </c:choose>
+  				 <td>
+				 <c:forEach items="#{listing}" var="object" varStatus="status">
+         			<tr class="#{status.index % 2 == 0 ? 'portlet-section-body' : 'portlet-section-alternate'}">
+				 		<c:choose>
+	    				<c:when test="${listMBean270.listVisibility[1]}">
+							<td>
+							<c:choose>
+								<c:when test="${listMBean270.canView == 'true'}">
+		 						 <h:commandLink action="add" actionListener="#{createMBean270.viewAction}" >
+									<f:attribute name="pkValue" value="#{object[0]}"/>
+									<h:outputText value="#{object[1]}"/>
+								</h:commandLink>
+							   </c:when>
+							   <c:otherwise>
+									<h:outputText value="#{object[1]}">
+									</h:outputText>
+							   </c:otherwise>
+							</c:choose>
+            				</td>
+						</c:when>
+	    				</c:choose>
+				 		<c:choose>
+	    				<c:when test="${listMBean270.listVisibility[2]}">
+							<td>
+		 						<h:outputText value="#{object[2]}">
+								</h:outputText>
+            				</td>
+						</c:when>
+	    				</c:choose>
+				 		<c:choose>
+	    				<c:when test="${listMBean270.listVisibility[3]}">
+							<td>
+		 						<h:outputText value="#{object[3]}">
+								</h:outputText>
+            				</td>
+						</c:when>
+	    				</c:choose>
+				 		<c:choose>
+	    				<c:when test="${listMBean270.listVisibility[4]}">
+							<td>
+		 						<h:outputText value="#{object[4]}">
+										<f:convertDateTime dateStyle="short"/>
+								</h:outputText>
+            				</td>
+						</c:when>
+	    				</c:choose>
+				 		<c:choose>
+	    				<c:when test="${listMBean270.listVisibility[5]}">
+							<td>
+		 						<h:outputText value="#{object[5]}">
+										<f:convertDateTime dateStyle="short"/>
+								</h:outputText>
+            				</td>
+						</c:when>
+	    				</c:choose>
+				 		<c:choose>
+	    				<c:when test="${listMBean270.listVisibility[6]}">
+							<td>
+		 						<h:outputText value="#{object[6]}">
+								</h:outputText>
+            				</td>
+						</c:when>
+	    				</c:choose>
+				 		<c:choose>
+	    				<c:when test="${listMBean270.listVisibility[7]}">
+							<td>
+		 						<h:outputText value="#{object[7]}">
+										<f:convertDateTime dateStyle="medium"/>
+								</h:outputText>
+            				</td>
+						</c:when>
+	    				</c:choose>
+         			</tr>
+         		</c:forEach>
+         		</td>
+			</tbody>
+		</table>
+		
+		<table width="100%">
+			<tbody>
+	 			<tr class="portlet-section-body">
+      		      <td align="center" colspan="2">
+     		          <h:panelGroup> 				
+						<h:commandLink id="PREVIOUS" action="previousPage" disabled="#{listMBean270.previousDisabled}" actionListener="#{listMBean270.pageChange}" >
+							<h:graphicImage alt="Previous" value="/images/prev.jpg" style="border:none" />
+							<h:outputText escape="true" value="  " />
+						</h:commandLink>
+						<h:commandLink id="NEXT" action="nextPage" disabled="#{listMBean270.nextDisabled}" actionListener="#{listMBean270.pageChange}" >
+							<h:graphicImage alt="Next" value="/images/next.jpg" style="border:none" />
+						</h:commandLink>
+	     			  </h:panelGroup>
+          		  </td>
+         		</tr>
+			</tbody>
+		</table>
+		</c:if>
+		<h:panelGroup> 
+		<!--	<c:if test="${listMBean270.canView == 'true'}"> -->
+				<h:commandButton action="add" actionListener="#{createMBean270.viewAction}" value="#{bundle.View}" disabled="#{!listMBean270.canView}">
+					<f:attribute name="pkValue" value="#{listMBean270.primaryKeyValue}" />
+				</h:commandButton>
+		<!--	</c:if> -->
+			<!-- <c:if test="${listMBean270.canCreate == 'true'}"> -->
+				<h:commandButton action="add" actionListener="#{createMBean270.addAction}" value="#{bundle.Add}" disabled="#{!listMBean270.canCreate}" immediate="true"/>
+			<!-- </c:if> -->
+			<!-- <c:if test="${listMBean270.canModify == 'true'}"> -->
+				<h:commandButton action="add" actionListener="#{createMBean270.modifyAction}" value="#{bundle.Modify}" disabled="#{!listMBean270.canModify}">
+					<f:attribute name="pkValue" value="#{listMBean270.primaryKeyValue}" />
+				</h:commandButton>
+			<!-- </c:if> -->
+			<!-- <c:if test="${listMBean270.canDelete == 'true'}"> -->
+				<h:commandButton id="delete" action="delete" actionListener="#{listMBean270.delete}" value="#{bundle.Delete}" disabled="#{!listMBean270.canDelete}"/>
+			<!-- </c:if> -->
+			<c:choose>
+				<c:when test="${listMBean270.criteria.searchDetails.search == 'true'}">
+					<h:commandButton  value="#{bundle.Reset}" action="#{listMBean270.reset}"/>
+				</c:when>
+			</c:choose>
+		</h:panelGroup>
+   	</h:form>
+   </f:view>
+</div>

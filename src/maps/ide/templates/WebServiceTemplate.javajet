@@ -1,0 +1,616 @@
+<%@ jet 
+	package = "com.genband.m5.maps.ide.model.template" 
+	imports = "java.util.* 
+				com.genband.m5.maps.ide.CPFPlugin
+				com.genband.m5.maps.common.CPFConstants
+				com.genband.m5.maps.ide.model.* 
+				com.genband.m5.maps.ide.model.util.*;" 
+	class = "CreateWS" 
+%>
+<% 	
+	CPFPlugin LOG = CPFPlugin.getDefault();
+	LOG.info("Web Service generaion started from tempalte Side...");
+	CPFResource CPFArgument = (CPFResource)argument; 
+ 	CPFScreen cpfScreen = (CPFScreen)CPFArgument.getCpfScreen();    //which holds the details collected at cpfScreen wizard time
+ 	ModelEntity baseEntity = cpfScreen.getBaseEntity();			//Which holds BaseEntity name of this web service
+ 	LOG.info("Generating web service for base Enitty : " + baseEntity.getName());	
+ 	WebServiceInfo webServiceInfo = cpfScreen.getWebServiceInfo();  //holds information related to generating webserivce like webmethods name adn web service name  
+ 	String webServiceName = new String();
+ 	String rootEntityName = baseEntity.getName ();
+ 	int operationId = cpfScreen.getPortletRef().getPortletId();
+ 	LOG.info("Generatinf web service for the portlet Id : " + operationId);
+ 	Map<CPFConstants.OperationType, String[]> webParams = webServiceInfo.getWebParams();    //Holds WebParam names for WebPorts
+ 	Map<CPFConstants.OperationType, String> webResults = webServiceInfo.getWebResults();
+ 	if(cpfScreen.getWebServiceRef () == null) {			//checking weather user selected already existed web service or not If not we will get web service name from webServiceInfo
+ 		webServiceName = webServiceInfo.getWebServiceName();
+ 	}
+ 	else {
+ 		//TODO this release does not supported adding web methods to already existing web services...
+ 		//Later has to edit this else part ...
+ 	}
+ 	LOG.info("Web Service name is : " + webServiceName);
+ 	Map<CPFConstants.OperationType, String> webMethodsMap = webServiceInfo.getWebMethodsMap();   //holds Web Methods to generate 
+%>
+
+package com.genband.m5.maps.services;
+
+import javax.jws.*;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.naming.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import org.jboss.security.SecurityAssociation;
+import java.security.Principal;
+import com.genband.m5.maps.identity.GBUserPrincipal;
+
+//import com.genband.m5.maps.common.PreProcessCriteria;
+import com.genband.m5.maps.interfaces.ICPFSessionFacade;
+import com.genband.m5.maps.common.entity.Organization;
+<%
+	if(!baseEntity.getName().equals("Organization")) {
+%>
+import <%= baseEntity.getCanonicalTypeName() %>;
+<%
+	}
+%>
+<%
+	if(webMethodsMap.keySet().contains(CPFConstants.OperationType.VIEW)) {
+%>
+import com.genband.m5.maps.messages.<%= baseEntity.getName() %>_<%= operationId %>;
+<%
+	}
+%>
+import com.genband.m5.maps.common.*;
+import javax.xml.ws.*;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.handler.MessageContext;
+//import com.genband.m5.maps.session.CPFSessionFacade;
+<%
+	if(webMethodsMap.keySet().contains(CPFConstants.OperationType.LIST)) {
+%>
+import com.genband.m5.maps.messages.<%= baseEntity.getName() %>Details_<%= operationId %>;
+<%
+	}
+%>
+
+@WebService (name = "<%= webServiceName %>", targetNamespace = "<%= webServiceInfo.getTargetNamespace () %>")
+@SOAPBinding (style = SOAPBinding.Style.RPC, use = SOAPBinding.Use.LITERAL)
+public class <%= webServiceName %>Impl implements <%= webServiceName %> {    
+
+		@Resource
+ 		private WebServiceContext wsCtx;
+ 		
+<%		
+	Map<Integer, String[]> operationRoleMap = null;			//which holds roles vs operationIDs
+	for(Iterator<CPFConstants.OperationType> keys = webMethodsMap.keySet().iterator(); keys.hasNext(); ) { 
+		CPFConstants.OperationType operationType = (CPFConstants.OperationType) keys.next();
+		LOG.info("Generating web method for the operation : " + operationType.toString());
+		String methodArguments = null;						//Arguments to be passed from Client to Port
+		String returnType = new String();					//Return Type of Port Method
+		String arguments = new String("operationId");       //Arguments to be passeed from Port to SessionBean
+		boolean returnValue = false;						//Return Value from the Port Method to be passed or not
+		String returning4mSF = new String("");				//Signature of returned varible from Session Bean i.e, CPFSessionFacade
+		String variable4mSF = new String("");				//Variable name holding values returned from Session Bean i.e, CPFSesisonFacade
+		String primaryKeyName = baseEntity.getPrimaryKey();  
+		String fields = new String ();						//Holds criteria fields
+		String from = new String ();						//Holds criteria from details
+		String where = new String ();						//Holds criteria where details
+		operationRoleMap = new HashMap<Integer, String[]> ();
+		operationRoleMap = cpfScreen.getOperationRoleMap (operationType);
+		String[] webParamNames = null;	//Added this line
+		if(webParams != null) {
+			webParamNames = webParams.get (operationType);
+		} 
+		if(webParamNames != null) {
+			methodArguments = new String ("@WebParam(name = \"" + webParamNames[0] + "\") ");
+		} else {
+			LOG.info("DID not enter web param names so not adding web params to the method... default will be set as params...");
+			methodArguments = new String();
+		}
+		switch (operationType) {
+			case CREATE :
+				returnType = "void";     //which holds return type of this operation
+				arguments = arguments.concat (", rootEntity");  
+				methodArguments = methodArguments.concat (rootEntityName + "_" + operationId + " ");
+				methodArguments = methodArguments.concat(rootEntityName + operationId); 
+				break;
+			case MODIFY :
+				returnType = "void";
+				arguments = arguments.concat (", rootEntity, criteria");
+				methodArguments = methodArguments.concat (rootEntityName + "_" + operationId + " ");
+				methodArguments = methodArguments.concat (rootEntityName + operationId);
+				break;
+			case DELETE :
+				returnType = "void";
+				arguments = arguments.concat (", rootEntity, primaryKeyValue, logicalDelete");
+				methodArguments = methodArguments.concat ("Long primaryKeyValue");
+				break;
+			case VIEW :
+				returnType = rootEntityName+"_" + operationId;
+				returnValue = true;
+				arguments = arguments.concat(", new " + rootEntityName + "()");
+				arguments = arguments.concat (", criteria"); 
+				methodArguments = methodArguments.concat ("Long primaryKeyValue");
+				returning4mSF = returning4mSF.concat(rootEntityName);	//Replacing Array Of Objects with Object
+				variable4mSF = variable4mSF.concat(" viewDetails = ");
+				where = where.concat (rootEntityName + "." + primaryKeyName + "= :PK");
+				break;
+			case LIST :
+				returnType = rootEntityName+"Details_" + operationId + "[]";
+				returnValue = true;
+				arguments = arguments.concat (", criteria");
+				methodArguments = methodArguments.concat ("AuxiliaryDetails auxiliaryDetails");
+				returning4mSF = returning4mSF.concat("List<Object []>");
+				variable4mSF = variable4mSF.concat(" listDetails = ");
+				if (cpfScreen.getExtraListPredicate () != null) {
+					where = where.concat (cpfScreen.getExtraListPredicate ());    
+				}
+				fields = fields.concat (rootEntityName + "." + baseEntity.getPrimaryKey() + ", ");
+				break;
+		}
+	//// Starting filling data for Criteria (from and fields)
+				//For BaseEntity
+		LOG.info("getting info of selected base entity attributes of from and fields");
+		from = from.concat (rootEntityName + " " + rootEntityName);
+		List<CPFAttribute> selectedAttributes = cpfScreen.getSelectedAttributes ();
+		for (Iterator<CPFAttribute> itrCpfAttribute = selectedAttributes.iterator (); itrCpfAttribute.hasNext ();) {
+			CPFAttribute cpfAttribute = (CPFAttribute)itrCpfAttribute.next ();
+			if (cpfAttribute.getForeignColumn () == null) {
+					//Edited on 26th Feb
+				if(operationType.compareTo(CPFConstants.OperationType.LIST) == 0)
+					fields = fields.concat (rootEntityName + "."+cpfAttribute.getModelAttrib ().getName () + ", ");
+				else 
+					fields = fields.concat (cpfAttribute.getModelAttrib ().getName () + ", ");
+			} else {
+					ModelAttribute innerModelAttribute = cpfAttribute.getForeignColumn ();
+					//ModelEntity innerModelEntity = (ModelEntity)cpfAttribute.getModelAttrib ().getForeignEntity ();
+					RelationShipInfo relationShipInfo = cpfAttribute.getModelAttrib().getRelType();
+					boolean manyRelation = false; 
+					if(relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.OneToMany)
+						|| relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.ManyToMany)) {
+						manyRelation = true;
+					}
+						//Edited on 20th Feb..
+					//from = from.concat (" left join " + rootEntityName + "." + relationShipInfo.getPropertyName () + " " + innerModelEntity.getName ());
+					from = from.concat (" left join " + rootEntityName + "." + relationShipInfo.getPropertyName () + " " + relationShipInfo.getPropertyName ());
+					if (operationType.compareTo(CPFConstants.OperationType.MODIFY) == 0) {
+						if (manyRelation) {
+							fields = fields.concat (relationShipInfo.getPropertyName () + "[n]" + ","); 
+						}else {
+							fields = fields.concat (relationShipInfo.getPropertyName () + ",");
+						}
+					} else {
+							//Edited on 26th Feb..
+						if (manyRelation) {
+							fields = fields.concat (relationShipInfo.getPropertyName () + "[n]." + innerModelAttribute.getName () + ",");
+						} else {			
+							fields = fields.concat (relationShipInfo.getPropertyName () + "." + innerModelAttribute.getName () + ",");
+						}
+					}
+			}
+		}
+				//For Other Selected Entities
+		Map<RelationKey, List<CPFAttribute>> nestedAttributes = cpfScreen.getNestedAttributes ();
+		if(nestedAttributes != null) {
+			LOG.info("getting info of selected Dependent entities attributes of from and fields");
+		for (Iterator<RelationKey> itrModelEntity = nestedAttributes.keySet().iterator (); itrModelEntity.hasNext ();) {
+			RelationKey relationKey = itrModelEntity.next(); 	//Added this line extra on 22nd Jan
+			//ModelEntity otherEntity = relationKey.getReferencedEntity();
+			RelationShipInfo relationShipInfo = relationKey.getRelationShipInfo();
+			boolean manyRelation = false;
+			if(relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.OneToMany)
+				|| relationShipInfo.getMapping().equals(CPFConstants.RelationshipType.ManyToMany)) {
+				manyRelation = true;
+			}
+				//Edited on 20th Feb..
+			from = from.concat (" left join " + rootEntityName + "." + relationShipInfo.getPropertyName () + " " 
+									+ relationShipInfo.getPropertyName ());
+			List<CPFAttribute> selectedOtherAttributes = nestedAttributes.get (relationKey);
+			for (Iterator<CPFAttribute> itrOtherCpfAttributes = selectedOtherAttributes.iterator (); itrOtherCpfAttributes.hasNext ();) {
+				CPFAttribute cpfAttribute = (CPFAttribute)itrOtherCpfAttributes.next ();
+				String propName = relationShipInfo.getPropertyName ();
+				if (cpfAttribute.getForeignColumn () == null) {
+					if (operationType.compareTo(CPFConstants.OperationType.MODIFY) == 0) {	
+						if (manyRelation) {
+							fields = fields.concat (relationShipInfo.getPropertyName () + "[n]" + "." + cpfAttribute.getModelAttrib ().getName () + ", ");
+						} else {
+							fields = fields.concat (relationShipInfo.getPropertyName () + "." + cpfAttribute.getModelAttrib ().getName () + ", ");
+						}
+					} else {
+						//Edited on 20th Feb..
+						fields = fields.concat (relationShipInfo.getPropertyName () + "." + cpfAttribute.getModelAttrib ().getName () + ", ");
+					}
+				} else {
+					ModelAttribute innerModelAttribute = cpfAttribute.getForeignColumn ();
+					//ModelEntity innerModelEntity = (ModelEntity)cpfAttribute.getModelAttrib ().getForeignEntity ();
+					RelationShipInfo innerRelationShipInfo = cpfAttribute.getModelAttrib().getRelType();
+					boolean innerManyRealtion = false;
+					if(innerRelationShipInfo.getMapping().equals(CPFConstants.RelationshipType.OneToMany)
+						|| innerRelationShipInfo.getMapping().equals(CPFConstants.RelationshipType.ManyToMany)) {
+						innerManyRealtion = true;
+					}
+						//edited on 20th Feb..
+					from = from.concat (" left join " + relationShipInfo.getPropertyName () + "." 
+											+ innerRelationShipInfo.getPropertyName () + " " 
+												+ relationShipInfo.getPropertyName () 
+													+ innerRelationShipInfo.getPropertyName ());
+					if (operationType.compareTo(CPFConstants.OperationType.MODIFY) == 0) {
+						if (manyRelation) {
+							fields = fields.concat (propName + "[n].");
+						} else {
+							fields = fields.concat (propName + ".");
+						}
+						if (innerManyRealtion) {
+							fields = fields.concat (innerRelationShipInfo.getPropertyName () + "[n]" + ",");
+						} else {
+							fields = fields.concat (innerRelationShipInfo.getPropertyName () + ",");
+						}
+					} else {
+						if (manyRelation) {
+							fields = fields.concat (propName + "[n].");
+						} else {
+							fields = fields.concat (propName + ".");
+						}
+						if (innerManyRealtion) {
+							fields = fields.concat (innerRelationShipInfo.getPropertyName () + "[n]." 
+													+ innerModelAttribute.getName () + ",");
+						} else {
+							fields = fields.concat (innerRelationShipInfo.getPropertyName () + "." 
+													+ innerModelAttribute.getName () + ",");
+							//fields = fields.concat (relationShipInfo.getPropertyName () 
+								//					+ innerRelationShipInfo.getPropertyName () + "." 
+									//				+ innerModelAttribute.getName () + ",");
+						}
+					} 
+				}
+			}
+		}
+		}
+		fields = fields.substring (0, fields.lastIndexOf (","));
+		if (where.equals ("")) {
+			where = rootEntityName +  ".merchantAccount" + "= (select merchantAccount from Organization merchantAccount where merchantAccount.organizationId=";
+		} else {
+			where = where.concat(" and " + rootEntityName +  ".merchantAccount" + "= (select merchantAccount from Organization merchantAccount where merchantAccount.organizationId=");
+		}
+	/////// Ending of filling data for Criteria (from and fields)
+	LOG.info("Web Method geenraiton started...");
+%>
+		@WebMethod
+<%		
+		if(returnValue){
+			if(webResults != null) {
+%>
+		@WebResult (name = "<%= webResults.get (operationType) %>")
+<% 	
+			} else {
+%>
+		@WebResult (name = "result<%= operationType %>")
+<%
+			}
+		}
+%>					//Starting of the Web Method
+		public <%= returnType %> <%= webMethodsMap.get(operationType) %> (<%= methodArguments %> ) throws WSException {
+			int operationId = get<%= webMethodsMap.get(operationType) %>OperationId ();      //getting operationId for this OperationType
+			Organization merchantAccount = _getMerchantAccount ();
+<%					//getting merchant account Id in case of LIST and VIEW operation
+			if (operationType.compareTo(CPFConstants.OperationType.LIST) == 0 || operationType.compareTo(CPFConstants.OperationType.VIEW) == 0) {
+%>
+			Long merchantId = merchantAccount.getOrganizationId ();    
+<%
+			} 
+%>
+<%	
+			if ((operationType.compareTo(CPFConstants.OperationType.VIEW) != 0) && (operationType.compareTo(CPFConstants.OperationType.LIST) != 0)) {
+%>
+<%
+			if(operationType.compareTo(CPFConstants.OperationType.DELETE) != 0) {
+%>
+			<%= rootEntityName %> rootEntity = <%= rootEntityName %><%= operationId %>.merge();
+			rootEntity.setMerchantAccount (merchantAccount);
+<%
+			} else {
+%>
+			<%= rootEntityName %> rootEntity = new <%= rootEntityName %>();
+<%
+			}
+			if(operationType.compareTo(CPFConstants.OperationType.CREATE) == 0) {
+%>
+			this.setPKs2Null(rootEntity);
+<%
+			}
+			}
+%>
+<%
+			if ((operationType.compareTo(CPFConstants.OperationType.VIEW) == 0) || (operationType.compareTo(CPFConstants.OperationType.MODIFY) == 0) || (operationType.compareTo(CPFConstants.OperationType.LIST) == 0)) {
+				String primaryKeyValue = new String("primaryKeyValue");
+%>
+			Criteria criteria = new Criteria();
+<%
+			if(operationType.compareTo(CPFConstants.OperationType.MODIFY) != 0) {
+%>
+			<%= returning4mSF %><%= variable4mSF %>null;
+<%
+			}
+			if (operationType.compareTo(CPFConstants.OperationType.MODIFY) == 0) {
+				primaryKeyValue = new String(rootEntityName + operationId + ".");
+				primaryKeyValue = primaryKeyValue.concat("get" + primaryKeyName.toUpperCase().charAt(0) + primaryKeyName.substring(1));
+				primaryKeyValue = primaryKeyValue.concat("()");
+			
+%>		
+			criteria.setBaseEntityName ("<%= rootEntityName %>");
+<%
+			}
+%>
+			criteria.setBasePrimaryKey("<%= primaryKeyName %>");
+			criteria.setFields ("<%= fields %>");
+<%
+			if (operationType.compareTo(CPFConstants.OperationType.LIST) == 0 || operationType.compareTo(CPFConstants.OperationType.VIEW) == 0) {
+%>
+			criteria.setFrom ("<%= from %>");
+			criteria.setWhere ("<%= where %>" + merchantId + ")");
+<%
+			}
+			if(operationType.compareTo(CPFConstants.OperationType.LIST) != 0) {
+%>
+			criteria.setBasePrimaryKeyValue(<%= primaryKeyValue %>);
+<%
+			} else {
+				//Edited on 26th Feb..
+%>	
+			//PreProcessCriteria preProcessCriteria = new PreProcessCriteria ();
+			//criteria.setSearchDetails (preProcessCriteria.preProcess (auxiliaryDetails));
+			this.preProcess(auxiliaryDetails);
+			criteria.setSearchDetails (auxiliaryDetails);
+<%
+			}
+			}
+%>
+<%
+			if(operationType.compareTo(CPFConstants.OperationType.DELETE) == 0) {
+%>
+			boolean logicalDelete = false;
+<%
+			}
+%>
+			ICPFSessionFacade cpfSessionFacade = null;
+			try {
+					Context ctx = new InitialContext();
+					cpfSessionFacade = (ICPFSessionFacade)ctx.lookup("maps/LocalCPFSessionFacade");
+					//cpfSessionFacade.initialize();
+			} catch (NamingException e) {
+					throw new WSException ("error in lookup sessionfacade", e);
+					//e1.printStackTrace();
+			}
+			try {
+<%
+			if(operationType.compareTo(CPFConstants.OperationType.VIEW) != 0) {
+%>
+				<%= variable4mSF %>cpfSessionFacade.<%= operationType.toString().toLowerCase() %> (<%= arguments %>);
+<%
+			} else {
+%>
+				<%= variable4mSF %>(<%= rootEntityName %>)cpfSessionFacade.<%= operationType.toString().toLowerCase() %>Object (<%= arguments %>);
+<%
+			}
+%>
+			} catch (CPFException e) {
+				throw new WSException ("error in operation Method", e);
+			}
+<%
+		if(operationType.compareTo(CPFConstants.OperationType.VIEW) == 0) {
+%>
+			<%= returnType %> returnDetails = new  <%= returnType %>(<%= variable4mSF.substring(0,variable4mSF.lastIndexOf("=")) %>);
+<%
+		} else if(operationType.compareTo(CPFConstants.OperationType.LIST) == 0) {
+%>
+			if(<%= variable4mSF.substring(0, variable4mSF.lastIndexOf("=")) %>.size() > auxiliaryDetails.getPageSize()) {
+					<%= variable4mSF.substring(0, variable4mSF.lastIndexOf("=")) %>.remove(auxiliaryDetails.getPageSize());
+			}
+			<%= returnType %> returnDetails = new <%= returnType.substring (0,returnType.lastIndexOf ("[")+1) %><%= variable4mSF.substring(0,variable4mSF.lastIndexOf("=")-1) %>.size()];
+			for (int itr = 0; itr < <%= variable4mSF.substring(0,variable4mSF.lastIndexOf("=")-1) %>.size(); itr++) {
+				Object[] temp = <%= variable4mSF.substring(0,variable4mSF.lastIndexOf("=")-1) %>.get(itr);
+				returnDetails[itr] = new  <%= returnType.substring(0, returnType.lastIndexOf("[")) %>(temp);
+			}
+<%
+		}
+%>
+<%
+			if(returnValue) {
+%>
+
+<%
+			if (operationType.compareTo(CPFConstants.OperationType.LIST) == 0) {
+%>
+			return returnDetails;
+<%
+			} else {
+%>
+			return returnDetails;
+<%
+			}
+ 			} 
+ 			LOG.info("Web Method generation ended...");
+%>											//Closing of the Web Method  and starting of the private method which returns operation ids for this method
+		}      
+		
+		private int get<%= webMethodsMap.get(operationType) %>OperationId () {
+			int operationId = new Integer (-99);
+<%
+			for (Iterator<Integer> keysRole = operationRoleMap.keySet ().iterator (); keysRole.hasNext ();) {
+				Integer id = keysRole.next ();
+				String[] roles = operationRoleMap.get (id);
+				String condition = new String ();
+				for (int i = 0; i < roles.length; i++) {
+					condition = condition.concat ("wsCtx.isUserInRole (\"" + roles [i] + "\") ||");
+				} 
+				condition = condition.substring (0, condition.lastIndexOf (")")+1);
+%>
+			if (<%= condition %>) {
+				operationId = <%= id.intValue () %>;
+			}
+<%
+			}
+%>
+			
+			return operationId;
+			//return -1;
+		}
+		
+<%
+	}  //This is end of for loop of Web Methods and their mappings
+	LOG.info("Web Method generation completed from template side.....");
+%>
+			//Mthod which will return Merchant Account for user from his Session
+		private Organization _getMerchantAccount() {
+			//commenting out security ...
+<%
+	if(baseEntity.isStatic()) {
+%>
+		Organization o =  new Organization ();
+		o.setOrganizationId (new Long (-1));
+		return o;
+<%
+	} else {
+%>
+			/*MessageContext mc = wsCtx.getMessageContext ();
+			HttpServletRequest request = (HttpServletRequest) mc.get (MessageContext.SERVLET_REQUEST);
+			HttpSession session = request.getSession ();
+			Object obj = session.getAttribute ("User");
+			User user = (User)obj;
+			return user.getMerchantAccount ();*/
+            Set<Principal> s = SecurityAssociation.getSubject().getPrincipals();
+
+            
+
+            for (Principal principal : s) {
+
+                  //LOG.debug ("sub principal: " + principal.getClass().getName());
+
+                        if (principal instanceof GBUserPrincipal) {
+
+                              //LOG.debug ("p: " + principal);
+
+                              
+
+                              Organization enterprise = ((GBUserPrincipal) principal).getMerchantAccount();
+
+                              long enterpriseId = enterprise.getOrganizationId();
+
+                              //LOG.debug("enterpriseId = " + enterpriseId);
+
+                              return enterprise;
+
+                        }
+
+ 
+
+                  }
+
+            
+
+ 
+
+            
+
+            //Organization o = new Organization ();
+
+            //o.setOrganizationId (new Long (0));
+
+            return null;
+
+<%
+	}
+%>
+		}
+
+<%
+	if(webMethodsMap.keySet().contains(CPFConstants.OperationType.CREATE)) {
+		String tempVar = null;
+		Map<String, String> dependentPKNames = null;
+		if(cpfScreen.getNestedAttributes() != null) {
+			dependentPKNames = new HashMap<String, String>();
+			Set<RelationKey> nestedRKs = cpfScreen.getNestedAttributes().keySet(); 
+			for(Iterator<RelationKey> itrNested = nestedRKs.iterator(); itrNested.hasNext();) {
+				RelationKey rk = itrNested.next();
+				tempVar = new String();
+				tempVar = rk.getReferencedEntity().getPrimaryKey();
+				tempVar = tempVar.toUpperCase().charAt(0) + tempVar.substring(1);
+				RelationShipInfo ri = rk.getRelationShipInfo();
+				dependentPKNames.put(ri.getPropertyName().toUpperCase().charAt(0) + ri.getPropertyName().substring(1)
+										, tempVar);
+			}
+		}
+		tempVar = new String();
+		tempVar = baseEntity.getPrimaryKey();
+		tempVar = tempVar.toUpperCase().charAt(0) + tempVar.substring(1);
+%>
+		private void setPKs2Null(<%= rootEntityName %> rootEntity) {
+			rootEntity.set<%= tempVar %> (null);
+<%
+		if(dependentPKNames != null) {
+			for(Iterator<String> itrDpkn = dependentPKNames.keySet().iterator(); itrDpkn.hasNext();){
+				String pn = itrDpkn.next();
+%>
+			rootEntity.get<%= pn %>().set<%= dependentPKNames.get(pn) %> (null);
+<%
+			}
+		}
+%>
+		}
+<%
+	}
+	if(webMethodsMap.keySet().contains(CPFConstants.OperationType.LIST)) {
+%>	
+		private void preProcess(AuxiliaryDetails auxiliaryDetails) throws WSException {
+			if(auxiliaryDetails.getOrderBy() != null) {
+				auxiliaryDetails.setOrderBy(this.SearchAndReplace(auxiliaryDetails.getOrderBy()));
+			}
+			if(auxiliaryDetails.getSearchInfo() != null && auxiliaryDetails.getSearchInfo().getSearchKey() != null) {
+				auxiliaryDetails.getSearchInfo().setSearchKey(
+								this.SearchAndReplace(auxiliaryDetails.getSearchInfo().getSearchKey()));
+			}
+		}
+		
+		private String SearchAndReplace (String expression) throws WSException {
+			String temp = new String(expression);
+			if(temp.equals("primaryKeyValue")) {
+				temp = new String("<%= rootEntityName %>.<%= baseEntity.getPrimaryKey() %>");
+			} else
+			if(temp.startsWith("<%= rootEntityName.toLowerCase().charAt(0) %><%= rootEntityName.substring(1) %>")
+				&& temp.length() > "<%= rootEntityName.toLowerCase().charAt(0) %><%= rootEntityName.substring(1) %>".length()){
+<%
+				String tempName = rootEntityName.toLowerCase().charAt(0) + rootEntityName.substring(1);
+%>
+				temp = temp.replaceFirst("<%= tempName %>", "<%= rootEntityName %>.");
+			}
+<%
+			if(cpfScreen.getNestedAttributes () != null) {
+				Set<RelationKey> nested = cpfScreen.getNestedAttributes ().keySet();
+				for(Iterator<RelationKey> itrNested = nested.iterator(); itrNested.hasNext();) {
+					String relationKeyName = itrNested.next().getRelationShipInfo().getPropertyName();
+%>
+			else
+			if(temp.startsWith("<%= relationKeyName %>") && temp.length() > "<%= relationKeyName %>".length()) {
+				temp = temp.replaceFirst("<%= relationKeyName %>", "<%= relationKeyName %>.");
+			}
+<%
+				}	//ENd of for loop
+			}	//End if If
+%>
+			else {
+				throw new WSException("Not a valid filed please check the field name you have entered..");
+			}
+			int pos = temp.lastIndexOf(".");
+			String te = new String(temp.substring(pos + 1));
+			te = te.toLowerCase().charAt(0) + te.substring(1);
+			temp = temp.substring(0, pos + 1) + te;
+			return temp;
+		}
+<%
+	}
+%>
+}

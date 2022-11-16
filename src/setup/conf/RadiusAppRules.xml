@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<radius-apps>
+        <app-mapping>
+                <app-name>radiusapp</app-name>
+                <pattern>
+                        <or>
+                                <equal>
+                                        <var>request.remote.ip.address</var>
+                                        <value>10.32.4.252</value>
+                                </equal>
+                                <equal>
+                                        <var>request.remote.ip.address</var>
+                                        <value>10.32.8.221</value>
+                                </equal>
+                                <equal>
+                                        <var>request.remote.ip.address</var>
+                                        <value>10.32.8.152</value>
+                                </equal>
+                        </or>
+                </pattern>
+        </app-mapping>
+</radius-apps>

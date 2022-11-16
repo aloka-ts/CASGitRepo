@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BuildNavigator SystemType="rsiAse" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="K:\Installer\samples\schema\build.xsd">
+	<Macros>
+		<Macro name="SAS_SIG_FIP" question="Please provide a Floating IP for SIP Signaling on this FT setup : "/>
+		<Macro name="HTTP_SIG_FIP" question="Please provide a Floating IP for HTTP Signaling on this FT setup : "/>
+		<Macro name="SAS_SIG_IP" question="Please provide a SIP Signaling IP for this setup : "/>
+		<Macro name="HTTP_SIG_IP" question="Please provide a HTTP Signaling IP for this setup : "/>
+		<Macro name="SAS_NW_REF_IP" question="Please provide a network reference IP for this setup : "/>
+		<Macro name="SAS_ORACLE_HOME" question="Provide ORACLE HOME : "/>
+		<Macro name="SAS_DB_CONN_STRING" question="Please provide the connection string [username/password@dbsid]: "/>
+		<Macro name="IP_ADDRESS" question="Please provide the IP address on which the DB resides: "/>
+		<Macro name="SAS_SIPLB_FIP" question="Please provide the Load Balancer FIP for this N+1 setup : "/>
+		<Macro name="SAS_SIPLB_PORT" question="Please provide the Load Balancer port (to get/release FIP) for this N+1 setup : "/>
+		<Macro name="ORACLE_HOME" question="Please provide the Oracle Home used by the EMS : "/>
+		<Macro name="DUAL_LAN" question="Will the setup be Dual Lan [yes/no] : "/>
+		<Macro name="SIGNALLING_IP" question="Please provide the Signalling IP : "/>
+		<Macro name="INGW_LIST" question="Please enter the list of INGWs (format: FIP1:SIP_PORT1,FIP2:SIP_PORT2): "/>
+
+
+<!-- MAPS macros -->
+
+        <Macro name="SAS_SIPLB_FIP" question="Please provide a Floating IP for FT setup : "/>
+		<!--<Macro name="DB_USER" question="Please enter Database username : "/>
+		<Macro name="DB_PASSWD" question="Please enter Database user password : "/>
+		<Macro name="DB1_SID" question="Please enter primary Database SID :  "/>
+		<Macro name="DB2_SID" question=" Please enter secondary Database SID : "/>
+		<Macro name="DB1_HOST" question="Please enter primary Database hostname :  "/>
+	    <Macro name="DB2_HOST" question="Please enter secondary Database hostname :  "/>
+	    
+<Macro name="DB_LISTENER_PORT" question="Enter the Primary DB Listener Port for MAPS : "/> 
+        <Macro name="DB_LISTENER_PORT_2" question="Enter the Secondary DB Listener Port for MAPS : "/> 
+
+        <Macro name="DB_FT_REQD" question="Is DB Fault Tolerance required (0 for NFT/ 1 for FT/ 2 for DataGuard/ 3 for Oracle RAC) : " defaultValue="3" />
+        <Macro name="ACTIVE_DATA_GUARD_SUPPORT" question="Is Active DataGuard Supported value (0 for 'No' and 1 for 'Yes') : " defaultValue="0" />
+-->
+<!-- End MAPS macros -->
+
+	</Macros>
+	<PackageInformation>
+		<Subsystem type="ASE Subsystem" template="ASEASE_VERSION/ASE_template.xml" presence="mandatory"/>
+		<!-- added maps sub-system -->
+		<Subsystem type="MmAppProvServer" template="MmAppProvServer6.0.0/MAPS_template.xml" presence="mandatory"/>
+	</PackageInformation>
+	<PreConfiguration>
+		<DefinedMacros>
+			<Macro name="NONE_ANS" value="NONE"/>
+			<Macro name="SUBSYS_COMMON" value="Common"/>
+			<Macro name="SUBSYS_ASE" value="ASE"/>
+			<Macro name="SYSTEM_VERSION" value="ASE_VERSION"/>
+			<Macro name="SYSTEM_DESCRIPTION" value="Communication Application Server (CAS) "/>
+			<Macro name="PRODUCT_ID" value="CAS"/>
+			<Macro name="CLEI_CODE" value="NOT SET"/>
+			<Macro name="ACCEPTANCE_DATE" value=" "/>
+			<Macro name="WARRANTY_PERIOD" value="180"/>
+			<Macro name="EXPIRY_DATE" value=" "/>
+			<Macro name="LICENSE_KEY" value=" "/>
+			<Macro name="VENDOR_NAME" value="Agnity, Inc."/>
+			<Macro name="BINARY_TYPE" value=" "/>
+            <Macro name="INSTALL_SUFFIX" value=""/>
+            <Macro name="SM_GENERIC_PORT" value="12000"/>
+            <Macro name="SM_MSG_QUE_ID" value="919191929"/>
+
+			<!-- added for maps -->
+
+			<!-- <Macro name="NONE_ANS" value="NONE"/> -->
+			<!-- <Macro name="SUBSYS_COMMON" value="Common"/> -->
+			<Macro name="SUBSYS_MAPS" value="MAPS"/>
+			<!-- <Macro name="SYSTEM_VERSION" value="6.0.0"/> 
+			<Macro name="SYSTEM_DESCRIPTION" value="Multimedia Application Provisioning Server"/>
+			<Macro name="PRODUCT_ID" value="MAPS"/>
+			<Macro name="CLEI_CODE" value="NOT SET"/>
+			<Macro name="ACCEPTANCE_DATE" value=" "/>
+			<Macro name="WARRANTY_PERIOD" value="180"/>
+			<Macro name="EXPIRY_DATE" value=" "/>
+			<Macro name="LICENSE_KEY" value=" "/>
+			<Macro name="VENDOR_NAME" value="Agnity, Inc."/>
+			<Macro name="BINARY_TYPE" value=" "/>
+            <Macro name="INSTALL_SUFFIX" value=""/>
+            <Macro name="SM_GENERIC_PORT" value="12000"/>
+            <Macro name="SM_MSG_QUE_ID" value="919191929"/> -->
+
+			<!-- end added for maps -->
+
+		</DefinedMacros>
+		<AlwaysToBePromptedMacros>
+			<Macro name="FT_MODE">
+				<IF value="2">
+				</IF>
+				<IF value="1">
+				</IF>
+				<IF value="3">
+					<Macro name="SAS_SIPLB_FIP"/>
+					<Macro name="SAS_SIPLB_PORT"/>
+				</IF>
+			</Macro>
+
+			<!-- for maps -->
+			<!--
+			<Macro name="DB_USER"/>
+			<Macro name="DB_PASSWD"/>
+			<Macro name="DB_FT_REQD">
+				<IF value="3">
+					<Macro name="DB1_HOST"/>
+                    <Macro name="DB2_HOST"/>
+					<Macro name="DB1_SID"/>
+                    <Macro name="DB2_SID"/>
+                    
+<Macro name="DB_LISTENER_PORT"/>
+                    <Macro name="DB_LISTENER_PORT_2"/>
+
+
+				</IF>
+				<IF value="2">
+					
+<Macro name="DB1_HOST"/>
+					<Macro name="DB2_HOST"/>
+					<Macro name="DB1_SID"/>
+					<Macro name="DB2_SID"/>
+                    
+<Macro name="DB_LISTENER_PORT"/>
+                    <Macro name="DB_LISTENER_PORT_2"/>
+
+					<Macro name="ACTIVE_DATA_GUARD_SUPPORT"/>
+
+				</IF>
+				<IF value="1">
+					
+<Macro name="DB1_HOST"/>
+					<Macro name="DB2_HOST"/>
+					<Macro name="DB1_SID"/>
+					<Macro name="DB2_SID"/>
+                    
+<Macro name="DB_LISTENER_PORT"/>
+                    <Macro name="DB_LISTENER_PORT_2"/>
+
+
+				</IF>
+				<IF value="0">
+					<Macro name="DB1_HOST"/>
+					<Macro name="DB1_SID"/>
+                   
+ <Macro name="DB_LISTENER_PORT"/>
+				</IF>
+			</Macro>-->
+
+			<!-- end for maps -->
+
+		</AlwaysToBePromptedMacros>
+	</PreConfiguration>
+	<AliasMacros>
+
+		<!-- for maps -->
+
+                <Macro name="DB1_HOST_IP" aliasMacroName="DB1_HOST" function="getIP"/>
+                <Macro name="DB2_HOST_IP" aliasMacroName="DB2_HOST" function="getIP"/>
+
+		<!-- end for maps -->
+
+        </AliasMacros>
+
+</BuildNavigator>
+

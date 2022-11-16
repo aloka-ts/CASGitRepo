@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationServiceImplementation xmlns:x0="http://www.w3.org/2001/XMLSchema">
+<!-- ***************************************************** -->
+<!-- *               MSCML Specifications                * -->
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSCML Play Spec                     * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>Play</ActionMethod>
+        <ActionSpecifier>MSCMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version='1.0'?>
+<MediaServerControl version='1.0'>
+   <request>
+       <play>
+	 <prompt repeat="${Repeat}" locale="${locale}">
+           <audio url="${promptName}"/>	 
+	 </prompt>
+       </play>
+   </request>
+</MediaServerControl>
+]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSCML Play List Spec                 * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>PlayList</ActionMethod>
+        <ActionSpecifier>MSCMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version='1.0'?>
+<MediaServerControl version='1.0'>
+   <request>
+       <play>
+	 <prompt repeat="${Repeat}" locale="${locale}">
+${playList}
+	 </prompt>
+       </play>
+   </request>
+</MediaServerControl>
+]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSCML PlayCollect Spec              * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>PlayCollect</ActionMethod>
+        <ActionSpecifier>MSCMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version='1.0'?>
+<MediaServerControl version="1.0">
+   <request>
+       <playcollect maxdigits="${MaxDigits}" firstdigittimer="${FirstDigitTimer}"
+	 interdigittimer="${InterDigitTimer}" extradigittimer="${ExtraDigitTimer}"
+	 interdigitcriticaltimer="${InterdigitCriticalTimer}" returnkey="${ReturnKey}" escapekey="${CollectEscapeKey}"
+	 cleardigits="no" barge="${barge}" maskdigits="no">
+	 <prompt repeat="${Repeat}" locale="${locale}">
+	   <audio url="${promptName}"/>
+	 </prompt>
+       </playcollect>
+     </request>
+</MediaServerControl>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+    
+<!-- ***************************************************** -->
+<!-- *               MSCML PlayListCollect Spec          * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>PlayListCollect</ActionMethod>
+        <ActionSpecifier>MSCMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version='1.0'?>
+<MediaServerControl version="1.0">
+   <request>
+       <playcollect maxdigits="${MaxDigits}" firstdigittimer="${FirstDigitTimer}" 
+	 interdigittimer="${InterDigitTimer}" extradigittimer="${ExtraDigitTimer}"
+	 interdigitcriticaltimer="${InterdigitCriticalTimer}" returnkey="${ReturnKey}" escapekey="${CollectEscapeKey}"
+	 cleardigits="no" barge="${barge}" maskdigits="no">
+	 <prompt repeat="${Repeat}" locale="${locale}">
+${playList}
+	 </prompt>
+       </playcollect>
+     </request>
+</MediaServerControl>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSCML Play Record Spec              * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>PlayRecord</ActionMethod>
+        <ActionSpecifier>MSCMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version="1.0"?>
+<MediaServerControl version="1.0">
+   <request>
+      <playrecord
+         recurl="${fileLocation}"
+         initsilence="${InitSilence}" endsilence="${EndSilence}" duration="${RecordDuration}"
+         barge="${barge}"
+         beep="${RecordBeep}"
+         mode="${RecordMode}"
+         cleardigits="no"
+         escapekey="${RecordEscapeKey}"
+         recstopmask="${RecordStopMask}">
+         <prompt repeat="${Repeat}" locale="${locale}">
+           <audio url="${promptName}"/>
+         </prompt>
+      </playrecord>
+   </request>
+</MediaServerControl>
+]]></Body>
+    </ActionImplementation>        
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSCML Play List Record Spec         * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>PlayListRecord</ActionMethod>
+        <ActionSpecifier>MSCMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version="1.0"?>
+<MediaServerControl version="1.0">
+   <request>
+      <playrecord
+         recurl="${fileLocation}"
+         initsilence="${InitSilence}" endsilence="${EndSilence}" duration="${RecordDuration}"
+         barge="${barge}"
+         beep="${RecordBeep}"
+         mode="${RecordMode}"
+         cleardigits="no"
+         escapekey="${RecordEscapeKey}"
+         recstopmask="${RecordStopMask}">
+         <prompt repeat="${Repeat}" locale="${locale}">
+${playList}
+         </prompt>
+      </playrecord>
+   </request>
+</MediaServerControl>
+]]></Body>
+    </ActionImplementation>        
+<!-- ***************************************************** -->
+    
+
+
+<!-- ***************************************************** -->
+<!-- *               MSCML Var Definitions               * -->
+<!-- ***************************************************** -->
+<!--
+   o  type - required, no default value: Specifies the major type format
+      of the spoken variable to be played.  Allowable values are "dat"
+      (date), "dig" (digit), "dur" (duration), "mth" (month), "mny"
+      (money), "num" (number), "sil" (silence), "str" (string), "tme"
+      (time), and "wkd" (weekday).
+
+   o  subtype - optional, no default value: Specifies the minor type
+      format of the spoken variable to be played.  Allowable values
+      depend on the value of the corresponding "type" attribute.
+      Possible values are "mdy", "ymd", and "dmy" for dates, "t12" and
+      "t24" for times, "gen", "ndn", "crd", and "ord" for digits, and
+      "USD" for money.
+
+   o  value - required, no default value: A string that will be
+      interpreted based on the formatting information specified in the
+      "type" and "subtype" attributes and the "locale" attribute of the
+      parent <prompt> element to render the spoken variable.
+-->
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *   MSCML Play Var DATE Spec  subtype="mdy"         * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSCMLDate</ActionSpecifier>
+        <Body><![CDATA[         <variable type="dat" subtype="${subType}" value="${itemName}"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- * MSCML Play Var Money Spec  subtype="USD"          * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSCMLMoney</ActionSpecifier>
+        <Body><![CDATA[         <variable type="money" subtype="${subType}" value="${itemName}"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *  MSCML Play Var Time Spec  subtype="t12"          * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSCMLTime</ActionSpecifier>
+        <Body><![CDATA[         <variable type="tme" subtype="${subType}" value="${itemName}"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- MSCML Play Var Digits Spec subtype="gen"            * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSCMLDigits</ActionSpecifier>
+        <Body><![CDATA[         <variable type="digit" subtype="${subType}" value="${itemName}"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- * MSML Play Var Number Spec   subtype="crd"         * -->
+<!-- ***************************************************** -->
+<ActionImplementation>^M
+        <ActionClass>MediaService</ActionClass>^M
+        <ActionMethod>AddToPlayList</ActionMethod>^M
+        <ActionSpecifier>MSCMLNumber</ActionSpecifier>^M
+        <Body><![CDATA[         <variable type="num" subtype="${subType}" value="${itemName}"/>]]></Body>^M
+    </ActionImplementation>
+
+<!-- ***************************************************** -->
+
+<!-- ***************************************************** -->
+<!-- *               MSML Play Var String Spec            * -->
+<!-- ***************************************************** -->
+<ActionImplementation>^M
+        <ActionClass>MediaService</ActionClass>^M
+        <ActionMethod>AddToPlayList</ActionMethod>^M
+        <ActionSpecifier>MSCMLString</ActionSpecifier>^M
+        <Body><![CDATA[         <variable type="str" value="${itemName}"/>]]></Body>^M
+    </ActionImplementation>
+
+<!-- ***************************************************** -->
+
+<!-- ***************************************************** -->
+<!-- *               MSCML Play Var Duration Spec             * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSCMLDuration</ActionSpecifier>
+        <Body><![CDATA[         <variable type="dur" value="${itemName}"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+<!-- ***************************************************** -->
+<!-- *               MSCML Play Var Audio Spec            * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSCMLAudio</ActionSpecifier>
+        <Body><![CDATA[         <audio url="${itemName}"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+</ApplicationServiceImplementation>
+
+
+

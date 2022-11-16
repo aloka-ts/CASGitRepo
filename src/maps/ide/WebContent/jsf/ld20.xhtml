@@ -1,0 +1,257 @@
+<div
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:pfc="http://www.jboss.com/portal/facelet/common"
+   xmlns:c="http://java.sun.com/jstl/core">
+   
+ <!--  <f:loadBundle basename="bundle.resources" var="bundle"/> -->
+ 	<f:view locale="#{facesContext.externalContext.request.locale}">
+	
+	<h:form id="SP">
+		<table width="50%">
+			<h:panelGroup>
+			<tr colspan="2">
+					<td>
+						<h:outputText value="#{bundle.Search}:  " styleClass="portlet-msg-info-m-contentText" style="font-weight: bold"/>
+					
+						<h:selectBooleanCheckbox id="SC" value="#{listMBean109.searechCaseSensitive}"/>
+						<h:outputLabel for="SC" rendered="true">
+							<h:outputText value="#{bundle.Case_Sensitive}"/>
+						</h:outputLabel> 
+					</td>
+			</tr>
+			<tr>
+				<td>
+					<h:selectOneMenu value="#{listMBean109.searchKey}" onchange="submit()" immediate="true">
+						<f:selectItems value="#{listMBean109.attbs}" />
+					 </h:selectOneMenu>
+				
+					<h:selectOneMenu id="Operator" value="#{listMBean109.searchOperator}">
+						<f:selectItem value="#{listMBean109.operators}"/>
+					</h:selectOneMenu>
+				
+					<h:inputText id="value" value="#{listMBean109.searchValue}">
+						<c:choose>
+							<c:when test="${listMBean109.searchKey == 'DeployedApp.appId'}">
+							</c:when>
+							<c:when test="${listMBean109.searchKey == 'DeployedApp.appDescription'}">
+							</c:when>
+							<c:when test="${listMBean109.searchKey == 'DeployedApp.deployDate'}">
+									<f:convertDateTime dateStyle="short"/>
+							</c:when>
+							<c:when test="${listMBean109.searchKey == 'DeployedApp.appDeployer'}">
+							</c:when>
+						</c:choose>
+					</h:inputText>
+				
+					<h:commandButton action="#{listMBean109.search}" value="#{bundle.Search}"/>
+				</td>
+			</tr>
+			</h:panelGroup>
+		</table>
+	</h:form>	
+	<h:form id="RP">
+		<c:set var="listing" value="${listMBean109.collec}"/>
+		<c:if test="${listing == null}">
+			<br/>
+			<h:outputText value="You Have No Data Rite Now"/>
+		</c:if>
+		<c:if test="${listing != null}">
+		<br/>
+		<br/>
+
+		<table width="100%">
+			<thead class="portlet-section-header">
+				<th>
+					<h:outputText value=" "/>
+	  			</th>
+				<c:choose>
+				  	<c:when test="${listMBean109.listVisibility[1]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean109.sort}" value="#{bundle.L109_DeployedApp_AppId}">
+								<f:param name="sortBy" value="DeployedApp.appId"/>
+							</h:commandLink>
+							<c:if test="${listMBean109.orderBy == 'DeployedApp.appId'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean109.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean109.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+				<c:choose>
+				  	<c:when test="${listMBean109.listVisibility[2]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean109.sort}" value="#{bundle.L109_DeployedApp_AppDescription}">
+								<f:param name="sortBy" value="DeployedApp.appDescription"/>
+							</h:commandLink>
+							<c:if test="${listMBean109.orderBy == 'DeployedApp.appDescription'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean109.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean109.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+				<c:choose>
+				  	<c:when test="${listMBean109.listVisibility[3]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean109.sort}" value="#{bundle.L109_DeployedApp_DeployDate}">
+								<f:param name="sortBy" value="DeployedApp.deployDate"/>
+							</h:commandLink>
+							<c:if test="${listMBean109.orderBy == 'DeployedApp.deployDate'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean109.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean109.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+				<c:choose>
+				  	<c:when test="${listMBean109.listVisibility[4]}">
+   				       	<th>
+							<h:commandLink action="#{listMBean109.sort}" value="#{bundle.L109_DeployedApp_AppDeployer}">
+								<f:param name="sortBy" value="DeployedApp.appDeployer"/>
+							</h:commandLink>
+							<c:if test="${listMBean109.orderBy == 'DeployedApp.appDeployer'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${listMBean109.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${listMBean109.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+			</thead>
+
+			<tbody>
+				<c:choose>
+	    				<c:when test="${listMBean109.listVisibility[0]}">
+							<td rowspan="11">
+							<h:selectOneRadio value="#{listMBean109.primaryKeyValue}" layout="pageDirection" immediate="true">
+								<f:selectItems value="#{listMBean109.radio}"/>
+							</h:selectOneRadio>
+  				 			</td>
+  						</c:when>
+  				 </c:choose>
+  				 <td>
+				 <c:forEach items="#{listing}" var="object" varStatus="status">
+         			<tr class="#{status.index % 2 == 0 ? 'portlet-section-body' : 'portlet-section-alternate'}">
+				 		<c:choose>
+	    				<c:when test="${listMBean109.listVisibility[1]}">
+							<td>
+							<c:choose>
+								<c:when test="${listMBean109.canView == 'true'}">
+		 						 <h:commandLink action="add" actionListener="#{createMBean109.viewAction}" >
+									<f:attribute name="pkValue" value="#{object[0]}"/>
+									<h:outputText value="#{object[1]}"/>
+								</h:commandLink>
+							   </c:when>
+							   <c:otherwise>
+									<h:outputText value="#{object[1]}">
+									</h:outputText>
+							   </c:otherwise>
+							</c:choose>
+            				</td>
+						</c:when>
+	    				</c:choose>
+				 		<c:choose>
+	    				<c:when test="${listMBean109.listVisibility[2]}">
+							<td>
+		 						<h:outputText value="#{object[2]}">
+								</h:outputText>
+            				</td>
+						</c:when>
+	    				</c:choose>
+				 		<c:choose>
+	    				<c:when test="${listMBean109.listVisibility[3]}">
+							<td>
+		 						<h:outputText value="#{object[3]}">
+										<f:convertDateTime dateStyle="short"/>
+								</h:outputText>
+            				</td>
+						</c:when>
+	    				</c:choose>
+				 		<c:choose>
+	    				<c:when test="${listMBean109.listVisibility[4]}">
+							<td>
+		 						<h:outputText value="#{object[4]}">
+								</h:outputText>
+            				</td>
+						</c:when>
+	    				</c:choose>
+         			</tr>
+         		</c:forEach>
+         		</td>
+			</tbody>
+		</table>
+		
+		<table width="100%">
+			<tbody>
+	 			<tr class="portlet-section-body">
+      		      <td align="center" colspan="2">
+     		          <h:panelGroup> 				
+						<h:commandLink id="PREVIOUS" action="previousPage" disabled="#{listMBean109.previousDisabled}" actionListener="#{listMBean109.pageChange}" >
+							<h:graphicImage alt="Previous" value="/images/prev.jpg" style="border:none" />
+							<h:outputText escape="true" value="  " />
+						</h:commandLink>
+						<h:commandLink id="NEXT" action="nextPage" disabled="#{listMBean109.nextDisabled}" actionListener="#{listMBean109.pageChange}" >
+							<h:graphicImage alt="Next" value="/images/next.jpg" style="border:none" />
+						</h:commandLink>
+	     			  </h:panelGroup>
+          		  </td>
+         		</tr>
+			</tbody>
+		</table>
+		</c:if>
+		<h:panelGroup> 
+		<!--	<c:if test="${listMBean109.canView == 'true'}"> -->
+				<h:commandButton action="add" actionListener="#{createMBean109.viewAction}" value="#{bundle.View}" disabled="#{!listMBean109.canView}">
+					<f:attribute name="pkValue" value="#{listMBean109.primaryKeyValue}" />
+				</h:commandButton>
+		<!--	</c:if> -->
+			<!-- <c:if test="${listMBean109.canCreate == 'true'}"> -->
+				<h:commandButton action="add" actionListener="#{createMBean109.addAction}" value="#{bundle.Add}" disabled="#{!listMBean109.canCreate}" immediate="true"/>
+			<!-- </c:if> -->
+			<!-- <c:if test="${listMBean109.canModify == 'true'}"> -->
+				<h:commandButton action="add" actionListener="#{createMBean109.modifyAction}" value="#{bundle.Modify}" disabled="#{!listMBean109.canModify}">
+					<f:attribute name="pkValue" value="#{listMBean109.primaryKeyValue}" />
+				</h:commandButton>
+			<!-- </c:if> -->
+			<!-- <c:if test="${listMBean109.canDelete == 'true'}"> -->
+				<h:commandButton action="delete" actionListener="#{listMBean109.delete}" value="#{bundle.Delete}" disabled="#{!listMBean109.canDelete}"/>
+			<!-- </c:if> -->
+			<c:choose>
+				<c:when test="${listMBean109.criteria.searchDetails.search == 'true'}">
+					<h:commandButton  value="#{bundle.Reset}" action="#{listMBean109.reset}"/>
+				</c:when>
+			</c:choose>
+		</h:panelGroup>
+   	</h:form>
+   </f:view>
+</div>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+        <runtime>
+                <library name="library/ejb3-persistence.jar">
+                <export name="*"/>
+                </library>
+                <library name="perspective.jar"/>
+                
+        </runtime>
+   <requires>
+	   <import plugin="org.eclipse.core.runtime"/>
+	   <import plugin="org.eclipse.core.resources"/>
+	   <import plugin="org.eclipse.ui"/>
+   </requires>
+
+        
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="GENBAND M5 Portal"
+            id="com.genband.m5.maps.ide">
+      </category>
+      <wizard
+            name="Portal Project"
+            icon="icons/sample.gif"
+            category="com.genband.m5.maps.ide"
+            class="com.genband.m5.maps.ide.wizard.CPFProjectWizard"
+            id="com.genband.m5.maps.ide.wizard.CPFProjectWizard">
+      </wizard>
+      <wizard
+            name="Provisioning Screen"
+            icon="icons/sample.gif"
+            category="com.genband.m5.maps.ide"
+            class="com.genband.m5.maps.ide.wizard.CPFScreenCreationWizard"
+            id="com.genband.m5.maps.ide.wizard.CPFScreenCreationWizard">
+      </wizard>
+      
+      <wizard name="Sitemap"
+              icon="icons/sitemap.gif"
+              category="com.genband.m5.maps.ide"
+              class="com.genband.m5.maps.ide.sitemap.SiteMapCreationWizard"
+              id="com.genband.m5.maps.ide.sitemap.SiteMapCreationWizard">
+      </wizard>
+      
+   </extension>
+<!--   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="com.genband.m5.maps.ide.properties.CPFPropertyPage"
+            id="com.genband.m5.maps.ide.properties.CPFPropertyPage"
+            name="Portal Properties"
+            nameFilter="*.xhtml"
+            objectClass="org.eclipse.core.resources.IFile">
+           </page>
+   </extension> -->
+   <extension
+         id="cpfBuilder"
+         name="CPF Project Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="com.genband.m5.maps.ide.builder.CPFBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="cpfNature"
+         name="CPF Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.genband.m5.maps.ide.builder.CPFNature">
+         </run>
+      </runtime>
+      <requires-nature id="org.eclipse.jdt.core.javanature"/>
+      <builder
+            id="com.genband.m5.maps.cpfBuilder">
+      </builder>
+   </extension>
+   
+ <!--   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="com.genband.m5.maps.ide.contribution1">
+         <action
+               label="Add/Remove Sample Nature"
+               class="com.genband.m5.maps.ide.builder.ToggleNatureAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="com.genband.m5.maps.ide.addRemoveNatureAction">
+         </action>
+      </objectContribution>
+   </extension> -->
+   
+    <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   
+    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="GENBAND M5 Portal Preferences"
+            class="com.genband.m5.maps.ide.preferences.CPFPreferencePage"
+            id="com.genband.m5.maps.ide.preferences.CPFPreferencePage">
+      </page>
+       <page id="com.genband.m5.maps.ide.preferences.CPFPreferenceLocalesPage"
+            name="Locale Settings"
+           class="com.genband.m5.maps.ide.preferences.CPFPreferenceLocalesPage"
+           category="com.genband.m5.maps.ide.preferences.CPFPreferencePage">
+      </page>
+       <page id="com.genband.m5.maps.ide.preferences.CPFPreferenceRolesPage"
+            name="Role Settings"
+           class="com.genband.m5.maps.ide.preferences.CPFPreferenceRolesPage"
+           category="com.genband.m5.maps.ide.preferences.CPFPreferencePage">
+      </page>
+     
+      <page id="com.genband.m5.maps.ide.preferences.CPFPreferenceDBUserNamePage"
+            name="DB User Settings"
+           class="com.genband.m5.maps.ide.preferences.CPFPreferenceDBUserNamePage"
+           category="com.genband.m5.maps.ide.preferences.CPFPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.genband.m5.maps.ide.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension point="org.eclipse.core.runtime.preferences">
+       <scope name="project" class="org.eclipse.core.internal.resources.ProjectPreferences"/>
+   </extension> 
+
+        <extension point="org.eclipse.ui.propertyPages">
+          <page objectClass="org.eclipse.core.resources.IProject"
+                adaptable="true"
+                name="Portal Properties" class="com.genband.m5.maps.ide.preferences.CPFPreferencePage"
+                id="com.genband.m5.maps.ide.preferences.CPFProperty">
+            <filter
+            name="projectNature"
+            value="com.genband.m5.maps.cpfNature">
+            </filter>
+          </page>
+           <page objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="com.genband.m5.maps.ide.preferences.LocalesPage"
+            name="Locale Settings" class="com.genband.m5.maps.ide.preferences.CPFPreferenceLocalesPage"
+           category="com.genband.m5.maps.ide.preferences.CPFProperty">
+            <filter
+            name="projectNature"
+            value="com.genband.m5.maps.cpfNature">
+            </filter>
+           </page>
+          <page objectClass="org.eclipse.core.resources.IProject"
+           adaptable="true"
+           id="com.genband.m5.maps.ide.preferences.RolesPage"
+            name="Role Settings" class="com.genband.m5.maps.ide.preferences.CPFPreferenceRolesPage"
+           category="com.genband.m5.maps.ide.preferences.CPFProperty">
+            <filter
+            name="projectNature"
+            value="com.genband.m5.maps.cpfNature">
+            </filter>
+           </page>  
+           
+            <page objectClass="org.eclipse.core.resources.IProject"
+           adaptable="true"
+           id="com.genband.m5.maps.ide.preferences.DBPage"
+           name="DB User Settings" class="com.genband.m5.maps.ide.preferences.CPFPreferenceDBUserNamePage"
+           category="com.genband.m5.maps.ide.preferences.CPFProperty">
+            <filter
+            name="projectNature"
+            value="com.genband.m5.maps.cpfNature">
+            </filter>
+           </page>  
+           
+    </extension>
+    
+    <extension point="org.eclipse.ui.editors">
+      <editor name="SiteMap Editor"
+              extensions="sitemap"
+              icon="icons/sitemap.gif"
+              default="true"
+              class="com.genband.m5.maps.ide.sitemap.SiteMapEditor"
+              contributorClass="com.genband.m5.maps.ide.sitemap.SiteMapEditorActionBarContributor"
+              id="SiteMap Editor">
+      </editor>
+   </extension>
+  
+     <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="com.genband.m5.maps.ide.builder">
+            <filter
+            name="projectNature"
+            value="com.genband.m5.maps.cpfNature">
+            </filter>
+         <action
+               label="Build Portals"
+               class="com.genband.m5.maps.ide.builder.BuildAction"
+               menubarPath="additions"
+               enablesFor="1"
+               id="com.genband.m5.maps.ide.builder">
+         </action>
+      </objectContribution>
+      
+   </extension>
+   
+   <extension point="org.eclipse.ui.perspectives">
+   <perspective
+         name="SiteMap Perspective"
+         class="com.genband.m5.maps.ide.sitemap.SiteMapPerspective"
+         id="com.genband.m5.maps.ide.SiteMapPerspective">
+   </perspective>
+   </extension>
+  
+   
+   </plugin>

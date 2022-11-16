@@ -1,0 +1,181 @@
+<config>
+	<jars>
+		<jar in="bpjars/ase.jar" out="bpjars/ase.jar"/>
+		<jar in="bpjars/soa-iface.jar" out="bpjars/soa-iface.jar"/>
+		<jar in="bpjars/ems.jar" out="bpjars/ems.jar"/>
+		<jar in="bpjars/jndids.jar" out="bpjars/jndids.jar"/>
+		<jar in="bpjars/sasdd.jar" out="bpjars/sasdd.jar"/>
+		<jar in="bpjars/workmanager.1.1.jar" out="bpjars/workmanager.1.1.jar"/>
+		<jar in="bpjars/bpenum.jar" out="bpjars/bpenum.jar"/>
+		<jar in="bpjars/bpsbbImpl.jar" out="bpjars/bpsbbImpl.jar"/>
+		<jar in="bpjars/slee.jar" out="bpjars/slee.jar"/>
+		<jar in="bpjars/jmxide.jar" out="bpjars/jmxide.jar"/>
+		<jar in="bpjars/jetc.jar" out="bpjars/jetc.jar"/>
+
+		<!-- Application interfaces -->
+		<jar in="bpjars/bpsbb.jar" out="bpjars/bpsbb.jar"/>
+		<jar in="bpjars/bpspi.jar" out="bpjars/bpspi.jar"/>
+		<jar in="bpjars/bpresource.jar" out="bpjars/bpresource.jar"/>
+		<jar in="bpjars/bpenumif.jar" out="bpjars/bpenumif.jar"/>
+		<jar in="bpjars/bpari.jar" out="bpjars/bpari.jar"/>
+
+		<!-- Tomcat and SIP stack related jars -->
+		<jar in="httpjars/ase-http.jar" out="httpjars/ase-http.jar"/>
+		<jar in="dsjars/dsua.jar" out="dsjars/dsua.jar"/>
+
+		<!-- ALC jars -->
+		<jar in="bpjars/alc.jar" out="bpjars/alc.jar"/>
+		<jar in="bpjars/MediaServiceALC.jar" out="bpjars/MediaServiceALC.jar"/>
+		<jar in="bpjars/ExpressionsALC.jar" out="bpjars/ExpressionsALC.jar"/>
+		<jar in="bpjars/DatabaseServiceALC.jar" out="bpjars/DatabaseServiceALC.jar"/>
+	</jars>
+
+	<classpath>
+		<jar name="dsjars/*.jar"/>
+		<jar name="otherjars/*.jar"/>
+	</classpath>
+
+    <keep-names>
+		<!-- Application interfaeces to be exampted -->
+        <class template="class com.baypackets.ase.spi.**">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+        <class template="class com.baypackets.ase.soa.iface.*">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+        <class template="class com.baypackets.ase.sbb.*">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+        <class template="class com.baypackets.ase.resource.*">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+        <class template="class com.baypackets.ase.ari.*">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<!-- Following are created by SAS using reflection on startup -->
+        <class template="class * instanceof com.baypackets.bayprocessor.agent.MComponent"/>
+        <class template="class com.baypackets.ase.util.EMSCallTraceAppender"/>
+        <class template="class com.baypackets.ase.dispatcher.RulesRepositoryImpl"/>
+        <class template="class com.baypackets.ase.teststubs.DriverConnector"/>
+        <class template="class com.baypackets.ase.container.sip.CallTraceServiceImpl"/>
+        <class template="class com.baypackets.ase.container.sip.SipProtocolAdapter"/>
+        <class template="class com.baypackets.ase.container.sip.TimerServiceImpl"/>
+        <class template="class com.baypackets.ase.security.SasPolicy"/>
+        <class template="class com.baypackets.ase.cdr.SimpleCDRFormatFactory"/>
+        <class template="class com.baypackets.ase.mediaserver.FileBasedMsDAOFactory"/>
+        <class template="class com.baypackets.ase.container.XmlSysAppInfoDAOFactory"/>
+        <class template="class com.baypackets.ase.externaldevice.outboundgateway.FileBasedGwDAOFactory"/>
+        <class template="class com.baypackets.ase.externaldevice.outboundgateway.OutboundGatewayManagerImpl"/>
+        <class template="class com.baypackets.ase.router.AseSipApplicationRouterManager"/>
+        <class template="class com.baypackets.ase.tomcat.EmbeddedTomcat"/>
+
+        <class template="class com.baypackets.bayprocessor.agent.MComponent"/>
+
+		<!-- JVM calls related -->
+		<class template="class *.AseMain">
+			<method template="public static void main(String[])"/>
+		</class>
+
+		<class template="class * instanceof java.lang.Runnable">
+			<method template="public void run()"/>
+		</class>
+
+		<class template="class * instanceof java.lang.Thread">
+			<method template="public void run()"/>
+		</class>
+
+        <class template="class * instanceof java.io.Serializable">
+            <field template="static final long serialVersionUID"/>
+            <method template="void writeObject(java.io.ObjectOutputStream)"/>
+            <method template="void readObject(java.io.ObjectInputStream)"/>
+            <method template="java.lang.Object writeReplace()"/>
+            <method template="java.lang.Object readResolve()"/>
+        </class>
+
+        <class template="class * instanceof javax.servlet.Servlet"/>
+
+		<!-- sip.xml rules' java code related -->
+        <class template="class com.baypackets.ase.dispatcher.RuleObject">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+        <class template="class com.baypackets.ase.dispatcher.Rule">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+        <class template="class com.baypackets.ase.dispatcher.RequestHelper">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<!-- ENUM client related -->
+		<class template="class com.baypackets.ase.enumclient.EnumClient">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<class template="class com.baypackets.ase.enumclient.EnumContext">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<class template="class com.baypackets.ase.enumclient.EnumListener">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<class template="class com.baypackets.ase.enumclient.EnumException">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<!-- IDE JMX management related -->
+		<class template="class com.baypackets.ase.jmxmanagement.*MBean">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<class template="class com.baypackets.ase.jmxmanagement.ServiceManagement">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<class template="class com.baypackets.ase.jmxmanagement.SarFileByteArray">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<class template="class com.baypackets.ase.jmxmanagement.LogWatcher">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<class template="class com.baypackets.ase.jmxmanagement.SOAServiceManagement">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<class template="class com.baypackets.ase.jmxmanagement.SOAServiceProvisioning">
+			<method template="protected+ *(**)"/>
+			<field template="protected+ *"/>
+		</class>
+
+		<method template="public void setLogFileLocation(java.lang.String)"/>
+    </keep-names>
+
+	<!--property name="string-encryption" value="disable"/-->
+	<property name="log-file" value="obfuscator.logs"/>
+	
+</config>

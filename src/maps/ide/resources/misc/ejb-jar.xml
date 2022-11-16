@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+ <ejb-jar>
+ <enterprise-beans>
+     <session>
+      <ejb-name>SessionFacade</ejb-name>
+      <ejb-class>com.genband.m5.maps.session.CPFSessionFacade</ejb-class>
+      <business-local>com.genband.m5.maps.interfaces.ICPFSessionFacade</business-local>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type> 
+    </session>
+    <session>
+      <ejb-name>EntitymanagerWrapper</ejb-name>
+      <ejb-class>com.genband.m5.maps.session.EntityManagerWrapper</ejb-class>
+      <business-local>com.genband.m5.maps.interfaces.IEntityManagerWrapper</business-local>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type> 
+		<env-entry>
+		<env-entry-name>maps/allowedRoles</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>Admin,NPA,SPA,NPM</env-entry-value>
+		</env-entry>
+    </session>
+    <session>
+      <ejb-name>CPFDataLoaderBean</ejb-name>
+      <ejb-class>com.genband.m5.maps.security.CPFDataLoaderBean</ejb-class>
+      <business-local>com.genband.m5.maps.security.ICPFDataLoader</business-local>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type> 
+		<env-entry>
+			<env-entry-name>maps/aclURL</env-entry-name>
+			<env-entry-type>java.lang.String</env-entry-type>
+			<env-entry-value>file:///C:\security.csv</env-entry-value>
+		</env-entry>
+    </session>
+  </enterprise-beans>
+</ejb-jar>

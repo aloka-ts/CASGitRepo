@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config_Setup>
+
+<ConfigSection>
+
+	<!--We are dividing the host attributes into two sets of information, first one containing the physical host information while the second part contain the interface information on the host.-->
+
+	<!--Following is the physical information of the HOST. Here the HOSTID will identify a host in the network, while CPU specifies the no of CPUs the host will have. RAM will specify the RAM size, in MB, on this host. OS_VER will specify the version of the OS, which is installed on the host.-->
+
+	<Hosts>
+		<Host HostId="H1">	
+                <AttributeList>
+                   <Attribute Name="CPU" Value="2"/>
+                   <Attribute Name="RAM" Value="1000"/>
+                   <Attribute Name="OS_VER" Value="5.10"/>
+                   <Attribute Name="OS_TYPE" Value="SunOS"/> <!-- Can be Linux or SunOS-->
+                   <Attribute Name="DisplayName" Value="saturn"/>
+                </AttributeList>
+                </Host>
+	  	<Host HostId="H2">
+			<AttributeList>
+			<Attribute Name="CPU" Value="2"/>
+			<Attribute Name="RAM" Value="1000"/>
+			<Attribute Name="OS_VER" Value="5.10`"/>
+			<Attribute Name="OS_TYPE" Value="SunOS"/> <!-- Can be Linux or SunOS-->
+			<Attribute Name="DisplayName" Value="bpsun45"/>
+			</AttributeList>
+		</Host>
+	</Hosts>
+	<!--In the following description we assume that the host H1 has one interface (IF11). The interface IF11 is used for accessing EMS from the outside world (e.g. OSS, SNMP), signaling (SIP, MGCP), mgmt-s (i.e. for connectivity bw EMS and other component). The Enums are like
+
+	0- None(For a Database Server)
+	1- Management North
+	2- Management South
+	3- Signaling -->
+
+	<!-- The Management Interface for any Host, must be placed before the Signaling Interface, if it is not same -->	
+	<Interfaces>
+		<Interface IFID="IF11" HostId="H1" Name="saturn" IP="192.168.12.70" Intf="0" Intf_Type="0,1,2,3"/>
+		<Interface IFID="IF21" HostId="H2" Name="bpsun45" IP="192.168.12.76" Intf="0" Intf_Type="0,1,2,3"/>
+	</Interfaces>
+
+	<!--Following is the database machine details with the Service Name (SVCNAME). Here we are keeping reference to the HOSTID. All the parameters are self-explanatory.-->
+
+	<Databases>
+		<Database DBID="DB1" HOSTID="H1" SVCNAME="saturn" VERSION="10.2.0.3.0" ADMIN_PASSWD="oracle123" USER_PASSWD="USER_PASSWD" />
+	</Databases>
+
+        <DB_USERS>
+                <DB_USER UserId="EMS" Name="ems_max" Passwd="ems_max"/>
+                <DB_USER UserId="SAS" Name="sas_max" Passwd="sas_max"/>
+        </DB_USERS>
+
+
+	<!--Following is the info related to the IVRs, here we are keeping all the necessary information about the IVR.-->
+	<!--TYPE can be one of the following 
+	COG - 1
+	IPUNITY - 2
+	SS - 3
+	AIN - 4
+	CONVEDIA/SIP - 5
+	CONVEDIA/MGCP - 6
+	AUDIOCODES - 7
+	SIP - 8
+
+	MSG_TYPE could be one of the following
+	NONE 
+	URL 
+	TRACK 
+	CONVERGENCE  -->
+
+	<!-- PK 
+	<IVRS>
+		<IVR IVRID="IVR1" MSG_TYPE="URL" BASE_DIR="/home/abc" TYPE="8" IP="192.168.1.59" PORT="5060" URL_PREFIX="file:///"/>
+	</IVRS>
+
+	<ANNOUNCEMENT_SERVERS>
+		<ANNOUNCEMENT_SERVER SERVER_ID="ANN1" STORAGE_PATH="/home/bpfs/test" SERVER_IP="p2.q2.r2.s2" USER="root"	PASSWORD="abcd" />
+	</ANNOUNCEMENT_SERVERS>
+
+	<SIP_SWITCH>
+           <DEFAULT_SWITCH SWITCH_ID="SWITCH1" SWITCH_IP="192.168.8.8" PORT="5060"/>
+  </SIP_SWITCH>
+
+  <IPLANETS>
+       <IPLANET IPLANET_ID="IMAP1" IPLANET_IP="192.168.1.104" ADMIN_USER="admin" ADMIN_PASSWORD="root1234" TIMEZONE="US/Pacific" TOP_DOMAIN="uchost.ucdomain.com" BPFS_FIP="192.168.1.104" BPFS_PATH="/global/iplanet/AAPCMUC"  />
+   </IPLANETS>
+       <FAX_SERVERS>
+                <FAX_SERVER FAX_SERVER_ID="SERVER1" FAX_SERVER_IP="192.168.8.25" FAX_SERVER_PORT="5060" />
+        </FAX_SERVERS>	-->
+			
+	<!--Following are the entries for outbound SIP gateways. The attributes are self-explanatory.-->
+	<!-- PK 
+	<OB_SIP_GWS>
+		<OB_SIP_GW GWID="OB1" IP="192.168.1.47" PORT="5060"/>
+	</OB_SIP_GWS>
+	-->
+	<!--Following are some miscellaneous entries required for the installation. These entries are such that the user might wish to change them but not necessarily-->
+
+	<Misc>
+        <UnixUser UserName="sas" Passwd="sas"  Group="other" HomeDir="/home1/sas" Shell="bash"/>
+		<!-- PK for 10g client -->
+		<OracleClientInfo ORACLE_HOME="/usr/local/10gclient" ORACLE_VERSION="10.2.0.1.0"/>
+
+		<!-- PK for oracle8 client -->
+		<!--
+		<OracleClientInfo ORACLE_HOME="/usr/local/OracleClient8173" ORACLE_VERSION="8.1.7.0.0"/>
+		-->
+
+		<JDK>
+			<JDKInfo JDK_ID="JDK1.5" VERSION="1.5.0_12" JDK_HOME="/usr/java"/>
+		</JDK>
+
+		<REF_IPS>
+			<REF_IP REF_IP_ID="REF_IP1" IP="192.168.1.101"/>
+		</REF_IPS>
+		<FIPS>
+			<FIP FIP_ID="FIP_EMS" IP="192.168.12.70"/> 
+			<FIP FIP_ID="FIP_SAS" IP="192.168.14.49"/> 
+		<!-- PK to be added for SPSI support
+			<FIP FIP_ID="FIP_SPSI" IP="192.168.12.70"/> 
+		-->
+		</FIPS>
+
+		<MULTICAST_IPS>
+			<MULTICAST_IP MULTICAST_IP_ID="MULTICAST_IP1" IP="aa12.bb12.cc12.dd12"/>
+			<MULTICAST_IP MULTICAST_IP_ID="MULTICAST_IP2" IP="aa14.bb14.cc14.dd14"/> 
+		</MULTICAST_IPS>
+		
+		<REPORT_SERVERS>
+		         <REPORT_SERVER REPORT_SERVER_ID="REPORT_SERVER1" IP="i1.j1.k1.l1" port="7777"/>
+        </REPORT_SERVERS>
+
+		<CLUSTERS>
+			<CLUSTER CLU_ID="CLU1" NAME="EMS" REGION="INDIA"/>
+			<CLUSTER CLU_ID="CLU2" NAME="SAS" REGION="INDIA"/>
+	<!--to be added for SPSI support
+			<CLUSTER CLU_ID="CLU3" NAME="SPSI" REGION="INDIA"/>
+	-->
+		</CLUSTERS>
+
+		<CONTACT_INFO>
+			<INFO CON_INFO_ID="CON1" Name="Prashant Kumar" Phone_Number="+91120420" Mail_Id="contact.person@genband.com" Address="C-42 BP INDIA"/>
+		</CONTACT_INFO>
+	</Misc>
+
+</ConfigSection>
+
+<SetupSection>
+
+	<!--The values of different parameters will refer the above section (SECTION-1), until/unless specified, here only the Ids will be mentioned for the corresponding section. For details please refer the example section.-->
+
+	<!--This is the first cluster which will contain EMS only-->
+
+    
+	<Cluster value="CLU1">
+
+<!--Here information related to the EMS SYSTEM is mentioned.-->
+
+	<System Name="EMS SYSTEM" Type="rsiEms" BuildDir="EMS_BUILD"> <!--static info and not referenced fromConfigSection -->
+	<CONTACT_INFO value="CON1"/>
+	<INSTALLATION_TYPE value="NFT"/>      <!--static info and not referenced from ConfigSection-->
+	<INSTALL_ROOT value="/home1/sas/EMS_INSTALL"/>    <!--static info and not referenced from ConfigSection-->
+	<HOSTS value="H1"/>
+	<DB_USER value="EMS"/>
+	<DBS value="DB1"/>
+
+      <!--Root Passwords will be prompted to the user. (For H1)-->
+
+      <!--The following port numbers are fixed. These are mentioned here just to give a provision to change these ports in case there is a need.-->
+      <SNMP_AGENT_PORT value="5161"/>     <!--static info and not referenced from ConfigSection-->
+      <DB_HOST_SNMP_PORT value="5161"/>   <!--static info and not referenced from ConfigSection-->
+      <DB_SNMP_PORT value="3161"/>      <!--static info and not referenced fromConfigSection-->
+      <LICENSE_KEY value="99819C31N3788949"/>
+      <CREATE_NEW_TABLES value="Y"/>      <!-- To create fresh EMS Tables, give the value "Y" else "N" -->
+      <REF_IPS value="REF_IP1"/>
+	<!--
+      <FIP value="FIP_EMS"/>
+	-->
+    </System>
+  </Cluster>
+
+	<Cluster value="CLU2">
+
+	<System Name="SAS" Type="rsiAse" BuildDir="SAS_BUILD/SipServlet5.6">
+
+		<INSTALLATION_TYPE value="FT"/>
+
+		<INSTALL_ROOT value="/home1/sas/SAS_INSTALL"/>
+
+		<HOSTS value="H1,H2"/>
+		<DB_USER value="SAS"/>
+
+		<DBS value="DB1"/>
+		<REF_IPS value="REF_IP1"/>
+		<INGW_LIST value=" "/>
+
+		<!--The Subsystem has tags Type - to identify the type of component;
+					Hosts - to identify the hosts on which this is installed -->
+		<Subsystems>
+			<!--
+			<Subsystem Type="ASE Subsystem" Hosts="H1,H2" Jdk_Ver="JDK1.5" />
+			-->
+			<Subsystem Type="ASE Subsystem" Hosts="H1,H2" Fips="FIP_SAS" Jdk_Ver="JDK1.5" />
+		</Subsystems>
+	</System>
+
+	</Cluster>
+
+<!-- 
+  <Cluster value="CLU3">
+
+    <System Name="SPSI1" Type="rsi8k" BuildDir="SPSI_BUILD">
+
+      <INSTALLATION_TYPE value="NFT"/>
+
+      <INSTALL_ROOT value="/home1/sas/SPSI_INSTALL"/>
+
+      <HOSTS value="H1"/>
+
+      <DB_USER value="NSP"/>
+
+      <DBS value="DB1"/>
+
+      <ANNOUNCEMENT_SERVERS value="ANN1"/>
+
+      <PRI_SPSI_PROVISIONING_IP value="192.168.12.4"/>
+
+      <SPSI_FLOATING_IP value="FIP_SPSI"/>
+
+      <SPSI_REF_IP value="REF_IP1"/>
+	 <IPLANETS value="IMAP1"/>
+		<FAX_SERVERS value="SERVER1"/>
+      The Subsystem has tags Type - to identify the type of component;Hosts - to identify the hosts on which this is
+ installed 
+
+      <Subsystems>
+
+        <Subsystem Type="SPSI" Hosts="H1" Fips="FIP_SPSI" Jdk_Ver="JDK1.5" />
+
+      </Subsystems>
+
+     </System>
+
+  </Cluster> -->
+
+</SetupSection>
+
+</Config_Setup>

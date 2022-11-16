@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="CAPApp">
+
+  <!--
+	<property name="INSTALLROOT" value="/vob/Sipservlet/src/tcap/cap/camelv2/sampleApplication" />
+
+	<property name="THIRDPARTY" value="/vob/thirdParty" />
+
+	<property name="BN_HOME" value="${THIRDPARTY}/BinaryNotes1.5.2" />
+	<property name="CAP_HOME" value="/vob/Sipservlet/src/tcap/cap" />
+  -->
+	<property name="src.dir"   value="${CAP_HOME}/camelv2/sampleApplication/src"/>
+	<property name="config.dir" value="${CAP_HOME}/camelv2/sampleApplication/config" />
+	<property name="webbuild.dir" value="${INSTALLROOT}/camelAppBuild"/>
+	<property name="classes.dir" value="${INSTALLROOT}/camelAppClasses" />
+	<property name="sas.sarFile" value="${webbuild.dir}/CAPAppServlet.war" />
+
+	
+	<path id="lib.dir">
+      <fileset dir="${BN_HOME}/Dist/lib/java">
+            <include name="binarynotes.jar"/>
+      </fileset>
+      <fileset dir="${INSTALLROOT}/bpjars">
+            <include name="tcap-provider-impl.jar"/>
+            <include name="tcap-provider-api.jar"/>
+            <include name="sas-cap-v2.jar"/>
+            <include name="bpsbb.jar"/>
+      </fileset>
+      <fileset dir="${THIRDPARTY}/otherjars">
+            <include name="servlet-2.4.jar"/>
+            <include name="log4j-1.2.8.jar"/>
+            <include name="sipservlet-1_1-api.jar"/>
+      </fileset>
+	</path>
+	 
+	
+	<!-- Clean up -->
+	<target name="clean" description="Clean the build directory">
+		<delete dir="${classes.dir}"/>
+    <delete dir="${INSTALLROOT}/cap"/>
+		<delete dir="${webbuild.dir}"/>
+		<delete file="${INSTALLROOT}/bpjars/sas-cap-v2.jar"/>
+		<delete file="${sas.sarFile}"/>
+	</target>
+
+
+	<target name="init" depends="clean">
+		<mkdir dir="${classes.dir}"/>
+    <mkdir dir="${INSTALLROOT}/cap/camelv2/codecClasses"/>
+		<mkdir dir="${webbuild.dir}"/>
+	</target>
+
+	
+  <target name="capCodecs" depends="init">
+        <echo message="THIRDPARTY: ${THIRDPARTY}"/>
+        <javac srcdir="${CAP_HOME}/camelv2/codec/src" destdir="${INSTALLROOT}/cap/camelv2/codecClasses" debug="true">
+              <include name="**/*.java"/>
+              <classpath refid="lib.dir"/>
+        </javac>
+        <jar update="true" jarfile="${INSTALLROOT}/bpjars/sas-cap-v2.jar" basedir="${INSTALLROOT}/cap/camelv2/codecClasses"/>
+        <delete dir="${INSTALLROOT}/cap"/>
+  </target>
+  
+  <target name="tcap">
+        <ant antfile="${CAP_HOME}/../build.xml" target="compile" inheritAll="false">
+          <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+        </ant>
+  </target>
+
+	<target name="compileCamelSampleApp" depends="capCodecs,tcap">
+	<!--target name="compile"-->
+      <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+			<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="lib.dir" debug="true">
+        <include name="**/*.java"/>
+        <!--classpath refid="lib.dir"/-->
+			</javac>
+	</target>
+
+	<target name="build" depends="compileCamelSampleApp">
+		<copy todir="${webbuild.dir}/WEB-INF/" file="${config.dir}/sip.xml" />
+		<copy todir="${webbuild.dir}/WEB-INF/" file="${config.dir}/sas.xml" />
+		<copy todir="${webbuild.dir}/WEB-INF/lib/">
+      <fileset dir="${BN_HOME}/Dist/lib/java">
+            <include name="binarynotes.jar"/>
+      </fileset>
+      <fileset dir="${INSTALLROOT}/bpjars">
+            <include name="tcap-provider-impl.jar"/>
+            <include name="tcap-provider-api.jar"/>
+            <include name="sas-cap-v2.jar"/>
+            <include name="bpsbb.jar"/>
+      </fileset>
+      <fileset dir="${THIRDPARTY}/otherjars">
+            <include name="servlet-2.4.jar"/>
+            <include name="log4j-1.2.8.jar"/>
+            <include name="sipservlet-1_1-api.jar"/>
+      </fileset>
+		</copy>
+		<copy todir="${webbuild.dir}/WEB-INF/classes">
+			<fileset dir="${classes.dir}">
+			</fileset>
+		</copy>
+
+		<jar destfile="${sas.sarFile}" basedir="${webbuild.dir}" />
+		<delete dir="${webbuild.dir}/WEB-INF" />
+		<delete dir="${classes.dir}"/>
+		<copy todir="${webbuild.dir}" file="${config.dir}/camelApp.properties" />
+
+	</target>
+	
+
+	<target name="generate-java-doc">
+		<javadoc destdir="docs/api"
+			author="true" version="true" use="true" windowtitle="Agnity API">
+			<packageset dir="${src.dir}" defaultexcludes="yes">
+			</packageset>
+			<doctitle><![CDATA[<h1>Java Doc</h1>]]></doctitle>
+			<bottom><![CDATA[<i>&copy;Agnity, Inc. All Rights Reserved.</i>]]></bottom>
+			<tag name="todo" scope="all" description="To do:"/>
+		</javadoc>
+	</target>
+</project>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Baypackets SIP Application Server//DTD SAS Descriptor//EN"
+   "http://www.baypackets.com/dtd/sas-app.dtd">
+
+<sas-app>
+
+	<name>RegistrarServlet</name>
+	<version>1.0</version>
+	<priority>5</priority>
+
+</sas-app>

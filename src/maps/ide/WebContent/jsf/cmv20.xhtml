@@ -1,0 +1,142 @@
+<div
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:pfc="http://www.jboss.com/portal/facelet/common"
+   xmlns:c="http://java.sun.com/jstl/core">
+	
+   <!-- <f:loadBundle basename="bundle.resources" var="bundle"/> -->
+   <f:view locale="#{facesContext.externalContext.request.locale}">
+
+<h:form id="details20">
+	<table width="100%">
+   		<tbody>  			
+   			
+   		<tr class="portlet-section-body">
+            	<td>
+				<c:choose>
+						<c:when test='${createMBean109.mode == "0"}'>
+						<h:outputText value="*" style="color:red"/>
+						</c:when>
+				</c:choose>
+            		#{bundle.D109_DeployedApp_AppId}:
+            	</td>
+            	<td>
+	     			<c:choose>
+						<c:when test='${createMBean109.mode == "0"}'>
+							<h:inputText id="D109_DeployedApp_AppId" value="#{createMBean109.appId}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<!-- <c:when test='${createMBean109.mode == "1"}'>
+							<h:inputText id="D109_DeployedApp_AppId" value="#{createMBean109.appId}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>-->
+						<c:otherwise>
+							<h:outputText id="D109_DeployedApp_AppId" value="#{createMBean109.appId}">
+							</h:outputText>
+						</c:otherwise>
+						<h:message for="D109_DeployedApp_AppId" style="color: Red"/>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D109_DeployedApp_AppId"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td>
+            		#{bundle.D109_DeployedApp_AppDescription}:
+            	</td>
+            	<td>
+	     			<c:choose>
+						<c:when test='${createMBean109.mode == "0"}'>
+							<h:inputText id="D109_DeployedApp_AppDescription" value="#{createMBean109.appDescription}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:when test='${createMBean109.mode == "1"}'>
+							<h:inputText id="D109_DeployedApp_AppDescription" value="#{createMBean109.appDescription}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D109_DeployedApp_AppDescription" value="#{createMBean109.appDescription}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D109_DeployedApp_AppDescription"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td>
+            		#{bundle.D109_DeployedApp_DeployDate}:
+            	</td>
+            	<td>
+	     			<c:choose>
+						<c:when test='${createMBean109.mode == "0"}'>
+							<h:inputText id="D109_DeployedApp_DeployDate" value="#{createMBean109.deployDate}" styleClass="portlet-form-input-field">
+								<f:convertDateTime dateStyle="short"/>
+							</h:inputText>
+							<h:outputText value="Ex : 1/3/05 (MM/DD/YY)"/>            		
+						</c:when>
+						<!-- <c:when test='${createMBean109.mode == "1"}'>
+							<h:inputText id="D109_DeployedApp_DeployDate" value="#{createMBean109.deployDate}" styleClass="portlet-form-input-field">
+								<f:convertDateTime dateStyle="short"/>
+							</h:inputText>
+							<h:outputText value="Ex : 1/3/05 (MM/DD/YY)"/>            		
+						</c:when> -->
+						<c:otherwise>
+							<h:outputText id="D109_DeployedApp_DeployDate" value="#{createMBean109.deployDate}">
+								<f:convertDateTime dateStyle="short"/>
+							</h:outputText>
+						</c:otherwise>
+				</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D109_DeployedApp_DeployDate"/>
+	    	</td>
+         	</tr>
+  		<tr class="portlet-section-body">
+            			<c:choose>
+					<c:when test='${createMBean109.mode == "0"}'>
+							<td>
+								<h:outputText value="*" style="color:red"/>
+								#{bundle.UrlLocation}:
+							</td>
+							<td>
+							<h:inputText id="UrlLocation" value="#{createMBean109.url}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>
+							<h:outputText value=" "/>
+	    						<h:message style="color: red" for="UrlLocation"/>
+							</td>            		
+					</c:when>
+				</c:choose>
+	    		
+	    	</tr>
+ 			
+   			<tr class="portlet-section-body">
+            <td align="right" colspan="2">
+				<h:panelGroup> 
+					<c:choose>
+						<c:when test='${createMBean109.mode == "1" || createMBean109.mode == "0"}'>
+							<h:commandButton id="save" action="viewDetails" actionListener="#{createMBean109.saveAction}" value="#{bundle.Save}"/>
+						</c:when>
+					</c:choose>
+					<c:choose>
+						<c:when test='${createMBean109.mode != "2"}'>
+							<h:commandButton action="list" value="#{bundle.Cancel}" immediate="true"/>
+						</c:when>
+						<c:otherwise>
+							<h:commandButton action="list" value="#{bundle.Ok}"/>
+						</c:otherwise>
+					</c:choose>
+	      		 </h:panelGroup>
+            </td>
+        	</tr>
+   		
+   		</tbody>
+   	</table>
+</h:form>
+</f:view> 
+</div>

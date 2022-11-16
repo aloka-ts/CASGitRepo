@@ -1,0 +1,81 @@
+<?xml version="1.0" standalone="yes"?>
+<!--
+/**********************************************************************
+*	 GENBAND, Inc. Confidential and Proprietary
+*
+* This work contains valuable confidential and proprietary 
+* information.
+* Disclosure, use or reproduction without the written authorization of
+* GENBAND, Inc. is prohibited.  This unpublished work by GENBAND, Inc.
+* is protected by the laws of the United States and other countries.
+* If publication of the work should occur the following notice shall 
+* apply: 
+* 
+* "Copyright 2007 GENBAND, Inc.  All rights reserved."
+**********************************************************************/
+-->
+<!DOCTYPE deployments PUBLIC
+   "-//JBoss Portal//DTD Portlet Instances 2.6//EN"
+   "http://www.jboss.org/portal/dtd/portlet-instances_2_6.dtd">
+
+<deployments>
+
+   <deployment>
+      <instance>
+         <instance-id>ownDetails_org_1_2_1Instance</instance-id>
+         <portlet-ref>ownDetails_org_1_2_1</portlet-ref>
+		 <portlet-preferences>
+            <preference>
+               <name>expires</name>
+               <value>180</value>
+            </preference>
+		 </portlet-preferences>
+         <security-constraint>
+		         <policy-permission>	            
+                   <role-name>SPA</role-name>
+                   <action-name>view</action-name>            
+                   <role-name>NPM</role-name>
+                   <action-name>view</action-name>               
+                 </policy-permission>
+         </security-constraint>
+      </instance>
+   </deployment>
+   <deployment>
+      <instance>
+         <instance-id>childOrganizationList_org_2_2_1Instance</instance-id>
+         <portlet-ref>childOrganizationList_org_2_2_1</portlet-ref>
+		 <portlet-preferences>
+            <preference>
+               <name>expires</name>
+               <value>180</value>
+            </preference>
+		 </portlet-preferences>
+         <security-constraint>
+		         <policy-permission>	            
+                   <role-name>SPA</role-name>
+                   <action-name>view</action-name>            
+                   <role-name>NPM</role-name>
+                   <action-name>view</action-name>               
+                 </policy-permission>
+         </security-constraint>
+      </instance>
+   </deployment>
+    <deployment>
+      <instance>
+         <instance-id>DeployedAppList_2_1Instance</instance-id>
+         <portlet-ref>DeployedAppList_2_1</portlet-ref>
+		 <portlet-preferences>
+            <preference>
+               <name>expires</name>
+               <value>180</value>
+            </preference>
+		 </portlet-preferences>
+         <security-constraint>
+		         <policy-permission>	            
+                   <role-name>NPA</role-name>
+                   <action-name>view</action-name>               
+                 </policy-permission>
+         </security-constraint>
+      </instance>
+   </deployment>
+</deployments>

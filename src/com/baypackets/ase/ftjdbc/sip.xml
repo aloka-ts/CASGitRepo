@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sip-app PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN" "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+<sip-app id="SipApp_ID">
+	<display-name>DataAccess</display-name>
+	<servlet>
+		<servlet-name>DataAccessTestServlet</servlet-name>
+		<display-name>DataAccessTestServlet</display-name>
+		<description>Test Servlet for Data Access</description>
+		<servlet-class>com.genband.ase.util.DataAccessTestServlet</servlet-class>
+		<init-param>
+			<param-name>DataSource1</param-name>
+			<param-value>wasdb1</param-value>
+			<description></description>
+		</init-param>
+		<init-param>
+			<param-name>DataSource2</param-name>
+			<param-value>wasdb2</param-value>
+			<description></description>
+		</init-param>
+		<init-param>
+			<param-name>FailedDBReconnectIntvl</param-name>
+			<param-value>30</param-value>
+			<description></description>
+		</init-param>
+		<init-param>
+			<param-name>DataSourceCount</param-name>
+			<param-value>2</param-value>
+			<description></description>
+		</init-param>
+		<load-on-startup>-1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DataAccessTestServlet</servlet-name>
+		<pattern>
+			<and>
+				<equal>
+					<var>request.method</var>
+					<value>INVITE</value>
+				</equal>
+				<equal>
+					<var>request.from.uri.user</var>
+					<value>5107432502</value>
+				</equal>
+			</and>
+		</pattern>
+	</servlet-mapping>
+</sip-app>

@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<project name="mssim" default="compile" basedir=".">
+
+	<property name="buildDir" value="${INSTALLROOT}"/>
+    <property name="out.dir"  value="${buildDir}/classes"/>
+    <property name="lib.dir"  value="${buildDir}/lib"/>
+    <property name="src.dir"  value="${basedir}"/>
+    <property name="sip.dir"  value="/vob/thirdParty/stacks/SIPStack/DySIPUAJava_6.4/src/dsua/lib"/>
+    <target name="init" description="setup version information" >
+        <exec executable="date" outputproperty="ver.time"   />
+        <exec executable="date" outputproperty="ver.date">
+            <arg value="+%m/%d/%y" />
+        </exec>
+        <property name="Name"    value="Media Server Simulator"/>
+        <property name="name"    value="mssim"/>
+        <echo message="${Name} ${ver.time} ${ver.date}" />
+
+		<mkdir dir="${lib.dir}"/>
+		<mkdir dir="${out.dir}"/>
+
+		<copy todir="${lib.dir}" file="/vob/thirdParty/otherjars/commons-httpclient-3.0.1.jar">
+			<fileset dir="${sip.dir}"/>
+		</copy>
+		<copy todir="${lib.dir}" file="/vob/thirdParty/otherjars/commons-codec-1.3.jar"/>
+		<copy todir="${lib.dir}" file="/vob/thirdParty/otherjars/commons-logging-api-1.1.jar"/>
+		<copy todir="${lib.dir}" file="/vob/thirdParty/otherjars/commons-logging-adapters-1.1.jar"/>
+		<copy todir="${lib.dir}" file="/vob/thirdParty/otherjars/commons-logging-1.1.jar"/>
+		<copy todir="${buildDir}" file="${src.dir}/log4j.xml"/>
+		<copy todir="${buildDir}" file="${src.dir}/run.sh"/>
+		<copy todir="${buildDir}" file="${src.dir}/README.txt"/>
+
+		<delete file="${buildDir}/mssim.tar.gz"/>
+    </target>
+
+    <property environment="env"/>
+
+    <path id="project.class.path">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement location="${out.dir}"/>
+    </path>
+
+    <target name="mssim" depends="init">
+
+		<javac debug="yes" srcdir="${src.dir}" destdir="${out.dir}">
+			<classpath refid="project.class.path"/>
+		</javac>
+
+		<jar jarfile="${buildDir}/mssim.jar" basedir="${out.dir}"/>
+
+		<delete dir="${out.dir}"/>
+
+		<tar tarfile="${buildDir}/mssim.tar" basedir="${buildDir}"/>
+
+		<gzip zipfile="${buildDir}/mssim.tar.gz" src="${buildDir}/mssim.tar"/>
+
+		<delete file="${buildDir}/mssim.tar"/>
+		<delete dir="${lib.dir}"/>
+		<delete file="${buildDir}/log4j.xml"/>
+		<delete file="${buildDir}/README.txt"/>
+		<delete file="${buildDir}/mssim.jar"/>
+		<delete file="${buildDir}/run.sh"/>
+    </target>
+</project>
+
+
+

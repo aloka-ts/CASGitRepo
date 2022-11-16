@@ -1,0 +1,233 @@
+<%@ jet package = "com.baypackets.ase.soa.codegenerator " imports = "java.util.* java.lang.reflect.*;" class = "RemoteServiceProxyGenerator" %>
+
+<% 	
+	Map argsMap = (HashMap)argument;
+	ClassInspector classInspector = (ClassInspector)argsMap.get("ClassInspector"); 
+	String stubClassName = (String)argsMap.get("StubClass"); 
+	String parentClassPkg= classInspector.getPackageName();
+ 	String parentClassName= classInspector.getClassName();
+	StringBuffer strBuf = new StringBuffer();
+    strBuf.append("\"");
+    strBuf.append(parentClassPkg);
+    strBuf.append(".");
+    strBuf.append(parentClassName);
+    strBuf.append("\"");
+    String interfaceClassName =  strBuf.toString();
+ 	
+%>
+
+package <%= parentClassPkg %>;
+
+import java.util.*;
+import java.lang.reflect.*;
+import org.apache.log4j.*;
+
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.commons.httpclient.SimpleHttpConnectionManager;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.HttpConnection;
+import org.apache.commons.httpclient.HostConfiguration;
+
+
+import com.baypackets.ase.soa.codegenerator.proxy.BaseProxy;
+
+public class <%= parentClassName %>RemoteProxy implements <%= parentClassName %>,BaseProxy {
+	private <%= stubClassName %> wsStub = null;
+	private String m_uri;
+	private static Logger m_logger = Logger.getLogger(<%= parentClassName %>RemoteProxy.class);
+
+	public <%= parentClassName %>RemoteProxy()    {
+                                                                                                                        
+    }
+                                                                                                                        
+    public <%= parentClassName %>RemoteProxy(<%= stubClassName %> stub)  {
+        wsStub = stub;
+    }
+
+	public void setImpl(Object impl)	{
+		//Empyt method just to satisfy compiler
+	}
+	public void setURI(String uri)  {
+        m_uri = uri;
+		try	{
+			wsStub = new <%= stubClassName %>(uri);
+			ConfigurationContext configurationContext =
+     		wsStub._getServiceClient().getServiceContext().getConfigurationContext();
+            configurationContext.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.FALSE);
+			MultiThreadedHttpConnectionManager mtMgr = new MultiThreadedHttpConnectionManager();
+            HttpClient httpClient = new HttpClient(mtMgr);
+            configurationContext.setProperty(HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
+            mtMgr.getParams().setDefaultMaxConnectionsPerHost(150);
+            mtMgr.getParams().setMaxTotalConnections(500);
+		}catch(Exception e)	{
+			m_logger.error("Error in Setting URI on Stub object",e);
+		}
+    }
+	public void setStub(<%= stubClassName %> stub)	{
+		 wsStub = stub;
+    }
+	public String getInterface()	{
+		return <%= interfaceClassName %>;
+	}
+
+	 public Object getImpl() {
+        return null;
+    }
+                                                                                                                             
+    public Object clone() throws CloneNotSupportedException {
+        try {
+            return super.clone();
+        }catch(CloneNotSupportedException exp)  {
+            throw exp;
+        }
+    }
+
+<%
+	String name = "";
+    String returnType = "";
+	boolean isPrimitive = false;
+    String modifiers = "";
+    Method[] methods = classInspector.getMethods();
+    for(int i=0;i<methods.length;i++)   {
+        Method m = methods[i];
+        name = m.getName();
+        Class retType = m.getReturnType();
+		isPrimitive = retType.isPrimitive();
+        modifiers = Modifier.toString((m.getModifiers()));
+        returnType = retType.getName();
+        Class[] params = m.getParameterTypes();
+        StringBuffer methodArguments = new StringBuffer();
+        StringBuffer implArguments = new StringBuffer();
+        for(int j=0;j<params.length;j++)    {
+            Class paramType = params[j];
+			if(paramType.isPrimitive()) {
+                methodArguments.append(paramType.getName());
+            }else if(!(paramType.isArray())) {
+                methodArguments.append(paramType.getName());
+            }else if(paramType.isArray())   {
+                methodArguments.append(paramType.getComponentType().getName());
+                methodArguments.append("[]");
+            }
+            methodArguments.append(" arg"+j);
+            implArguments.append(" arg"+j);
+            methodArguments.append(",");
+            implArguments.append(",");
+        }
+        int index = methodArguments.length();
+        if(index > 0)
+            methodArguments.deleteCharAt(index -1);
+        index = implArguments.length();
+        if(index > 0)   {
+            implArguments.deleteCharAt(index -1);
+        }
+        Class[] exps = m.getExceptionTypes();
+        StringBuffer exceptions = new StringBuffer();
+        if(exps.length > 0) {
+        	exceptions.append("throws ");
+            for(int k=0;k<exps.length;k++)  {
+                exceptions.append(exps[k].getName());
+                exceptions.append(",");
+            }
+			index = exceptions.length();
+        	if(index > 0)   {
+            	exceptions.deleteCharAt(index -1);
+        	}
+	
+                                                                                                                          
+        }
+%>
+    public <%= returnType %> <%= name %> (<%= methodArguments.toString() %> ) <%= exceptions.toString() %> {
+		<%
+        if(!isPrimitive) {
+        %>
+            <%= returnType %> retVal = null;
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("int"))  {
+        %>
+            <%= returnType %> retVal = 0;
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("short"))  {
+        %>
+            <%= returnType %> retVal = 0;
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("long"))  {
+        %>
+            <%= returnType %> retVal = 0;
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("float"))  {
+        %>
+            <%= returnType %> retVal = 0.0f;
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("double"))  {
+        %>
+            <%= returnType %> retVal = 0.0;
+        <%
+        }
+        %>
+		<%
+        if(returnType.equals("boolean"))  {
+        %>
+            <%= returnType %> retVal = false;
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("char"))  {
+        %>
+            <%= returnType %> retVal =  '\u0000';
+        <%
+        }
+        %>
+        <%
+        if(returnType.equals("byte"))  {
+        %>
+            <%= returnType %> retVal = 0;
+        <%
+        }
+        %>
+	try {
+        <%
+        if(!returnType.equals("void"))  {
+        %>
+            retVal = wsStub.<%= name %>(<%= implArguments.toString() %>);
+        <%
+        }else   {
+        %>
+            wsStub.<%= name %>(<%= implArguments.toString() %>);
+        <%
+        }
+        %>
+    }catch(Exception e) {
+        m_logger.error("Error in invoking "+"<%= name %>"+"("+"<%= implArguments.toString() %>" +") on Proxy ",e);
+    }
+      <%
+    if(!returnType.equals("void"))  {
+     %>
+        return (<%= returnType %>)retVal;
+<%
+    }
+%>
+                                                                                                                        
+    }
+<%
+        }
+%>
+}
+

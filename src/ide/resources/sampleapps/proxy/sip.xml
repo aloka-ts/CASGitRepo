@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+   "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+<sip-app>
+
+
+  <display-name>Proxy test servlet</display-name>
+<distributable/>
+  <servlet>
+    <servlet-name>ProxyApp</servlet-name>
+    <servlet-class>com.baypackets.sampleapps.proxy.ProxyApp</servlet-class>
+    <load-on-startup/>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProxyApp</servlet-name>
+    <pattern>
+        <equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+    </pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>10</session-timeout>
+  </session-config>
+</sip-app>

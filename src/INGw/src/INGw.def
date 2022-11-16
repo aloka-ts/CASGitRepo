@@ -1,0 +1,20 @@
+
+
+EXTRA_DEFINES += USE_LOCK_FOR_REF_COUNT
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+DIRS += INGwInfrastructure  \
+        INGwCommonTypes  \
+				INGwLoadDistributor \
+				INGwSipProvider     \
+				INGwFtHandler       \
+				INGwTcapProvider    \
+        INGwStackManager    \
+				INGwIwf             \
+				stub_INGwIwf
+#Main.install: $(DIRS:%=%.install)
+#  @echo "All components compiled."
+
+DIRS += INGwMain
+

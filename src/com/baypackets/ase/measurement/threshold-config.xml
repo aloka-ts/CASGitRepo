@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ThresholdMgr>
+	
+	<!-- Threshold counter for Application Session  -->
+	<ThresholdCounter id="Application Session Threshold"
+					  thresholdType="absolute" mode="reset"  modeIntervalInSec="300" 
+					  lowThresholdValue="NA" thresholdValue="10000" 
+					  oid = "30.10.101" associatedId=""
+					  action="alarm" alarmMessage="Number of active application Session exceeded higher limit"
+					  entityType = "OSS" entityId="CAS" 
+					  scanIntervalInSec = "6000" enabled="true" deferedProcessing="false"/>
+
+	<!-- Threshold counter for SIP Session  -->
+	<ThresholdCounter id="SIP Session Threshold"
+					  thresholdType="absolute" mode="reset"  modeIntervalInSec="300" 
+					  lowThresholdValue="NA" thresholdValue="10000" 
+					  oid = "30.10.102" associatedId=""
+					  action="alarm" alarmMessage="Number of SIP Session exceeded higher limit"
+					  entityType = "OSS" entityId="CAS" 
+					  scanIntervalInSec = "6000" enabled="true" deferedProcessing="false"/>
+
+	<!-- Threshold counter for Serialization Failures  -->
+	<ThresholdCounter id="Serialization Failure Threshold"
+					  thresholdType="absolute" mode="reset"  modeIntervalInSec="300" 
+					  lowThresholdValue="NA" thresholdValue="1000" 
+					  oid = "30.10.103" associatedId=""
+					  action="alarm" alarmMessage="Number of Serialization Failures exceeded the threshold value"
+					  entityType = "OSS" entityId="CAS" 
+					  scanIntervalInSec = "6000" enabled="true" deferedProcessing="false"/>
+
+	<!-- Threshold counter for Deserialization Failures  -->
+	<ThresholdCounter id="Deserialization Failure Threshold"
+					  thresholdType="absolute" mode="reset"  modeIntervalInSec="300" 
+					  lowThresholdValue="NA" thresholdValue="1000"
+					  oid = "30.10.104" associatedId=""
+					  action="alarm" alarmMessage="Number of Deserialization Failures exceeded the threshold value"
+					  entityType = "OSS" entityId="CAS" 
+					  scanIntervalInSec = "6000" enabled="true" deferedProcessing="false"/>
+</ThresholdMgr>

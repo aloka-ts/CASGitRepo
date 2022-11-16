@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<AttributeList>
+<Attribute name="send.event" displayName="Send Event"
+			mandatory="true" type="list"  value="app.done,done,msml.dialog.exit,pause,resume,toggle-state,terminate,retsart,forward,backward,starttimer,terminate.cancelled,terminate.finalsilence,nospeech,softer,louder,mute,unmute,reset,amt" />
+
+<!-- Conference Package Specification Elements and Attributes -->		
+<Attribute name="conf.id" displayName="Conference Identifier"
+			mandatory="true" whitespace="no" type="basic" />
+
+<Attribute name="conf.term" displayName="Conference Term Attribute"
+			mandatory="false" type="basic" />
+
+<Attribute name="conf.mark" displayName="Conference Mark Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+			
+<Attribute name="destroyconf.mark" displayName="Destroy Conference Mark Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+
+<Attribute name="audiomix.id" displayName="Audiomix Identifier"
+			supported="false" mandatory="false" whitespace="no" type="basic" />
+			
+<Attribut name="audiomix.samplerate" displayName="Audiomix Sample Rate"
+			mandatory="false" type="basic" /> 		
+			
+<Attribute name="nloudest.n" displayName="Conference Maximum Number of Active Participants"
+			mandatory="false" type="range" value="1,2147483647" />
+						
+<Attribute name="asn.ri" displayName="Conference Reporting Time interval"
+			mandatory="false" type="range"  value="1,3600" />
+			
+<Attribute name="asn.asth" displayName="Active Speaker Threshold"
+			supported="false" mandatory="false" type="range"  value="-96,0" />			
+
+<Attribute name="videolayout.id" displayName="Videolayout Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+						
+<Attribute name="videolayout.rootsize" displayName="Root Size of Videolayout"
+			mandatory="false" type="list"  value="VGA,QVGA,CIF,QCIF,SQCIF" />
+
+<Attribut name="root.backgroundcolor" displayName="Root Background Color"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribut name="root.backgroundimage" displayName="Root Background Image"
+			supported="false" mandatory="false" type="basic" />	
+			
+<Attribute name="videolayout.selector" displayName="Videolayout Selector Element"
+			mandatory="false" type="basic" />
+
+<Attribute name="selector.id" displayName="Selector Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+			
+<Attribute name="selector.method" displayName="Selector Method"
+			mandatory="false" type="list" value="vas" />
+			
+<Attribute name="selector.status" displayName="Selector Status"
+			supported="false" mandatory="false" type="list" value="active,disabled" />
+			
+<Attribute name="selector.blankothers" displayName="Selector Blank Others"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="selector.vas" displayName="Selector VAS Element"
+			supported="false" mandatory="false" type="basic" />
+
+<Attribute name="selector.region" displayName="Selector Region Element"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="region.id" displayName="Region Identifier"
+			mandatory="true" whitespace="no" type="basic" />
+
+<Attribute name="region.left" displayName="Region Left Attribute"
+			mandatory="true" type="range"  value="0,100" />	
+			
+<Attribute name="region.top" displayName="Region Top Attribute"
+			mandatory="true" type="range"  value="0,100" />	
+			
+<Attribute name="region.relativesize" displayName="Region Relative Size Attribute"
+			mandatory="true" type="list" value="1,1/2,1/3,1/4,2/3" />
+
+<Attribute name="region.priority" displayName="Region Priority Attribute"
+			mandatory="false" type="range"  value="0,1" />
+			
+<Attribute name="region.title" displayName="Region Title Attribute"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="region.titletextcolor" displayName="Region Title Text Color Attribute"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="region.titlebackgroundcolor" displayName="Region Title Background Color Attribute"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="region.bordercolor" displayName="Region Border Color Attribute"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="region.borderwidth" displayName="Region Border Width Attribute"
+			supported="false" mandatory="false" type="range" value="1,2147483647" />
+			
+<Attribute name="region.logo" displayName="Region Logo Attribute"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="region.freeze" displayName="Region Freeze Attribute"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="region.blank" displayName="Region Blank Attribute"
+			supported="false" mandatory="false" type="basic" />
+																					
+<Attribute name="vas.si" displayName="VAS Switching Interval"
+			mandatory="false" type="basic" />
+			
+<Attribute name="vas.speakersees" displayName="VAS Speaker Sees"
+			mandatory="false" type="list" value="current,previous" />	
+			
+<Attribute name="modifystream.id1" displayName="Conference Participant ID"
+			mandatory="true" whitespace="no" type="basic" />
+
+<Attribute name="modifystream.id2" displayName="Conference Controller ID"
+			mandatory="true" whitespace="no" type="basic" />	
+
+<Attribute name="modifystream.mark" displayName="Modify Stream Mark Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+																				
+<Attribute name="join.id1" displayName="Conference Participant ID"
+			mandatory="true" whitespace="no" type="basic" />
+
+<Attribute name="join.id2" displayName="Conference Controller ID"
+			mandatory="true" whitespace="no" type="basic" />
+				
+<Attribute name="unjoin.id1" displayName="Conference Participant ID"
+			mandatory="true" whitespace="no" type="basic" />
+
+<Attribute name="unjoin.id2" displayName="Conference Controller ID"
+			mandatory="true" whitespace="no" type="basic" />
+			
+<Attribute name="unjoin.mark" displayName="Unjoin Mark Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+						
+<Attribute name="msml.monitor" displayName="Msml Monitor Element"
+			supported="false" mandatory="false" type="basic" />
+						
+<Attribute name="monitor.id1" displayName="Monitor ID 1"
+			mandatory="true" whitespace="no" type="basic" />
+
+<Attribute name="monitor.id2" displayName="Monitor ID 2"
+			mandatory="true" whitespace="no" type="basic" />
+			
+<Attribute name="monitor.mark" displayName="Monitor Mark Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+				
+<Attribute name="monitor.compressed" displayName="Monitor Compressed"
+			mandatory="false" type="basic" />
+									
+<Attribute name="stream.media" displayName="Stream Media"
+			mandatory="true" type="list"  value="audio,video" />
+			
+<Attribute name="stream.dir" displayName="Stream Direction"
+			mandatory="true" type="list"  value="to-id1,from-id1" />
+
+<Attribute name="stream.compressed" displayName="Stream Compressed"
+			supported="false" mandatory="false" type="basic" />
+
+<Attribute name="stream.preffered" displayName="Stream Preffered"
+			supported="false" mandatory="false" type="basic" />
+
+<Attribute name="stream.override" displayName="Stream Override"
+			supported="false" mandatory="false" type="basic" />
+									
+<Attribute name="stream.gain.id" displayName="Stream Gain ID"
+			supported="false" mandatory="false" whitespace="no" type="basic" />
+			
+<Attribute name="stream.gain.amt" displayName="Stream Gain Amount"
+			mandatory="false" type="range"  value="-10,10" />	
+
+<Attribute name="stream.gain.agc" displayName="Stream AGC Attribute"
+			supported="false" mandatory="false" type="basic" />	
+						
+<Attribute name="gain.agc.tgtlvl" displayName="Target Level for AGC"
+			supported="false" mandatory="false" type="range"  value="-40,0" />
+			
+<Attribute name="gain.agc.maxgain" displayName="Maxgain for AGC"
+			supported="false" mandatory="false" type="range"  value="0,40" />	
+
+<Attribute name="stream.clamp" displayName="Stream Clamp Element"
+			mandatory="false" type="basic" />
+			
+<Attribute name="stream.visual" displayName="Stream Visual Element"
+			supported="false" mandatory="false" type="basic" />
+<!-- Conference Package Specification Elements and Attributes -->	
+
+
+<!-- Dialog Package Specification Elements and Attributes -->					
+<Attribute name="dialog.target" displayName="Dialog Target"
+			mandatory="true" whitespace="no" type="basic" />
+
+<Attribute name="dialog.src" displayName="Dialog Source"
+			mandatory="false" type="basic" />
+			
+<Attribute name="dialog.name" displayName="Dialog Name"
+			mandatory="false" type="basic" />
+						
+<Attribute name="dialog.mark" displayName="Dialog Mark Identifier"
+			mandatory="false" whitespace="no" type="basic" />	
+			
+<Attribute name="dialogend.mark" displayName="Dialogend Mark Identifier"
+			mandatory="false" whitespace="no" type="basic" />	
+			
+<Attribute name="dialogend.id" displayName="Dialogend ID"
+			mandatory="true" whitespace="no" type="basic" />	
+
+<Attribute name="dialog.exit" displayName="Dialog Exit Element"
+			supported="false" mandatory="false" type="basic" />	
+			
+<Attribute name="exit.namelist" displayName="Dialog Exit Namelist"
+			mandatory="false" type="basic" />	
+			
+<Attribute name="dialog.disconnect" displayName="Dialog Disconnect Element"
+			supported="false" mandatory="false" type="basic" />	
+			
+<Attribute name="disconnect.namelist" displayName="Dialog Disconnect Namelist"
+			mandatory="false" type="basic" />	
+						
+<Attribute name="dialog.event" displayName="Dialog Group Event"
+			mandatory="true" type="list"  value="app.done,done,terminate" />				
+<!-- Dialog Package Specification Elements and Attributes -->
+
+
+<!-- Play Specification Attributes -->
+<Attribute name="play.id" displayName="Play ID"
+			mandatory="false" whitespace="no" type="basic" />
+						
+<Attribute name="play.interval" displayName="Play Interval"
+			mandatory="false" type="range" value="0,262144000"/>
+
+<Attribute name="play.barge" displayName="Play Barge"
+			mandatory="false" type="basic" />
+
+<Attribute name="play.cleardb" displayName="Play Clear Digit Buffer"
+			mandatory="false" type="basic" />			
+
+<Attribute name="play.initial" displayName="Play Initial"
+			mandatory="false" type="list" value="generate,suspend" />
+			
+<Attribute name="play.offset" displayName="Play Offset"
+			mandatory="false" whitespace="no" type="basic" />
+			
+<Attribute name="play.skip" displayName="Play Skip"
+			mandatory="false" type="range" value="1,2147483647" />
+			
+<Attribute name="play.iterate" displayName="Play Iterations"
+			mandatory="false" type="range" value="2,2147483647"/>
+			
+<Attribute name="play.duration" displayName="Play Duration"
+			mandatory="false" type="range" value="1,2147483647" />
+
+<Attribute name="play.event" displayName="Play Event"
+			mandatory="true" type="list"  value="app.done,done,pause,resume,toggle-state,terminate,retsart,forward,backward" />
+			
+<Attribute name="play.language" displayName="Play Language"
+			supported="false" mandatory="false" type="list" value="ara,bwa,chi,eng,fre,may,por,spa,tha"/>
+			
+<Attribute name="play.audio" displayName="Play Audio Element"
+			mandatory="false" type="basic" />
+			
+<Attribute name="play.video" displayName="Play Video Element"
+			mandatory="false" type="basic" />
+			
+<Attribute name="play.var" displayName="Play Var Element"
+			supported="true" mandatory="false" type="basic" />			
+
+<Attribute name="play.media" displayName="Play Media Element"
+			mandatory="false" type="basic" />
+
+<Attribute name="play.playexit" displayName="Play Exit Element"
+			mandatory="false" type="basic" />
+			
+<Attribute name="audio.uri" displayName="Audio URI"
+			mandatory="true" type="basic" />
+			
+<Attribute name="audio.format" displayName="Audio Format"
+			mandatory="false" type="basic" />	
+						
+<Attribute name="audio.audiosamplerate" displayName="Audio Sample Rate"
+			mandatory="false" type="range" value="1,2147483647" />
+			
+<Attribute name="audio.audiosamplesize" displayName="Audio Sample Size"
+			mandatory="false" type="range" value="1,2147483647" />
+
+<Attribute name="audio.iterate" displayName="Audio Iterate"
+			mandatory="false" type="range" value="2,2147483647" />
+
+<Attribute name="audio.language" displayName="Play Audio Language"
+			supported="false" mandatory="false" type="list" 
+			value="ara,bwa,chi,eng,fre,may,por,spa,tha"/>
+			
+<Attribute name="video.uri" displayName="Video URI"
+			mandatory="true" type="basic" />
+			
+<Attribute name="video.format" displayName="Video Format"
+			mandatory="false" type="basic" />	
+						
+<Attribute name="video.audiosamplerate" displayName="Audio Sample Rate for Video"
+			supported="false" mandatory="false" type="range" value="1,2147483647" />
+			
+<Attribute name="video.audiosamplesize" displayName="Audio Sample Size for Video"
+			supported="false" mandatory="false" type="range" value="1,2147483647" />
+			
+<Attribute name="video.codecconfig" displayName=" Video CodecConfig"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="video.profile" displayName=" Video Profile"
+			mandatory="false" type="basic" />
+									
+<Attribute name="video.level" displayName=" Video Level"
+			mandatory="false" type="basic" />
+			
+<Attribute name="video.imagewidth" displayName=" Video Image Width"			
+			mandatory="false" type="range" value="1,2147483647" />
+			
+<Attribute name="video.imageheight" displayName=" Video Image height"			
+			mandatory="false" type="range" value="1,2147483647" />
+
+<Attribute name="video.maxbitrate" displayName=" Video Max Bit Rate"			
+			mandatory="false" type="range" value="1,2147483647" />
+
+<Attribute name="video.framerate" displayName=" Video Frame Rate"			
+			mandatory="false" type="range" value="1,2147483647" />
+
+<Attribute name="video.iterate" displayName=" Video Iterate"			
+			mandatory="false" type="range" value="2,2147483647" />
+			
+																
+<Attribute name="var.type" displayName="Variable Announcement Type"
+			mandatory="true" type="list" 
+			value="date,digits,duration,month,money,number,silence,time,weekday"/>
+
+<Attribute name="var.subtype.date" displayName="Variable Announcement Sub Type For Date"
+			mandatory="true" type="list" value="dmy,dym,mdy,myd,ymd,ydm"/>
+
+<Attribute name="var.subtype.digits" displayName="Variable Announcement Sub Type For Digit"
+			mandatory="true" type="list" value="gen,gen2,ndn"/>
+
+<Attribute name="var.subtype.duration" displayName="Variable Announcement Sub Type For Duration"
+			mandatory="true" type="list" value="mns,hrs,yrs"/>
+
+<Attribute name="var.subtype.money" displayName="Variable Announcement Sub Type For Money"
+			mandatory="true" type="list" value="cny,eur,usd,aed,brl,bwp,myr"/>
+
+<Attribute name="var.subtype.number" displayName="Variable Announcement Sub Type For Number"
+			mandatory="true" type="list" value="crd,ord"/>
+			
+<Attribute name="var.subtype.silence" displayName="Variable Announcement Sub Type For Silence"
+			mandatory="false" type="list" value="null"/>
+
+<Attribute name="var.subtype.time" displayName="Variable Announcement Sub Type For Time"
+			mandatory="true" type="list" value="t12,t24"/>			
+			
+<Attribute name="var.subtype.weekday" displayName="Variable Announcement Sub Type For Weekday"
+			mandatory="false" type="list" value="null" />			
+
+<Attribute name="var.value" displayName="Variable Announcement value"
+			mandatory="true" type="basic" />			
+
+<Attribute name="var.language" displayName="Variable Announcement Language"
+			mandatory="false" type="list" value="ara,bwa,chi,eng,fre,may,por,spa,tha"/>
+<!-- Play Specification Elements and Attributes -->
+
+
+<!-- DTMF Collect Specification Elements and Attributes -->
+<Attribute name="dtmf.id" displayName="DTMF ID"
+			mandatory="false" whitespace="no" type="basic" />
+
+<Attribute name="dtmf.cleardb" displayName="DTMF Clear Digit Buffer"
+			mandatory="false" type="basic" />
+			
+<Attribute name="dtmf.starttimer" displayName="DTMF Start Timer"
+			mandatory="false" type="basic" />				
+			
+<Attribute name="dtmf.fdt" displayName="DTMF - First Digit Timer"
+			mandatory="false" type="range" value="1,2147483647"/>
+
+<Attribute name="dtmf.idt" displayName="DTMF - Inter Digit Timer"
+			mandatory="false" type="range" value="1,2147483647"/>
+
+<Attribute name="dtmf.ldd" displayName="DTMF - Long DTMF Digit Timer"
+			supported="false" mandatory="false" type="range" value="100,100000"/>
+			
+<Attribute name="dtmf.edt" displayName="DTMF - Extra Digit Timer"
+			supported="false" mandatory="false" type="range" value="1,2147483647"/>
+
+<Attribute name="dtmf.play" displayName="DTMF Play"
+			supported="false" mandatory="false" type="basic" />
+
+<Attribute name="dtmf.dtmfexit" displayName="DTMF Exit"
+			mandatory="false" type="basic" />
+			
+<Attribute name="nomatch.send" displayName="DTMF NoMatch Send"
+			mandatory="false" type="basic" />
+			
+<Attribute name="noinput.send" displayName="DTMF NoInput Send"
+			mandatory="false" type="basic" />
+			
+<Attribute name="detect.send" displayName="DTMF Detect Send"
+			mandatory="false" type="basic" />	
+
+<Attribute name="nomatch.iterate" displayName="DTMF NoMatch Iterate"
+			mandatory="false" type="range" value="2,2147483647" />
+			
+<Attribute name="noinput.iterate" displayName="DTMF NoInput Iterate"
+			mandatory="false" type="range" value="2,2147483647" />
+																				
+<Attribute name="dtmf.iterate" displayName="DTMF Iterate"
+			mandatory="false" type="range" value="2,2147483647" />
+						
+<Attribute name="dtmf.event" displayName="DTMF Collect Event"
+			mandatory="true" type="list"  value="app.done,done,terminate,starttimer" />		
+
+<Attribute name="pattern.digits" displayName="DTMF Digit Pattern"
+			mandatory="true" type="basic" />
+
+<Attribute name="pattern.format" displayName="DTMF Digit Pattern Format"
+			mandatory="false" type="list"  value="mgcp,megaco,moml+digits" />	
+
+<Attribute name="pattern.iterate" displayName="DTMF Pattern Iterate"
+			mandatory="false" type="range" value="2,2147483647" />						
+<!-- DTMF Collect Specification Elements and Attributes -->		
+
+
+<!-- Record Specification Elements and Attributes -->		
+<Attribute name="record.id" displayName="Recording ID"
+			mandatory="false" whitespace="no" type="basic" />
+			
+<Attribute name="record.dest" displayName="Recording Destination"
+			mandatory="false" type="basic" />
+			
+<Attribute name="record.audiodest" displayName="Audio Recording Destination"
+			mandatory="false" type="basic" />
+			
+<Attribute name="record.videodest" displayName="Video Recording Destination"
+			mandatory="false" type="basic" />	
+					
+<Attribute name="record.append" displayName="Record Append"
+			supported="false" mandatory="false" type="basic" />	
+			
+<Attribute name="record.format" displayName="Recording Format" 
+			mandatory="true" type="list" delim="|" 
+			value="audio/wav|audio/x-wav|audio/x-wav;codec=mulaw|audio/vnd.wave;codec=1|audio/vnd.wave;codec=6|audio/wav;codec=mulaw|video/proprietary;codecs=linear,h263|video/proprietary;codecs=linear,h264|audio/vnd.wave;codec=7|audio/vnd.wave;codec=83|audio/vnd.wave;codec=8C"/>
+			
+<Attribute name="record.audiosamplerate" displayName="Audio Sample Rate"
+			mandatory="false" type="range" value="1,2147483647" />
+
+<Attribute name="record.audiosamplesize" displayName="Audio Sample Size"
+			mandatory="false" type="range" value="1,2147483647" />
+
+<Attribute name="record.codecconfig" displayName="Record CodecConfig"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="record.profile" displayName=" Record Profile"
+			mandatory="false" type="basic" />
+									
+<Attribute name="record.level" displayName=" Record Level"
+			mandatory="false" type="basic" />
+			
+<Attribute name="record.imagewidth" displayName=" Record Image Width"			
+			mandatory="false" type="range" value="1,2147483647" />
+			
+<Attribute name="record.imageheight" displayName=" Record Image height"			
+			mandatory="false" type="range" value="1,2147483647" />
+
+<Attribute name="record.maxbitrate" displayName=" Record Max Bit Rate"			
+			mandatory="false" type="range" value="1,2147483647" />
+
+<Attribute name="record.framerate" displayName=" Record Frame Rate"			
+			mandatory="false" type="range" value="1,2147483647" />
+
+<Attribute name="record.initial" displayName=" Record Initial"			
+			mandatory="false" type="list" value="create,suspend" />
+						
+<Attribute name="record.maxtime" displayName="Maximum Recoring Time"
+			mandatory="true" type="range" 
+			value="1,2147483647"/>
+
+<Attribute name="record.prespeech" displayName="Recording Pre-speech timer"
+			supported="false" mandatory="false" type="range" 
+			value="1,2147483647"/>
+
+<Attribute name="record.postspeech" displayName="Recording Post-speech timer"
+			mandatory="false" type="range" 
+			value="1,2147483647"/>
+
+<Attribute name="record.term" displayName="Recording Termination Key"
+			mandatory="false" type="list" value="0,1,2,3,4,5,6,7,8,9,*,#,A,B,C,D"/>
+			
+<Attribute name="record.event" displayName="Record Event"
+			mandatory="true" type="list"  value="app.done,done,pause,resume,toggle-state,terminate,terminate.cancelled,terminate.finalsilence,nospeech" />
+
+<Attribute name="record.play" displayName="Record Play Element"
+			supported="false" mandatory="false" type="basic" />
+			
+<Attribute name="record.recordexit" displayName="Record Exit Element"
+			mandatory="false" type="basic" />					
+<!-- Record Specification Elements and Attributes -->	
+
+
+<!-- Dialog Group Package Specification Elements and Attributes -->
+<Attribute name="dialog.group" displayName="Dialog Group Element"
+			mandatory="false" type="basic" />
+					
+<Attribute name="group.topology" displayName="Dialog Group Topology"
+			mandatory="true" type="list"  value="parallel,serial,fullduplex" />
+																									
+<Attribute name="group.id" displayName="Dialog Group Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+			
+<Attribute name="group.event" displayName="Dialog Group Event"
+			mandatory="true" type="list"  value="terminate" />
+			
+<Attribute name="group.groupexit" displayName="Dialog Group Exit Element"
+			mandatory="false" type="basic" />
+<!-- Dialog Group Package Specification Elements and Attributes -->
+			
+
+<!-- Dialog Transform Package Specification Elements and Attributes -->						
+			
+<Attribute name="dialog.vad" displayName="Dialog VAD Element"
+			supported="false" mandatory="false" type="basic" />
+
+<Attribute name="vad.id" displayName="Dialog VAD Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+				
+<Attribute name="vad.starttimer" displayName="Voice Activity Dectection Start Timer"
+			mandatory="false" type="basic" />
+			
+<Attribute name="vad.voice" displayName="Voice Activity Dectection Voice Element"
+			mandatory="false" type="basic" />
+
+<Attribute name="vad.tvoice" displayName="Voice Activity Dectection Tvoice Element"
+			mandatory="false" type="basic" />
+
+<Attribute name="vad.silence" displayName="Voice Activity Dectection Silence Element"
+			mandatory="false" type="basic" />									
+
+<Attribute name="vad.tsilence" displayName="Voice Activity Dectection Tsilence Element"
+			mandatory="false" type="basic" />
+			
+<Attribute name="vad.event" displayName="Send Event for VAD"
+			mandatory="true" type="list"  value="terminate,starttimer" />
+		
+<Attribute name="dialog.gain" displayName="Dialog Gain Element"
+			mandatory="false" type="basic" />
+			
+<Attribute name="dialog.gain.id" displayName="Gain ID"
+			supported="false" mandatory="false" whitespace="no" type="basic" />
+
+<Attribute name="dialog.gain.incr" displayName="Gain Increment"
+			mandatory="false" type="range"  value="1,96" />
+									
+<Attribute name="gain.event" displayName="Send Event for GAIN"
+			mandatory="true" type="list"  value="mute,unmute,reset,softer,louder,amt" />
+			
+<Attribute name="dialog.gain.amt" displayName="Gain Amount"
+			mandatory="true" type="range"  value="-10,10" />
+			
+<Attribute name="dialog.agc" displayName="Dialog AGC Element"
+			supported="false" mandatory="false" type="basic" />	
+			
+<Attribute name="dialog.agc.id" displayName="DIalog AGC ID"
+			mandatory="false" whitespace="no" type="basic" />
+											
+<Attribute name="agc.event" displayName="Send Event for AGC"
+			mandatory="true" type="list"  value="mute,unmute" />
+			
+<Attribute name="dialog.agc.tgtlvl" displayName="Target Level for AGC"
+			mandatory="true" type="range"  value="-40,0" />
+			
+<Attribute name="dialog.agc.maxgain" displayName="Maxgain for AGC"
+			mandatory="false" type="range"  value="0,40" />
+		
+<Attribute name="dialog.gate" displayName="Dialog Gate Element"
+			supported="false" mandatory="false" type="basic" />
+
+<Attribute name="gate.id" displayName="Dialog Gate Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+																		
+<Attribute name="gate.event" displayName="Send Event for GATE"
+			mandatory="true" type="list"  value="mute,unmute" />		
+
+<Attribute name="dialog.clamp" displayName="Dialog Clamp Element"
+			supported="false" mandatory="false" type="basic" />
+
+<Attribute name="dialog.clamp.id" displayName="Dialog Clamp Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+
+<Attribute name="dialog.relay" displayName="Dialog Relay Element"
+			supported="false" mandatory="false" type="basic" />
+
+<Attribute name="dialog.relay.id" displayName="Dialog Relay Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+<!-- Dialog Transform Package Specification Elements and Attributes -->
+
+
+<!-- Audit Package Specification Elements and Attributes -->											
+<Attribute name="audit.queryid" displayName="Audit Query Identifier"
+			mandatory="true" whitespace="no" type="basic" />
+									
+<Attribute name="audit.statelist" displayName="Statelist of Audit Package"
+			mandatory="false" type="list" value="audit.conf.confconfig.*,audit.conf.confconfig,audit.conf.confconfig.audiomix.*,audit.conf.confconfig.audiomix,audit.conf.confconfig.audiomix.asn,audit.conf.confconfig.audiomix.n-loudest,audit.conf.confconfig.videolayout.*,audit.conf.confconfig.videolayout,audit.conf.confconfig.videolayout.root,audit.conf.confconfig.videolayout.selector,
+audit.conf.confconfig.controller,audit.conf.dialog.*,audit.conf.dialog,audit.conf.dialog.duration,audit.conf.dialog.premitive,audit.conf.dialog.controller,audit.conf.stream.*,audit.conf.stream,audit.conf.stream.clamp,audit.conf.stream.gain,audit.conf.stream.visual" />			
+
+<Attribute name="audit.mark" displayName="Audit Mark Identifier"
+			supported="false" mandatory="false" whitespace="no" type="basic" />						
+<!-- Audit Package Specification Elements and Attributes -->	
+		
+<!-- Mapping for language related tag in var announcement -->
+<LanguageMapping>
+<Language from="en_US" to="eng"/>
+<Language from="sp_SP" to="spa"/>
+</LanguageMapping>
+
+</AttributeList>
+

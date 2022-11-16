@@ -1,0 +1,171 @@
+<%@ jet 
+	package="com.genband.m5.maps.ide.model.template" 
+	class="FacesConfig" 
+	imports="com.genband.m5.maps.common.CPFConstants 
+		     com.genband.m5.maps.ide.CPFPlugin
+			 com.genband.m5.maps.ide.model.* 
+			 java.util.* 
+			 java.util.List"
+%>
+<%
+	CPFPlugin LOG = CPFPlugin.getDefault() ;
+	CPFPortlet cpfPortlet = (CPFPortlet)argument ;
+	LOG.info("Faces Config stuff generation started for portlet id : " + cpfPortlet.getPortletId());
+	int portletId = cpfPortlet.getPortletId();
+	CPFScreen cpfScreen = null;
+	String mainJsfName = null; 	//Holds the base entity list screen JSF Name...
+	String detailsJsfName = null;	//Holds  the details screen JSF Name....
+	List<String> nestedJsfNames = null;
+	//Managaed bean tag generation starts here..................
+		//generating Managed Bean tag in case of Details Screen exists.......
+	if(cpfPortlet.getDetailsScreen() != null) { 
+		LOG.info("managed bean declaration for Details MBean : createMBean_" + portletId);
+%>
+		<managed-bean>
+      		<managed-bean-name>createMBean<%= portletId %></managed-bean-name>
+      		<managed-bean-class>com.genband.m5.maps.ide.mbeans.createMBean_<%= portletId %></managed-bean-class>
+      		<managed-bean-scope>session</managed-bean-scope> 
+   		</managed-bean>
+<%
+	}
+		//generating Managed Bean tag in case of List Screen exists.......
+	if(cpfPortlet.getListScreen() != null) { 
+		cpfScreen = cpfPortlet.getListScreen();
+		LOG.info("managed bean declaration for List MBean : listMBean_" + portletId);
+%>
+		<managed-bean>
+      		<managed-bean-name>listMBean<%= portletId %></managed-bean-name>
+      		<managed-bean-class>com.genband.m5.maps.ide.mbeans.listMBean_<%= portletId %></managed-bean-class>
+      		<managed-bean-scope>session</managed-bean-scope> 
+   		</managed-bean>
+<%
+			//generating Managed Bean tag in case of Nested List Screen exists (i.e many2many relation exists).......
+		if(cpfScreen.getNestedJspNames() != null) {
+			nestedJsfNames = new ArrayList<String>();
+			Iterator<RelationKey> itrNested = cpfScreen.getNestedJspNames().keySet().iterator();
+			int i = 1;
+			while(itrNested.hasNext()) {
+				nestedJsfNames.add(cpfScreen.getNestedJspNames().get(itrNested.next()).getJspName());
+				LOG.info("managed bean declaration for nested List MBean : listMBean" + portletId + "_nested" + i);
+%>
+		<managed-bean>
+      		<managed-bean-name>listMBean<%= portletId %>nested<%= i %></managed-bean-name>
+      		<managed-bean-class>com.genband.m5.maps.ide.mbeans.listMBean<%= portletId %>_nested<%= i++ %></managed-bean-class>
+      		<managed-bean-scope>session</managed-bean-scope> 
+   		</managed-bean>
+<%
+			}
+		}	//End of geenrating managed Beans tags................
+		
+		//Navigation rule tags generation starts here............................
+		
+			//Holding the name of main JSP 
+		List<CPFConstants.OperationType> actionsSupported = cpfScreen.getActionsSupported();
+		mainJsfName = cpfScreen.getJspName();
+		mainJsfName = mainJsfName.substring(mainJsfName.lastIndexOf("/") + 1);
+		if(cpfPortlet.getDetailsScreen() != null) {
+			detailsJsfName = cpfPortlet.getDetailsScreen().getJspName();
+			detailsJsfName = detailsJsfName.substring(detailsJsfName.lastIndexOf("/") + 1); 
+		}
+		//Generating Navigation Rules for base entity listing screen starts here.....
+		LOG.info("Generating Navigation FLow for XHTML : " + mainJsfName);
+%>
+
+		<navigation-rule>
+	  		<from-view-id>/WEB-INF/jsf/<%= mainJsfName %>.xhtml</from-view-id>
+      		<navigation-case>
+         		<from-outcome>SUCCESS</from-outcome>
+ 		        <to-view-id>/WEB-INF/jsf/<%= mainJsfName %>.xhtml</to-view-id>
+      		</navigation-case>
+	  		<navigation-case>
+         		<from-outcome>PROVERROR</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/prov-error.xhtml</to-view-id>
+      		</navigation-case>
+<%
+			//In case of Delete is supported then defining navigation after deleting
+		if(actionsSupported.contains(CPFConstants.OperationType.DELETE)) {
+%>
+			<navigation-case>
+         		<from-outcome>delete</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/<%= mainJsfName %>.xhtml</to-view-id>
+      		</navigation-case>
+<%
+		}
+			//Defining Navigation in case of add and/or modify and/or view actions supported
+			//Navigation form list JSF to Details JSF
+		if(actionsSupported.contains(CPFConstants.OperationType.CREATE) 
+			|| actionsSupported.contains(CPFConstants.OperationType.MODIFY)
+				|| actionsSupported.contains(CPFConstants.OperationType.VIEW)) {
+			if(detailsJsfName != null) {
+%>
+			<navigation-case>
+         		<from-outcome>add</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/<%= detailsJsfName %>.xhtml</to-view-id>
+      		</navigation-case>
+<%
+			}
+		}
+		if(cpfScreen.getNestedJspNames() != null) {
+			Iterator<RelationKey> itrNested = cpfScreen.getNestedJspNames().keySet().iterator();
+			int i = 1;
+			//while(itrRelationKey.hasNext()) {
+			while(itrNested.hasNext()) {
+				//RelationKey nested = itrNested.next();
+				itrNested.next();
+				String nestedJsfName = nestedJsfNames.get(i-1);
+				nestedJsfName = nestedJsfName.substring(nestedJsfName.lastIndexOf("/") + 1); 
+%> 
+			<navigation-case>
+        		 <from-outcome>listMBean<%= portletId %>nested<%= i++ %></from-outcome>
+         		 <to-view-id>/WEB-INF/jsf/<%= nestedJsfName %>.xhtml</to-view-id>
+     		</navigation-case>
+<%
+			}
+		}	
+%>
+      	</navigation-rule>
+<%
+	}	//End of Generating Navigation Rules for base entity listing screen.....
+					//cpfScreen still holding the screen details for Listing only......
+			//Start of Generating navigation rules for details screen in case 
+				//Create and/or Modify and/or View actions supported..
+	if(cpfPortlet.getDetailsScreen() != null) { 
+		LOG.info("Generating Navigatino FLow for details linked screen : " + detailsJsfName);
+%>
+		<navigation-rule>
+	 		 <from-view-id>/WEB-INF/jsf/<%= detailsJsfName %>.xhtml</from-view-id>
+	  		 <navigation-case>
+         		 <from-outcome>list</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/<%= mainJsfName %>.xhtml</to-view-id>
+     		 </navigation-case>
+	  		<navigation-case>
+         		<from-outcome>viewDetails</from-outcome>
+        		 <to-view-id>/WEB-INF/jsf/<%= detailsJsfName %>.xhtml</to-view-id>
+      		</navigation-case>
+   		</navigation-rule>
+<%
+	}		//End of Generating navigation rules for details screen
+		//Start of Generating Navigation Rules in case of nested relations exist between Base and related entities....
+	if(cpfScreen.getNestedJspNames() != null) {
+		Iterator<RelationKey> itrNested = cpfScreen.getNestedJspNames().keySet().iterator();
+		while(itrNested.hasNext()) {
+			RelationKey nested = itrNested.next();
+			String nestedJsfName = cpfScreen.getNestedJspNames().get(nested).getJspName();
+			LOG.info("Generating Navigation Flow for nested screen XHTMl : " + nestedJsfName);
+%>
+		<navigation-rule>
+	  		<from-view-id>/WEB-INF/jsf/<%= nestedJsfName %>.xhtml</from-view-id>
+	 		<navigation-case>
+         		<from-outcome>SUCCESS</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/<%= nestedJsfName %>.xhtml</to-view-id>
+      		</navigation-case>
+	  		<navigation-case>
+         		<from-outcome>resetToMain</from-outcome>
+         		<to-view-id>/WEB-INF/jsf/<%= mainJsfName %>.xhtml</to-view-id>
+      		</navigation-case>
+	 	</navigation-rule>
+<%
+		}
+		LOG.info("Faces Config Generation for portlet Id : " + portletId + "Finished");
+	}
+%>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app id="WebApp_ID">
+       <display-name>ServiceDefinitionApp</display-name>
+      <servlet>
+            <servlet-name>ServiceDefinitionApp</servlet-name>
+            <display-name>ServiceDefinitionApp</display-name>
+            <description></description>
+            <servlet-class>com.genband.sip.ServiceDefinitionApp.ServiceDefinitionApp</servlet-class>
+      </servlet>
+      <servlet>
+            <servlet-name>alc</servlet-name>
+            <display-name>alc</display-name>
+            <description></description>
+            <servlet-class>com.genband.ase.alc.http.ALCHttpServletInterface</servlet-class>
+      </servlet>
+      <servlet-mapping>
+            <servlet-name>ServiceDefinitionApp</servlet-name>
+            <url-pattern>
+                  /ServiceDefinitionApp
+            </url-pattern>                
+      </servlet-mapping>
+      <servlet-mapping>
+            <servlet-name>alc</servlet-name>
+            <url-pattern>
+                  /service-action
+            </url-pattern>                
+      </servlet-mapping>
+
+</web-app>

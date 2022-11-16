@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+   "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+<sip-app>
+
+     <listener>
+          <listener-class>com.baypackets.ase.sysapps.obgwapp.ObGwHeartbeatServlet</listener-class>
+     </listener>
+
+     <servlet>
+          <servlet-name>ObGwHeartbeatServlet</servlet-name>
+          <servlet-class>com.baypackets.ase.sysapps.obgwapp.ObGwHeartbeatServlet</servlet-class>
+          <load-on-startup/>
+     </servlet>
+  
+     <session-config>
+          <session-timeout>1</session-timeout>
+     </session-config>
+
+</sip-app>

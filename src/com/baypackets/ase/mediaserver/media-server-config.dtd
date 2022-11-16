@@ -1,0 +1,69 @@
+<!-- 
+	This DTD is used to validate the "media-server-config.xml" file that 
+	contains the meta data on all media servers provisioned to the platform.
+-->
+
+<!ELEMENT media-server-config (media-server*)>
+
+<!ELEMENT media-server (id, vendor-name, ip-address, port, default-state, noheartbeat?, heartbeaturi?, adaptor-class-name, announcement-base-uri?, recording-base-uri?, capabilities, is-remote?, is-private?)>
+
+<!ELEMENT id (#PCDATA)>
+
+<!ELEMENT vendor-name (#PCDATA)>
+
+<!ELEMENT ip-address (#PCDATA)>
+
+<!ELEMENT port (#PCDATA)>
+<!ELEMENT default-state (#PCDATA)>
+
+<!--
+	Request URI to send if heartbeating to element, if empty will pick up 
+        from ms adaptor class
+-->
+<!ELEMENT heartbeaturi (#PCDATA)>
+
+<!--
+	Allows disabling heartbeat on a individual ms level, useful during testing
+        to reduce extraneous messaging
+-->
+<!ELEMENT noheartbeat EMPTY>
+
+<!--
+	This is the fully qualified name of the MsAdaptor class used to communicate
+	with the media server over the control plane.
+-->
+<!ELEMENT adaptor-class-name (#PCDATA)>
+
+<!-- 
+	This is the URI of the root directory that contains all the voice data files 
+	that the media server will use for playing announcments. 
+-->
+<!ELEMENT announcement-base-uri (#PCDATA)>
+
+<!-- 
+	This is the URI of the root directory where the media server will store all
+	voice recordings.
+-->
+<!ELEMENT recording-base-uri (#PCDATA)>
+
+<!ELEMENT capabilities (capability+)>
+
+<!--
+	The body content of this element can either be a decimal representation of
+	a bit set (ex. 32) or a string representation of one of the public
+	static constants defined in the MediaServer interface 
+	(ex. CAPABILITY_VAR_ANNOUNCEMENT, CAPABILITY_VOICE_XML, etc.)
+-->
+<!ELEMENT capability (#PCDATA)>
+
+<!--
+	is-remote element tells whether this media server is locally configured or remotely.
+	Default value of this element is 0 i.e. local media server.
+	If this media server is remotely configured, value of this element should be 1 
+-->
+<!ELEMENT is-remote (#PCDATA)>
+
+<!-- 
+is-private element tells whether is this media server private address or not
+-->
+<!ELEMENT is-private (#PCDATA)>

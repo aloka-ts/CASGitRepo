@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/src/CASGitRepo.iml" filepath="$PROJECT_DIR$/src/CASGitRepo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/tcap/bn/bn.iml" filepath="$PROJECT_DIR$/src/tcap/bn/bn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/tcap/inap/itu-t/cs2/codec/src/inap_codec.iml" filepath="$PROJECT_DIR$/src/tcap/inap/itu-t/cs2/codec/src/inap_codec.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/tcap/tcap.iml" filepath="$PROJECT_DIR$/src/tcap/tcap.iml" />
+    </modules>
+  </component>
+</project>

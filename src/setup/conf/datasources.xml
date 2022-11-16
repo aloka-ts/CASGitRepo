@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This xml files contains all the information regarding the  datasources configured by SAS -->
+<!-- name must be unique-->
+<!-- we can supply as many datasource configuration as we can-->
+
+<datasources-config>
+
+	<datasource>
+		<name>SASDB</name>		<!-- The name of the datasource to which it would be bound -->
+		<username>n</username>
+		<password>n</password>
+		<drivername>oracle.jdbc.driver.OracleDriver</drivername>
+		<factory>com.baypackets.ase.jndi.ds.OracleDataSourceObjectFactory</factory>
+		<url>jdbc:oracle:thin:@192.168.1.106:1521:rsi8k</url>
+		<!-- For RAC url format will be
+		jdbc:oracle:thin:@(DESCRIPTION= (LOAD_BALANCE=yes) 
+       		(ADDRESS=(PROTOCOL=TCP)(HOST=HOST1_IP)(PORT=1521)) 
+       		(ADDRESS=(PROTOCOL=TCP)(HOST=HOST2_IP)(PORT=1521)) 
+       		(CONNECT_DATA=(SERVICE_NAME=service_name)))
+		<onsconfig>nodes=VIRTUAL_IP1:REMOTE_PORT,VIRTUAL_IP2:REMOTE_PORT</onsconfig>
+		--> 
+		<minsize>2</minsize>
+		<maxsize>6</maxsize>
+		<initialsize>3</initialsize>
+		<increment>2</increment>
+		<shrink>1</shrink>
+		<cachesize>2</cachesize>
+	</datasource>
+
+
+
+	
+<!-- This is for registrar application -->
+	<datasource>
+                <name>com.baypackets.registrar</name>
+                <username>DB_USER</username>	
+                <password>DB_PASSWORD</password>	
+                <drivername>oracle.jdbc.driver.OracleDriver</drivername>
+		<factory>com.baypackets.ase.jndi.ds.OracleDataSourceObjectFactory</factory>
+                <url>jdbc:oracle:thin:@DB_IP:1521:DB_SID</url>
+		<!-- For RAC url format will be
+		jdbc:oracle:thin:@(DESCRIPTION= (LOAD_BALANCE=yes) 
+       		(ADDRESS=(PROTOCOL=TCP)(HOST=HOST1_IP)(PORT=1521)) 
+       		(ADDRESS=(PROTOCOL=TCP)(HOST=HOST2_IP)(PORT=1521)) 
+       		(CONNECT_DATA=(SERVICE_NAME=service_name)))
+		<onsconfig>nodes=VIRTUAL_IP1:REMOTE_PORT,VIRTUAL_IP2:REMOTE_PORT</onsconfig>
+		--> 
+                <minsize>1</minsize>
+                <maxsize>4</maxsize>
+                <initialsize>1</initialsize>
+                <increment>1</increment>
+                <shrink>0</shrink>
+                <cachesize>0</cachesize>
+        </datasource>
+		
+<!-- This is for PAC application -->
+	<datasource>
+                <name>com.agnity.pac</name>
+                <username>DB_USER</username>	
+                <password>DB_PASSWORD</password>	
+                <drivername>oracle.jdbc.driver.OracleDriver</drivername>
+		<factory>com.baypackets.ase.jndi.ds.OracleDataSourceObjectFactory</factory>
+                <url>jdbc:oracle:thin:@DB_IP:1521:DB_SID</url>
+		<!-- For RAC url format will be
+		jdbc:oracle:thin:@(DESCRIPTION= (LOAD_BALANCE=yes) 
+       		(ADDRESS=(PROTOCOL=TCP)(HOST=HOST1_IP)(PORT=1521)) 
+       		(ADDRESS=(PROTOCOL=TCP)(HOST=HOST2_IP)(PORT=1521)) 
+       		(CONNECT_DATA=(SERVICE_NAME=service_name)))
+		<onsconfig>nodes=VIRTUAL_IP1:REMOTE_PORT,VIRTUAL_IP2:REMOTE_PORT</onsconfig>
+		--> 
+                <minsize>1</minsize>
+                <maxsize>4</maxsize>
+                <initialsize>1</initialsize>
+                <increment>1</increment>
+                <shrink>0</shrink>
+                <cachesize>0</cachesize>
+        </datasource>
+
+<!-- This is for CAB application -->
+        <datasource>
+                <name>com.agnity.cab</name>
+                <username>DB_USER</username>
+                <password>DB_PASSWORD</password>
+                <drivername>oracle.jdbc.driver.OracleDriver</drivername>
+                <factory>com.baypackets.ase.jndi.ds.OracleDataSourceObjectFactory</factory>
+                <url>jdbc:oracle:thin:@DB_IP:1521:DB_SID</url>
+                <!-- For RAC url format will be
+                jdbc:oracle:thin:@(DESCRIPTION= (LOAD_BALANCE=yes)
+                (ADDRESS=(PROTOCOL=TCP)(HOST=HOST1_IP)(PORT=1521))
+                (ADDRESS=(PROTOCOL=TCP)(HOST=HOST2_IP)(PORT=1521))
+                (CONNECT_DATA=(SERVICE_NAME=service_name)))
+                <onsconfig>nodes=VIRTUAL_IP1:REMOTE_PORT,VIRTUAL_IP2:REMOTE_PORT</onsconfig>
+                -->
+                <minsize>1</minsize>
+                <maxsize>4</maxsize>
+                <initialsize>1</initialsize>
+                <increment>1</increment>
+                <shrink>0</shrink>
+                <cachesize>0</cachesize>
+        </datasource>
+
+<!-- This is for CIM application -->
+        <datasource>
+                <name>com.agnity.cim</name>
+                <username>DB_USER</username>
+                <password>DB_PASSWORD</password>
+                <drivername>oracle.jdbc.driver.OracleDriver</drivername>
+                <factory>com.baypackets.ase.jndi.ds.OracleDataSourceObjectFactory</factory>
+                <url>jdbc:oracle:thin:@DB_IP:1521:DB_SID</url>
+                <!-- For RAC url format will be
+                jdbc:oracle:thin:@(DESCRIPTION= (LOAD_BALANCE=yes)
+                (ADDRESS=(PROTOCOL=TCP)(HOST=HOST1_IP)(PORT=1521))
+                (ADDRESS=(PROTOCOL=TCP)(HOST=HOST2_IP)(PORT=1521))
+                (CONNECT_DATA=(SERVICE_NAME=service_name)))
+                <onsconfig>nodes=VIRTUAL_IP1:REMOTE_PORT,VIRTUAL_IP2:REMOTE_PORT</onsconfig>
+                -->
+                <minsize>1</minsize>
+                <maxsize>4</maxsize>
+                <initialsize>1</initialsize>
+                <increment>1</increment>
+                <shrink>0</shrink>
+                <cachesize>0</cachesize>
+        </datasource>
+
+		
+	<!-- This is for Application Database  -->
+	<datasource>
+                <name>APPDB</name>
+                <username>DB_USER</username>
+                <password>DB_PASSWORD</password>
+                <drivername>oracle.jdbc.driver.OracleDriver</drivername>
+		<factory>com.baypackets.ase.jndi.ds.OracleDataSourceObjectFactory</factory>
+                <url>jdbc:oracle:thin:@127.0.0.1:1521:XE</url>
+		<!-- For RAC url format will be
+		jdbc:oracle:thin:@(DESCRIPTION= (LOAD_BALANCE=yes) 
+       		(ADDRESS=(PROTOCOL=TCP)(HOST=HOST1_IP)(PORT=1521)) 
+       		(ADDRESS=(PROTOCOL=TCP)(HOST=HOST2_IP)(PORT=1521)) 
+       		(CONNECT_DATA=(SERVICE_NAME=service_name)))
+		<onsconfig>nodes=VIRTUAL_IP1:REMOTE_PORT,VIRTUAL_IP2:REMOTE_PORT</onsconfig>
+		--> 
+		<add-rac-listener>false</add-rac-listener>
+                <minsize>1</minsize>
+                <maxsize>4</maxsize>
+                <initialsize>1</initialsize>
+                <increment>1</increment>
+                <shrink>0</shrink>
+                <cachesize>0</cachesize>
+     </datasource>
+	 
+	 	 	<!-- This is for Application ODG Database  -->
+	<datasource>
+                <name>DG_APPDB</name>
+                <username>dgtest</username>
+                <password>DGTEST</password>
+                <drivername>oracle.jdbc.driver.OracleDriver</drivername>
+		<factory>com.baypackets.ase.jndi.ds.odg.ODGDataSourceObjectFactory</factory>
+                <url_prim>jdbc:oracle:thin:@10.0.0.55:1521/master1</url_prim>
+                <url_sec>jdbc:oracle:thin:@10.0.0.221:1521/master1</url_sec>
+                <url_ro>jdbc:oracle:thin:@10.0.0.77:1521/master1</url_ro>  
+				<dg_nodes>3</dg_nodes>  
+                <minsize>1</minsize>
+                <maxsize>4</maxsize>
+                <initialsize>1</initialsize>
+                <increment>1</increment>
+                <shrink>0</shrink>
+                <cachesize>0</cachesize>
+                <retryCount>10</retryCount>
+                <reconWaitTime>5</reconWaitTime>
+     </datasource>
+      
+ <!-- This is for Mysql based Application Database  -->
+     <datasource>
+                <name>MYSQL_APPDB</name>
+                <username>DB_USER</username>
+                <password>DB_PASSWORD</password>
+                <drivername>com.mysql.jdbc.Driver</drivername>
+                <factory>com.baypackets.ase.jndi.ds.MysqlDataSourcePoolObjectFactory</factory>
+                <url>jdbc:mysql://127.0.0.1:3306/DB_SCHEMA</url>
+                <minsize>1</minsize>
+                <maxsize>4</maxsize>
+                <increment>1</increment>
+                <acquireRetryAttempts>5</acquireRetryAttempts>
+                <checkoutTimeout>10000</checkoutTimeout>
+     </datasource>
+
+	<!--
+        <jndi-config>
+                <initialcontextfactory>com.sun.jndi.rmi.registry.RegistryContextFactory</initialcontextfactory>
+                <providerurl>rmi://192.168.8.122:1099</providerurl>
+        </jndi-config> -->
+
+
+	
+
+</datasources-config>

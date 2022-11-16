@@ -1,0 +1,26 @@
+
+CLASSPATH=
+
+
+PLATFORM=`uname`
+if [ ${PLATFORM} == "Linux" ]
+then
+	JAVA_HOME=/vob/thirdParty/java/jdk1.6.0_02_lnx
+	export LD_PRELOAD=/vob/thirdParty/java/jdk1.6.0_02_lnx/jre/lib/libreadlink_interpose.so
+	export LD_LIBRARY_PATH=/vob/thirdParty/java/jdk1.6.0_02_lnx/jre/lib/i386:/vob/thirdParty/java/jdk1.6.0_02_lnx/jre/lib/i386/jli
+else
+	JAVA_HOME=/vob/thirdParty/java/jdk1.6.0_02
+fi
+
+export JAVA_HOME
+
+ANT_HOME=/vob/thirdParty/ANT/apache-ant-1.7.0
+export ANT_HOME
+
+if [ ${PLATFORM} == "Linux" ]
+then
+  alias imake=/vob/thirdParty/imake/bin/imake
+else
+  alias imake=/vob/thirdParty/TAO/imake/bin/imake
+fi
+

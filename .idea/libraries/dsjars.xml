@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="dsjars">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/dsjars/Acme.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/dsjars/concurrent.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/dsjars/dslicense.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/dsjars/dsua.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/dsjars/flexlm.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/dsjars/JainSipApi1.0.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/dsjars/log4j.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/dsjars/mime.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/dsjars/trove.jar!/" />
+      <root url="jar://$USER_HOME$/CAS8.0_OtherJars/dsjars/xmlParserAPIs.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

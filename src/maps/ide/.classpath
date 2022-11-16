@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="library/myfaces-api-1.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/myfaces-impl-1.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/hibernate3.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/jboss-ejb3x.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/jboss-j2ee.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/jboss-jaxws.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/log4j.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/portlet-api-lib.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/servlet-api.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="lib" path="library/ejb3-persistence.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

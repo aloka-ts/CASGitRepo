@@ -1,0 +1,107 @@
+<%@ jet package="com.genband.m5.maps.ide.builder" 
+	class="JbossPortletXML"
+	imports="java.util.List 
+	com.genband.m5.maps.ide.sitemap.model.Footer 
+	com.genband.m5.maps.ide.sitemap.model.Header
+	com.genband.m5.maps.ide.sitemap.model.MainPage
+	com.genband.m5.maps.ide.sitemap.model.PlaceHolder
+	com.genband.m5.maps.ide.sitemap.model.Portlet
+	com.genband.m5.maps.ide.sitemap.model.SiteMap
+	com.genband.m5.maps.ide.sitemap.model.SubPage
+	com.genband.m5.maps.ide.sitemap.util.SiteMapUtil
+	java.util.StringTokenizer
+	com.genband.m5.maps.ide.CPFPlugin"
+%>
+<%
+	//SiteMap object will come to this file as an argument
+	SiteMap siteMap = (SiteMap)argument;
+%>
+
+<!--
+/**********************************************************************
+*	 GENBAND, Inc. Confidential and Proprietary
+*
+* This work contains valuable confidential and proprietary 
+* information.
+* Disclosure, use or reproduction without the written authorization of
+* GENBAND, Inc. is prohibited.  This unpublished work by GENBAND, Inc.
+* is protected by the laws of the United States and other countries.
+* If publication of the work should occur the following notice shall 
+* apply:
+* 
+* "Copyright 2007 GENBAND, Inc.  All rights reserved."
+**********************************************************************/
+-->
+
+<!DOCTYPE portlet-app PUBLIC
+   "-//JBoss Portal//DTD JBoss Portlet 2.6//EN"
+   "http://www.jboss.org/portal/dtd/jboss-portlet_2_6.dtd">
+
+	<portlet-app>
+<%
+	String jsfLoc = "//WEB-INF//jsf//";
+	String helpLoc = "//WEB-INF//help//";
+	String mainJsfName = null; 	//Holds the base entity list screen JSF Name...
+
+	for(int numChild=0 ; numChild < siteMap.getChildren().size() ; numChild++){
+								
+			if (siteMap.getChildren().get(numChild) instanceof MainPage){
+				MainPage objMainPage = (MainPage)siteMap.getChildren().get(numChild);
+				if (objMainPage.isDummy()==false){
+				
+				for(int num=0 ; num < objMainPage.getChildren().size() ; num++){
+					
+					//If child of MainPage is PlaceHolder
+					if (objMainPage.getChildren().get(num) instanceof PlaceHolder){
+						PlaceHolder objPlaceHolder = (PlaceHolder)objMainPage.getChildren().get(num);
+						CPFPlugin.getDefault().info(" In PortletXML.java : In PlaceHolder object : "+objPlaceHolder.getName());
+						for(int numCh=0 ; numCh < objPlaceHolder.getChildren().size() ; numCh++){
+							Portlet objPortlet = (Portlet)objPlaceHolder.getChildren().get(numCh);
+							
+							
+%>
+    	<portlet>
+      		<portlet-name><%= objPortlet.getName().replace(" ","_").concat("_").concat(siteMap.getName()).concat("_").concat(Integer.toString(objMainPage.getPageNo())).concat("_").concat(Integer.toString(objPlaceHolder.getPlaceHolderNo())).concat("_").concat(Integer.toString(objPortlet.getPortletNo())) %></portlet-name>
+      		<header-content>
+				<script src="/js/mode.js" language="javascript"></script>
+				<script src="/js/delete.js" language="javascript"></script>
+      		</header-content>
+    	</portlet>
+<%							
+							}//end of closest for
+					}//end of if for placeholder	
+					
+					//If child of MainPage is SubPage
+					else if (objMainPage.getChildren().get(num) instanceof SubPage){
+						SubPage objSubPage = (SubPage)objMainPage.getChildren().get(num);
+						
+						if (objSubPage.isDummy()==false){
+						CPFPlugin.getDefault().info(" In PortletXML.java : In non-dummy SubPage object : "+objSubPage.getName());
+						for(int numCh2=0 ; numCh2 < objSubPage.getChildren().size() ; numCh2++){
+							
+							//Assuming children of SubPage can only be a PlaceHolder
+							PlaceHolder obPlaceHolder = (PlaceHolder)objSubPage.getChildren().get(numCh2);
+							for(int numC=0 ; numC < obPlaceHolder.getChildren().size() ; numC++){
+								
+								Portlet obPortlet = (Portlet)obPlaceHolder.getChildren().get(numC);
+%>
+  	  	<portlet>
+     	 	<portlet-name><%= obPortlet.getName().replace(" ","_").concat("_").concat(siteMap.getName()).concat("_").concat(Integer.toString(objMainPage.getPageNo())).concat("_").concat(Integer.toString(objSubPage.getPageNo())).concat("_").concat(Integer.toString(obPlaceHolder.getPlaceHolderNo())).concat("_").concat(Integer.toString(obPortlet.getPortletNo())) %></portlet-name>
+    	 	<header-content>
+				<script src="/js/mode.js" language="javascript"></script>
+				<script src="/js/delete.js" language="javascript"></script>
+    		 </header-content>             
+    	</portlet>
+<%							
+							}//end of closest for
+		
+						}//end of next for
+						}//end of SubPage.isDummy
+					}//if instance of sub-page closes
+				}//mainPage() children for closes
+				}//if mainpage.dummy closes
+									
+			}
+		}
+%>
+	</portlet-app>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementMgr minScanIntervalInSec="100" minAccumulationIntervalInSec="300">
+
+	<!--1. Total Number of Incoming Invocations -->
+                                                                                                                             
+    <MeasurementCounter id="Total Number of Incoming Invocations"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="33.6.1">
+	           <param name="Total Number of Incoming Invocations"/>
+    </MeasurementCounter>
+	
+	<!--2. Total Number of Outgoing Invocations -->
+                                                                                                                             
+    <MeasurementCounter id="Total Number of Outgoing Invocations"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="33.6.5">
+	           <param name="Total Number of Outgoing Invocations"/>
+    </MeasurementCounter>
+	
+	<!--3. Total Number of Incoming Callbacks -->
+                                                                                                                             
+    <MeasurementCounter id="Total Number of Incoming Callbacks"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="33.6.2">
+	           <param name="Total Number of Incoming Callbacks"/>
+    </MeasurementCounter>
+	
+	<!--4. Total Number of Outgoing Callbacks -->
+                                                                                                                             
+    <MeasurementCounter id="Total Number of Outgoing Callbacks"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="33.6.6">
+	           <param name="Total Number of Outgoing Callbacks"/>
+    </MeasurementCounter>
+	
+	<!--5. Total Number of Incoming Invocations Failed -->
+                                                                                                                             
+    <MeasurementCounter id="Total Number of Incoming Invocations Failed"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="33.6.3">
+	           <param name="Total Number of Incoming Invocations Failed"/>
+    </MeasurementCounter>
+	
+	<!--6. Total Number of Outgoing Invocations Failed -->
+                                                                                                                             
+    <MeasurementCounter id="Total Number of Outgoing Invocations Failed"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="33.6.7">
+	           <param name="Total Number of Outgoing Invocations Failed"/>
+    </MeasurementCounter>
+	
+	<!--7. Total Number of Incoming Callbacks Failed -->
+                                                                                                                             
+    <MeasurementCounter id="Total Number of Incoming Callbacks Failed"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="33.6.4">
+	           <param name="Total Number of Incoming Callbacks Failed"/>
+    </MeasurementCounter>
+	
+	<!--8. Total Number of Outgoing Callbacks Failed -->
+                                                                                                                             
+    <MeasurementCounter id="Total Number of Outgoing Callbacks Failed"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="33.6.8">
+	           <param name="Total Number of Outgoing Callbacks Failed"/>
+    </MeasurementCounter>
+	
+	<!--9. Total Number of Times Findservice Method Invoked -->
+                                                                                                                             
+    <MeasurementCounter id="Total Number of Findservice Method Invoked"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="33.6.9">
+	           <param name="Total Number of Findservice Method Invoked"/>
+    </MeasurementCounter>
+	
+	<!--10. Total Number of Times Findlistener Method Invoked -->
+                                                                                                                             
+    <MeasurementCounter id="Total Number of Findlistener Method Invoked"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="33.6.10">
+	           <param name="Total Number of Findlistener Method Invoked"/>
+    </MeasurementCounter>
+
+	<MeasurementSet id="CAS MeasurementSet Priority Calls" version="2"
+		accumulationInterval="1800" priority="0">
+	<MeasurementCounter id="Total Number of Incoming Invocations"/>
+	<MeasurementCounter id="Total Number of Outgoing Invocations"/>
+	<MeasurementCounter id="Total Number of Incoming Callbacks"/>
+	<MeasurementCounter id="Total Number of Outgoing Callbacks"/>
+	<MeasurementCounter id="Total Number of Incoming Invocations Failed"/>
+	<MeasurementCounter id="Total Number of Outgoing Invocations Failed"/>
+	<MeasurementCounter id="Total Number of Incoming Callbacks Failed"/>
+	<MeasurementCounter id="Total Number of Outgoing Callbacks Failed"/>
+	<MeasurementCounter id="Total Number of Findservice Method Invoked"/>
+	<MeasurementCounter id="Total Number of Findlistener Method Invoked"/>
+	</MeasurementSet>
+
+</MeasurementMgr>
+

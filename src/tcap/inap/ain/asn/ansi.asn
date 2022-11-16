@@ -1,0 +1,2109 @@
+AIN-Operations {ainOperationsObjectIdentifier}
+-- This module contains type definitions for the AIN operations.
+DEFINITIONS ::=
+BEGIN
+IMPORTS
+OPERATION FROM TCAPPackage {ansiTCAPObjectIdentifier}
+-- error types
+applicationError,
+failureReport
+FROM AIN-Errors {ainErrorsObjectIdentifier}
+datatypes
+FROM AIN-Parameters {ainParametersObjectIdentifier}
+AccessCode,
+ACGEncountered,
+ACGGlobalOverride,
+ActResult,
+AdministrableObject,
+AlternateBillingIndicator,
+AlternateCarrier,
+AlternateDialingPlanInd,
+AlternateTrunkGroup,
+AMAAlternateBillingNumber,
+AMABAFModules,
+AMABillingFeature,
+AMABusinessCustomerID,
+AMADigitsDialedWC,
+AMALineNumber,
+AMAMeasure,
+AMAMeasurement,
+AMASequenceNumber,
+AMAServiceProviderID,
+AMASetHexABIndicator,
+AMAslpID,
+Amp1,
+Amp2,
+AnswerIndicator,
+ApplicationErrorString,
+ApplicationIndicator,
+ApplyRestrictions,
+BCMType,
+BearerCapability,
+BusyCause,
+BusyType,
+CalledPartyID,
+CalledPartyStationType,
+CallingGeodeticLocation,
+CallingPartyBGID,
+CallingPartyID,
+CallType,
+Carrier,
+CarrierUsage,
+CcID,
+ChargeNumber,
+ChargePartyStationType,
+ClearCause,
+ClearCauseData,
+CloseCause,
+CollectedAddressInfo,
+CollectedDigits,
+CongestionLevel,
+ConnectTime,
+ControlCauseIndicator,
+ControlEncountered,
+ControllingLegTreatment,
+CsID,
+CTRConnection,
+DestinationAddress,
+DisconnectCause,
+DisconnectFlag,
+DisplayText,
+DPConverter,
+DTMFDigitsEntered,
+EchoData,
+EditListType,
+EDPNotification,
+EDPRequest,
+EnvelopContent,
+EnvelopeEncodingAuthority,
+ErrorCause,
+ExtendedRinging,
+ExtensionParameter,
+FacilityGID,
+FacilityMemberID,
+FacilityStatus,
+FailedMessage,
+Failure,
+FailureCause,
+FailureCauseData,
+FeatureActivatorID,
+ForwardCallIndicator,
+GapDuration,
+GapInterval,
+GenericAddress,
+GenericAddressList,
+GenericDigits,
+GenericDigitsList,
+GenericName,
+GlobalTitleAddress,
+InfoProvided,
+IPReturnBlock,
+JurisdictionInformation,
+LampTreatment,
+Lata,
+LegID,
+MonitorTime,
+NetworkSpecificFacilities,
+NotificationDuration,
+NotificationIndicator,
+ODTMFDigitsString,
+ODTMFNumberOfDigits,
+ONoAnswerTimer,
+OriginalCalledPartyID,
+OSIIndicator,
+OutpulseNumber,
+OverflowBillingIndicator,
+PartyID,
+PartyOnHold,
+PassiveLegTreatment,
+PointInCall,
+Prefix,
+PrimaryBillingIndicator,
+PrimaryTrunkGroup,
+ProvideInfo,
+RedirectingPartyID,
+RedirectionInformation,
+ResourceType,
+ResultCause,
+RTPReroutingNumber,
+RTPServiceIndicator,
+Sap,
+SecondAlternateBillingIndicator,
+SecondAlternateCarrier,
+SecondAlternateTrunkGroup,
+SecurityEnvelope,
+ServiceContext,
+ServiceProviderID,
+SignalingPointCode,
+Spid,
+SrhrGroupID,
+SSPResponseMessageTimerT1,
+StatusCause,
+STRConnection,
+StrParameterBlock,
+SubsystemNumber,
+Tcm,
+TDTMFDigitString,
+TDTMFNumberOfDigits,
+TerminationIndicator,
+TimeoutTimer,
+TimerUpdated,
+TNoAnswerTimer,
+TransID,
+TranslationType,
+TriggerCriteriaFlag,
+TriggerCriteriaType,
+TriggerInformation,
+UpdateGroups,
+UserID,
+VerticalServiceCode,
+WakeUpDuration
+FROM AIN-Parameters datatypes;
+
+--{ainParametersObjectIdentifier};
+-- ainOperationsObjectIdentifier OBJECT IDENTIFIER ::= ? 
+-- not yet defined
+
+
+-- TYPE DEFINITIONS FOR AIN OPERATIONS FOLLOWS
+CallInfoFromResource ::= OPERATION
+ARGUMENT CallInfoFromResourceArg
+--ERRORS
+--{applicationError,
+--failureReport
+--}
+--IPReturnBlock OPTIONAL,
+--Amp1 OPTIONAL,
+--Amp2 OPTIONAL,
+--ExtensionParameter OPTIONAL,
+
+CallInfoFromResourceArg ::= SEQUENCE {
+resourceType ResourceType OPTIONAL,
+iPReturnBlock IPReturnBlock OPTIONAL,
+strParameterBlock StrParameterBlock OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL, 
+tSTRCTimer TSTRCTimer OPTIONAL
+}
+--::= private: 26116
+-- Family Name is "Caller Interaction"
+Close ::= OPERATION
+ARGUMENT CloseArg
+CloseArg ::= SEQUENCE {
+userID UserID OPTIONAL,
+bearerCapability BearerCapability OPTIONAL,
+closeCause CloseCause OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--::= private: 28161
+-- Family Name is "Transaction Control"
+
+CTRClear ::= OPERATION
+ARGUMENT CTRClearArg
+ERRORS
+{applicationError,
+failureReport
+}
+
+CTRClearArg ::= SEQUENCE {
+clearCause ClearCause,
+legID LegID OPTIONAL,
+ccID CcID OPTIONAL,
+bCMType BCMType OPTIONAL,
+pointInCall PointInCall OPTIONAL,
+collectedDigits CollectedDigits OPTIONAL,
+collectedAddressInfo CollectedAddressInfo OPTIONAL,
+carrier Carrier OPTIONAL,
+failureCause FailureCause OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+aMAMeasurement AMAMeasurement OPTIONAL,
+clearCauseData ClearCauseData OPTIONAL,
+iPReturnBlock IPReturnBlock OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+-- LINKED {
+-- acknowledge,
+-- analyzeRoute,
+-- collectInformation,
+-- continue,
+-- disconnect,
+-- disconnectLeg,
+-- forwardCall,
+-- mergeCall,
+-- moveleg,
+-- originateCall,
+-- splitLeg
+-- }
+--::= private: 26118
+-- Family Name is "Caller Interaction"
+
+
+FailureOutcome ::= OPERATION
+ARGUMENT FailureOutcomeArg
+ERRORS 
+{applicationError,
+failureReport
+}
+
+FailureOutcomeArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+notificationIndicator NotificationIndicator OPTIONAL,
+ccID CcID OPTIONAL,
+legID LegID OPTIONAL,
+bCMType BCMType OPTIONAL,
+pointInCall PointInCall OPTIONAL,
+failureCause FailureCause OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+-- LINKED {
+-- acknowledge,
+-- connectToResource,
+-- disconnect,
+-- mergeCall
+-- }
+--::= private: 25604
+-- Family Name is "Connection Control"
+
+InfoAnalyzed ::= OPERATION
+ARGUMENT InfoAnalyzedArg
+ERRORS 
+{applicationError,
+failureReport
+}
+
+InfoAnalyzedArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+calledPartyID CalledPartyID OPTIONAL,
+lata Lata OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+callingPartyBGID CallingPartyBGID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+carrier Carrier OPTIONAL,
+accessCode AccessCode OPTIONAL,
+collectedAddressInfo CollectedAddressInfo OPTIONAL,
+collectedDigits CollectedDigits OPTIONAL,
+verticalServiceCode VerticalServiceCode OPTIONAL,
+tcm Tcm OPTIONAL,
+originalCalledPartyID OriginalCalledPartyID OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+sap Sap OPTIONAL,
+sTRConnection STRConnection OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+genericAddressList GenericAddressList OPTIONAL,
+networkSpecificFacilities NetworkSpecificFacilities OPTIONAL,
+cTRConnection CTRConnection OPTIONAL,
+jurisdictionInformation JurisdictionInformation OPTIONAL,
+prefix Prefix OPTIONAL,
+callingGeodeticLocation CallingGeodeticLocation OPTIONAL,
+triggerInformation TriggerInformation OPTIONAL
+}
+-- analyzeRoute,
+-- continue,
+-- sendToResource,
+-- disconnect,
+-- collectInformation
+-- }
+--::= private: 25603
+-- Family Name is "Request/Notification"
+
+InfoCollected ::= OPERATION
+ARGUMENT InfoCollectedArg
+ERRORS
+{applicationError,
+failureReport
+}
+InfoCollectedArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+chargeNumber ChargeNumber OPTIONAL,
+lata Lata OPTIONAL,
+carrier Carrier OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+accessCode AccessCode OPTIONAL,
+collectedAddressInfo CollectedAddressInfo OPTIONAL,
+collectedDigits CollectedDigits OPTIONAL,
+verticalServiceCode VerticalServiceCode OPTIONAL,
+tcm Tcm OPTIONAL,
+originalCalledPartyID OriginalCalledPartyID OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+sap Sap OPTIONAL,
+genericAddressList GenericAddressList OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+prefix Prefix OPTIONAL,
+callingGeodeticLocation CallingGeodeticLocation OPTIONAL,
+triggerInformation TriggerInformation OPTIONAL
+}
+-- LINKED {
+-- analyzeRoute,
+-- sendToResource,
+-- disconnect
+-- continue
+-- }
+--::= private: 25602
+-- Family Name is "Request/Notification"
+NetworkBusy ::= OPERATION
+ARGUMENT NetworkBusyArg
+ERRORS
+{applicationError,
+failureReport
+}
+NetworkBusyArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+chargeNumber ChargeNumber OPTIONAL,
+lata Lata OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+calledPartyID CalledPartyID OPTIONAL,
+tcm Tcm OPTIONAL,
+originalCalledPartyID OriginalCalledPartyID OPTIONAL,
+carrier Carrier OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+sap Sap OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL,
+prefix Prefix OPTIONAL,
+triggerInformation TriggerInformation OPTIONAL
+}
+-- LINKED {
+-- analyzeRoute,
+-- sendToResource,
+-- disconnect,
+-- continue,
+-- forwardCall
+-- }
+--::= private: 25623
+-- Family Name is "Request/Notification"
+
+OAnswer ::= OPERATION
+ARGUMENT OAnswerArg
+ERRORS
+{applicationError,
+failureReport
+}
+OAnswerArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+notificationIndicator NotificationIndicator OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--::= private: 25611
+-- Family Name is "Request/Notification"
+OAbandon  ::= OPERATION
+ARGUMENT OAbandonArg
+ERRORS
+{applicationError,
+failureReport
+}
+OAbandonArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+ccID CcID OPTIONAL,
+pointInCall PointInCall OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL
+}
+-- LINKED {
+-- connectToResource,
+-- disconnect,
+-- disconnectLeg,
+-- mergeCall,
+-- reconnect
+-- }
+--::= private: 25614
+-- Family Name is "Request/Notification"
+
+OCalledPartyBusy ::= OPERATION
+ARGUMENT OCalledPartyBusyArg
+ERRORS
+{applicationError,
+failureReport
+}
+OCalledPartyBusyArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+calledPartyID CalledPartyID OPTIONAL,
+lata Lata OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+carrier Carrier OPTIONAL,
+originalCalledPartyID OriginalCalledPartyID OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+busyCause BusyCause OPTIONAL,
+sap Sap OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+sTRConnection STRConnection OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+cTRConnection CTRConnection OPTIONAL,
+prefix Prefix OPTIONAL,
+triggerInformation TriggerInformation OPTIONAL
+}
+
+-- LINKED {
+-- analyzeRoute,
+-- continue,
+-- sendToResource
+-- }
+--::= private: 25607
+-- Family Name is "Request/Notification"
+
+ODisconnect ::= OPERATION
+ARGUMENT ODisconnectArg
+ERRORS
+{applicationError,
+failureReport
+}
+ODisconnectArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+notificationIndicator NotificationIndicator OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+disconnectCause DisconnectCause OPTIONAL,
+legID LegID OPTIONAL,
+pointInCall PointInCall OPTIONAL
+}
+
+-- LINKED {
+-- collectInformation,
+-- sendToResource,
+-- analyzeRoute,
+-- connectToResource,
+-- disconnect,
+-- disconnectLeg,
+-- mergeCall,
+-- reconnect
+-- }
+--::= private: 25626
+--Family Name is "Request/Notification"
+
+OMidCall ::= OPERATION
+ARGUMENT OMidCallArg
+ERRORS
+{applicationError,
+failureReport
+}
+OMidCallArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+legID LegID OPTIONAL,
+pointInCall PointInCall OPTIONAL,
+ccID CcID OPTIONAL,
+featureActivatorID FeatureActivatorID OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+callingPartyBGID CallingPartyBGID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+carrier Carrier OPTIONAL,
+accessCode AccessCode OPTIONAL,
+collectedAddressInfo CollectedAddressInfo OPTIONAL,
+collectedDigits CollectedDigits OPTIONAL,
+verticalServiceCode VerticalServiceCode OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+-- LINKED {
+-- analyzeRoute,
+-- collectInformation,
+-- connectToResource,
+-- disconnect,
+-- disconnectLeg,
+-- mergeCall,
+-- moveLeg,
+-- originateCall,
+-- splitLeg
+-- }
+--::= private: 25615
+-- Family Name is "Request/Notification"
+
+ONoAnswer ::= OPERATION
+ARGUMENT ONoAnswerArg
+ERRORS
+{applicationError,
+failureReport
+}
+ONoAnswerArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+calledPartyID CalledPartyID OPTIONAL,
+lata Lata OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+carrier Carrier OPTIONAL,
+originalCalledPartyID OriginalCalledPartyID OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+sap Sap OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+sTRConnection STRConnection OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+cTRConnection CTRConnection OPTIONAL,
+prefix Prefix OPTIONAL,
+triggerInformation TriggerInformation OPTIONAL
+}
+
+-- LINKED {
+-- analyzeRoute,
+-- sendToResource,
+-- continue
+-- }
+--::= private: 25609
+-- Family Name is "Request/Notification"
+
+OSuspended ::= OPERATION
+ARGUMENT OSuspendedArg
+ERRORS
+{applicationError,
+failureReport
+}
+OSuspendedArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+notificationIndicator NotificationIndicator OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+legID LegID OPTIONAL,
+pointInCall PointInCall OPTIONAL
+}
+
+-- LINKED {
+-- collectInformation,
+-- sendToResource,
+-- analyzeRoute,
+-- connectToResource,
+-- disconnect,
+-- disconnectLeg,
+-- mergeCall
+-- }
+--::= private: 25625
+--Family Name is "Request/Notification"
+OTermSeized ::= OPERATION
+ARGUMENT OTermSeizedArg
+ERRORS
+{applicationError,
+failureReport
+}
+OTermSeizedArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+notificationIndicator NotificationIndicator OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+--::= private: 25612
+-- Family Name is "Request/Notification"
+
+OriginationAttempt ::= OPERATION
+ARGUMENT OriginationAttemptArg
+ERRORS
+{applicationError,
+failureReport
+}
+OriginationAttemptArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+chargeNumber ChargeNumber OPTIONAL,
+lata Lata OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+carrier Carrier OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+sap Sap OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL,
+triggerInformation TriggerInformation OPTIONAL
+}
+
+-- LINKED {
+-- analyzeRoute,
+-- sendToResource,
+-- disconnect
+-- }
+--::= private: 25624
+-- Family Name is "Request/Notification"
+
+
+ResourceClear ::= OPERATION
+ARGUMENT ResourceClearArg
+ERRORS
+{applicationError,
+failureReport
+}
+ResourceClearArg ::= SEQUENCE {
+clearCause ClearCause,
+collectedDigits CollectedDigits OPTIONAL,
+collectedAddressInfo CollectedAddressInfo OPTIONAL,
+carrier Carrier OPTIONAL,
+failureCause FailureCause OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+aMAMeasurement AMAMeasurement OPTIONAL,
+clearCauseData ClearCauseData OPTIONAL,
+iPReturnBlock IPReturnBlock OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--RESULT SEQUENCE {
+--ExtensionParameter OPTIONAL
+--}
+
+-- LINKED {
+-- analyzeRoute,
+-- forwardCall,
+-- sendToResource,
+-- authorizeTermination,
+-- disconnect,
+-- continue,
+-- offerCall,
+-- collectInformation
+-- }
+--::= private: 26114
+-- Family Name is "Caller Interaction"
+
+
+SuccessOutcome ::= OPERATION
+ARGUMENT SuccessOutcomeArg
+ERRORS
+{applicationError,
+failureReport
+}
+SuccessOutcomeArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+notificationIndicator NotificationIndicator OPTIONAL,
+ccID CcID OPTIONAL,
+legID LegID OPTIONAL,
+bCMType BCMType OPTIONAL,
+pointInCall PointInCall OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+-- LINKED {
+-- acknowledge,
+-- connectToResource,
+-- disconnectLeg,
+-- moveLeg
+-- }
+--::= private: 25617
+-- Family Name is "Request/Notification"
+TAnswer ::= OPERATION
+ARGUMENT TAnswerArg
+ERRORS
+{applicationError,
+failureReport
+}
+TAnswerArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+notificationIndicator NotificationIndicator OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+--::= private: 25610
+-- Family Name is ôRequest/Notificationö
+
+
+TBusy ::= OPERATION
+ARGUMENT TBusyArg
+ERRORS
+{applicationError,
+failureReport
+}
+TBusyArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+calledPartyID CalledPartyID OPTIONAL,
+lata Lata OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+originalCalledPartyID OriginalCalledPartyID OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+busyCause BusyCause OPTIONAL,
+busyType BusyType OPTIONAL,
+calledPartyStationType CalledPartyStationType OPTIONAL,
+sap Sap OPTIONAL,
+genericName GenericName OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+sTRConnection STRConnection OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+cTRConnection CTRConnection OPTIONAL,
+triggerInformation TriggerInformation OPTIONAL
+}
+
+-- LINKED {
+-- forwardCall,
+-- offerCall,
+-- continue,
+-- sendToResource
+-- }
+--::= private: 25606
+-- Family Name is "Request/Notification"
+
+
+TDisconnect ::= OPERATION
+ARGUMENT TDisconnectArg
+ERRORS
+{applicationError,
+failureReport
+}
+TDisconnectArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+ccID CcID OPTIONAL,
+legID LegID OPTIONAL,
+pointInCall PointInCall OPTIONAL,
+disconnectCause DisconnectCause OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL
+}
+
+-- LINKED {
+-- analyzeRoute,
+-- collectInformation,
+-- connectToResource,
+-- disconnect,
+-- disconnectLeg,
+-- mergeCall,
+-- reconnect
+-- }
+--::= private: 25618
+-- Family Name is "Request/Notification"
+
+
+TDTMFEntered ::= OPERATION
+ARGUMENT TDTMFEnteredArg
+ERRORS
+{applicationError,
+failureReport
+}
+TDTMFEnteredArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+dTMFDigitsDetected DTMFDigitsDetected OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL
+}
+
+-- LINKED {
+-- continue,
+-- disconnect,
+-- forwardCall,
+-- sendToResource
+-- }
+--::= private: 25628
+-- Family Name is "Request/Notification"
+  
+
+
+TMidCall ::= OPERATION
+ARGUMENT TMidCallArg
+ERRORS
+{applicationError,
+failureReport
+}
+TMidCallArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+calledPartyID CalledPartyID OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+legID LegID OPTIONAL,
+pointInCall PointInCall OPTIONAL,
+ccID CcID OPTIONAL,
+featureActivatorID FeatureActivatorID OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+callingPartyBGID CallingPartyBGID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+carrier Carrier OPTIONAL,
+accessCode AccessCode OPTIONAL,
+collectedAddressInfo CollectedAddressInfo OPTIONAL,
+collectedDigits CollectedDigits OPTIONAL,
+verticalServiceCode VerticalServiceCode OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL
+}
+
+-- LINKED {
+-- analyzeRoute,
+-- collectInformation,
+-- connectToResource,
+-- disconnect,
+-- disconnectLeg,
+-- mergeCall,
+-- moveLeg,
+-- originateCall,
+-- splitLeg
+-- }
+--::= private: 25619
+-- Family Name is "Request/Notification"
+  
+
+
+TNoAnswer ::= OPERATION
+ARGUMENT TNoAnswerArg
+ERRORS
+{applicationError,
+failureReport
+}
+
+TNoAnswerArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+calledPartyID CalledPartyID OPTIONAL,
+lata Lata OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+originalCalledPartyID OriginalCalledPartyID OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+calledPartyStationType CalledPartyStationType OPTIONAL,
+sap Sap OPTIONAL,
+genericName GenericName OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+sTRConnection STRConnection OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+cTRConnection CTRConnection OPTIONAL,
+triggerInformation TriggerInformation OPTIONAL
+}
+-- LINKED {
+-- forwardCall,
+-- sendToResource,
+-- continue
+-- }
+--::= private: 25608
+-- Family Name is "Request/Notification"
+  
+
+
+TerminationAttempt ::= OPERATION
+ARGUMENT TerminationAttemptArg
+ERRORS
+{applicationError,
+failureReport
+}
+TerminationAttemptArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+calledPartyID CalledPartyID OPTIONAL,
+lata Lata OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+calledPartyStationType CalledPartyStationType OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+tcm Tcm OPTIONAL,
+originalCalledPartyID OriginalCalledPartyID OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+genericName GenericName OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+sap Sap OPTIONAL,
+sTRConnection STRConnection OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+cTRConnection CTRConnection OPTIONAL,
+rTPServiceIndicator RTPServiceIndicator OPTIONAL,
+genericAddressList GenericAddressList OPTIONAL,
+triggerInformation TriggerInformation OPTIONAL,
+callingGeodeticLocation CallingGeodeticLocation OPTIONAL
+}
+
+-- LINKED {
+-- authorizeTermination,
+-- forwardCall,
+-- sendToResource,
+-- disconnect
+-- }
+--::= private: 25605
+-- Family Name is "Request/Notification"
+  
+
+
+TermResourceAvailable ::= OPERATION
+ARGUMENT TermResourceAvailableArg
+ERRORS
+{applicationError,
+failureReport
+}
+TermResourceAvailableArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+notificationIndicator NotificationIndicator OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+calledPartyID CalledPartyID OPTIONAL,
+lata Lata OPTIONAL,
+triggerCriteriaType TriggerCriteriaType OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+originalCalledPartyID OriginalCalledPartyID OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+calledPartyStationType CalledPartyStationType OPTIONAL,
+sap Sap OPTIONAL,
+genericName GenericName OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+sTRConnection STRConnection OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+cTRConnection CTRConnection OPTIONAL,
+triggerInformation TriggerInformation OPTIONAL
+}
+
+-- LINKED {
+-- forwardCall,
+-- sendToResource,
+-- continue
+-- }
+--::= private: 25613
+-- Family Name is "Request/Notification"
+  
+
+
+Timeout ::= OPERATION
+ARGUMENT TimeoutArg
+ERRORS
+{applicationError,
+failureReport
+}
+TimeoutArg ::= SEQUENCE {
+userID UserID,
+bearerCapability BearerCapability,
+legID LegID OPTIONAL,
+bCMType BCMType OPTIONAL,
+pointInCall PointInCall OPTIONAL,
+ccID CcID OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+notificationIndicator NotificationIndicator OPTIONAL
+}
+
+-- LINKED {
+-- analyzeRoute,
+-- connectToResource,
+-- continue,
+-- disconnect,
+-- forwardCall,
+-- sendToResource
+-- }
+--::= private:25620
+-- Family Name is "Request/Notification"
+Acknowledge ::= OPERATION
+ARGUMENT AcknowledgeArg
+ERRORS
+{applicationError
+}
+AcknowledgeArg ::= SEQUENCE {
+csID CsID OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+lampTreatment LampTreatment OPTIONAL,
+displayText DisplayText OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+--::= private: 25862
+-- Family Name is "Connection Control (Call Model)"
+
+
+AnalyzeRoute ::=OPERATION
+ARGUMENT AnalyzeRouteArg
+ERRORS
+{applicationError
+}
+AnalyzeRouteArg ::= SEQUENCE {
+chargeNumber ChargeNumber OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+calledPartyID CalledPartyID OPTIONAL,
+outpulseNumber OutpulseNumber OPTIONAL,
+tcm Tcm OPTIONAL,
+primaryTrunkGroup PrimaryTrunkGroup OPTIONAL,
+alternateTrunkGroup AlternateTrunkGroup OPTIONAL,
+secondAlternateTrunkGroup SecondAlternateTrunkGroup OPTIONAL,
+carrier Carrier OPTIONAL,
+alternateCarrier AlternateCarrier OPTIONAL,
+secondAlternateCarrier SecondAlternateCarrier OPTIONAL,
+passiveLegTreatment PassiveLegTreatment OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+alternateBillingIndicator AlternateBillingIndicator OPTIONAL,
+secondAlternateBillingIndicator SecondAlternateBillingIndicator OPTIONAL,
+overflowBillingIndicator OverflowBillingIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE (1..2) OF
+aMALineNumber  SEQUENCE SIZE (1..2) OF 
+AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE (1..5) OF
+aMADigitsDialedWC SEQUENCE SIZE (1..5) OF
+AMADigitsDialedWC OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+carrierUsage CarrierUsage OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+genericAddressList GenericAddressList OPTIONAL,
+networkSpecificFacilities NetworkSpecificFacilities OPTIONAL,
+callingPartyBGID CallingPartyBGID OPTIONAL,
+forwardCallIndicator ForwardCallIndicator OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL,
+prefix Prefix OPTIONAL,
+genericDigitsList GenericDigitsList OPTIONAL,
+applyRestrictions ApplyRestrictions OPTIONAL,
+displayText DisplayText OPTIONAL,
+genericName GenericName OPTIONAL
+}
+--::= private: 25857
+--::= private: 25857
+-- Family Name is "Connection Control (Call Model)"
+  
+
+
+AuthorizeTermination ::= OPERATION
+ARGUMENT AuthorizeTerminationArg
+ERRORS
+{applicationError
+}
+AuthorizeTerminationArg ::= SEQUENCE {
+callingPartyID CallingPartyID OPTIONAL,
+tcm Tcm OPTIONAL,
+controllingLegTreatment ControllingLegTreatment OPTIONAL,
+displayText DisplayText OPTIONAL,
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE (1..2) OF
+--aMALineNumber AMALineNumber OPTIONAL,
+aMALineNumber  SEQUENCE SIZE (1..2) OF 
+AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE (1..5) OF
+-- aMADigitsDialedWC AMADigitsDialedWC OPTIONAL,
+aMADigitsDialedWC SEQUENCE SIZE (1..5) OF
+AMADigitsDialedWC OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL,
+genericName GenericName OPTIONAL
+}
+
+--::= private: 25858
+-- Family Name is "Connection Control (Call Model)"
+CancelResourceEvent ::= OPERATION
+ARGUMENT CancelResourceEventArg
+ERRORS
+{applicationError
+}
+CancelResourceEventArg ::= SEQUENCE {
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+-- LINKED { resourceClear }
+--::= private: 26115
+-- Family Name is "Caller Interaction"
+
+
+CollectInformation ::= OPERATION
+ARGUMENT CollectInformationArg
+ERRORS
+{applicationError
+}
+CollectInformationArg ::= SEQUENCE {
+callingPartyID CallingPartyID OPTIONAL,
+collectedDigits CollectedDigits OPTIONAL,
+dPConverter DPConverter OPTIONAL,
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+alternateBillingIndicator AlternateBillingIndicator OPTIONAL,
+secondAlternateBillingIndicator SecondAlternateBillingIndicator OPTIONAL,
+overflowBillingIndicator OverflowBillingIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+--SEQUENCE SIZE(1..2) OF
+--aMALineNumber AMALineNumber OPTIONAL,
+aMALineNumber  SEQUENCE SIZE (1..2) OF 
+AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE(1..5) OF
+--aMADigitsDialedWC AMADigitsDialedWC OPTIONAL,
+aMADigitsDialedWC SEQUENCE SIZE (1..5) OF
+AMADigitsDialedWC OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+alternateDialingPlanInd AlternateDialingPlanInd OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL
+}
+
+--::= private: 25861
+-- Family Name is "Connection Control (Call Model)"
+
+
+ConnectToResource ::= OPERATION
+ARGUMENT ConnectToResourceArg
+ERRORS
+{applicationError
+}
+ConnectToResourceArg ::=SEQUENCE {
+resourceType ResourceType,
+strParameterBlock StrParameterBlock,
+legID LegID OPTIONAL,
+disconnectFlag DisconnectFlag OPTIONAL,
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE(1..2) OF
+--aMALineNumber AMALineNumber OPTIONAL,
+aMALineNumber  SEQUENCE SIZE (1..2) OF 
+AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE(1..5) OF
+--aMADigitsDialedWC AMADigitsDialedWC OPTIONAL,
+aMADigitsDialedWC SEQUENCE SIZE (1..5) OF
+AMADigitsDialedWC OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+destinationAddress DestinationAddress OPTIONAL,
+dPConverter DPConverter OPTIONAL,
+aMAMeasure AMAMeasure OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+-- LINKED {
+-- callInfoFromResource,
+-- cTRClear
+-- }
+--::= private: 26117
+-- Family Name is "Caller Interaction"
+
+
+Continue ::= OPERATION
+ARGUMENT ContinueArg
+ERRORS
+{applicationError
+}
+ContinueArg ::= SEQUENCE {
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE (1..2) OF
+--aMALineNumber AMALineNumber OPTIONAL,
+aMALineNumber  SEQUENCE SIZE (1..2) OF 
+AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE (1..5) OF
+--aMADigitsDialedWC AMADigitsDialedWC OPTIONAL,
+aMADigitsDialedWC SEQUENCE SIZE (1..5) OF
+AMADigitsDialedWC OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL
+}
+
+--::= private: 25869
+-- Family Name is "Connection Control (Call Model)"
+
+
+CreateCall ::= OPERATION
+ARGUMENT CreateCallArg
+ERRORS
+{applicationError,
+failureReport
+}
+
+CreateCallArg ::= SEQUENCE {
+calledPartyID CalledPartyID,
+callingPartyID CallingPartyID,
+chargeNumber ChargeNumber OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+carrier Carrier OPTIONAL,
+alternateCarrier AlternateCarrier OPTIONAL,
+secondAlternateCarrier SecondAlternateCarrier OPTIONAL,
+passiveLegTreatment PassiveLegTreatment OPTIONAL,
+genericAddressList GenericAddressList OPTIONAL,
+callingPartyBGID CallingPartyBGID OPTIONAL,
+forwardCallIndicator ForwardCallIndicator OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+carrierUsage CarrierUsage OPTIONAL,
+controllingLegTreatment ControllingLegTreatment OPTIONAL,
+userID UserID OPTIONAL,
+bearerCapability BearerCapability OPTIONAL,
+verticalServiceCode VerticalServiceCode OPTIONAL,
+accessCode AccessCode OPTIONAL,
+displayText DisplayText OPTIONAL,
+notificationDuration NotificationDuration OPTIONAL,
+wakeUpDuration WakeUpDuration OPTIONAL,
+oSIIndicator OSIIndicator OPTIONAL,
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+overflowBillingIndicator OverflowBillingIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE (1..2) OF
+aMALineNumber AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+prefix Prefix OPTIONAL
+}
+--RESULT SEQUENCE {
+--FailureCause OPTIONAL
+--}
+-- LINKED {
+-- originationAttempt
+-- }
+--::= private: 25863
+-- Family Name is "Connection Control (Call Model)"
+  
+
+
+Disconnect ::= OPERATION
+ARGUMENT DisconnectArg
+ERRORS
+{applicationError
+}
+DisconnectArg ::=SEQUENCE {
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE (1..2) OF
+--aMALineNumber AMALineNumber OPTIONAL,
+aMALineNumber  SEQUENCE SIZE (1..2) OF 
+AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE (1..5) OF
+--aMADigitsDialedWC AMADigitsDialedWC OPTIONAL,
+aMADigitsDialedWC SEQUENCE SIZE (1..5) OF
+AMADigitsDialedWC OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL,
+rTPReroutingNumber RTPReroutingNumber OPTIONAL
+}
+
+--::= private: 25859
+-- Family Name is "Connection Control (Call Model)"
+DisconnectLeg ::= OPERATION
+ARGUMENT DisconnectLegArg
+ERRORS
+{applicationError
+}
+DisconnectLegArg ::= SEQUENCE {
+legID LegID,
+csID CsID OPTIONAL,
+passiveLegTreatment PassiveLegTreatment OPTIONAL,
+lampTreatment LampTreatment OPTIONAL,
+displayText DisplayText OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+-- LINKED {
+-- cTRClear,
+-- failureOutcome
+-- }
+--::= private: 25864
+-- Family Name is "Connection Control (Call Model)"
+  
+
+
+ForwardCall ::= OPERATION
+ARGUMENT ForwardCallArg
+ERRORS
+{applicationError
+}
+ForwardCallArg ::= SEQUENCE {
+callingPartyID CallingPartyID OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+calledPartyID CalledPartyID OPTIONAL,
+outpulseNumber OutpulseNumber OPTIONAL,
+tcm Tcm OPTIONAL,
+primaryTrunkGroup PrimaryTrunkGroup OPTIONAL,
+alternateTrunkGroup AlternateTrunkGroup OPTIONAL,
+secondAlternateTrunkGroup SecondAlternateTrunkGroup OPTIONAL,
+carrier Carrier OPTIONAL,
+alternateCarrier AlternateCarrier OPTIONAL,
+secondAlternateCarrier SecondAlternateCarrier OPTIONAL,
+passiveLegTreatment PassiveLegTreatment OPTIONAL,
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+alternateBillingIndicator AlternateBillingIndicator OPTIONAL,
+secondAlternateBillingIndicator SecondAlternateBillingIndicator OPTIONAL,
+overflowBillingIndicator OverflowBillingIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE (1..2) OF
+--aMALineNumber AMALineNumber OPTIONAL,
+aMALineNumber  SEQUENCE SIZE (1..2) OF 
+AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE (1..5) OF
+--aMADigitsDialedWC AMADigitsDialedWC OPTIONAL,
+aMADigitsDialedWC SEQUENCE SIZE (1..5) OF
+AMADigitsDialedWC OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+redirectionInformation RedirectionInformation OPTIONAL,
+carrierUsage CarrierUsage OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL,
+prefix Prefix OPTIONAL,
+applyRestrictions ApplyRestrictions OPTIONAL,
+displayText DisplayText OPTIONAL,
+genericName GenericName OPTIONAL
+}
+
+--::= private: 27137
+-- Family Name is "Connectivity Control"
+  
+
+
+MergeCall ::= OPERATION
+ARGUMENT MergeCallArg
+ERRORS
+{applicationError
+}
+MergeCallArg ::= SEQUENCE {
+displayText DisplayText OPTIONAL,
+lampTreatment LampTreatment OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE (1..2) OF
+aMALineNumber AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE (1..5) OF
+aMADigitsDialedWC AMADigitsDialedWC OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+-- LINKED {
+-- cTRClear,
+-- failureOutcome,
+-- successOutcome
+-- }
+--::= private: 25865
+-- Family Name is "Connection Control (Call Model)"
+  
+
+
+MoveLeg ::=OPERATION
+ARGUMENT MoveLegArg
+ERRORS
+{applicationError
+}
+MoveLegArg ::= SEQUENCE {
+displayText DisplayText OPTIONAL,
+lampTreatment LampTreatment OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+-- LINKED {
+-- cTRClear,
+-- failureOutcome,
+-- successOutcome
+-- }
+--::= private: 25866
+-- Family Name is "Connection Control (Call Model)"
+OfferCall ::= OPERATION
+ARGUMENT OfferCallArg
+ERRORS
+{applicationError
+}
+OfferCallArg ::= SEQUENCE {
+callingPartyID CallingPartyID OPTIONAL,
+controllingLegTreatment ControllingLegTreatment OPTIONAL,
+displayText DisplayText OPTIONAL,
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE (1..2) OF
+aMALineNumber AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE (1..5) OF
+aMADigitsDialedWC AMADigitsDialedWC OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL,
+genericName GenericName OPTIONAL
+}
+
+--::= private: 25860
+-- Family Name is "Connection Control (Call Model)"
+  
+
+
+OriginateCall ::= OPERATION
+ARGUMENT OriginateCallArg
+ERRORS
+{applicationError
+}
+OriginateCallArg ::= SEQUENCE {
+collectedDigits CollectedDigits OPTIONAL,
+dPConverter DPConverter OPTIONAL,
+alternateDialingPlanInd AlternateDialingPlanInd OPTIONAL,
+callingPartyID CallingPartyID OPTIONAL,
+lampTreatment LampTreatment OPTIONAL,
+controllingLegTreatment ControllingLegTreatment OPTIONAL,
+displayText DisplayText OPTIONAL,
+bearerCapability BearerCapability OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+calledPartyID CalledPartyID OPTIONAL,
+outpulseNumber OutpulseNumber OPTIONAL,
+tcm Tcm OPTIONAL,
+primaryTrunkGroup PrimaryTrunkGroup OPTIONAL,
+alternateTrunkGroup AlternateTrunkGroup OPTIONAL,
+secondAlternateTrunkGroup SecondAlternateTrunkGroup OPTIONAL,
+carrier Carrier OPTIONAL,
+alternateCarrier AlternateCarrier OPTIONAL,
+secondAlternateCarrier SecondAlternateCarrier OPTIONAL,
+passiveLegTreatment PassiveLegTreatment OPTIONAL,
+redirectingPartyID RedirectingPartyID OPTIONAL,
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+alternateBillingIndicator AlternateBillingIndicator OPTIONAL,
+secondAlternateBillingIndicator SecondAlternateBillingIndicator OPTIONAL,
+overflowBillingIndicator OverflowBillingIndicator OPTIONAL,
+genericAddressList GenericAddressList OPTIONAL,
+forwardCallIndicator ForwardCallIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE (1..2) OF
+--aMALineNumber AMALineNumber OPTIONAL,
+aMALineNumber  SEQUENCE SIZE (1..2) OF 
+AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE (1..5) OF
+--aMADigitsDialedWC AMADigitsDialedWC OPTIONAL,
+aMADigitsDialedWC SEQUENCE SIZE (1..5) OF
+AMADigitsDialedWC OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+carrierUsage CarrierUsage OPTIONAL,
+networkSpecificFacilities NetworkSpecificFacilities OPTIONAL,
+callingPartyBGID CallingPartyBGID OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+  
+
+
+
+-- LINKED {
+-- failureOutcome
+-- }
+--::= private: 25867
+-- Family Name is "Connection Control (Call Model)"
+  
+
+
+Reconnect ::= OPERATION
+ARGUMENT ReconnectArg
+ERRORS
+{applicationError
+} 
+ReconnectArg ::= SEQUENCE {
+notificationDuration NotificationDuration OPTIONAL,
+controllingLegTreatment ControllingLegTreatment OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+--::= private: 25870
+-- Family Name is "Connection Control (Call Model)"
+  
+
+
+SendToResource ::= OPERATION
+ARGUMENT SendToResourceArg
+ERRORS
+{applicationError
+}
+SendToResourceArg ::= SEQUENCE {
+resourceType ResourceType,
+strParameterBlock StrParameterBlock,
+disconnectFlag DisconnectFlag OPTIONAL,
+answerIndicator AnswerIndicator OPTIONAL,
+primaryBillingIndicator PrimaryBillingIndicator OPTIONAL,
+aMAAlternateBillingNumber AMAAlternateBillingNumber OPTIONAL,
+aMABusinessCustomerID AMABusinessCustomerID OPTIONAL,
+--SEQUENCE SIZE(1..2) OF
+--aMALineNumber AMALineNumber OPTIONAL,
+aMALineNumber  SEQUENCE SIZE (1..2) OF 
+AMALineNumber OPTIONAL,
+aMAslpID AMAslpID OPTIONAL,
+--SEQUENCE SIZE(1..5) OF
+--aMADigitsDialedWC AMADigitsDialedWC OPTIONAL,
+aMADigitsDialedWC SEQUENCE SIZE (1..5) OF
+AMADigitsDialedWC OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+destinationAddress DestinationAddress OPTIONAL,
+dPConverter DPConverter OPTIONAL,
+aMAMeasure AMAMeasure OPTIONAL,
+serviceProviderID ServiceProviderID OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+aMABillingFeature AMABillingFeature OPTIONAL,
+aMASequenceNumber AMASequenceNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+aMAServiceProviderID AMAServiceProviderID OPTIONAL,
+extendedRinging ExtendedRinging OPTIONAL,
+carrier Carrier OPTIONAL,
+alternateCarrier AlternateCarrier OPTIONAL,
+secondAlternateCarrier SecondAlternateCarrier OPTIONAL,
+carrierUsage CarrierUsage OPTIONAL,
+chargeNumber ChargeNumber OPTIONAL,
+chargePartyStationType ChargePartyStationType OPTIONAL,
+tSTRCTimer TSTRCTimer OPTIONAL,
+partyID PartyID OPTIONAL,
+partyOnHold PartyOnHold OPTIONAL,
+calledPartyID CalledPartyID OPTIONAL
+}
+--RESULT SEQUENCE {
+--ExtensionParameter OPTIONAL
+--}
+
+-- LINKED {
+-- resourceClear,
+-- callInfoFromResource
+-- }
+--::= private: 26113
+-- Family Name is "Caller Interaction"
+
+SetTimer ::= OPERATION
+ARGUMENT SetTimerArg
+ERRORS
+{applicationError
+}
+SetTimerArg ::= SEQUENCE {
+sSPResponseMessageTimerT1 SSPResponseMessageTimerT1 OPTIONAL
+}
+--RESULT { TimerUpdated
+--}
+
+--::= private: 26889 (Class 1)
+-- Family Name is "Information Revision"
+SplitLeg ::= OPERATION
+ARGUMENT SplitLegArg
+ERRORS
+{applicationError
+}
+SplitLegArg ::= SEQUENCE {
+legID LegID,
+displayText DisplayText OPTIONAL,
+lampTreatment LampTreatment OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+-- LINKED {
+-- cTRClear,
+-- failureOutcome,
+-- successOutcome
+-- }
+--::= private: 25868
+-- Family Name is "Connection Control (Call Model)"
+Acg ::= OPERATION
+ARGUMENT AcgArg
+ERRORS
+{applicationError
+}
+AcgArg ::= SEQUENCE {
+controlCauseIndicator ControlCauseIndicator,
+gapDuration GapDuration,
+gapInterval GapInterval,
+translationType TranslationType,
+globalTitleAddress GlobalTitleAddress,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+--::= private: 26881
+-- Family Name is "Network Management"
+  
+
+
+AcgGlobalCtrlRestore ::= OPERATION
+ARGUMENT AcgGlobalCtrlRestoreArg
+ERRORS
+{applicationError
+}
+AcgGlobalCtrlRestoreArg ::= SEQUENCE {
+aCGGlobalOverride ACGGlobalOverride,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--RESULT SEQUENCE{
+--ExtensionParameter OPTIONAL
+--}
+
+--::= private: 26883
+-- Family Name is "Network Management"
+AcgOverflow ::= OPERATION
+ARGUMENT AcgOverflowArg
+AcgOverflowArg ::= SEQUENCE {
+controlCauseIndicator ControlCauseIndicator,
+translationType TranslationType,
+globalTitleAddress GlobalTitleAddress,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--::= private: 26884
+-- Family Name is ôNetwork Managementö
+ActivityTest ::= OPERATION
+ARGUMENT ActivityTestArg
+ERRORS
+{applicationError
+}
+ActivityTestArg ::= SEQUENCE {
+transID TransID,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--RESULT SEQUENCE {
+--ActResult
+--}
+
+--::= private: 26886
+-- Family Name is ôNetwork Managementö
+
+CallTypeRequest ::= OPERATION
+ARGUMENT CallTypeRequestArg
+ERRORS
+{applicationError,
+faultReport
+}
+CallTypeRequestArg ::= SEQUENCE {
+calledPartyID CalledPartyID,
+callingPartyID CallingPartyID,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--RESULT SEQUENCE {
+--CallType,
+--ExtensionParameter OPTIONAL
+--}
+
+--::= private: 26887
+-- Family Name is ôInformation Revisionö
+ControlRequest ::= OPERATION
+ARGUMENT ControlRequestArg
+ControlRequestArg ::= SEQUENCE {
+congestionLevel CongestionLevel OPTIONAL,
+gapInterval GapInterval OPTIONAL,
+translationType TranslationType OPTIONAL,
+globalTitleAddress GlobalTitleAddress OPTIONAL,
+signalingPointCode SignalingPointCode OPTIONAL,
+subsystemNumber SubsystemNumber OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--::= private: 26885
+-- Family Name is ôNetwork Managementö
+  
+
+
+EchoRequest ::= OPERATION
+ARGUMENT EchoRequestArg
+ERRORS
+{applicationError
+}
+EchoRequestArg ::= SEQUENCE {
+applicationIndicator ApplicationIndicator OPTIONAL,
+serviceContext ServiceContext OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--RESULT SEQUENCE {
+--FailureCause OPTIONAL,
+--ExtensionParameter OPTIONAL
+--}
+
+--::= private: 26882
+-- Family Name is ôNetwork Managementö
+FurnishAMAInformation ::= OPERATION
+ARGUMENT FurnishAMAInformationArg
+ERRORS
+{applicationError
+}
+FurnishAMAInformationArg ::= SEQUENCE {
+aMABAFModules AMABAFModules OPTIONAL,
+aMASetHexABIndicator AMASetHexABIndicator OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+--::= private: 27649
+-- Family Name is ôAMAö
+MonitorForChange ::= OPERATION
+ARGUMENT MonitorForChangeArg
+ERRORS
+{applicationError
+}
+MonitorForChangeArg ::= SEQUENCE {
+facilityStatus FacilityStatus,
+monitorTime MonitorTime,
+calledPartyID CalledPartyID OPTIONAL,
+facilityGID FacilityGID OPTIONAL,
+facilityMemberID FacilityMemberID OPTIONAL,
+bearerCapability BearerCapability OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+controlEncountered ControlEncountered OPTIONAL
+}
+
+--LINKED {
+--monitorSuccess,
+--statusReported
+-- }
+--::= private: 26369
+-- Family Name is "Status Notification"
+
+MonitorSuccess ::= OPERATION
+ARGUMENT MonitorSuccessArg
+ERRORS
+{applicationError,
+failureReport
+}
+MonitorSuccessArg ::= SEQUENCE{
+facilityStatus FacilityStatus,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+--::= private: 26371
+-- Family Name is "Status Notification"
+NCAData ::= OPERATION
+ARGUMENT NCADataArg
+NCADataArg ::= SEQUENCE {
+nCAData CHOICE {
+calledPartyID CalledPartyID,
+srhrGroupID SrhrGroupID
+},
+callingPartyID CallingPartyID,
+envelopeEncodingAuthority EnvelopeEncodingAuthority,
+envelopContent EnvelopContent,
+securityEnvelope SecurityEnvelope OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+controlEncountered ControlEncountered OPTIONAL
+}
+--::= private: 27394
+-- Family Name is "NCA Signaling"
+  
+
+
+NCARequest ::= OPERATION
+ARGUMENT NCARequestArg
+ERRORS
+{applicationError,
+failureReport
+}
+NCARequestArg ::= SEQUENCE {
+calledPartyID CalledPartyID,
+callingPartyID CallingPartyID,
+envelopeEncodingAuthority EnvelopeEncodingAuthority,
+envelopContent EnvelopContent,
+securityEnvelope SecurityEnvelope OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+aCGEncountered ACGEncountered OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+controlEncountered ControlEncountered OPTIONAL
+}
+--RESULT SEQUENCE {
+--EnvelopeEncodingAuthority,
+--EnvelopContent,
+--SecurityEnvelope OPTIONAL,
+--Amp1 OPTIONAL,
+--amp2 Amp2 OPTIONAL,
+--ExtensionParameter OPTIONAL
+--}
+
+--::= private: 27393
+-- Family Name is "NCA Signaling"
+QueryRequest ::= OPERATION
+ARGUMENT QueryRequestArg
+ERRORS
+{applicationError,
+failureReport
+}
+QueryRequestArg ::= SEQUENCE {
+userID UserID OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+controlEncountered ControlEncountered OPTIONAL,
+provideInfo ProvideInfo OPTIONAL
+}
+--RESULT SEQUENCE {
+--Amp1 OPTIONAL,
+--Amp2 OPTIONAL,
+--ExtensionParameter OPTIONAL,
+--InfoProvided OPTIONAL
+--}
+
+--::= private: 26626
+-- Family Name is ôInformation Revisionö
+
+RequestReportBCMEvent ::= OPERATION
+ARGUMENT RequestReportBCMEventArg
+ERRORS
+{applicationError
+}
+RequestReportBCMEventArg ::= SEQUENCE {
+eDPRequest EDPRequest OPTIONAL,
+eDPNotification EDPNotification OPTIONAL,
+oNoAnswerTimer ONoAnswerTimer OPTIONAL,
+tNoAnswerTimer TNoAnswerTimer OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+timeoutTimer TimeoutTimer OPTIONAL,
+oDTMFDigitString ODTMFDigitString OPTIONAL,
+oDTMFNumberOfDigits ODTMFNumberOfDigits OPTIONAL,
+tDTMFDigitString TDTMFDigitString OPTIONAL,
+tDTMFNumberOfDigits TDTMFNumberOfDigits OPTIONAL
+}
+
+--::= private: 27905
+-- Family Name is "Request Event"
+SendNotification ::= OPERATION
+ARGUMENT SendNotificationArg
+ERRORS
+{applicationError
+}
+SendNotificationArg ::= SEQUENCE{
+echoData EchoData,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+--::= private: 26373
+-- Family Name is "Status Notification"
+StatusReported ::= OPERATION
+ARGUMENT StatusReportedArg
+ERRORS
+{applicationError
+}
+StatusReportedArg ::= SEQUENCE{
+facilityStatus FacilityStatus OPTIONAL,
+statusCause StatusCause OPTIONAL,
+failureCause FailureCause OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+
+--::= private: 26370
+-- Family Name is "Status Notification"
+  
+
+
+TerminationNotification ::= OPERATION
+ARGUMENT TerminationNotificationArg
+TerminationNotificationArg ::= SEQUENCE {
+echoData EchoData,
+terminationIndicator TerminationIndicator,
+connectTime ConnectTime OPTIONAL,
+busyCause BusyCause OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--::= private: 26372
+-- Family Name is "Status Notification"
+Update ::= OPERATION
+ARGUMENT  UpdateArg
+ERRORS
+{applicationError,
+failureReport
+}
+UpdateArg ::=SEQUENCE {
+administrableObject AdministrableObject,
+editListType EditListType OPTIONAL,
+amp1 Amp1 OPTIONAL,
+amp2 Amp2 OPTIONAL,
+extensionParameter ExtensionParameter OPTIONAL,
+controlEncountered ControlEncountered OPTIONAL,
+aMAslpID AMAslpID OPTIONAL
+}
+--RESULT SEQUENCE {
+--Amp1 OPTIONAL,
+--Amp2 OPTIONAL,
+--ExtensionParameter OPTIONAL,
+--ResultCause OPTIONAL
+--}
+
+--::= private: 26627
+-- Family Name is "Information Revision"
+UpdateRequest ::= OPERATION
+ARGUMENT UpdateRequestArg
+ERRORS
+{applicationError
+}
+UpdateRequestArg ::= SEQUENCE {
+userID UserID,
+triggerCriteriaFlag TriggerCriteriaFlag OPTIONAL,
+bearerCapability BearerCapability OPTIONAL,
+controlEncountered ControlEncountered OPTIONAL,
+failureCause FailureCause OPTIONAL
+}
+--RESULT SEQUENCE {
+--FailureCause OPTIONAL
+--}
+
+--::= private: 26625
+-- Family Name is "Information Revision"
+
+ReportError ::= OPERATION
+ARGUMENT ReportErrorArg
+ReportErrorArg ::= SEQUENCE {
+applicationErrorString ApplicationErrorString,
+extensionParameter ExtensionParameter OPTIONAL
+}
+--::= private: 28417
+-- Family Name is "Abnormal"
+END

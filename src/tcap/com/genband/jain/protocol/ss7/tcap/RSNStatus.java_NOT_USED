@@ -1,0 +1,44 @@
+package com.genband.jain.protocol.ss7.tcap;
+
+import jain.protocol.ss7.SccpUserAddress;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RSNStatus implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4065197508225388435L;
+
+	private List<SccpUserAddress> suaList = new ArrayList<SccpUserAddress>();
+	
+	public Status status ;
+
+	public List<SccpUserAddress> getSuaList() {
+		return suaList;
+	}
+
+	public void setSuaList(List<SccpUserAddress> suaList) {
+		this.suaList = suaList;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	} 
+	
+	
+		
+}
+
+enum Status  
+{ 
+	IN_PROGRESS, UNREACHABLE, COMPLETED
+}
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sas-resource
+   PUBLIC "-//Baypackets SIP Application Server//DTD SAS Resource Descriptor//EN"
+   "Enum://www.baypackets.com/dtd/sas-resource.dtd">
+<sas-resource>
+	<name>enum-ra</name>
+	<version>1.0</version>
+	<protocol>enum</protocol>
+	<resource-adaptor-class>com.baypackets.ase.ra.enumserver.EnumResourceAdaptorImpl</resource-adaptor-class>
+	<resource-factory-class>com.baypackets.ase.ra.enumserver.EnumResourceFactoryImpl</resource-factory-class>
+	<message-factory-class>com.baypackets.ase.ra.enumserver.message.EnumMessageFactoryImpl</message-factory-class>
+	<session-factory-class>com.baypackets.ase.ra.enumserver.session.EnumResourceSessionFactory</session-factory-class>
+	<measurement-config-file>MeasurementConfig.xml</measurement-config-file>
+</sas-resource>

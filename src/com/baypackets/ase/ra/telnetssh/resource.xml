@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sas-resource
+   PUBLIC "-//Baypackets SIP Application Server//DTD SAS Resource Descriptor//EN"
+   "http://www.baypackets.com/dtd/sas-resource.dtd">
+<sas-resource>
+	<name>telnetssh-ra</name>
+	<version>1.0</version>
+	<protocol>telnetssh</protocol>
+	<resource-adaptor-class>com.baypackets.ase.ra.telnetssh.LsResourceAdaptorImpl</resource-adaptor-class>
+	<resource-factory-class>com.baypackets.ase.ra.telnetssh.LsResourceFactoryImpl</resource-factory-class>
+	<message-factory-class>com.baypackets.ase.ra.telnetssh.message.LsMessageFactoryImpl</message-factory-class>
+	<session-factory-class>com.baypackets.ase.ra.telnetssh.session.LsResourceSessionFactory</session-factory-class>
+	<measurement-config-file>MeasurementConfig.xml</measurement-config-file>
+	<!--
+	<threshold-config-file>ThresholdConfig.xml</threshold-config-file>
+	<listener-proxy-config>
+		<event-type>CONNECTED</event-type>
+		<proxy-class>com.baypackets.sasresource.SampleListenerProxy</proxy-class>
+		<listener-class>com.baypackets.sasresource.ConnectionListener</listener-class>
+	</listener-proxy-config>
+	-->
+</sas-resource>

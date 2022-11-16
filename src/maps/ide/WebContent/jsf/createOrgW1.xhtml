@@ -1,0 +1,333 @@
+ 
+<div
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:pfc="http://www.jboss.com/portal/facelet/common"
+   xmlns:c="http://java.sun.com/jstl/core">
+	
+   <!-- <f:loadBundle basename="bundle.resources" var="bundle"/> -->
+   <f:view locale="#{facesContext.externalContext.request.locale}">
+	
+<h:form>
+	<table width="100%">
+   		<tbody>
+			<tr class="portlet-section-alternate">
+				<th colspan="2" style="color:white; background:#869286">
+					<h:outputText  value="#{bundle.D270_Organization_Group_BAR1}"/>
+				</th>
+			</tr>  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D270_Organization_CustomerId}
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+							<h:inputText id="D270_Organization_CustomerId" value="#{createMBean270.customerId}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D270_Organization_CustomerId" value="#{createMBean270.customerId}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D270_Organization_CustomerId"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean270.mode == "1" || createMBean270.mode == "0"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D270_Organization_Name}
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+							<h:inputText id="D270_Organization_Name" value="#{createMBean270.name}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:when test='${createMBean270.mode == "1"}'>
+							<h:inputText id="D270_Organization_Name" value="#{createMBean270.name}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D270_Organization_Name" value="#{createMBean270.name}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D270_Organization_Name"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D270_Organization_DisplayName}
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+							<h:inputText id="D270_Organization_DisplayName" value="#{createMBean270.displayName}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D270_Organization_DisplayName" value="#{createMBean270.displayName}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D270_Organization_DisplayName"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean270.mode == "1" || createMBean270.mode == "0"}'>
+            				<h:outputText value="*" style="color:red"/>
+            				</c:when>
+            			</c:choose>
+            		#{bundle.D270_Organization_DomainName}
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+							<h:inputText id="D270_Organization_DomainName" value="#{createMBean270.domainName}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:when test='${createMBean270.mode == "1"}'>
+							<h:inputText id="D270_Organization_DomainName" value="#{createMBean270.domainName}" styleClass="portlet-form-input-field" required="true">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D270_Organization_DomainName" value="#{createMBean270.domainName}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D270_Organization_DomainName"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D270_Organization_Description}
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+							<h:inputText id="D270_Organization_Description" value="#{createMBean270.description}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D270_Organization_Description" value="#{createMBean270.description}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D270_Organization_Description"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean270.mode == "1" || createMBean270.mode == "0"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D270_Organization_ActivationDate}
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+							<h:inputText id="D270_Organization_ActivationDate" value="#{createMBean270.activationDate}" styleClass="portlet-form-input-field" required="true">
+								<f:convertDateTime dateStyle="short"/>
+							</h:inputText>
+							<h:outputText value="Ex : 1/3/05 (MM/DD/YY)"/>            		
+						</c:when>
+						<c:when test='${createMBean270.mode == "1"}'>
+							<h:inputText id="D270_Organization_ActivationDate" value="#{createMBean270.activationDate}" styleClass="portlet-form-input-field" required="true">
+								<f:convertDateTime dateStyle="short"/>
+							</h:inputText>
+							<h:outputText value="Ex : 1/3/05 (MM/DD/YY)"/>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D270_Organization_ActivationDate" value="#{createMBean270.activationDate}">
+								<f:convertDateTime dateStyle="short"/>
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D270_Organization_ActivationDate"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean270.mode == "1" || createMBean270.mode == "0"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D270_Organization_ExpirationDate}
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+							<h:inputText id="D270_Organization_ExpirationDate" value="#{createMBean270.expirationDate}" styleClass="portlet-form-input-field" required="true">
+								<f:convertDateTime dateStyle="short"/>
+							</h:inputText>
+							<h:outputText value="Ex : 1/3/05 (MM/DD/YY)"/>            		
+						</c:when>
+						<c:when test='${createMBean270.mode == "1"}'>
+							<h:inputText id="D270_Organization_ExpirationDate" value="#{createMBean270.expirationDate}" styleClass="portlet-form-input-field" required="true">
+								<f:convertDateTime dateStyle="short"/>
+							</h:inputText>
+							<h:outputText value="Ex : 1/3/05 (MM/DD/YY)"/>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D270_Organization_ExpirationDate" value="#{createMBean270.expirationDate}">
+								<f:convertDateTime dateStyle="short"/>
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D270_Organization_ExpirationDate"/>
+	    	</td>
+         	</tr>
+  			
+   			<c:choose>
+				<c:when test='${createMBean270.mode == "2"}'>
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D270_Organization_LastUpdated}
+            	</td>
+            	<td width="80%">
+	     			
+							<h:outputText id="D270_Organization_LastUpdated" value="#{createMBean270.lastUpdated}">
+								<f:convertDateTime dateStyle="short"/>
+							</h:outputText>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D270_Organization_LastUpdated"/>
+	    	</td>
+         	</tr>
+				</c:when>
+	    	</c:choose>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		#{bundle.D270_Organization_Timezone}
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+							<h:inputText id="D270_Organization_Timezone" value="#{createMBean270.timezone}" styleClass="portlet-form-input-field">
+							</h:inputText>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D270_Organization_Timezone" value="#{createMBean270.timezone}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D270_Organization_Timezone"/>
+	    	</td>
+         	</tr>
+  			
+   			
+   			<tr class="portlet-section-body">
+            	<td width="20%">
+            		<c:choose>
+						<c:when test='${createMBean270.mode == "1" || createMBean270.mode == "0"}'>
+            				<h:outputText value="*" style="color:red"/>
+            			</c:when>
+            		</c:choose>
+            		#{bundle.D270_Organization_Status}
+            	</td>
+            	<td width="80%">
+	     			<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+							<h:selectOneRadio id="D270_Organization_Status" value="#{createMBean270.status}" styleClass="portlet-form-input-field" required="true">
+								<f:selectItems value="#{createMBean270.bstatusTV}"/>
+							</h:selectOneRadio>            		
+						</c:when>
+						<c:when test='${createMBean270.mode == "1"}'>
+							<h:selectOneRadio id="D270_Organization_Status" value="#{createMBean270.status}" styleClass="portlet-form-input-field" required="true">
+								<f:selectItems value="#{createMBean270.bstatusTV}"/>
+							</h:selectOneRadio>            		
+						</c:when>
+						<c:otherwise>
+							<h:outputText id="D270_Organization_Status" value="#{createMBean270.bstatusTV[createMBean270.selectedStatus].label}">
+							</h:outputText>
+						</c:otherwise>
+	    		</c:choose>
+	    		<h:outputText value=" "/>
+	    		<h:message style="color: red" for="D270_Organization_Status"/>
+	    	</td>
+         	</tr>
+         		
+         	<tr/>
+         	
+         	<tr class="portlet-section-body">
+      		      <td align="right" colspan="4">
+     		          <h:panelGroup> 				
+						<h:commandButton style="height:21px; width:51px" id="PREVIOUS" action="#{createMBean270.previousPage}" disabled="true" value="Back">
+						</h:commandButton>
+						<c:choose>
+							<c:when test='${createMBean270.mode == "1"}'>
+								<h:commandButton style="height:21px; width:51px" id="NEXT" action="#{createMBean270.nextPage}" value="Next" disabled="true">
+								</h:commandButton>
+							</c:when>
+							<c:otherwise>
+								<h:commandButton style="height:21px; width:51px" id="NEXT" action="#{createMBean270.nextPage}" value="Next">
+								</h:commandButton>
+							</c:otherwise>
+						</c:choose>
+	     			  </h:panelGroup>
+				<h:panelGroup> 
+					<c:choose>
+						<c:when test='${createMBean270.mode == "0"}'>
+							<h:commandButton style="height:21px; width:51px" action="viewDetails" actionListener="#{createMBean270.saveAction}" value="#{bundle.Save}" disabled="true"/>
+						</c:when>
+						<c:when test='${createMBean270.mode == "1"}'>
+							<h:commandButton style="height:21px; width:51px" action="viewDetails" actionListener="#{createMBean270.saveAction}" value="#{bundle.Save}"/>
+						</c:when>
+					</c:choose>
+					<c:choose>
+						<c:when test='${createMBean270.mode != "2"}'>
+							<h:commandButton style="height:21px; width:51px" action="#{createMBean270.cancelAction}" value="#{bundle.Cancel}" immediate="true"/>
+						</c:when>
+						<c:otherwise>
+							<h:commandButton style="height:21px; width:51px" action="list" value="#{bundle.Ok}"/>
+						</c:otherwise>
+					</c:choose>
+	      		 </h:panelGroup>
+            </td>
+        	</tr>
+   		
+   		</tbody>
+   	</table>
+</h:form>
+</f:view> 
+</div>

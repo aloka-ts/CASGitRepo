@@ -1,0 +1,26 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="telnetSshRa.raConfigBean"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="ignoreUnresolvablePlaceholders">
+			<value>true</value>
+		</property>
+
+		<property name="locations">
+			<list>
+				<value>
+					classpath://telnetsshra.properties
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- RA Property -->
+	<bean id="lsRaProperties"
+		class="com.baypackets.ase.ra.telnetssh.utils.RaProperties">
+		<property name="deQueueThreadLoadFactor" value="${telnetssh.dequethreadloadfactor}" />
+	</bean>
+</beans>

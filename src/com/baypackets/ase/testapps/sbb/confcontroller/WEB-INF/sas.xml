@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ * Copyright Notice ============================================*
+ * This file contains proprietary information of BayPackets, Inc.
+ * Copying or reproduction without prior written approval is prohibited.
+ * Copyright (c) 2004-2006 =====================================
+ */
+-->
+
+<!DOCTYPE sas-app
+   PUBLIC "-//Baypackets SIP Application Server//DTD SAS Descriptor//EN"
+   "http://www.baypackets.com/dtd/sas-app_1_0.dtd">
+
+<sas-app>
+
+	<name>900</name>
+	<version>1.0</version>
+	<priority>1</priority>	
+<sbb/>
+	<replication-config>		
+		<replication-policy>
+			<event>TIMER_CREATION</event>
+			<replication-type>REPLICATE</replication-type>
+		</replication-policy>
+		<replication-policy>
+			<event>TIMER_EXPIRY</event>
+			<replication-type>REPLICATE</replication-type>
+		</replication-policy>		
+	</replication-config>
+</sas-app>

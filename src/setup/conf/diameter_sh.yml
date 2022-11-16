@@ -1,0 +1,15 @@
+is-stateless: "false"
+local-realm: serverRealm
+local.fqdn: cas00fip.agnity.com
+local.client.fqdn: cas00fip.agnity.com
+listen-points: "aaa://cas00fip.agnity.com:3868;transport=sctp,aaa://cas00fip.agnity.com:3869;transport=sctp"
+service.context.id: exampleContext@agnity.com
+local-client-realm: casClientRealm
+#destination-realm: remoteRealm,remoteRealm1
+#remote.peer.routes: "priority=1;remoteRealm;aaa://cas00fip.agnity.com:3866"
+
+enable.sctp.multihoming: "false"
+initiate.route.connection: "true"
+local.client.sctp.ip.list: ""
+destination-realm: serverRealm
+remote.peer.routes: "priority=1;serverRealm;aaa://cas00fip.agnity.com:3868;transport=sctp"

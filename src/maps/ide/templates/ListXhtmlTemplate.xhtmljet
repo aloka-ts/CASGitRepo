@@ -1,0 +1,918 @@
+<%@ jet 
+	package="com.genband.m5.maps.ide.model.template" 
+	class="ListXhtml" 
+	imports="com.genband.m5.maps.common.CPFConstants 
+			 com.genband.m5.maps.ide.CPFPlugin
+			 com.genband.m5.maps.ide.model.* 
+			 java.util.* 
+			 java.util.List 
+			 com.genband.m5.maps.ide.model.util.*"
+%> 
+<%
+	CPFPlugin LOG = CPFPlugin.getDefault();
+	CPFResource CPFArgument = (CPFResource)argument; 
+ 	CPFScreen cpfScreen = (CPFScreen)CPFArgument.getCpfScreen();
+ 	ResourceInfo resourceInfo = (ResourceInfo)CPFArgument.getResourceInfo();
+ 	String resourceName = resourceInfo.getResourceName();
+ 	LOG.info("Generating list XHTML for : " + resourceName);
+ 	ModelEntity modelEntity = null;
+ 	modelEntity = (ModelEntity)cpfScreen.getBaseEntity();
+ 	ModelEntity baseEntity = cpfScreen.getPortletRef().getBaseEntity();
+ 	List<CPFAttribute> selectedAttributes = null;					
+ 	Integer operationId = cpfScreen.getPortletRef().getPortletId();		//Holds Operation Id of the method
+ 	LOG.info("Generating this for portlet Id : " + operationId);
+	Map<RelationKey, List<CPFAttribute>> nestedAttributes = cpfScreen.getNestedAttributes();
+	List<CPFConstants.OperationType> actionsSupported  = cpfScreen.getActionsSupported ();
+	List<Boolean> nestedLink = new ArrayList<Boolean>();
+	Map<RelationKey, String> nestedLinkNames = new HashMap<RelationKey, String>();
+	Map<Integer, String> nestedMBeanNames = new HashMap<Integer, String>();		//Holds MBean Names for linking Page and thier Actions in case of OneToMany relation
+	List<String> headerNames = new ArrayList<String>();
+	
+	List<String> formatTag = new ArrayList<String>();		//Holds the JSF code for format tags Null If there is no format selected
+	List<String> conversionTag = new ArrayList<String>();	//Holds the tag for conversion in search panel 
+	
+	List<String> sortValues = null;				//Holds sortBy param values to submit managed bean for sorting as well as for validation in case of Search
+	Map<Integer, Integer> positionMap = new HashMap<Integer, Integer>();	//Holds map between position on html page and position here in the list created..
+		//Map<Integer, Integer> == Map<HTMLPos, currentListPos>
+	Map<Integer, Integer> criteriaPos = new HashMap<Integer, Integer>();
+		//Map<Integer, Integer> == Map<HTMLPos, position in Criteria fields>
+	
+	String listMBeanName = new String("listMBean");	//Holds MBean name for Listing Page
+	
+	String mainPropertyName = null;
+	
+	if(CPFArgument.getOperationId() > 0) {
+		listMBeanName = listMBeanName.concat(operationId.toString());
+		//listMBeanName = listMBeanName.concat("nested" + CPFArgument.getOperationId());
+		//listMBeanName = listMBeanName.concat("nested" + CPFArgument.getOperationId());
+		listMBeanName = listMBeanName.concat("nested" + CPFArgument.getClassName());
+		
+		CPFScreen baseScreen = cpfScreen.getPortletRef().getListScreen();
+ 		Map<RelationKey, CPFScreen> nestedJsp = baseScreen.getNestedJspNames();
+ 		Iterator<RelationKey> itrRelationKey = nestedJsp.keySet().iterator();
+ 		while(itrRelationKey.hasNext()) {
+ 			RelationKey relKey = itrRelationKey.next();
+ 			CPFScreen thisCpfScreen = nestedJsp.get(relKey);
+ 			if(thisCpfScreen.getJspName().equals(cpfScreen.getJspName())) {
+ 				mainPropertyName = new String(relKey.getRelationShipInfo().getPropertyName());
+ 				LOG.info("The resource is not Base Entity and its property name in Base entiy is : "
+ 							+ mainPropertyName);
+ 				break;
+ 			}
+ 		}
+	} else {
+		listMBeanName = listMBeanName.concat(operationId.toString());
+	}
+	String createMBeanName = new String("createMBean"); 				//Holds MBean name for Details Page
+	createMBeanName = createMBeanName.concat(operationId.toString());
+		//getting selected attribtues for current resource name	
+ 	selectedAttributes = cpfScreen.getSelectedAttributes ();
+ 	
+ 	if(cpfScreen.getNestedJspNames() != null) {
+ 		int temp = 1;
+ 		Iterator<RelationKey> itrNestedJspNames = cpfScreen.getNestedJspNames().keySet().iterator();
+ 		//Iterator<RelationKey> itrNestedJspNames = cpfScreen.getNestedAttributes().keySet().iterator();
+ 		while(itrNestedJspNames.hasNext()) {
+ 			RelationKey tempRK = itrNestedJspNames.next();
+ 			/*if(tempRK.getRelationShipInfo().getMapping().equals(CPFConstants.RelationshipType.ManyToOne)
+					|| tempRK.getRelationShipInfo().getMapping().equals(CPFConstants.RelationshipType.OneToOne)) {
+				continue;
+			}*/	//Added on 18th April
+ 			//nestedLinkNames.put(tempRK, "listMBean" + operationId + "nested" + temp++);
+ 			nestedLinkNames.put(tempRK, "listMBean" + operationId + "nested" + tempRK.getRelationShipInfo().getPropertyName());
+ 		}	
+ 	}
+ 	
+ //DOING	process for CPF ATTRIBUTES STARTS HERE............	
+		//In case of Sort action is supported....
+	LOG.info("Started processing selected Attributes to get information about formatType, headerNames etc...");
+	if(actionsSupported.contains(CPFConstants.OperationType.SORT) 
+		|| actionsSupported.contains(CPFConstants.OperationType.SEARCH)) {
+		sortValues = new ArrayList<String>();
+	}
+	Iterator<CPFAttribute> itrSelectedAttributes = selectedAttributes.iterator();
+	int j = 0;
+	int currentListPos = 0;
+	int totalNoOfAttbs = selectedAttributes.size();
+	int cfp = 0;
+	int counterForTest = 0;		//Added on 18th April....
+	while(itrSelectedAttributes.hasNext()) {
+		CPFAttribute cpfAttribute = itrSelectedAttributes.next();
+		LOG.info("X Attb Vis counter : " + counterForTest++);		//Added on 18th Apr
+		nestedLink.add(false);
+		System.out.println("j: " + j++);
+			//Changes for Resource Bundle
+		if(currentListPos == 0) {
+				headerNames.add(null);
+		} else {
+				String tempAttr = cpfAttribute.getLabel().replaceAll(" ", "_");
+				String leftLabel = null;
+				if(CPFArgument.getOperationId() > 0) {
+					leftLabel = new String("L"+operationId+"_"+mainPropertyName+"_"+tempAttr);
+				} else {
+					leftLabel = new String("L"+operationId+"_"+modelEntity.getName()+"_"+tempAttr);
+				}
+				headerNames.add(leftLabel);
+		}
+			//Changes Over
+		//headerNames.add(cpfAttribute.getLabel());
+		LOG.info("find pos : " + cpfAttribute.getPosition());
+		if(CPFArgument.getOperationId() > 0) {	//For nested screen
+			positionMap.put(currentListPos, currentListPos);
+			criteriaPos.put(currentListPos, currentListPos++);
+		} else {	//For base entity screen
+			positionMap.put(cpfAttribute.getPosition(), currentListPos++);
+			criteriaPos.put(cpfAttribute.getPosition(), cfp++);
+		}
+		if(sortValues != null) {
+			String temp = null;
+			if(CPFArgument.getOperationId() > 0 && modelEntity.getName().equals(baseEntity.getName())) {
+				temp = new String(mainPropertyName);
+			} else {
+				temp = new String(modelEntity.getName());
+			}
+			temp = temp.concat(".");
+			temp = temp.concat(cpfAttribute.getModelAttrib().getName());
+			sortValues.add(temp);
+		}
+		if(cpfAttribute.getFormatData() != null 
+			&& !cpfAttribute.getFormatData().getCategory().equals(CPFConstants.FormatType.TEXT)) {
+				CPFConstants.FormatType formatType = cpfAttribute.getFormatData().getCategory();
+				String temp = new String(); 
+				String convTemp = null;
+				if(formatType.equals(CPFConstants.FormatType.NUMERIC) 
+					|| formatType.equals(CPFConstants.FormatType.CURRENCY)
+						|| formatType.equals(CPFConstants.FormatType.INTEGRAL)) {
+						temp = temp.concat("	<f:convertNumber pattern=\"");
+							//14th March....
+						String tempPat = cpfAttribute.getFormatData().getPattern();
+						if(formatType.equals(CPFConstants.FormatType.INTEGRAL) && tempPat.contains(".")) {
+							tempPat = tempPat.substring(0, tempPat.indexOf("."));
+						}
+						temp = temp.concat(tempPat + "\"/>");
+						
+							//Added this for conversion in search panel....
+						if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Long")
+							|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("long")) {
+							convTemp = new String("		<f:converter converterId=\"javax.faces.Long\"/>");
+						} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Integer")
+									|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("int")) {
+							convTemp = new String("		<f:converter converterId=\"javax.faces.Integer\"/>");
+						} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Double") 
+									|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("double")) {
+							convTemp = new String("		<f:converter converterId=\"javax.faces.Double\"/>");
+						} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Float")
+									|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("float")) {
+							convTemp = new String("		<f:converter converterId=\"javax.faces.Float\"/>");
+						} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Boolean")
+									|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("boolean")) {
+							convTemp = new String("		<f:converter converterId=\"javax.faces.Boolean\"/>");
+						} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Byte")
+									|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("byte")) {
+							convTemp = new String("		<f:converter converterId=\"javax.faces.Byte\"/>");
+						} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Character")
+									|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("char")) {
+							convTemp = new String("		<f:converter converterId=\"javax.faces.Character\"/>");
+						} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Short")
+									|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("short")) {
+							convTemp = new String("		<f:converter converterId=\"javax.faces.Short\"/>");
+						}
+						//temp = temp.concat(cpfAttribute.getFormatData().getPattern() + "\"/>");
+				} else {	//Setting for Date Time and Date_Time
+					String tempPat = cpfAttribute.getFormatData().getPattern();
+					if(tempPat.equals("Short") || tempPat.equals("Medium") || tempPat.equals("Long")
+						|| tempPat.equals("Full")) {
+						
+						tempPat = tempPat.toLowerCase().charAt(0) + tempPat.substring(1);
+						if(formatType.equals(CPFConstants.FormatType.DATE)){
+							temp = temp.concat("	<f:convertDateTime ");
+							temp = temp.concat("dateStyle=\"");
+						} else if(formatType.equals(CPFConstants.FormatType.TIME)) {
+								temp = temp.concat("	<f:convertDateTime ");
+								temp = temp.concat("timeStyle=\"");
+						} else {
+								temp = temp.concat("	<f:convertDateTime ");
+								temp = temp.concat("timeStyle=\"" + tempPat + "\" ");
+								temp = temp.concat("dateStyle=\"");
+						}
+					} else {
+						temp = temp.concat("	<f:convertDateTime pattern=\"");
+					}
+					temp = temp.concat(tempPat + "\"/>");
+					convTemp = new String(temp);
+				}
+				if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Boolean")
+									|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("boolean")) {
+					formatTag.add(convTemp);
+				} else {
+					formatTag.add(temp);
+				}
+				conversionTag.add(convTemp);
+		} else {
+			String temp = null;
+			String convTemp = null;
+			if(cpfAttribute.getModelAttrib().getDataType().equals(CPFConstants.AttributeDataType.DATE)){
+				temp = new String("		<f:convertDateTime type=\"date\"/>");
+				convTemp = new String(temp);
+				//formatTag.add(temp);
+			} else if(cpfAttribute.getModelAttrib().getDataType().equals(CPFConstants.AttributeDataType.TIMESTAMP)){
+				if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals(java.sql.Time.class)) {
+					temp = new String("		<f:convertDateTime type=\"time\"/>");
+				} else {
+					temp = new String("		<f:convertDateTime type=\"both\"/>");
+				}
+				convTemp = new String(temp);
+				//formatTag.add(temp);
+			} else if(cpfAttribute.getModelAttrib().getDataType().equals(CPFConstants.AttributeDataType.NUMERIC)) {
+				temp = new String("		<f:convertNumber/>");
+					
+					//Added this for conversion in search panel....
+				if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Long")
+					|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("long")) {
+					convTemp = new String("		<f:converter converterId=\"javax.faces.Long\"/>");
+				} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Integer")
+							|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("int")) {
+					convTemp = new String("		<f:converter converterId=\"javax.faces.Integer\"/>");
+				} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Double") 
+							|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("double")) {
+					convTemp = new String("		<f:converter converterId=\"javax.faces.Double\"/>");
+				} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Float")
+							|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("float")) {
+					convTemp = new String("		<f:converter converterId=\"javax.faces.Float\"/>");
+				} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Boolean")
+							|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("boolean")) {
+					convTemp = new String("		<f:converter converterId=\"javax.faces.Boolean\"/>");
+				} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Byte")
+							|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("byte")) {
+					convTemp = new String("		<f:converter converterId=\"javax.faces.Byte\"/>");
+				} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Character")
+							|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("char")) {
+					convTemp = new String("		<f:converter converterId=\"javax.faces.Character\"/>");
+				} else if(cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Short")
+							|| cpfAttribute.getModelAttrib().getCanonicalTypeName().equals("short")) {
+					convTemp = new String("		<f:converter converterId=\"javax.faces.Short\"/>");
+				}
+				//formatTag.add(temp);
+			} //else {
+				//formatTag.add(null);
+				formatTag.add(temp);
+				conversionTag.add(convTemp);
+			//} 
+		}
+	}
+	
+	//if(resourceName.equals(baseEntity.getName()) && nestedAttributes != null) {
+	if(CPFArgument.getOperationId() == 0 && nestedAttributes != null) {
+		LOG.info("Doingg process for related entities of OneToOne or ManyToOne relationship Entity selected attributes..");
+		Iterator<RelationKey> itrOtherEntities = nestedAttributes.keySet().iterator();
+		int i = 0;
+		while(itrOtherEntities.hasNext()) {
+			RelationKey relationKey = itrOtherEntities.next();
+			String tempProp = relationKey.getRelationShipInfo().getPropertyName();
+			List<CPFAttribute> cpfAttributes = nestedAttributes.get(relationKey);
+			ModelEntity tempModelEntity = relationKey.getReferencedEntity();
+			CPFConstants.RelationshipType mapping = relationKey.getRelationShipInfo().getMapping();
+			if(mapping.equals(CPFConstants.RelationshipType.OneToMany) 
+				|| mapping.equals(CPFConstants.RelationshipType.ManyToMany)) {   //IF ONE2MANY RELATIONSHIP EXISTS
+				nestedLink.add(true);
+				//nestedMBeanNames.put(i++, nestedLinkNames.get(relationKey));
+				nestedMBeanNames.put(nestedAttributes.get(relationKey).get(0).getPosition(), nestedLinkNames.get(relationKey));
+				headerNames.add(tempProp);
+				formatTag.add(null);
+				if(sortValues != null) {
+					sortValues.add(null);
+				}
+				conversionTag.add(null);
+				LOG.info("find pos : " + nestedAttributes.get(relationKey).get(0).getPosition());
+				String jspName = cpfScreen.getNestedJspNames().get(relationKey).getJspName();
+				LOG.info("X Attb Vis counter nested relation : " + jspName + " : " + counterForTest++);		//Added on 18th Apr
+				positionMap.put(nestedAttributes.get(relationKey).get(0).getPosition(), currentListPos++);
+				totalNoOfAttbs += nestedAttributes.get(relationKey).size();
+			} else {
+				Iterator<CPFAttribute> itrCpfAttributes = cpfAttributes.iterator();
+				totalNoOfAttbs += nestedAttributes.get(relationKey).size();
+				while(itrCpfAttributes.hasNext()) {
+					CPFAttribute otherCpfAttribute = (CPFAttribute)itrCpfAttributes.next();
+					LOG.info("X Attb Vis counter : " + counterForTest++);		//Added on 18th Apr
+						//Changes for Resource Bundle
+					String depTempAttr = otherCpfAttribute.getLabel().replaceAll(" ", "_");
+					String depLeftLabel = "L"+operationId+"_"+relationKey.getRelationShipInfo().getPropertyName()+"_"+depTempAttr;
+					headerNames.add(depLeftLabel);
+						//Changes Over
+					//headerNames.add(otherCpfAttribute.getLabel());
+					nestedLink.add(false);
+					LOG.info("find pos : " + otherCpfAttribute.getPosition());
+					positionMap.put(otherCpfAttribute.getPosition(), currentListPos++);
+					criteriaPos.put(otherCpfAttribute.getPosition(), cfp++);
+					if(sortValues != null) {
+						//String temp = new String(tempModelEntity.getName());
+						String temp = new String(tempProp);
+						temp = temp.concat(".");
+						temp = temp.concat(otherCpfAttribute.getModelAttrib().getName());
+						sortValues.add(temp);
+					}
+					if(otherCpfAttribute.getFormatData() != null 
+						&& !otherCpfAttribute.getFormatData().getCategory().equals(CPFConstants.FormatType.TEXT)) {
+							CPFConstants.FormatType formatType = otherCpfAttribute.getFormatData().getCategory();
+							String temp = new String();
+							String convTemp = null;
+							
+							if(formatType.equals(CPFConstants.FormatType.NUMERIC) 
+								|| formatType.equals(CPFConstants.FormatType.CURRENCY)
+									|| formatType.equals(CPFConstants.FormatType.INTEGRAL)) {
+									temp = temp.concat("	<f:convertNumber pattern=\"");
+										//14th March....
+									String tempPat = otherCpfAttribute.getFormatData().getPattern();
+									if(formatType.equals(CPFConstants.FormatType.INTEGRAL) && tempPat.contains(".")) {
+										tempPat = tempPat.substring(0, tempPat.indexOf("."));
+									}
+									temp = temp.concat(tempPat + "\"/>");
+									
+										//Added this for conversion in search panel....
+									if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Long")
+										|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("long")) {
+										convTemp = new String("		<f:converter converterId=\"javax.faces.Long\"/>");
+									} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Integer")
+												|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("int")) {
+										convTemp = new String("		<f:converter converterId=\"javax.faces.Integer\"/>");
+									} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Double") 
+												|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("double")) {
+										convTemp = new String("		<f:converter converterId=\"javax.faces.Double\"/>");
+									} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Float")
+												|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("float")) {
+										convTemp = new String("		<f:converter converterId=\"javax.faces.Float\"/>");
+									} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Boolean")
+											|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("boolean")) {
+										convTemp = new String("		<f:converter converterId=\"javax.faces.Boolean\"/>");
+									} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Byte")
+											|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("byte")) {
+										convTemp = new String("		<f:converter converterId=\"javax.faces.Byte\"/>");
+									} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Character")
+											|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("char")) {
+										convTemp = new String("		<f:converter converterId=\"javax.faces.Character\"/>");
+									} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Short")
+											|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("short")) {
+										convTemp = new String("		<f:converter converterId=\"javax.faces.Short\"/>");
+									}
+									//temp = temp.concat(otherCpfAttribute.getFormatData().getPattern() + "\"/>");
+							} else {
+								String tempPat = otherCpfAttribute.getFormatData().getPattern();
+								if(tempPat.equals("Short") || tempPat.equals("Medium") || tempPat.equals("Long")
+									|| tempPat.equals("Full")) {
+						
+									tempPat = tempPat.toLowerCase().charAt(0) + tempPat.substring(1);
+									if(formatType.equals(CPFConstants.FormatType.DATE)){
+										temp = temp.concat("	<f:convertDateTime ");
+										temp = temp.concat("dateStyle=\"");
+									} else if(formatType.equals(CPFConstants.FormatType.TIME)) {
+										temp = temp.concat("	<f:convertDateTime ");
+										temp = temp.concat("timeStyle=\"");
+									} else {
+										temp = temp.concat("	<f:convertDateTime ");
+										temp = temp.concat("timeStyle=\"" + tempPat + "\" ");
+										temp = temp.concat("dateStyle=\"");
+									}
+								} else {
+										temp = temp.concat("	<f:convertDateTime pattern=\"");
+								}
+								temp = temp.concat(tempPat + "\"/>");
+							}
+							formatTag.add(temp);
+							conversionTag.add(convTemp);
+					} else {
+						String temp = null;
+						String convTemp = null;
+						
+						if(otherCpfAttribute.getModelAttrib().getDataType().equals(CPFConstants.AttributeDataType.DATE)){
+							temp = new String("		<f:convertDateTime type=\"date\"/>");
+							convTemp = new String(temp);
+							//formatTag.add(temp);
+						} else if(otherCpfAttribute.getModelAttrib().getDataType().equals(CPFConstants.AttributeDataType.TIMESTAMP)){
+							if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals(java.sql.Time.class)) {
+								temp = new String("		<f:convertDateTime type=\"time\"/>");
+							} else {
+								temp = new String("		<f:convertDateTime type=\"both\"/>");
+							}
+							convTemp = new String(temp);
+							//formatTag.add(temp);
+						} else  if(otherCpfAttribute.getModelAttrib().getDataType().equals(CPFConstants.AttributeDataType.NUMERIC)) {
+							temp = new String("		<f:convertNumber/>");
+							
+								//Added this for conversion in search panel....
+							if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Long")
+								|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("long")) {
+								convTemp = new String("		<f:converter converterId=\"javax.faces.Long\"/>");
+							} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Integer")
+										|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("int")) {
+								convTemp = new String("		<f:converter converterId=\"javax.faces.Integer\"/>");
+							} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Double") 
+										|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("double")) {
+								convTemp = new String("		<f:converter converterId=\"javax.faces.Double\"/>");
+							} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Float")
+										|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("float")) {
+								convTemp = new String("		<f:converter converterId=\"javax.faces.Float\"/>");
+							} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Boolean")
+										|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("boolean")) {
+								convTemp = new String("		<f:converter converterId=\"javax.faces.Boolean\"/>");
+							} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Byte")
+										|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("byte")) {
+								convTemp = new String("		<f:converter converterId=\"javax.faces.Byte\"/>");
+							} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Character")
+										|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("char")) {
+								convTemp = new String("		<f:converter converterId=\"javax.faces.Character\"/>");
+							} else if(otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("java.lang.Short")
+										|| otherCpfAttribute.getModelAttrib().getCanonicalTypeName().equals("short")) {
+								convTemp = new String("		<f:converter converterId=\"javax.faces.Short\"/>");
+							}
+							//formatTag.add(temp);
+						}// else {
+							//formatTag.add(null);
+						formatTag.add(temp);
+						conversionTag.add(convTemp);
+						//}
+					}
+				}
+			}
+			
+		}
+	}
+//DOING	process for CPFATTRIBUTES ENDS HERE............	
+%>
+<%
+	//Xhtml generation starts here..............
+	LOG.info("XHTML generation started inside Tempalte...... adding Div tag to XHTMl..");
+%>
+<div
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:pfc="http://www.jboss.com/portal/facelet/common"
+   xmlns:c="http://java.sun.com/jstl/core">
+   
+ <!--  <f:loadBundle basename="bundle.resources" var="bundle"/> -->
+ 	<f:view locale="#{facesContext.externalContext.request.locale}">
+	
+<%
+	//Search Panel starts here....
+	LOG.info("Adding Search Panel to XHTMl....");
+	if(actionsSupported.contains(CPFConstants.OperationType.SEARCH)) {
+%>
+	<h:form id="SPList<%= operationId %>">
+		<table width="50%">
+			<h:panelGroup>
+			<tr colspan="2">
+					<td>
+						<h:outputText value="#{bundle.Search}:  " styleClass="portlet-msg-info-m-contentText" style="font-weight: bold"/>
+					
+						<h:selectBooleanCheckbox id="SC" value="#{<%= listMBeanName %>.searechCaseSensitive}"/>
+						<h:outputLabel for="SC" rendered="true">
+							<h:outputText value="#{bundle.Case_Sensitive}"/>
+						</h:outputLabel> 
+					</td>
+			</tr>
+			<tr>
+				<td>
+					<h:selectOneMenu value="#{<%= listMBeanName %>.searchKey}" onchange="submit()" immediate="true">
+						<f:selectItems value="#{<%= listMBeanName %>.attbs}" />
+					</h:selectOneMenu>
+				
+					<h:selectOneMenu id="Operator" value="#{<%= listMBeanName %>.searchOperator}">
+						<f:selectItem value="#{<%= listMBeanName %>.operators}"/>
+					</h:selectOneMenu>
+				
+					<h:inputText id="value" value="#{<%= listMBeanName %>.searchValue}">
+						<c:choose>
+<%
+				Iterator<String> itrFormatTag = null;
+				Iterator<String> itrConvTag = null;	//Added for conversion purpose..
+				Iterator<String> itrSortVal = null;
+				if(formatTag != null) {
+					 itrFormatTag = formatTag.iterator();
+					 itrFormatTag.next();	//Skipping the added primary key attribute...
+				}
+				if(conversionTag != null) {
+					itrConvTag = conversionTag.iterator();
+					itrConvTag.next();		//Skipping the added primary Key attribute...
+				}
+				if(sortValues != null) {
+					 itrSortVal = sortValues.iterator();
+					 itrSortVal.next();		//Skipping the added primary key attribute...
+				}
+				while(itrSortVal.hasNext()) {
+					String sortValue = itrSortVal.next();
+					//String format = itrFormatTag.next();
+					String format = itrConvTag.next();
+					if(sortValue != null) {
+%>
+							<c:when test="${<%= listMBeanName %>.searchKey == '<%= sortValue %>'}">
+<%
+						if(format != null) {
+%>
+								<%= format %>
+<%
+						} else {
+						}
+%>
+							</c:when>
+<%
+					}
+				}
+%>
+						</c:choose>
+					</h:inputText>
+				
+					<h:commandButton action="#{<%= listMBeanName %>.search}" value="#{bundle.Search}"/>
+				</td>
+			</tr>
+			</h:panelGroup>
+		</table>
+	</h:form>
+<%
+	}
+	//Search Panel Ends here....
+	LOG.info("adding search panel finished... adding form Tag to XHTML...");
+%>	
+	<h:form id="RPList<%= operationId %>">
+		<c:set var="listing" value="${<%= listMBeanName %>.collec}"/>
+		<c:if test="${listing == null}">
+			<br/>
+			<h:outputText value="You Have No Data Rite Now"/>
+		</c:if>
+		<c:if test="${listing != null}">
+		<br/>
+		
+		<!-- for displaying acks for actions taken especially create, modify and delete -->
+		<c:choose>
+			<c:when test='${<%= listMBeanName %>.delStatus == "1"}'>
+				<h:message for="delete" style="color: Blue"/>
+			</c:when>
+			<c:when test='${<%= listMBeanName %>.delStatus == "0"}'>
+				<h:message for="delete" style="color: Red"/>
+			</c:when>
+		</c:choose>
+    	<h:message for="add" style="color: Blue"/>
+    	<h:message for="modify" style="color: Blue"/>
+
+<%
+	//Result Table cretaion Starts here.....
+	LOG.info("adding Result Table to XHTML....");
+%>
+		<table width="100%">
+<%
+		//Table Header starts here....
+		LOG.info("Adding table Headers to the table..... as well adding sort also if supportable..");
+%>
+			<thead class="portlet-section-header">
+<%
+			int i = 0;
+			int htmlPos = 0;
+			if(CPFArgument.getOperationId() == 0) {
+				totalNoOfAttbs = totalNoOfAttbs - 1; 
+			}
+			while(htmlPos < totalNoOfAttbs) {
+				if(i == 0) {
+					i++;
+					if(CPFArgument.getOperationId() > 0) {
+						htmlPos++;
+					}
+					if(actionsSupported.contains(CPFConstants.OperationType.MODIFY)
+						|| actionsSupported.contains(CPFConstants.OperationType.DELETE) || 
+							actionsSupported.contains(CPFConstants.OperationType.VIEW)) {
+%>
+				<th>
+					<h:outputText value=" "/>
+	  			</th>
+<%
+					}
+				} else {
+					String header = null;
+					boolean nested = false;
+					String sortValue = null;
+					if(positionMap.get(htmlPos) == null) {
+						htmlPos++;
+						continue;
+					}
+					header = headerNames.get(positionMap.get(htmlPos));
+					nested = nestedLink.get(positionMap.get(htmlPos));
+					if(!nested && sortValues != null
+						&& actionsSupported.contains(CPFConstants.OperationType.SORT)) {
+						sortValue = sortValues.get(positionMap.get(htmlPos));
+					}
+					if(nested) {
+%>
+				<th align="center">
+					<h:outputText value="#{bundle.<%= header %>}"/>
+	 			</th>
+<%				
+					} else {
+						if(sortValues != null && actionsSupported.contains(CPFConstants.OperationType.SORT)) {
+%>
+				<c:choose>
+				  	<c:when test="${<%= listMBeanName %>.listVisibility[<%= positionMap.get(htmlPos) %>]}">
+   				       	<th>
+							<h:commandLink action="#{<%= listMBeanName %>.sort}" value="#{bundle.<%= header.replaceAll(" ", "_") %>}">
+								<f:param name="sortBy" value="<%= sortValue %>"/>
+							</h:commandLink>
+							<c:if test="${<%= listMBeanName %>.orderBy == '<%= sortValue %>'}">
+							     <h:outputText escape="true" value=" "/>
+							     <c:choose>
+								<c:when test="${<%= listMBeanName %>.ascending == true}">
+									<h:graphicImage value="/images/nested.jpg" height="12" style="border:none" alt="Ascending"/>
+								</c:when>								
+								<c:when test="${<%= listMBeanName %>.ascending != true}">
+									<h:graphicImage value="/images/parent.jpg" height="12" style="border:none" alt="Descending"/>
+								</c:when>
+							     </c:choose>
+							</c:if>
+	 					</th>
+	 				 </c:when>
+	 			</c:choose>
+<%
+						} else {
+%>
+				<th>
+					<h:outputText value="#{bundle.<%= header.replaceAll(" ", "_") %>}"/>
+				</th>
+<%
+						}
+					}
+					htmlPos++;
+				}
+			}
+%>
+			</thead>
+<%
+		//Table Header ends here....
+		LOG.info("Adding headers to table finished....");
+%>
+
+<%
+		//TABLE BODY CREATION STARTS HERE...............
+		LOG.info("adding Table Body to The Table started....");
+%>
+			<tbody>
+<%
+			if(actionsSupported.contains(CPFConstants.OperationType.MODIFY)
+				|| actionsSupported.contains(CPFConstants.OperationType.DELETE) || 
+					actionsSupported.contains(CPFConstants.OperationType.VIEW)) {
+					int pagination = cpfScreen.getPreference().getPagination();
+					LOG.info("Adding Radio Buttons to the table for row selection...");
+%>
+				<c:choose>
+	    				<c:when test="${<%= listMBeanName %>.listVisibility[0]}">
+							<td rowspan="<%= pagination + 1 %>">
+							<h:selectOneRadio value="#{<%= listMBeanName %>.primaryKeyValue}" layout="pageDirection" immediate="true">
+								<f:selectItems value="#{<%= listMBeanName %>.radio}"/>
+							</h:selectOneRadio>
+  				 			</td>
+  						</c:when>
+  				 </c:choose>
+<%
+			}
+%>
+  				 <td>
+				 <c:forEach items="#{listing}" var="object" varStatus="status">
+         			<tr class="#{status.index % 2 == 0 ? 'portlet-section-body' : 'portlet-section-alternate'}">
+<%
+			i = 0;
+			int nestedName = 0;
+			htmlPos = 0;
+			while(htmlPos < totalNoOfAttbs) {
+				//Integer fp = criteriaPos.get(htmlPos);
+				if(i == 0) {
+					i++;
+					if(CPFArgument.getOperationId() > 0) {
+						htmlPos++;
+					}
+					continue;
+				}
+				if(positionMap.get(htmlPos) == null) {
+					htmlPos++;
+					continue;
+				}
+				String format = formatTag.get(positionMap.get(htmlPos));
+%>
+				 		<c:choose>
+	    				<c:when test="${<%= listMBeanName %>.listVisibility[<%= positionMap.get(htmlPos) %>]}">
+<%
+				if(i == 1){
+					if(nestedLink.get(positionMap.get(htmlPos))) {
+						//String nestedMBeanName = nestedMBeanNames.get(nestedName++);
+						String nestedMBeanName = nestedMBeanNames.get(htmlPos);
+						String nestedNavigatinoName = nestedMBeanName.replace("_", "");
+%>
+							<td align="center">
+								<h:commandLink action="<%= nestedNavigatinoName %>" actionListener="#{<%= nestedMBeanName %>.action}">
+									<h:graphicImage alt="Details" value="/images/nested.jpg" height="15" style="border:none"/>
+									<f:param name="pkValue" value="#{object[0]}"/>
+								</h:commandLink>
+	    					</td>
+<%
+					} else {
+%>
+							<td>
+<%
+							if(actionsSupported.contains(CPFConstants.OperationType.VIEW)) {
+%>
+							<c:choose>
+								<c:when test="${<%= listMBeanName %>.canView == 'true'}">
+		 						 <h:commandLink action="add" actionListener="#{<%= createMBeanName %>.viewAction}" >
+									<f:attribute name="pkValue" value="#{object[0]}"/>
+									<h:outputText value="#{object[<%= criteriaPos.get(htmlPos) %>]}"/>
+<%
+							} else {
+%>
+								<h:outputText value="#{object[<%= criteriaPos.get(htmlPos) %>]}">
+<%
+							}		
+%>
+<%
+							if(format != null) {
+%>
+									<%= format %>
+<%
+							}
+							if(actionsSupported.contains(CPFConstants.OperationType.VIEW)) {
+%>
+								</h:commandLink>
+							   </c:when>
+							   <c:otherwise>
+									<h:outputText value="#{object[<%= criteriaPos.get(htmlPos) %>]}">
+<%
+							if(format != null) {
+%>
+										<%= format %>
+<%
+							}
+%>
+									</h:outputText>
+							   </c:otherwise>
+							</c:choose>
+<%
+							} else {
+%>
+								</h:outputText>
+<%
+							}
+%>
+            				</td>
+<%
+					}
+					i++;
+				} else {
+					if(nestedLink.get(positionMap.get(htmlPos))) {
+						//String nestedMBeanName = nestedMBeanNames.get(nestedName++);
+						String nestedMBeanName = nestedMBeanNames.get(htmlPos);
+						String nestedNavigatinoName = nestedMBeanName.replace("_", "");
+%>
+							<td align="center">
+								<h:commandLink action="<%= nestedNavigatinoName %>" actionListener="#{<%= nestedMBeanName %>.action}">
+									<!-- <h:outputText escape="true" value="DetailsPage"/> -->
+									<h:graphicImage alt="Details" value="/images/nested.jpg" height="15" style="border:none"/>
+									<f:param name="pkValue" value="#{object[0]}"/>
+								</h:commandLink>
+	    					</td>
+<%
+					} else {
+%>
+							<td>
+		 						<h:outputText value="#{object[<%= criteriaPos.get(htmlPos) %>]}">
+<%
+								if(format != null) {
+%>
+									<%= format %>
+<%
+								}
+%>
+								</h:outputText>
+            				</td>
+<%
+					}
+				}
+				htmlPos++;
+%>
+						</c:when>
+	    				</c:choose>
+<%
+			}
+%>
+         			</tr>
+         		</c:forEach>
+         		</td>
+			</tbody>
+<%
+		//TABLE BODY CREATION ENDS HERE...............
+		LOG.info("Table Body Creation Completed ....");
+%>
+		</table>
+<%
+	//Result Table creation Ends here......
+%>
+
+<%
+	//PageChange panel are coming here............
+	LOG.info("Adding page Change panel to the table....");
+%>		
+		<table width="100%">
+			<tbody>
+	 			<tr class="portlet-section-body">
+      		      <td align="center" colspan="2">
+     		          <h:panelGroup> 				
+						<h:commandLink id="PREVIOUS" action="previousPage" disabled="#{<%= listMBeanName %>.previousDisabled}" actionListener="#{<%= listMBeanName %>.pageChange}" >
+							<h:graphicImage alt="Previous" value="/images/prev.jpg" style="border:none" />
+							<h:outputText escape="true" value="  " />
+						</h:commandLink>
+						<h:commandLink id="NEXT" action="nextPage" disabled="#{<%= listMBeanName %>.nextDisabled}" actionListener="#{<%= listMBeanName %>.pageChange}" >
+							<h:graphicImage alt="Next" value="/images/next.jpg" style="border:none" />
+						</h:commandLink>
+	     			  </h:panelGroup>
+          		  </td>
+         		</tr>
+			</tbody>
+		</table>
+<%
+	//PageChange panel Ends here............
+%>
+		</c:if>
+<%
+	//CMV buttons panel Starts here......
+%>
+		<h:panelGroup> 
+<%
+		//if(resourceName.equals(baseEntity.getName())) {
+		if(CPFArgument.getOperationId() == 0) {
+%>
+<%
+		//if(actionsSupported.contains(CPFConstants.OperationType.VIEW)) {
+			LOG.info("Adding view button to the table...");
+%>
+		<!--	<c:if test="${<%= listMBeanName %>.canView == 'true'}"> -->
+				<h:commandButton action="add" actionListener="#{<%= createMBeanName %>.viewAction}" value="#{bundle.View}" disabled="#{!<%= listMBeanName %>.canView}">
+					<f:attribute name="pkValue" value="#{<%= listMBeanName %>.primaryKeyValue}" />
+				</h:commandButton>
+		<!--	</c:if> -->
+<%
+		//}
+%>
+<%
+		//if(actionsSupported.contains(CPFConstants.OperationType.CREATE)) {
+			LOG.info("Adding Create button to the table...");
+%>
+			<!-- <c:if test="${<%= listMBeanName %>.canCreate == 'true'}"> -->
+				<h:commandButton id="add" action="add" actionListener="#{<%= createMBeanName %>.addAction}" value="#{bundle.Add}" disabled="#{!<%= listMBeanName %>.canCreate}" immediate="true"/>
+			<!-- </c:if> -->
+<%
+		//}
+%>
+<%
+		//if(actionsSupported.contains(CPFConstants.OperationType.MODIFY)) {
+			LOG.info("Adding Modify button to the table...");
+%>
+			<!-- <c:if test="${<%= listMBeanName %>.canModify == 'true'}"> -->
+				<h:commandButton id="modify" action="add" actionListener="#{<%= createMBeanName %>.modifyAction}" value="#{bundle.Modify}" disabled="#{!<%= listMBeanName %>.canModify}">
+					<f:attribute name="pkValue" value="#{<%= listMBeanName %>.primaryKeyValue}" />
+				</h:commandButton>
+			<!-- </c:if> -->
+<%
+	//	}
+%>
+<%
+		//if(actionsSupported.contains(CPFConstants.OperationType.DELETE)) {
+			LOG.info("Adding Delete button to the table...");
+%>
+			<!-- <c:if test="${<%= listMBeanName %>.canDelete == 'true'}"> -->
+				<h:commandButton id="delete" action="delete" onclick="return delete1();" actionListener="#{<%= listMBeanName %>.delete}" value="#{bundle.Delete}" disabled="#{!<%= listMBeanName %>.canDelete}"/>
+			<!-- </c:if> -->
+<%
+	//	}
+		}
+			//Editing on 23rd Feb
+		//if(!resourceName.equals(baseEntity.getName ())) {
+		if(CPFArgument.getOperationId() > 0) {
+			//This only for Nested Screen to return back to the Main List
+%>
+			<h:commandLink action="resetToMain" actionListener="#{<%= listMBeanName %>.r2Parent}">
+				<h:graphicImage height="30" value="/images/parent.jpg" style="border:none" alt="Parent List"/>
+			</h:commandLink>
+<%	 
+		}
+		if(actionsSupported.contains(CPFConstants.OperationType.SEARCH)) {	//Added this line later
+%>
+			<c:choose>
+				<c:when test="${<%= listMBeanName %>.criteria.searchDetails.search == 'true'}">
+					<h:commandButton  value="#{bundle.Reset}" action="#{<%= listMBeanName %>.reset}"/>
+				</c:when>
+			</c:choose>
+<%
+		}	//Added this line later
+	//CMV buttons panel Ends here......
+%>
+		</h:panelGroup>
+   	</h:form>
+   </f:view>
+</div>
+<%
+	//Xhtml generation ends here................
+	LOG.info("XHTML generation finished from template....");
+%>

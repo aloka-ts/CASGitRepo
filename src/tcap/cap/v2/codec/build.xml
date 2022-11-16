@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="CAPV2Codec">
+		<property name="THIRDPARTY_OTHERJARS" value="${THIRDPARTY}/otherjars" />
+	        <property name="CAPV2_HOME" value="${TCAP_HOME}/cap/v2/codec" />
+		<property name="BN_SRC_HOME" value="${TCAP_HOME}/bn/" />
+	
+		<property name="BUILD_DIR" value="${INSTALLROOT}/capv2" />
+		<property name="BUILD_CLASS_DIR" value="${BUILD_DIR}/codecClasses" />
+		<property name="JAR_TGT_DIR" value="${INSTALLROOT}/bpjars" />
+		<property name="LIB_TCAP_DIR" value="${INSTALLROOT}/bpjars" />
+
+        <target name="clean" description="Clean the build directory">
+                <delete dir="${BUILD_DIR}"/>
+                <delete file="${JAR_TGT_DIR}/capv2codecs.jar"/>
+        </target>
+
+        <target name="init" depends="clean">
+                <mkdir dir="${BUILD_CLASS_DIR}"/>
+        </target>
+
+        <path id="lib.dir">
+      		<fileset dir="${THIRDPARTY_OTHERJARS}">
+            	<include name="log4j-1.2.8.jar"/>
+      		</fileset>
+           	<fileset dir="${LIB_TCAP_DIR}">
+                <include name="tcap-provider-api.jar"/>
+      		</fileset>
+    	</path>
+
+        <target name="build" depends="init">
+        	<echo message="INSTALLROOT: ${INSTALLROOT}"/>
+			<echo message="TCAP_HOME: ${TCAP_HOME}"/>
+			<echo message="THIRDPARTY: ${THIRDPARTY}"/>
+			<echo message="THIRDPARTY_OTHERJARS: ${THIRDPARTY_OTHERJARS}"/>
+			<echo message="CAPV2_HOME: ${CAPV2_HOME}"/>
+			<echo message="BN_SRC_HOME: ${BN_SRC_HOME}"/>
+			<echo message="BUILD_DIR: ${BUILD_DIR}"/>
+			<echo message="BUILD_CLASS_DIR: ${BUILD_CLASS_DIR}"/>
+			<echo message="JAR_TGT_DIR: ${JAR_TGT_DIR}"/>
+			<echo message="LIB_TCAP_DIR: ${LIB_TCAP_DIR}"/>			
+			
+        	<javac srcdir="${BN_SRC_HOME}/src" destdir="${BUILD_CLASS_DIR}" debug="true">
+        	            	<include name="org/**/*.java"/>
+        	                <classpath refid="lib.dir"/>
+        	</javac>
+        	<javac srcdir="${CAPV2_HOME}/src" destdir="${BUILD_CLASS_DIR}" debug="true">
+            	<include name="com/**/*.java"/>
+                <classpath refid="lib.dir"/>
+            </javac>
+            <jar update="true" jarfile="${JAR_TGT_DIR}/capv2codecs.jar" basedir="${BUILD_CLASS_DIR}"/>
+            <delete dir="${BUILD_DIR}/"/>
+        </target>
+</project>

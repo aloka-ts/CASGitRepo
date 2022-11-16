@@ -1,0 +1,183 @@
+package com.baypackets.ase.ra.rf.impl;
+
+import javax.servlet.sip.SipURI;
+
+import org.apache.log4j.Logger;
+
+import com.baypackets.ase.resource.ResourceException;
+import com.baypackets.ase.ra.rf.RfResourceException;
+import com.baypackets.ase.resource.Response;
+import com.baypackets.ase.spi.container.SasMessage;
+import com.baypackets.ase.ra.rf.RfAbstractRequest;
+import com.baypackets.ase.ra.rf.Constants;
+
+public class RfSessionRequest extends RfAbstractRequest
+{
+	private static Logger logger = Logger.getLogger(RfEventRequest.class);
+	private String appServerName = null;
+	private String userName = null;
+	private String eventTimeStamp = null;
+	private String callingPartyAddress = null;
+	private String calledPartyAddress = null;
+	private String originIOI = null;
+	private String termIOI = null;
+	private String ggsnAddress = null;
+	private String servedPartyIpAddress = null;
+	private String sdpMediaName = null;
+	private String sdpMediaDesc = null;
+	private String gprsChargingID =null;
+	private String userSessionID = null;
+	private String sdpSessionDescrAVP = null;
+	
+	
+	public RfSessionRequest(int type)
+	{
+		super(type);
+	}
+	
+	public String getUserSessionID()
+	{
+		return this.userSessionID;
+	}
+
+	public void setUserSessionID(String id) throws RfResourceException
+	{
+		this.userSessionID = id;
+	}
+
+	public String getSdpSessionDescrAVP()
+	{
+		return this.sdpSessionDescrAVP;
+	}
+
+	public void setSdpSessionDescrAVP(String avp) throws RfResourceException
+	{
+		this.sdpSessionDescrAVP = avp;
+	}
+	
+	public String getAppServerName() 
+	{
+		return this.appServerName;
+	}
+
+	public void setAppServerName(String serverName) throws RfResourceException 
+	{
+		this.appServerName  = serverName;
+	
+	}
+
+	public void setUserName(String name) throws RfResourceException
+	{
+		this.userName = name;
+	}
+		
+	public String getUserName()
+	{
+		return this.userName;
+	}
+
+	public void setEventTimeStamp(String stamp) throws RfResourceException
+	{
+		this.eventTimeStamp = stamp;
+	}
+
+	public String getEventTimeStamp()
+	{
+		return this.eventTimeStamp;
+	}
+
+	public void setCallingPartyAddress(String address) throws RfResourceException
+	{
+		this.callingPartyAddress = address;
+	}
+
+	public String getCallingPartyAddress()
+	{
+		return this.callingPartyAddress;
+	}
+
+	public void setCalledPartyAddress(String address) throws RfResourceException
+	{
+		this.calledPartyAddress = address;
+	}
+
+	public String getCalledPartyAddress()
+	{
+		return this.calledPartyAddress;
+	}
+
+	public void setOriginIOI(String orig) throws RfResourceException
+	{
+		this.originIOI = orig;
+	}
+
+	public String getOriginIOI()
+	{
+		return this.originIOI;
+	}
+
+	public void setTermIOI(String term) throws RfResourceException
+	{
+		this.termIOI = term;
+	}
+
+	public String getTermIOI()
+	{
+		return this.termIOI;
+	}
+
+	public void setGgsnAddress(String add) throws RfResourceException
+	{
+		this.ggsnAddress = add;
+	}
+
+	public String getGgsnAddress()
+	{
+		return this.ggsnAddress;
+	}
+
+	public void setServedPartyIpAddress(String ip) throws RfResourceException
+	{
+		this.servedPartyIpAddress = ip;
+	}
+
+	public String getServedPartyIpAddress()
+	{
+		return this.servedPartyIpAddress;
+	}
+
+	public void setSdpMediaName(String name) throws RfResourceException
+	{
+		this.sdpMediaName = name;
+	}
+
+	public String getSdpMediaName()
+	{
+		return this.sdpMediaName;
+	}
+
+	public void setSdpMediaDesc(String desc) throws RfResourceException
+	{
+		this.sdpMediaDesc = desc;
+	}
+
+	public String getSdpMediaDesc()
+	{
+		return this.sdpMediaDesc;
+	}
+
+	public void setGprsChargingID(String id) throws RfResourceException
+	{
+		this.gprsChargingID = id;
+	}
+
+	public String getGprsChargingID()
+	{
+		return this.gprsChargingID;
+	}
+	
+	public void setAccountingRecordType(int type) throws RfResourceException
+	{
+		this.ACCOUNTING_RECORD_TYPE = type;
+	}
+}

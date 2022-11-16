@@ -1,0 +1,229 @@
+<%@ jet 
+	package="com.genband.m5.maps.ide.model.template" 
+	class="ReturnBean" 
+	imports="com.genband.m5.maps.ide.model.* 
+			 java.util.* 
+			 com.genband.m5.maps.ide.CPFPlugin
+			 java.util.List"
+%>
+<% 	
+	CPFPlugin LOG = CPFPlugin.getDefault();
+	CPFResource CPFArgument = (CPFResource)argument; 
+ 	CPFScreen cpfScreen = (CPFScreen)CPFArgument.getCpfScreen();
+ 	ModelEntity modelEntity = null;
+ 	modelEntity = (ModelEntity)cpfScreen.getBaseEntity();
+ 	ModelEntity baseEntity = cpfScreen.getPortletRef().getBaseEntity();
+ 	LOG.info("Return Bean details generation started for Base Entity : " + baseEntity.getName());
+ 	List<CPFAttribute> selectedAttributes = cpfScreen.getSelectedAttributes ();					
+ 	int operationId = cpfScreen.getPortletRef().getPortletId();   //Holds Operation Id of the method
+ 	LOG.info("Creating Return Bean details for the portlet Id : " + operationId);
+	Map<RelationKey, List<CPFAttribute>> nestedAttributes = cpfScreen.getNestedAttributes();
+	List<String> varibleNames = new ArrayList<String>();
+	List<String> setters = new ArrayList<String>();
+	List<String> getters = new ArrayList<String>();
+	List<String> signatures = new ArrayList<String>();
+	List<String> declarations = new ArrayList<String>();
+	
+	String className = baseEntity.getName()+"Details_"+operationId;
+	LOG.info("The class name for Return Details bean name is : " + className);
+%>
+<% 
+	//Adding Base Entity Primary Key to the Return Details
+	varibleNames.add("primaryKeyValue");	//Hard coding the variable Name
+	setters.add("setPrimaryKeyValue");
+	getters.add("getPrimaryKeyValue");
+	signatures.add("java.lang.Long");
+	declarations.add("private java.lang.Long primaryKeyValue");	//Adding declaration
+	
+		//doing process for Variable declaration, setters, getters and DataTypes here..................
+	LOG.info("Started doing process to get Variable names declaration, their setters , getters and Data Types too.."); 
+	for(Iterator<CPFAttribute> attributeItr = selectedAttributes.iterator(); attributeItr.hasNext(); ) { 
+ 		CPFAttribute selectedAttribute = (CPFAttribute)attributeItr.next();    //For each selected attribute
+		ModelAttribute modelAttrib; 
+		String temp = null;   //holds model entity name
+		if (selectedAttribute.getForeignColumn () == null) {  
+			modelAttrib = selectedAttribute.getModelAttrib();
+			temp  = baseEntity.getName();		
+		}
+		else   //If it is a foreign column then get attribute from Foreign column
+		{
+			LOG.info("selected attribute found as Foreign attribute with name : " + selectedAttribute.getName());
+			modelAttrib = selectedAttribute.getForeignColumn ();
+			LOG.info("Display column for this foreign attribtue is : " + modelAttrib.getName());
+				//Edited on 20th Feb
+			temp  = selectedAttribute.getModelAttrib().getName ();
+		}
+		
+		String type = modelAttrib.getCanonicalTypeName();      //retrieving Attribute data type
+		if (type.equals ("java.sql.Date") || type.equals ("java.sql.Time") || type.equals ("java.sql.Timestamp")) {
+			LOG.info("Date Type attribute found ....");
+			type = new String ("java.util.Date");
+		} else if (type.equals ("java.sql.Blob")) {
+			type = new String("byte[]");
+		} else if (type.equals ("java.sql.Clob")) {
+			type = new String("char[]");
+		}
+		String varName = modelAttrib.getName();
+		varName = varName.toUpperCase ().charAt (0) + varName.substring (1);
+		setters.add ("set" + temp + varName);
+		getters.add ("get" + temp + varName);
+		temp = temp.toLowerCase ().charAt (0) + temp.substring (1);
+		varName = temp + varName.toUpperCase ().charAt (0) + varName.substring (1);
+		varibleNames.add (varName);
+		signatures.add (type);
+		declarations.add("private " + type + " " + varName);	//Adding declaration
+	}
+			//Generating Varible declarations for Dependent here........
+	if (nestedAttributes != null) {
+		LOG.info("Doping the above process for Dependent selected attributes");
+		Set<RelationKey> selectedOtherEntities = nestedAttributes.keySet();
+		for (Iterator<RelationKey> itr = selectedOtherEntities.iterator(); itr.hasNext(); ) {
+			RelationKey relationKey = itr.next();
+			ModelEntity otherModelEntity = relationKey.getReferencedEntity();
+			List<CPFAttribute> selectedOtherAttributes = nestedAttributes.get (relationKey);
+			for (Iterator<CPFAttribute> itrAttribute = selectedOtherAttributes.iterator(); itrAttribute.hasNext();) {
+				CPFAttribute selectedAttribute = (CPFAttribute) itrAttribute.next ();
+				ModelAttribute modelAttrib; 
+				String type = null;
+				String varName = null;
+				String temp = null;
+				if (selectedAttribute.getForeignColumn () == null) {
+					modelAttrib = selectedAttribute.getModelAttrib(); 
+					//temp  = otherModelEntity.getName();			
+					temp  = relationKey.getRelationShipInfo().getPropertyName();
+				}
+				else
+				{
+					LOG.info("Found this dependent selected attribute as foreign attribute with name : " + selectedAttribute.getName());
+					modelAttrib = selectedAttribute.getForeignColumn ();
+					LOG.info("The display source column name for this foreign attribtue is : " + modelAttrib.getName());
+						//Edited on 20th Feb
+					temp  = selectedAttribute.getModelAttrib().getName ();
+					temp = temp.toUpperCase().charAt(0) + temp.substring(1);	//Capitalizing the first letter
+					temp = otherModelEntity.getName() + temp; 	//prefixing the container entity name
+				}
+				type = modelAttrib.getCanonicalTypeName();
+				if (type.equals ("java.sql.Date") || type.equals ("java.sql.Time") || type.equals ("java.sql.Timestamp")) {
+					LOG.info("Found date type attribute for Dependent selected attribute..");
+					type = new String ("java.util.Date");
+				}else if (type.equals ("java.sql.Blob")) {
+					type = new String ("Byte[]");
+				} else if (type.equals ("java.sql.Clob")) {
+					type = new String ("Char[]");
+				}
+				varName = modelAttrib.getName();		
+				varName = varName.toUpperCase ().charAt (0) + varName.substring (1);
+				setters.add ("set" + temp + varName);
+				getters.add ("get" + temp + varName);
+				temp = temp.toLowerCase ().charAt (0) + temp.substring (1);
+				varName = temp + varName.toUpperCase ().charAt (0) + varName.substring (1);
+				varibleNames.add (varName);
+				signatures.add (type);
+				declarations.add("private " + type + " " + varName);	//Adding declaration
+			}	//End of for loop iterator over CPFAttribtues...
+		}	//End of for loop iterator over selectedotherentities..
+	}	//End of if nestedattributes != null...
+	//End of doing process for Variable declaration, setters, getters and DataTypes here...............
+%>	
+<%
+	//Bean generation Started Here.....
+%>
+
+package com.genband.m5.maps.messages;
+
+import java.util.*;
+import com.genband.m5.maps.common.CommonUtil;
+
+/**
+		This is the model Bean class for <%= modelEntity.getName() %> 
+		created by Damodar Reddy T
+*/
+
+public class  <%= className %> {
+
+<%
+	LOG.info("Declaring variables inside the class....");
+		//Variables declaration started here....
+	for(Iterator<String> itrDeclarations = declarations.iterator(); itrDeclarations.hasNext();) {
+%>
+		<%= itrDeclarations.next() %>;
+<%
+	}	//End Variables declaration here....
+	LOG.info("Variables declaration is finished..");
+%>
+
+		public <%= className %> () {
+		}
+
+<%
+	//Generating Getters here.......................
+	LOG.info("Defining Getters in side the class.....");
+	Iterator<String> itrGetter = getters.iterator ();
+	Iterator<String> itrVaribleNames = varibleNames.iterator ();
+	Iterator<String> itrSignatures =  signatures.iterator ();
+	while (itrGetter.hasNext ()) {
+%>
+		public <%= (String)itrSignatures.next() %> <%= (String)itrGetter.next () %> () {
+			return this.<%= (String)itrVaribleNames.next () %>;
+		}
+		 
+<%
+	}
+%>
+<%
+	//Generating Setters here.......................
+	LOG.info("Defining setters inside the class.....");
+	Iterator<String> itrSetter = setters.iterator ();
+	itrVaribleNames = varibleNames.iterator ();
+	itrSignatures =  signatures.iterator ();
+	while (itrSetter.hasNext ()) {
+		String varName = (String)itrVaribleNames.next ();
+%>
+		public void <%= (String)itrSetter.next () %> (<%= (String)itrSignatures.next() %> <%= varName %>) {
+			this.<%= varName %> = <%= varName %>;
+		}
+		 
+<%
+	}
+%>
+<%
+	//Generating Constructor here.........
+	LOG.info("Defining constructor which will set all the values from the object received as an argument..");
+%>
+	public <%= className %> (Object[] object) {
+		CommonUtil cu = new CommonUtil();
+	
+<%
+		Iterator<String> itrVaribleNames1 = varibleNames.iterator ();
+		Iterator<String> itrSignatures1 = signatures.iterator();
+		int i = 0;
+		while (itrVaribleNames1.hasNext ()) {
+			String dType = itrSignatures1.next ();
+			String rVarName = itrVaribleNames1.next ();
+			Class c = null;
+			try {
+				c = Class.forName(dType);
+			} catch(ClassNotFoundException e) {
+				LOG.info("Not a lang data type...");
+			}
+%>
+		if(object[<%= i %>] != null)
+<%
+			if(c == null) {
+%>
+			<%= rVarName %> = cu.trObjectToPrimitive(object [<%= i++ %>], <%= rVarName %>);
+<%
+			} else {
+%>
+			<%= rVarName %> = (<%= dType %>) object [<%= i++ %>];
+<%
+			}
+		}
+	LOG.info("constructor which will set all the values from the object received as an argument has been declared..");
+%>
+	}
+}
+<%
+	//Bean Generation Ended here.....
+	LOG.info("Return Bean generation is finished from tempalte side....");
+%>

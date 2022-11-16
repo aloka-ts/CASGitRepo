@@ -1,0 +1,72 @@
+<!ELEMENT sas-app (name?, version?, priority?, main-servlet?, sbb?, 
+			sysutil?, listener*, message-handler*, message-handler-mapping*, 
+			resource-factory-mapping*,
+			replication-config?, response-time?, login-config?)>
+
+<!ELEMENT name (#PCDATA)>
+
+<!ELEMENT version (#PCDATA)>
+
+<!ELEMENT priority (#PCDATA)>
+
+<!ELEMENT xmlapp (#PCDATA)>	
+
+<!ELEMENT main-servlet (#PCDATA)>
+
+<!ELEMENT sbb (#PCDATA)>
+
+<!ELEMENT sysutil (#PCDATA)>
+
+<!ELEMENT listener ( listener-class ) >
+
+<!ELEMENT listener-class ( #PCDATA ) >
+
+<!ELEMENT message-handler ( handler-name, handler-class ) >
+
+<!ELEMENT handler-name ( #PCDATA ) >
+
+<!ELEMENT handler-class ( #PCDATA ) >
+
+<!ELEMENT resource-name ( #PCDATA ) >
+
+<!ELEMENT message-handler-mapping ( handler-name, resource-name ) >
+
+<!ELEMENT resource-factory-mapping ( factory-name, resource-name ) >
+
+<!ELEMENT factory-name ( #PCDATA ) >
+
+<!ELEMENT resource-factory-mapping ( factory-name, resource-name ) >
+
+<!ELEMENT replication-config (replication-policy*)>
+
+<!ELEMENT replication-policy (event, replication-type)>
+
+<!ELEMENT event (#PCDATA)>
+
+<!ELEMENT replication-type (#PCDATA)>
+
+<!ELEMENT response-time (start-time?, end-time?)>
+
+<!ELEMENT start-time (#PCDATA)>
+
+<!ELEMENT end-time (#PCDATA)>
+
+<!ATTLIST response-time  target  CDATA  #IMPLIED>
+
+<!ATTLIST response-time  weight  CDATA  #IMPLIED>
+
+<!ATTLIST start-time  session-index  CDATA  #IMPLIED>
+
+<!ATTLIST start-time  message-index  CDATA  #IMPLIED>
+
+<!ATTLIST end-time  session-index  CDATA  #IMPLIED>
+
+<!ATTLIST end-time  message-index CDATA  #IMPLIED>
+
+<!ELEMENT login-config (auth-method?, realm-name?)>
+
+<!ELEMENT auth-method (#PCDATA)>
+
+<!ATTLIST auth-method id ID #IMPLIED>
+
+<!ELEMENT realm-name (#PCDATA)>

@@ -1,0 +1,18 @@
+RULES  = lib
+TARGET = libINGwIwf
+
+CXXFLAGS.debug:=-g
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+EXTRA_DEFINES += CCPU_STUB
+#EXTRA_DEFINES += INGW_LOOPBACK_SAS
+
+#include ../INGwCommonDefs/telesys-stack.def
+#include ../INGwCommonDefs/trillium-ainstack.def
+include ../INGwCommonDefs/ccpu-stack.def
+include ../INGwCommonDefs/hss-sipstack.def
+
+SRCS = INGwIwf/INGwIwfIface.C				 \
+       INGwIwf/INGwIwfProvider.C
+
+HDRS = $(wildcard */*.h)

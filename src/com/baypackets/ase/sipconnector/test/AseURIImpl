@@ -1,0 +1,6 @@
+192.168.9.232:5060
+sip:123455667@someHost.com
+tel:+123455667
+\"hotshot\" <sip:123455667@someHost.com>
+tel:+123455667@somthing.com
+http:123455667@someHost.com

@@ -1,0 +1,186 @@
+#!/usr/bin/perl -I. 
+use Getopt::Long;
+use File::Find;
+use POSIX qw(strftime);
+Getopt::Long::Configure("auto_abbrev");
+GetOptions("input:s", "alcmlPath:s", "implPath:s", "cp:s", "javaHomePath:s", "xsdOutputDir:s", "compileOnly:s", "multipass:s", "schemaIn:s", "schemaOut:s", "bindingOutputDir:s");
+
+my $Usage = "\nUsage:\n\talcmlc -input <file.java> -xsdOutputDir <buildDir> -alcmlPath <alcmlPath> -cp <classpath> -javaHomePath <PathToJAXBCompiler> -implPath <PathToYourImplementation>\n";
+$opt_javaHomePath or die "Must define path to xjc compiler. $Usage";
+$opt_javaHomePath =~ s/\\/\//g;
+$opt_alcmlPath or die "Must define path to alcml implementation. $Usage";
+$opt_alcmlPath =~ s/\\/\//g;
+$opt_implPath or die "Must define path to your implementation. $Usage";
+$opt_implPath =~ s/\\/\//g;
+$opt_input or die "Must define input file. $Usage";
+$opt_xsdOutputDir or die "Must define output directory for user XSD declarations. $Usage";
+$opt_xsdOutputDir =~ s/\\/\//g;
+$opt_cp = $opt_alcmlPath.":".$opt_cp;
+$opt_cp =~ s/\\/\//g;
+
+$_=$^O;
+# OS HACK, this is to get around the mess that is microsoft windows
+# ya see, the sun guys have decided (unfortunately they were not left with a better option)
+# to use different seperators for class path delinitors, so this is the kludge to correct.
+if (/win/i) { $opt_cp =~ s/:/;/g; $opt_cp =~ s/^([A-Z,a-z]{1});/\1:/; $opt_cp =~ s/;([A-Z,a-z]{1});/;\1:/g; }
+if (/dos/i) { $opt_cp =~ s/:/;/g; $opt_cp =~ s/^([A-Z,a-z]{1});/\1:/; $opt_cp =~ s/;([A-Z,a-z]{1});/;\1:/g; }
+
+my $singleUserCompilation = 'false';
+
+if ($opt_compileOnly eq 'true' && $opt_multipass eq 'false')
+{
+        $singleUserCompilation = 'true';
+}
+if ($opt_compileOnly eq 'true' || $singleUserCompilation eq 'true')
+{
+my %filelist;
+find(\&wanted, $opt_implPath);
+sub wanted 
+{
+        if (/.*$opt_input$/)
+        {
+                local(*JAVA_INPUT) ;
+                open(JAVA_INPUT, "${File::Find::name}") or die "cannot open ${File::Find::name}\n"; 
+                my $java_input = do { local( $/ ) ; <JAVA_INPUT> } ;
+                close JAVA_INPUT;
+                $_ = $java_input;
+                if (/ALCMLActionClass/s)
+                {
+                        $filelist{$File::Find::name} = $File::Find::name; 
+                }
+        }
+}
+
+for $item (keys %filelist)
+{
+        print "Processing $item\n";
+        my ($rootFile) = ($item =~ /([a-z,A-Z,0-9]+)\.java/);
+        my $xsdDeclFileName = "\"${opt_xsdOutputDir}/$rootFile"."DECL".".xsd\"";
+        my $xsdTypeDeclFileName = "\"${opt_xsdOutputDir}/$rootFile"."DECL_TYPE".".xsd\"";
+        
+        my $javaImpl = `\"$opt_javaHomePath/bin/apt\" -nocompile -classpath \"$opt_cp\" -factorypath \"$opt_cp\" -factory GenerateALCMLxsdApFactory -AimplDir=\"${opt_xsdOutputDir}/\" -AjavaImpl $item -AxsdDeclFile=$xsdDeclFileName -AxsdTypeDeclFile=$xsdTypeDeclFileName`;
+        print $javaImpl;
+
+}
+
+my %filelist;
+my @AllImplementors;
+if ($singleUserCompilation eq 'false')
+{
+        local(*REGISTERED_IMPLS_INPUT) ;
+        open(REGISTERED_IMPLS_INPUT, "${opt_alcmlPath}/src/RegisteredImplementors.xml") or die || die "Cannot find registrations file \"${opt_alcmlPath}/src/RegisteredImplementors.xml\"\n";
+        my $text = do { local( $/ ) ; <REGISTERED_IMPLS_INPUT> } ;
+        my $exist = ($text =~ /<Implementor>${opt_xsdOutputDir}<\/Implementor>/s);
+        if ($exist) {} else { $text =~ s/<\/RegisteredImplementors>/\t<Implementor>${opt_xsdOutputDir}<\/Implementor>\n<\/RegisteredImplementors>/g ; }
+        close REGISTERED_IMPLS_INPUT;
+        
+        open(REGISTERED_IMPLS_OUTPUT, ">${opt_alcmlPath}/src/RegisteredImplementors.xml") or die || die "Cannot find registrations file \"${opt_alcmlPath}/src/RegisteredImplementors.xml\"\n";
+        print REGISTERED_IMPLS_OUTPUT $text;
+        close REGISTERED_IMPLS_OUTPUT;
+
+
+        # slurp registered
+        open(REGISTERED_IMPLS_INPUT, "${opt_alcmlPath}/src/RegisteredImplementors.xml") or die || die "Cannot find registrations file \"${opt_alcmlPath}/src/RegisteredImplementors.xml\"\n";
+
+        while (<REGISTERED_IMPLS_INPUT>) { if (/<Implementor>(.*)<\/Implementor>/) { push @AllImplementors, $1; } }
+        close REGISTERED_IMPLS_INPUT;
+        
+}
+else
+{
+    push @AllImplementors, ${opt_xsdOutputDir};
+}
+
+# slurp xsd
+local(*XSD_INPUT) ;
+open(XSD_INPUT, "${opt_schemaIn}") or die || die "Cannot open master XSD file ${opt_schemaIn}\n";
+my $xsd = do { local( $/ ) ; <XSD_INPUT> } ;
+close XSD_INPUT;
+        
+for $item (@AllImplementors)
+{
+        find(\&declwanted, $item);
+        sub declwanted { if (/.*DECL.xsd$/) { $filelist{$File::Find::name} = $File::Find::name; } }
+}
+for $item (keys %filelist)
+{
+        # slurp impl
+        local(*DECL_INPUT) ;
+        open(DECL_INPUT, "$item") or die || die "Cannot open user decl XSD file $item\n";
+        my $decl_impl = do { local( $/ ) ; <DECL_INPUT> } ;
+        close DECL_INPUT;
+        $now_string = strftime "%a %b %e %H:%M:%S %Y", localtime;
+        $xsd =~  s/<!-- PREPROCESS -->/<!-- PREPROCESS -->\n<!-- GENERATED - DO NOT EDIT on $now_string -->\n<!-- $item -->\n$decl_impl<!-- GENERATED -->\n/g ; 
+}
+
+my %filelist;
+for $item (@AllImplementors)
+{
+        find(\&decltypewanted, $item);
+        sub decltypewanted { if (/.*DECL_TYPE.xsd$/) { $filelist{$File::Find::name} = $File::Find::name; } }
+}
+for $item (keys %filelist)
+{
+        # slurp impl type defs
+        local(*DECL_TYPE_INPUT) ;
+        open(DECL_TYPE_INPUT, "$item") or die || die "Cannot open user decl XSD file $item\n";
+        my $decl_type_impl = do { local( $/ ) ; <DECL_TYPE_INPUT> } ;
+        close DECL_TYPE_INPUT;
+        $now_string = strftime "%a %b %e %H:%M:%S %Y", localtime;
+        
+        my ($userinclude) = ($decl_type_impl =~ /(<xs:include .*\/>)/);
+        if ($userinclude)
+        {
+                $userinclude =~ s/{\$implPath}/$opt_implPath/g;
+                $xsd =~  s/<!-- USERDEFINED INCLUDES -->/<!-- USERDEFINED INCLUDES -->\n\t<!-- GENERATED - DO NOT EDIT on $now_string -->\n\t<!-- $item -->\n$userinclude\n\t<!-- GENERATED -->\n/g ;
+        }
+        $decl_type_impl =~ s/<xs:include .*\/>/$userinclude/g;
+        
+        open(DECL_TYPE_INPUT, ">$item") or die || die "Cannot open user decl XSD file $item\n";
+        print DECL_TYPE_INPUT $decl_type_impl;
+        close DECL_TYPE_INPUT;
+        
+        $decl_type_impl =~ s/<xs:include .*\/>//g;
+
+        $xsd =~  s/<!-- USERDEFINES -->/<!-- USERDEFINES -->\n\t<!-- GENERATED - DO NOT EDIT on $now_string -->\n\t<!-- $item -->\n$decl_type_impl\t<!-- GENERATED -->\n/g ; 
+}
+open(XSD_OUTPUT, ">${opt_schemaOut}") or die || die "Cannot open master XSD file ${opt_schemaOut}\n";
+print XSD_OUTPUT $xsd;
+close XSD_OUTPUT;
+}
+if ($opt_compileOnly eq 'false' || $singleUserCompilation eq 'true')
+{
+        my $PACKAGE="com.genband.ase.alc.alcml.jaxb.xjc";
+        
+        my $output=`\"$opt_javaHomePath/bin/xjc\" -p ${PACKAGE} ${opt_schemaOut} -d ${opt_bindingOutputDir}/`;
+        print $output;
+
+        my %filelist;
+        find(\&jaxb_impl, "${opt_bindingOutputDir}/com/genband/ase/alc/alcml/jaxb/xjc/");
+        sub jaxb_impl { if (/.*\.java$/) { $filelist{$File::Find::name} = $File::Find::name; } }
+        for $item (keys %filelist)
+        {
+                # slurp jaxb impl
+                local(*JAXB_INPUT) ;
+                open(JAXB_INPUT, "$item") or die || die "Cannot open JAXB_INPUT file $item\n";
+                my $jaxb_impl = do { local( $/ ) ; <JAXB_INPUT> } ;
+                close JAXB_INPUT;
+
+                $jaxb_impl =~ s/public class (.*) \{/public class \1 extends BaseXSD \{/g;
+                open(JAXB_OUTPUT, ">$item") or die || die "Cannot open JAXB_OUTPUT file $item\n";
+                print JAXB_OUTPUT $jaxb_impl;
+                close JAXB_OUTPUT;
+        }
+
+        open(JAXB_OUTPUT_BASE, ">${opt_bindingOutputDir}/com/genband/ase/alc/alcml/jaxb/xjc/BaseXSD.java") or die || die "Cannot open ${opt_bindingOutputDir}/com/genband/ase/alc/alcml/jaxb/xjc/BaseXSD.java\n";
+        print JAXB_OUTPUT_BASE "package ${PACKAGE};import com.genband.ase.alc.alcml.jaxb.ServiceDefinition;\nimport java.lang.Class;\nimport java.util.logging.Level;\nimport java.util.logging.Logger;\nimport java.io.Serializable;\n";
+        print JAXB_OUTPUT_BASE "public class BaseXSD implements Serializable {  static Logger logger = Logger.getLogger(BaseXSD.class.getName());\n";
+        print JAXB_OUTPUT_BASE "BaseXSD()\n";
+        print JAXB_OUTPUT_BASE "{ logger.log(Level.FINER, \"Attempting to initialize \"+this.getClass().getSimpleName());\n";
+        print JAXB_OUTPUT_BASE "try { Class staticIniti = Class.forName(this.getClass().getSimpleName()+\"ServiceUserAction\"); }\n";
+        print JAXB_OUTPUT_BASE "catch (Exception e) { logger.log(Level.FINER, \"Class not found \"+this.getClass().getSimpleName()+\"ServiceUserAction, not a user extension.\"); } }; } \n\n";
+        close JAXB_OUTPUT_BASE;
+}
+
+
+

@@ -1,0 +1,18 @@
+[Unit]
+Description=cas
+After=syslog.target network.target
+StartLimitBurst=5
+StartLimitInterval=100
+[Service]
+Type=simple
+User=orion
+Environment=INSTALLROOT=<CAS INSTALLROOT>
+ExecStartPre=/bin/sleep 5
+ExecStart=<CAS INSTALLROOT>/ASESubsystem/scripts/ase_no_ems
+ExecStop=<CAS INSTALLROOT>/ASESubsystem/scripts/stop_ase_no_ems
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+[Install]
+WantedBy=multi-user.target
+

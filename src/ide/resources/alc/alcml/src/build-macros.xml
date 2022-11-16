@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project name="build-macros" basedir=".">
+      <macrodef name="alcmlc">
+            <attribute name="classpath"/>
+            <attribute name="destdir"/>
+            <attribute name="srcdir"/>
+            <attribute name="input" default="java"/>
+            <attribute name="schemaIn" default="${ALCML_HOME}/src/ApplicationLogicControl.xsd"/>
+            <attribute name="schemaOut" default="${ALCML_HOME}/src/tmpApplicationLogicControl.xsd"/>
+            <attribute name="bindingOutputDir" default="${ALCML_HOME}/src/"/>
+            
+            <attribute name="internalUseCompileOnly" default="true"/>
+            <attribute name="internalUseMultipass" default="false"/>
+            <sequential>    
+                  <property name="alcml.compiler.dir" Value="${ALCML_HOME}/src/com/genband/ase/alc/alcml/jaxb/"/>
+                  <property name="alcml.jar.dir" Value="${ALCML_HOME}/build"/>
+                  <property name="xjc.compiler.dir" Value="${JAVA_HOME}/"/>
+                  <fixcrlf file="${alcml.compiler.dir}/alcmlc"/>
+                  <mkdir dir="${ALCML_HOME}/src/com/genband/ase/alc/alcml/jaxb/xjc/"/>
+                  <exec dir="${alcml.compiler.dir}" executable="perl">
+                        <arg line="'${alcml.compiler.dir}/alcmlc'"/>
+                        <arg line="-cp '@{classpath}:./'"/>
+                        <arg line="-input '@{input}'"/>
+                        <arg line="-xsdOutputDir '@{destdir}'"/>
+                        <arg line="-alcmlPath '${ALCML_HOME}'"/>
+                        <arg line="-implPath '@{srcdir}'"/>
+                        <arg line="-javaHomePath '${xjc.compiler.dir}'"/>
+                        <arg line="-compileOnly @{internalUseCompileOnly}"/>
+                        <arg line="-multipass @{internalUseMultipass}"/>
+                        <arg line="-schemaIn '@{schemaIn}'"/>
+                        <arg line="-bindingOutputDir '@{bindingOutputDir}'"/>
+                        <arg line="-schemaOut '@{schemaOut}'"/>
+                  </exec>
+      </sequential>   
+      </macrodef>
+</project>

@@ -1,0 +1,46 @@
+<!-- 
+	This DTD is used to validate the "outbound-gateway-config.xml" file that 
+	contains the meta data on all media servers provisioned to the platform.
+-->
+
+<!ELEMENT outbound-gateway-config (outbound-gateway*)>
+
+<!ELEMENT outbound-gateway (id,group-id, ip-address, port, priority?, noheartbeat?, heartbeaturi?)>
+
+<!--
+	String identifier for the gateway used for human presentation
+-->
+<!ELEMENT id (#PCDATA)>
+
+<!--
+	String identifier for the gateway group used for human presentation
+-->
+<!ELEMENT group-id (#PCDATA)>
+
+<!--
+	Address of the gateway
+-->
+<!ELEMENT ip-address (#PCDATA)>
+
+<!--
+	SIP listener port on the gateway
+-->
+<!ELEMENT port (#PCDATA)>
+
+<!--
+	Priority for gateway selection
+-->
+<!ELEMENT priority (#PCDATA)>
+
+<!--
+	Request URI to send if heartbeating to element, if empty will pick up 
+        from ms adaptor class
+-->
+<!ELEMENT heartbeaturi (#PCDATA)>
+
+<!--
+	Allows disabling heartbeat on a individual ms level, useful during testing
+        to reduce extraneous messaging
+-->
+<!ELEMENT noheartbeat EMPTY>
+

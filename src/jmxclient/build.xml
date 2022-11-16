@@ -1,0 +1,110 @@
+<!-- ==================================================== -->
+<!-- Build file: JMXClient -->
+<!-- ==================================================== -->
+
+<project name="JMXClient" default="all" basedir=".">
+	<!-- ***************************************** -->
+    <!-- Main target -->
+    <target name="all" depends="at-client">
+    </target>
+    <!-- ***************************************** -->
+	
+	<!-- Set the variables used inside -->
+    <property name="jmx.src.dir" value="${AT_SRC}"/>
+    <property name="jmx.build.dir" Value="${INSTALLROOT}/jmxClient"/>
+		
+	<target name="clean">
+		<property name="at.dest.dir" value="${jmx.build.dir}/AT"/>
+		<delete dir="${at.dest.dir}"/>
+	</target>
+	
+	<target name="at-client" depends = "clean">
+    	<echo message ="Building the AT-client "/>
+		
+		<property name="at.src.dir" value="${jmx.src.dir}"/>
+		<property name="at.src.scripts.dir" value="${at.src.dir}/../scripts"/>
+		
+		<property name="at.dest.dir" value="${jmx.build.dir}/AT"/>
+		<property name="at.dest.lib.dir" value="${at.dest.dir}/lib"/>
+		<property name="at.dest.scripts.dir" value="${at.dest.dir}/scripts"/>
+
+		<property name="at.tmp.dir" value="${INSTALLROOT}/ATClasses"/>
+		<property name="at.tmp.class.dir" value="${at.tmp.dir}/classes"/>
+		
+		<echo message ="JMX SRc=${jmx.src.dir}"/>
+		<echo message ="JMX build=${jmx.build.dir}"/>
+		
+		<echo message ="AT src=${at.src.dir}"/>
+		<echo message ="AT script src =${at.src.scripts.dir}"/>
+				
+		<echo message ="AT dest=${at.dest.dir}"/>
+		<echo message ="AT dest lib=${at.dest.lib.dir}"/>
+		<echo message ="AT dest scripts=${at.dest.scripts.dir}"/>
+		
+		<echo message ="AT tmp=${at.tmp.dir}"/>
+		<echo message ="AT classes tmp=${at.tmp.class.dir}"/>
+		
+		<mkdir dir="${jmx.build.dir}"/>
+		<mkdir dir="${at.dest.dir}"/>
+		<mkdir dir="${at.dest.lib.dir}"/>	
+		<mkdir dir="${at.dest.scripts.dir}"/>	
+		
+		<mkdir dir="${at.tmp.dir}"/>
+		<mkdir dir="${at.tmp.class.dir}"/>
+				
+		<copy todir="${at.dest.lib.dir}" file="${INSTALLROOT}/bpjars/jmxide.jar"/>
+		<copy todir="${at.dest.lib.dir}" file="${THIRDPARTY}/otherjars/commons-logging-1.1.jar"/>    	
+		<copy todir="${at.dest.lib.dir}" file="${THIRDPARTY}/otherjars/log4j-1.2.8.jar"/>    	
+		<copy todir="${at.dest.lib.dir}" file="${THIRDPARTY}/otherjars/jmxremote_optional.jar"/>
+		<copy todir="${at.dest.lib.dir}" file="${THIRDPARTY}/otherjars/jmxremote.jar"/>   			
+		<copy todir="${at.dest.lib.dir}" file="${THIRDPARTY}/otherjars/jmxri.jar"/>		
+		
+		<!-- Define the classpath. Please make sure that all the jars available in the lib -->
+		<path id="atclasspath">
+			<fileset dir="${at.dest.lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+		
+		
+		<pathconvert property="libs.project" pathsep=" ">
+			<mapper>
+				<chainedmapper>
+					<!-- remove absolute path -->
+					<flattenmapper />
+					<!-- add lib/ prefix -->
+				    <globmapper from="*" to="lib/*" />
+				</chainedmapper>
+			</mapper>
+			<path>
+				<!-- lib.home contains all jar files, in several subdirectories -->
+				<fileset dir="${at.dest.lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</path>
+		</pathconvert>
+
+
+		<javac srcdir="${at.src.dir}" destdir="${at.tmp.class.dir}" debug="true">
+			<include name="com/sas/util/**/*.java"/>
+			<classpath refid="atclasspath"/>
+		</javac>
+
+		<echo message ="AT client jar=${at.dest.dir}/atClient.jar"/>
+		
+		<jar jarfile="${at.dest.dir}/atClient.jar" basedir="${at.tmp.class.dir}" >
+			<include name="com/sas/util/**/*.class"/>
+			<manifest >
+				<attribute name="Main-Class" value="com.sas.util.JmxATClient"/>
+				<attribute name="Class-Path" value=". ${libs.project}" />
+			</manifest>
+		</jar>
+		<copy todir="${at.dest.dir}/" file="${at.src.dir}/application.properties"/>
+		<copy todir="${at.dest.scripts.dir}/" file="${at.src.scripts.dir}/startAT.sh"/>
+				
+		<delete dir="${at.tmp.class.dir}"/>
+		<delete dir="${at.tmp.dir}"/> 
+				
+    </target>
+	
+</project>

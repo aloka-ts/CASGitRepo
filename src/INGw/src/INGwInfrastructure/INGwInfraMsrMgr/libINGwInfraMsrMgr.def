@@ -1,0 +1,50 @@
+RULES          	= lib
+TARGET          = libINGwInfraMsrMgr
+
+EXTRA_INCLUDES  += $(XERCESROOT)/include
+
+EXTRA_DEFINES   += _AGENT_IMPL_ _MSR_SET_DUMP_ 
+#EXTRA_DEFINES   += _AGENT_IMPL_ _MSR_SET_DUMP_ _BP_CCM_
+
+EXTRA_RULES     += vbroker
+#EXTRA_RULES     += oracle vbroker
+    
+#EXTRA_LIBDIRS   += $(XERCES_HOME)/lib 
+EXTRA_LIBS      += Util xerces-c INGwInfraUtil elf
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+#include ../commondefs/ccm-config.def
+
+SRCS            =  INGwInfraMsrMgr/MsrCoreData.C \
+                   INGwInfraMsrMgr/MsrHashMap.C \
+                   INGwInfraMsrMgr/MsrHashNode.C \
+                   INGwInfraMsrMgr/MsrInstant.C \
+                   INGwInfraMsrMgr/MsrIntf.C \
+                   INGwInfraMsrMgr/MsrSet.C \
+                   INGwInfraMsrMgr/MsrTimer.C \
+                   INGwInfraMsrMgr/MsrThread.C \
+                   INGwInfraMsrMgr/MsrValue.C \
+                   INGwInfraMsrMgr/MsrValueMgr.C \
+                   INGwInfraMsrMgr/MsrWorkerThread.C \
+                   INGwInfraMsrMgr/MsrXmlParse.C \
+                   INGwInfraMsrMgr/MsrMgr.C 
+
+HDRS            =  INGwInfraMsrMgr/MsrCoreData.h \
+                   INGwInfraMsrMgr/MsrHashMap.h \
+                   INGwInfraMsrMgr/MsrHashNode.h \
+                   INGwInfraMsrMgr/MsrIncludes.h \
+                   INGwInfraMsrMgr/MsrInstant.h \
+                   INGwInfraMsrMgr/MsrIntf.h \
+                   INGwInfraMsrMgr/MsrMgr.h \
+                   INGwInfraMsrMgr/MsrPool.h \
+                   INGwInfraMsrMgr/MsrSet.h \
+                   INGwInfraMsrMgr/MsrTimer.h \
+                   INGwInfraMsrMgr/MsrThread.h \
+                   INGwInfraMsrMgr/MsrUpdateMsg.h \
+                   INGwInfraMsrMgr/MsrValue.h \
+                   INGwInfraMsrMgr/MsrValueMgr.h \
+                   INGwInfraMsrMgr/MsrWU.h \
+                   INGwInfraMsrMgr/MsrWorkerThread.h \
+                   INGwInfraMsrMgr/MsrXmlParse.h
+

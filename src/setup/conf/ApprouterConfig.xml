@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+	File Containing Rules for application router triggering.
+	It also contains mapping between Application and correlationID
+	used in case of hand off or assist
+-->
+
+<approuter-config>
+	<allow-uri-without-user>false</allow-uri-without-user>
+	<db-procedure-name>CAS_GET_INTERESTED_APPS.GET_NEW_INTERESTED_APPS</db-procedure-name>
+	<default-country-code>+52</default-country-code>
+	<default-app>2</default-app>
+	<use-shared-token-corr>0</use-shared-token-corr>
+	<use-svc-key-on-no-match>0</use-svc-key-on-no-match>
+
+	<handoff-assist-config>
+		<!--Format of request uri:: 008863XYYZ[Correlation ID] -->
+		<handoff-assist-identifier>008863</handoff-assist-identifier>	
+		<corr-id-length>8</corr-id-length>
+		
+		<handoff-assist-mapping>
+			<corr-id-starts-with>1</corr-id-starts-with> 
+			<application-name>Free Call</application-name>
+		</handoff-assist-mapping>
+		<handoff-assist-mapping>
+			<corr-id-starts-with>2</corr-id-starts-with> 
+			<application-name>Advanced Call</application-name>
+		</handoff-assist-mapping>
+		<handoff-assist-mapping>
+			<corr-id-starts-with>3</corr-id-starts-with> 
+			<application-name>VPN</application-name>
+		</handoff-assist-mapping>		
+	</handoff-assist-config>
+		
+	<inap-config>
+		<tcapprovider-name>tcap-provider</tcapprovider-name>
+		<tcap-call-begin-identifier>tcap</tcap-call-begin-identifier>
+	</inap-config>
+
+	<!--
+	<trigger-criteria> defines the critera on which the app triggers. Possible triggerTypes are:
+	OriginInfo, CallingPartyNumber, DialledNumber, Custom
+	-->
+	<app-trigger-priority>
+		<app-mapping>
+			<application-id>6</application-id>
+			<application-name>Origination</application-name>
+			<trigger-criteria>OriginInfo</trigger-criteria>
+		</app-mapping>
+		<app-mapping>
+			<application-id>1</application-id>
+			<application-name>VPN</application-name>
+			<trigger-criteria>Custom</trigger-criteria>
+		</app-mapping>
+		<app-mapping>
+			<application-id>10</application-id>
+			<application-name>LNP</application-name>
+			<trigger-criteria>OriginInfo</trigger-criteria>
+		</app-mapping>
+		<app-mapping>
+			<application-id>2</application-id>
+			<application-name>ATF</application-name>
+			<trigger-criteria>Custom</trigger-criteria>
+		</app-mapping>
+	</app-trigger-priority>
+
+</approuter-config>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodeDescriptor action="display" display="-" displayText="ApplicationLogicControl"><Container displayText="ApplicationLogicControl"><ApplicationLogicControl>
+        <NodeDescriptor action="display" display="-" displayText="Service"><Container displayText="Service Name Initialize"><Service Name="Initialize">
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+		<NodeDescriptor action="display" display="-"><ItemValue displayText="Set Variable debug EqualTo true"/></NodeDescriptor><Set Variable="debug" EqualTo="true"/>
+        </Service></Container></NodeDescriptor>
+</ApplicationLogicControl></Container></NodeDescriptor>

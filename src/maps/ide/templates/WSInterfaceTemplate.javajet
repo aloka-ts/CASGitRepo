@@ -1,0 +1,110 @@
+<%@ jet package = "com.genband.m5.maps.ide.model.template" imports = "java.util.* com.genband.m5.maps.ide.CPFPlugin com.genband.m5.maps.common.CPFConstants com.genband.m5.maps.ide.model.*;" class = "CreateWSInterface" %>
+package com.genband.m5.maps.services;
+
+import javax.jws.*;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.naming.*;
+import java.util.ArrayList;
+<% 	
+	CPFPlugin LOG = CPFPlugin.getDefault();
+	LOG.info("SEI generation started in Tempalte.....");
+	CPFResource CPFArgument = (CPFResource)argument; 
+ 	CPFScreen cpfScreen = (CPFScreen)CPFArgument.getCpfScreen();
+ 	ModelEntity baseEntity = cpfScreen.getPortletRef().getBaseEntity();
+ 	WebServiceInfo webServiceInfo = cpfScreen.getWebServiceInfo();
+ 	String webServiceName = new String();
+ 	String rootEntityName = baseEntity.getName();
+ 	int operationId = cpfScreen.getPortletRef().getPortletId();
+ 	if(cpfScreen.getWebServiceRef () == null) {
+ 		webServiceName = webServiceInfo.getWebServiceName();
+ 	}
+ 	else {
+ 	}
+ 	Map<CPFConstants.OperationType, String> webMethodsMap = webServiceInfo.getWebMethodsMap();
+ 	Map<CPFConstants.OperationType, String[]> webParams = webServiceInfo.getWebParams();    //Holds WebParam names for WebPorts
+ 	Map<CPFConstants.OperationType, String> webResults = webServiceInfo.getWebResults();
+%>
+<%
+	if(webMethodsMap.keySet().contains(CPFConstants.OperationType.VIEW)) {
+%>
+import com.genband.m5.maps.messages.<%= baseEntity.getName() %>_<%= operationId %>;
+<%
+	}
+%>
+<%
+	if(webMethodsMap.keySet().contains(CPFConstants.OperationType.LIST)) {
+%>
+import com.genband.m5.maps.messages.<%= baseEntity.getName() %>Details_<%= operationId %>;
+<%
+	}
+%>
+import com.genband.m5.maps.common.*;
+import javax.xml.ws.*;
+
+@WebService (name = "<%= webServiceName %>", targetNamespace = "<%= webServiceInfo.getTargetNamespace () %>")
+@SOAPBinding (style = SOAPBinding.Style.RPC, use = SOAPBinding.Use.LITERAL)
+public interface <%= webServiceName %> {   
+<%	
+		//Started Generating web Method for each selected operation....
+	for(Iterator<CPFConstants.OperationType> keys = webMethodsMap.keySet().iterator(); keys.hasNext(); ) { 
+		CPFConstants.OperationType operationType = (CPFConstants.OperationType) keys.next();
+		String methodArguments = null;
+		String returnType = new String();
+		boolean returnValue = false;
+		String[] webParamNames = null;	
+		if(webParams != null) {
+			webParamNames = webParams.get (operationType);
+		}
+		if(webParamNames != null) {
+			methodArguments = new String ("@WebParam(name = \"" + webParamNames[0] + "\") ");
+		} else {
+			methodArguments = new String();
+		}
+		switch (operationType) {
+			case CREATE :
+				returnType = "void";
+				methodArguments = methodArguments.concat (rootEntityName + "_" + operationId+" ");
+				methodArguments = methodArguments.concat(rootEntityName + operationId);  
+				break;
+			case MODIFY :
+				returnType = "void";
+				methodArguments = methodArguments.concat (rootEntityName + "_" + operationId + " ");
+				methodArguments = methodArguments.concat (rootEntityName + operationId);
+				break;
+			case DELETE :
+				returnType = "void";
+				methodArguments = methodArguments.concat ("Long primaryKeyValue");
+				break;
+			case VIEW :
+				returnType = rootEntityName+"_" + operationId;
+				returnValue = true;
+				methodArguments = methodArguments.concat ("Long primaryKeyValue");
+				break;
+			case LIST :
+				 returnType = rootEntityName+"Details_" + operationId + "[]";
+				 returnValue = true;
+				 methodArguments = methodArguments.concat ("AuxiliaryDetails auxiliaryDetails");
+				 break;
+		}
+%>
+		@WebMethod
+<%		
+		if(returnValue){
+			if(webResults != null) {
+%>
+		@WebResult (name = "<%= webResults.get(operationType) %>")
+<% 	
+			} else {
+%>
+		@WebResult (name = "result<%= operationType %>")
+<%
+			}
+		}
+%>
+		public <%= returnType %> <%= webMethodsMap.get(operationType) %> (<%= methodArguments %> ) throws WSException;
+<% 		
+	}		//End of For loop
+	LOG.info("SEI geenraion finished from tempalte side.....");
+%>
+}

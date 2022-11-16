@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<AttributeList>
+
+<Attribute name="play.id" displayName="Announcement Id"
+			mandatory="false" type="basic"/>
+
+<Attribute name="play.prompt.baseurl" displayName="Announcement base URL"
+			mandatory="false" type="basic"/>
+
+<Attribute name="play.prompt.delay" displayName="Announcement pause between repetitions"
+			mandatory="false" type="range" value="0,65536000"/>
+			
+<Attribute name="play.prompt.interval" displayName="Delay between repetitions"
+            mandatory="false" type="range" value="0,262144000"/>
+
+<Attribute name="play.prompt.gain" displayName="Announcement absolute gain"
+			mandatory="false" type="range" value="0,65536000"/>
+
+<Attribute name="play.prompt.gaindelta" displayName="Announcement absolute gain"
+			mandatory="false" type="range" value="0,65536000"/>
+			
+<Attribute name="play.prompt.rate" displayName="Announcement playback rate of content"
+			mandatory="false" type="range" value="0,65536000"/>
+
+<Attribute name="play.prompt.ratedelta" displayName="Announcement playback rate delta"
+			mandatory="false" type="range" value="0,65536000"/>
+		
+		
+<Attribute name="play.prompt.offset" displayName="Announcement offset at which play to begin"
+			mandatory="false" type="list" value="ara,bwa,chi,eng,fre,may,por,spa,tha"/>
+
+<Attribute name="play.prompt.repeat" displayName="Announcement no of repeat"
+			mandatory="false" type="range" value="0,65536000"/>
+
+<Attribute name="play.prompt.stoponerror" displayName="Announcement Error behaviour"
+			mandatory="false" type="list" value="yes,no"/>
+
+
+<Attribute name="play.prompt.iterations" displayName="Play Iterations"
+			mandatory="false" type="range" value="1,65536000"/>
+
+<Attribute name="play.prompt.language" displayName="Play Language"
+			mandatory="false" type="list" value="en_US,en_AU,en_GB,sp_SP,es_MX,FY_FR,DE_DE,JA_JP,ja_JP,IT_IT,kr_KR,zh_CN,pr_PR,th_TH,rs_RS,ro_RO,vi_VN,tl_PH"/>
+
+<Attribute name="variable.type" displayName="Variable Announcement Type"
+			mandatory="true" type="list" value="date,digit,duration,month,money,number,silence,time,weekday,dig,string"/>
+
+<Attribute name="variable.subtype.string" displayName="Variable Announcement Sub Type For String"
+            mandatory="false" type="list" value="null"/>
+
+<Attribute name="play.prompt.duration" displayName="Announcement duration"
+			mandatory="false" type="range" value="1,65536000"/>
+
+<Attribute name="variable.subtype.date" displayName="Variable Announcement Sub Type For Date"
+			mandatory="true" type="list" 
+			value="dmy,dym,mdy,myd,ymd,ydm"/>
+
+<Attribute name="variable.subtype.digit" displayName="Variable Announcement Sub Type For Digit"
+			mandatory="true" type="list" 
+			value="gen,gen2,ndn"/>
+			
+<Attribute name="variable.subtype.dig" displayName="Variable Announcement Sub Type For Digit"
+			mandatory="true" type="list" 
+			value="gen,gen2,ndn"/>
+
+<Attribute name="variable.subtype.duration" displayName="Variable Announcement Sub Type For Duration"
+			mandatory="false" type="list" 
+			value="null"/>
+
+<Attribute name="variable.subtype.money" displayName="Variable Announcement Sub Type For Money"
+			mandatory="true" type="list" 
+			value="CNY,EUR,USD,AED,BRL,BWP,MYR,MXN,JPY,DOP"/>
+
+<Attribute name="variable.subtype.number" displayName="Variable Announcement Sub Type For Number"
+			mandatory="true" type="list" 
+			value="crd,ord"/>
+			
+<Attribute name="variable.subtype.silence" displayName="Variable Announcement Sub Type For Silence"
+			mandatory="true" type="list" 
+			value="null"/>
+
+<Attribute name="variable.subtype.time" displayName="Variable Announcement Sub Type For Time"
+			mandatory="true" type="list" 
+			value="t12,t24"/>			
+			
+<Attribute name="variable.subtype.weekday" displayName="Variable Announcement Sub Type For Weekday"
+			mandatory="true" type="list" 
+			value="null" />		
+			
+<Attribute name="var.subtype.date" displayName="Variable Announcement Sub Type For Date"
+			mandatory="true" type="list" 
+			value="dmy,dym,mdy,myd,ymd,ydm"/>
+
+<Attribute name="var.subtype.digits" displayName="Variable Announcement Sub Type For Digit"
+			mandatory="true" type="list" 
+			value="gen,gen2,ndn"/>
+
+<Attribute name="var.subtype.duration" displayName="Variable Announcement Sub Type For Duration"
+			mandatory="false" type="list" 
+			value="null"/>
+
+<Attribute name="var.subtype.money" displayName="Variable Announcement Sub Type For Money"
+			mandatory="true" type="list" 
+			value="cny,eur,usd,aed,brl,bwp,myr,mxn,jpy,dop"/>
+
+<Attribute name="var.subtype.number" displayName="Variable Announcement Sub Type For Number"
+			mandatory="true" type="list" 
+			value="crd,ord"/>
+			
+<Attribute name="var.subtype.silence" displayName="Variable Announcement Sub Type For Silence"
+			mandatory="true" type="list" 
+			value="null"/>
+
+<Attribute name="var.subtype.time" displayName="Variable Announcement Sub Type For Time"
+			mandatory="true" type="list" 
+			value="t12,t24"/>
+			
+<Attribute name="variable.subtype.time" displayName="Variable Announcement Sub Type For Time"
+			mandatory="true" type="list" 
+			value="t12,t24"/>			
+			
+<Attribute name="var.subtype.weekday" displayName="Variable Announcement Sub Type For Weekday"
+			mandatory="true" type="list" 
+			value="null" />			
+
+<Attribute name="variable.value" displayName="Variable Announcement value"
+			mandatory="true" type="basic" />			
+
+<Attribute name="var.language" displayName="Variable Announcement Language"
+			mandatory="false" type="list" 
+			value="ara,bwa,chi,eng,fre,may,por,spa,tha"/>
+
+<Attribute name="dtmf.fdt" displayName="DTMF - First Digit Timer"
+			mandatory="false" type="range" value="0,300000"/>
+
+<Attribute name="dtmf.idt" displayName="DTMF - Inter Digit Timer"
+		mandatory="false" type="range" value="1,300000"/>
+
+<Attribute name="dtmf.edt" displayName="DTMF - Extra Digit Timer"
+			mandatory="false" type="range" value="1,300000"/>
+
+<Attribute name="dtmf.mindigits" displayName="DTMF - Minimum Digits Pattern"
+			mandatory="false" type="range" value="1,50"/>
+
+<Attribute name="dtmf.maxdigits" displayName="DTMF - Maximum Digits Pattern"
+			mandatory="false" type="range" value="1,50"/>
+
+<Attribute name="dtmf.length" displayName="DTMF - Length of Digits Pattern"
+			mandatory="false" type="range" value="1,50"/>
+
+<Attribute name="dtmf.termkey" displayName="DTMF - Termination Key Pattern"
+			mandatory="false" type="list" value="0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,*,#"/>
+
+<Attribute name="dtmf.retkey" displayName="DTMF - Return Key Pattern"
+			mandatory="false" type="list" value="0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,*,#"/>
+
+<Attribute name="record.dest" displayName="Recording Destination"
+			mandatory="true" type="basic" />			
+
+<Attribute name="record.format" displayName="Recording Format"
+			mandatory="true" type="list" delim="|"
+			value="audio/wav|audio/x-wav|audio/vnd.wave;codec=1|audio/vnd.wave;codec=6|audio/vnd.wave;codec=7|audio/vnd.wave;codec=83|audio/vnd.wave;codec=8C"/>
+
+<Attribute name="record.maxtime" displayName="Maximum Recoring Time"
+			mandatory="true" type="range" 
+			value="1000,108000000"/>
+
+<Attribute name="record.prespeech" displayName="Recording Pre-speech timer"
+			mandatory="false" type="range" 
+			value="1000,108000000"/>
+
+<Attribute name="record.postspeech" displayName="Recording Post-speech timer"
+			mandatory="false" type="range" 
+			value="1000,108000000"/>
+
+<Attribute name="record.escape" displayName="Recording Escape key pattern" 
+			mandatory="false" type="list" 
+			value="0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,*,#"/>
+
+<Attribute name="record.term" displayName="Recording Termination Key"
+			mandatory="false" type="list" value="0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,*,#"/>
+
+<Attribute name="dialog.id" displayName="Dialog Identifier"
+			mandatory="false" whitespace="no" type="basic" />
+
+<Attribute name="dialog.target" displayName="Dialog Target"
+			mandatory="true" whitespace="no" type="basic" />
+			
+<Attribute name="conf.id" displayName="Conference Identifier"
+			mandatory="true" whitespace="no" type="basic" />
+
+<Attribute name="conf.n" displayName="Conference Number of participants"
+			mandatory="false" type="range"  value="1,16" />
+
+<Attribute name="conf.ri" displayName="Conference Reporting Time interval"
+			mandatory="false" type="range"  value="2000,600000" />
+
+<Attribute name="join.id1" displayName="Conference Participant ID"
+			mandatory="true" whitespace="no" type="basic" />
+
+<Attribute name="join.id2" displayName="Conference Controller ID"
+			mandatory="true" whitespace="no" type="basic" />
+
+<Attribute name="join.duplex" displayName="Conference Participant Mode"
+			mandatory="false" type="list"  value="half,full" />
+
+</AttributeList>

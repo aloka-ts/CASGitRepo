@@ -1,0 +1,66 @@
+## This script is used to debug debug level of different stack layer.
+## stack messages will be captured in  /LOGS/INGw/stack.log file
+## IMPORTANT: Logging should not be enabled during high load. The purpose
+##            of this script is do debugging during functionality testing.
+##            Enabling this during high load may result in INC misbehaving.
+#!/usr/bin/ksh
+
+. ~/profile.ingw
+. $INSTALLROOT/$SUBSYS_DIR/sol28g/conf/hssenv.sh
+
+usage()
+{
+	clear
+	echo -e "\033[1mSELECT Stack Layer\033[0m"
+	echo "ALL  Layer [Enter 1]"
+	echo "TCAP Layer [Enter 2]"
+	echo "SCCP Layer [Enter 3]"
+	echo "MTP3 Layer [Enter 4]"
+	echo "MTP2 Layer [Enter 5]"
+	echo "M3UA Layer [Enter 6]"
+	echo ""
+	echo -n "Enter layer: "
+	read input
+
+	return $input
+}
+
+getCommand()
+{
+	if [[ $1 -eq 1 ]]
+	then
+		var="ALL 7"
+	elif [[ $1 -eq 2 ]]
+	 then
+		var="TCAP 7"
+	elif [[ $1 -eq 3 ]]
+	 then
+		var="SCCP 7"
+	elif [[ $1 -eq 4 ]]
+	 then
+		var="MTP3 7"
+	elif [[ $1 -eq 5 ]]
+	 then
+		var="MTP2 7"
+	elif [[ $1 -eq 6 ]]
+	 then
+		var="M3UA 7"
+	fi
+}
+
+usage
+value=$?
+
+if [[ $value -lt 1 || $value -gt 6 ]]
+then
+ echo "You have entered wrong choice. Exiting...."
+ exit
+fi
+var=""
+getCommand $value
+
+executeCmd=`echo "set stack-debug-level DISABLE" $var`
+
+echo $executeCmd
+
+$INSTALLROOT/$SUBSYS_DIR/sol28g/bin/INGwProbe -s $SIP_LISTENER_HOST -c "$executeCmd"

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************
+*	 GENBAND, Inc. Confidential and Proprietary
+*
+* This work contains valuable confidential and proprietary 
+* information.
+* Disclosure, use or reproduction without the written authorization of
+* GENBAND, Inc. is prohibited.  This unpublished work by GENBAND, Inc.
+* is protected by the laws of the United States and other countries.
+* If publication of the work should occur the following notice shall 
+* apply:
+* 
+* "Copyright 2007 GENBAND, Inc.  All rights reserved."
+**********************************************************************/
+-->
+
+<deployments>
+   <deployment>
+      <parent-ref/>
+      <if-exists>overwrite</if-exists>
+      <portal>
+         <portal-name>Organization</portal-name>
+         <properties>
+            <property>
+               <name>layout.id</name>
+               <value>generic</value>
+            </property>
+            <property>
+               <name>theme.id</name>
+               <value>maple</value>
+            </property>
+            <property>
+               <name>theme.renderSetId</name>
+               <value>divRenderer</value>
+            </property>
+         </properties>
+         <supported-modes>
+            <mode>view</mode>
+            <mode>help</mode>
+         </supported-modes>
+         <supported-window-states>
+            <window-state>normal</window-state>
+            <window-state>minimized</window-state>
+            <window-state>maximized</window-state>
+         </supported-window-states>
+         <security-constraint>
+            <policy-permission>            
+               <role-name>SPA</role-name>
+               <action-name>view</action-name>            
+               <role-name>NPM</role-name>
+               <action-name>view</action-name>               
+            </policy-permission>
+         </security-constraint>
+         <page>
+		<page-name>default</page-name>
+         <properties>
+            <property>
+               <name>order</name>
+               <value>1</value>
+            </property>
+            <property>
+               <name>layout.id</name>
+               <value>generic</value>
+            </property>
+            <property>
+               <name>theme.id</name>
+               <value>maple</value>
+            </property>
+            
+         </properties>
+         <security-constraint>
+            <policy-permission>	            
+               <role-name>SPA</role-name>
+               <action-name>view</action-name>            
+               <role-name>NPM</role-name>
+               <action-name>view</action-name>               
+            </policy-permission>
+         </security-constraint>
+         <window>
+            <window-name>ownDetails</window-name>
+            <instance-ref>ownDetails_org_1_2_1Instance</instance-ref>
+            <region>center</region>
+            <height>1</height>
+         </window>
+         </page>
+         <page>
+         <page-name>Child Organizations</page-name>
+         <properties>
+            <property>
+               <name>order</name>
+               <value>2</value>
+            </property>
+            <property>
+               <name>layout.id</name>
+               <value>generic</value>
+            </property>
+            <property>
+               <name>theme.id</name>
+               <value>maple</value>
+            </property>
+            
+         </properties>
+         <security-constraint>
+            <policy-permission>	            
+               <role-name>SPA</role-name>
+               <action-name>view</action-name>            
+               <role-name>NPM</role-name>
+               <action-name>view</action-name>               
+            </policy-permission>
+         </security-constraint>
+         <window>
+            <window-name>childOrganizationList_2_1</window-name>
+            <instance-ref>childOrganizationList_org_2_2_1Instance</instance-ref>
+            <region>center</region>
+            <height>1</height>
+         </window>
+         </page>      
+       </portal>
+    </deployment>
+</deployments>

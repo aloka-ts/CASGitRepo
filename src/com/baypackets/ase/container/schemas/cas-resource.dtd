@@ -1,0 +1,89 @@
+<!-- The cas-resource element is the root of the 
+deployment descriptor for a CAS Resource Adapter -->
+<!ELEMENT cas-resource ( name, version, protocol?, 
+	resource-adaptor-class, resource-factory-class?, 
+	message-factory-class, session-factory-class,
+	measurement-config-file?, threshold-config-file?,
+	listener-proxy-config* ) >
+
+<!-- name specifies the Name of the Resource Adapter.
+Name along with version should be a unique value.
+Name should not have any white spaces in it. -->
+<!ELEMENT name ( #PCDATA ) >
+
+<!-- version specifies the Version of the Resource Adapter.
+Version along with Name should be a unique value.
+Version should not have any white spaces in it. -->
+<!ELEMENT version ( #PCDATA ) >
+
+<!-- 
+protocol specifies the protocol used by the Resource Adapter.
+-->
+<!ELEMENT protocol ( #PCDATA ) >
+
+<!-- Name of the resource adaptor implementation class.
+The valid value is a fully qualified class name.
+This implementation class should implement the interface
+com.baypackets.ase.spi.resource.ResourceAdaptor interface. -->
+<!ELEMENT resource-adaptor-class ( #PCDATA ) >
+
+<!-- Name of the resource factory implementation class.
+The valid value is a fully qualified class name.
+This implementation class should implement the interface
+com.baypackets.ase.resource.ResourceFactory interface 
+This is an OPTIONAL element. If not specified, the 
+container will use a default resource factory implementation. -->
+<!ELEMENT resource-factory-class ( #PCDATA ) >
+
+<!-- Name of the message factory implementation class.
+The valid value is a fully qualified class name.
+This implementation class should implement the interface
+com.baypackets.ase.spi.resource.MessageFactory interface 
+The container will create an instance of this specified class,
+Wrap it with a proxy implementation and make it available using
+ResourceContext.getMessageFactory() method. -->
+<!ELEMENT message-factory-class ( #PCDATA ) >
+
+<!-- Name of the session factory implementation class.
+The valid value is a fully qualified class name.
+This implementation class should implement the interface
+com.baypackets.ase.spi.resource.SessionFactory interface 
+The container will create an instance of this specified class,
+Wrap it with a proxy implementation and make it available using
+ResourceContext.getSessionFactory() method. -->
+<!ELEMENT session-factory-class ( #PCDATA ) >
+
+<!-- Specifies the name of the measurement-config-file.
+This file should be packaged in the resource archive file.
+The file name is a path relative to the root of the archive file. -->
+<!ELEMENT measurement-config-file ( #PCDATA ) >
+
+<!-- Specifies the name of the threshold-config-file.
+This file should be packaged in the resource archive file.
+The file name is a path relative to the root of the archive file. -->
+<!ELEMENT threshold-config-file ( #PCDATA ) >
+
+<!-- Specifies the name of the listener proxy configuration.
+These entries will be used when the resource adapter wants to define
+custom listener interfaces that would be invoked while the events are
+delivered. During  the deployment, the container would instantiate 
+an instance of the class specified under the proxy-class child element.
+
+Whenever an event is given to the container, it will check whether the 
+event type matches for any of the listener-proxy config. If yes,
+it will get all the application listeners of the type specified in 
+listener-class child element, and give it to the proxy-class instance
+for processing.
+
+Now the proxy-class instance can invoke the desired method on the listener.
+-->
+<!ELEMENT listener-proxy-config ( event-type, proxy-class, listener-class ) >
+
+<!-- Event type as defined by the resource adapter's application contract -->
+<!ELEMENT event-type ( #PCDATA ) >
+
+<!-- Fully qualified name of the listener proxy implementation -->
+<!ELEMENT proxy-class ( #PCDATA ) >
+
+<!-- Fully qualified name of the Custom listener type -->
+<!ELEMENT listener-class ( #PCDATA ) >

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationServiceImplementation xmlns:x0="http://www.w3.org/2001/XMLSchema">
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>Initialize</ActionMethod>
+        <Context>
+            <Tag>Repeat</Tag>
+            <Value>1</Value>
+        </Context>
+          <Context>
+            <Tag>Duration</Tag>
+            <Value>300000ms</Value>
+        </Context>
+        <Context>
+            <Tag>MaxDigits</Tag>
+            <Value>10</Value>
+        </Context>
+        <Context>
+            <Tag>MinDigits</Tag>
+            <Value>1</Value>
+        </Context>
+        <Context>
+            <Tag>FirstDigitTimer</Tag>
+            <Value>5000ms</Value>
+        </Context>
+        <Context>
+            <Tag>InterDigitTimer</Tag>
+            <Value>5000ms</Value>
+        </Context>
+        <Context>
+            <Tag>InterdigitCriticalTimer</Tag>
+            <Value>5000ms</Value>
+        </Context>
+        <Context>
+            <Tag>ExtraDigitTimer</Tag>
+            <Value>1000ms</Value>
+        </Context>
+        <Context>
+            <Tag>CollectEscapeKey</Tag>
+            <Value>A</Value>
+        </Context>
+        <Context>
+            <Tag>ReturnKey</Tag>
+            <Value>#</Value>
+        </Context>
+        <Context>
+            <Tag>cleardigits</Tag>
+            <Value>no</Value>
+        </Context>
+<!-- ***************************************************** -->
+<!-- *      Media Enumerations			         * -->
+<!-- ***************************************************** -->
+<!-- ***************************************************** -->
+<!-- *      barge				         * -->
+<!-- ***************************************************** -->
+        <Context>
+            <Tag>MSCMLBargeTrue</Tag>
+            <Value>yes</Value>
+        </Context>
+        <Context>
+            <Tag>MSCMLBargeFalse</Tag>
+            <Value>no</Value>
+        </Context>
+        <Context>
+            <Tag>MSMLBargeTrue</Tag>
+            <Value>true</Value>
+        </Context>
+        <Context>
+            <Tag>MSMLBargeFalse</Tag>
+            <Value>false</Value>
+        </Context>
+<!-- ***************************************************** -->
+<!-- *      RecordMode				         * -->
+<!-- ***************************************************** -->
+        <Context>
+            <Tag>MSCMLAppendTrue</Tag>
+            <Value>append</Value>
+        </Context>
+        <Context>
+            <Tag>MSCMLAppendFalse</Tag>
+            <Value>overwrite</Value>
+        </Context>
+        <Context>
+            <Tag>MSMLAppendTrue</Tag>
+            <Value>true</Value>
+        </Context>
+        <Context>
+            <Tag>MSMLAppendFalse</Tag>
+            <Value>false</Value>
+        </Context>
+<!-- ***************************************************** -->
+<!-- ***************************************************** -->
+        <Context>
+            <Tag>barge</Tag>
+            <Value>${${MediaType}BargeTrue}</Value>
+        </Context>
+        <Context>
+            <Tag>RecordMode</Tag>
+            <Value>${${MediaType}AppendFalse}</Value>
+        </Context>
+        <Context>
+            <Tag>maskdigits</Tag>
+            <Value>no</Value>
+        </Context>
+        <Context>
+            <Tag>InitSilence</Tag>
+            <Value>5000ms</Value>
+        </Context>
+        <Context>
+            <Tag>EndSilence</Tag>
+            <Value>3000ms</Value>
+        </Context>
+        <Context>
+            <Tag>RecordDuration</Tag>
+            <Value>30000ms</Value>
+        </Context>
+        <Context>
+            <Tag>RecordBeep</Tag>
+            <Value>yes</Value>
+        </Context>
+        <Context>
+            <Tag>RecordEscapeKey</Tag>
+            <Value>A</Value>
+        </Context>
+        <Context>
+            <Tag>RecordStopMask</Tag>
+            <Value>0123456789#*</Value>
+        </Context>
+        <Context>
+            <Tag>EarlyMedia</Tag>
+            <Value>false</Value>
+        </Context>
+        <Context>
+            <Tag>MSCMLContextTYPE</Tag>
+            <Value><![CDATA[application/mediaservercontrol+xml]]></Value>
+        </Context>
+        <Context>
+            <Tag>MSMLContextTYPE</Tag>
+            <Value><![CDATA[application/msml+xml]]></Value>
+        </Context>
+        <Context>
+            <Tag>MSMLMediaServerUser</Tag>
+            <Value>msml</Value>
+        </Context>
+        <Context>
+            <Tag>MSCMLMediaServerUser</Tag>
+            <Value>ivr</Value>
+        </Context>
+        <Body><![CDATA[Media Service Defaults
+       <playcollect id="${CollectionIdentifier}" maxdigits="${MaxDigits}" firstdigittimer="${FirstDigitTimer}"
+         interdigittimer="${InterDigitTimer}" extradigittimer="${ExtraDigitTimer}"
+         interdigitcriticaltimer="${InterdigitCriticalTimer}" returnkey="${ReturnKey}" escapekey="${EscapeKey}"
+         cleardigits="no" barge="yes" maskdigits="no">
+        ]]></Body>
+    </ActionImplementation>
+</ApplicationServiceImplementation>

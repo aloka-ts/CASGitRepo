@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<replication-config>
+
+    <replication-per-second>100</replication-per-second>
+    
+    <replication-policy>
+        <event>TIMER_EXPIRY</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+    
+    <replication-policy>
+        <event>SIP_INVITE_TRAN_COMPLETE</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+
+   <!--Added to provide FT handling in case of provisional reliable responses. By default it will be commented --> 
+    <!-- <replication-policy>
+        <event>SIP_INVITE_TRAN_REL_PROV_RESP</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+    -->
+
+    <replication-policy>
+        <event>SIP_MESSAGE_TRAN_COMPLETE</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+        
+    <replication-policy>
+        <event>SIP_PUBLISH_TRAN_COMPLETE</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+        
+    <replication-policy>
+        <event>SIP_BYE_TRAN_COMPLETE</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+
+    
+    <replication-policy>
+        <event>SIP_INFO_TRAN_COMPLETE</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+   
+    <replication-policy>
+        <event>SIP_OPTIONS_TRAN_COMPLETE</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+    
+    <replication-policy>
+        <event>SIP_REFER_TRAN_COMPLETE</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+
+    <replication-policy>
+        <event>SIP_NOTIFY_TRAN_COMPLETE</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+
+    <replication-policy>
+        <event>RESOURCE_REQUEST_SENT</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+    
+     <replication-policy>
+        <event>RESOURCE_RESPONSE_SENT</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+
+    <replication-policy>
+        <event>CLEAN_UP</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+
+    <replication-policy>
+        <event>BULK_REPLICATION</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+                            
+    <replication-policy>
+        <event>TIMER_CREATION</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+                            
+    <replication-policy>
+        <event>TIMER_CANCELLATION</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+                            
+    <replication-policy>
+        <event>REPLICABLE_CHANGED</event>
+        <replication-type>REPLICATE</replication-type>
+    </replication-policy>
+
+	<!--Added to stop replication of 3xx responses -->
+    <!-- <replication-policy>
+        <event>INVITE_REDIRECTION_RESP</event>
+        <replication-type>NO_REPLICATION</replication-type>
+    </replication-policy>
+    -->
+
+                            
+</replication-config>
+

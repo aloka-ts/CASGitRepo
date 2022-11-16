@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationServiceImplementation xmlns:x0="http://www.w3.org/2001/XMLSchema">
+<!-- ***************************************************** -->
+<!-- *               MSML Specifications                 * -->
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSML Play Spec                      * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>Play</ActionMethod>
+        <ActionSpecifier>MSMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version="1.0" encoding="US-ASCII"?>
+<msml version="1.1">
+   <dialogstart target="${Target}" type="application/moml+xml" name="abc">
+     <play barge="${barge}" cleardb="true" iterations="${Repeat}" maxtime="${Duration}">
+        <audio uri="${promptName}"/>
+     </play>
+   </dialogstart>
+</msml>
+]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+<!-- ***************************************************** -->
+<!-- *               MSML EndPlay Spec                   * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>EndPlay</ActionMethod>
+        <ActionSpecifier>MSMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version="1.0" encoding="US-ASCII"?>
+<msml version="1.1">
+   <dialogend id="${DialogId}"/>
+</msml>
+]]></Body>
+    </ActionImplementation>
+
+
+<!-- ***************************************************** -->
+<!-- *               MSML Play List Spec                 * -->
+<!-- ***************************************************** -->
+<ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>PlayList</ActionMethod>
+        <ActionSpecifier>MSMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version="1.0" encoding="US-ASCII"?>
+<msml version="1.1">
+   <dialogstart target="${Target}" type="application/moml+xml" name="abc">
+    <play barge="${barge}" cleardb="true" iterations="${Repeat}" maxtime="${Duration}">
+${playList}
+     </play>
+   </dialogstart>
+</msml>
+]]></Body>
+</ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSML PlayCollect Spec              * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>PlayCollect</ActionMethod>
+        <ActionSpecifier>MSMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version="1.0" encoding="US-ASCII"?>
+<msml version="1.1">
+<dialogstart target="${Target}" type="application/moml+xml" name="abc">
+      <play barge="${barge}" cleardb="true" iterations="${Repeat}">
+      <audio uri="${promptName}"/>
+      </play>
+      <dtmf fdt="${FirstDigitTimer}" idt="${InterDigitTimer}" edt="${ExtraDigitTimer}" cleardb="false">
+      <pattern digits="min=${MinDigits};max=${MaxDigits};rtk=${ReturnKey}" format="moml+digits">
+       <send target="source" event="app.done" namelist="dtmf.end dtmf.digits"/>
+       </pattern>
+       <noinput>
+       <send target="source" event="app.done" namelist="dtmf.end"/>
+       </noinput>
+       <nomatch>
+       <send target="source" event="app.done" namelist="dtmf.digits dtmf.end"/>
+       </nomatch>
+      </dtmf>
+</dialogstart>
+</msml>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSML PlayListCollect Spec              * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>PlayListCollect</ActionMethod>
+        <ActionSpecifier>MSMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version="1.0" encoding="US-ASCII"?>
+<msml version="1.1">
+<dialogstart target="${Target}" type="application/moml+xml" name="abc">
+      <play barge="${barge}" cleardb="true" iterations="${Repeat}">
+${playList}
+      </play>
+      <dtmf fdt="${FirstDigitTimer}" idt="${InterDigitTimer}" edt="${ExtraDigitTimer}" cleardb="false">
+      <pattern digits="min=${MinDigits};max=${MaxDigits};rtk=${ReturnKey}" format="moml+digits">
+       <send target="source" event="app.done" namelist="dtmf.end dtmf.digits"/>
+       </pattern>
+        <noinput>
+       <send target="source" event="app.done" namelist="dtmf.end"/>
+       </noinput>
+       <nomatch>
+       <send target="source" event="app.done" namelist="dtmf.digits dtmf.end"/>
+       </nomatch>
+      </dtmf>
+</dialogstart>
+</msml>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSML PlayRecord Spec                * -->
+<!-- ***************************************************** -->
+<ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>PlayRecord</ActionMethod>
+        <ActionSpecifier>MSMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version="1.0" encoding="US-ASCII"?>
+<msml version="1.1">
+<dialogstart target="${Target}" type="application/moml+xml" name="abc">
+      <play barge="${barge}" cleardb="true" iterations="${Repeat}">
+      <audio uri="${promptName}"/>
+      </play>
+      <record dest="${fileLocation}" format="audio/wav"
+      maxtime="${RecordDuration}" cvd:pre-speech="${InitSilence}" cvd:post-speech="${EndSilence}"
+      cvd:termkey="${RecordEscapeKey}" append="${RecordMode}">
+       <send target="source" event="app.done" namelist="record.len"/>
+      </record>
+</dialogstart>
+</msml>]]></Body>
+</ActionImplementation>
+
+
+<!-- ***************************************************** -->
+<!-- *               MSML PlayListRecord Spec            * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>PlayListRecord</ActionMethod>
+        <ActionSpecifier>MSMLDefault</ActionSpecifier>
+        <Body><![CDATA[<?xml version="1.0" encoding="US-ASCII"?>
+<msml version="1.1">
+<dialogstart target="${Target}" type="application/moml+xml" name="abc">
+      <play barge="${barge}" cleardb="true" iterations="${Repeat}">
+${playList}
+      </play>
+      <record dest="${fileLocation}" format="audio/wav"
+      maxtime="${RecordDuration}" cvd:pre-speech="${InitSilence}" cvd:post-speech="${EndSilence}"
+      cvd:termkey="${RecordEscapeKey}" append="${RecordMode}">
+       <send target="source" event="app.done" namelist="record.len"/>
+      </record>
+</dialogstart>
+</msml>]]></Body>
+</ActionImplementation>
+<!-- ***************************************************** -->
+
+
+
+<!-- ***************************************************** -->
+<!-- *               MSML Play Variable Specs            * -->
+<!-- ***************************************************** -->
+<!-- ***************************************************** -->
+<!-- *               MSML Play Var DATE Spec             * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSMLDate</ActionSpecifier>
+        <Body><![CDATA[         <var type="date" subtype="mdy" value="${itemName}" xml:lang="eng"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSML Play Var Number Spec            * -->
+<!-- ***************************************************** -->
+<ActionImplementation>^M
+        <ActionClass>MediaService</ActionClass>^M
+        <ActionMethod>AddToPlayList</ActionMethod>^M
+        <ActionSpecifier>MSMLNumber</ActionSpecifier>^M
+        <Body><![CDATA[         <var type="number" subtype="crd" value="${itemName}" xml:lang="eng"/>]]></Body>^M
+    </ActionImplementation>
+
+<!-- ***************************************************** -->
+
+<!-- ***************************************************** -->
+<!-- *               MSML Play Var Money Spec            * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSMLMoney</ActionSpecifier>
+        <Body><![CDATA[         <var type="money" subtype="usd" value="${itemName}" xml:lang="eng"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+<!-- ***************************************************** -->
+<!-- *               MSML Play Var String Spec            * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSMLString</ActionSpecifier>
+        <Body><![CDATA[         <var type="string"  value="${itemName}" xml:lang="eng"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+
+<!-- ***************************************************** -->
+<!-- *               MSML Play Var Time Spec            * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSMLTime</ActionSpecifier>
+        <Body><![CDATA[         <var type="time" subtype="t12" value="${itemName}" xml:lang="eng"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->
+<!-- *               MSML Play Var Time Spec            * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSMLDigits</ActionSpecifier>
+        <Body><![CDATA[         <var type="digits" subtype="gen" value="${itemName}" xml:lang="eng"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+<!-- ***************************************************** -->^M
+<!-- *               MSML Play Duration  Spec            * -->^M
+<!-- ***************************************************** -->^M
+    <ActionImplementation>^M
+        <ActionClass>MediaService</ActionClass>^M
+        <ActionMethod>AddToPlayList</ActionMethod>^M
+        <ActionSpecifier>MSMLDuration</ActionSpecifier>^M
+        <Body><![CDATA[         <var type="duration" value="${itemName}" xml:lang="eng"/>]]></Body>^M
+    </ActionImplementation>^M
+<!-- ***************************************************** -->^M
+
+<!-- ***************************************************** -->
+<!-- *               MSML Play Var Audio Spec            * -->
+<!-- ***************************************************** -->
+    <ActionImplementation>
+        <ActionClass>MediaService</ActionClass>
+        <ActionMethod>AddToPlayList</ActionMethod>
+        <ActionSpecifier>MSMLAudio</ActionSpecifier>
+        <Body><![CDATA[         <audio uri="${itemName}"/>]]></Body>
+    </ActionImplementation>
+<!-- ***************************************************** -->
+
+
+
+
+</ApplicationServiceImplementation>

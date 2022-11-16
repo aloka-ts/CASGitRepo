@@ -1,0 +1,16 @@
+//////////////////////////////////////////////////////////////////////////
+//
+//        Copyright (c) 2000, Bay Packets Inc.
+//        All rights reserved.
+//
+//        FILE_NAME: BpSizeDef.h
+//
+//////////////////////////////////////////////////////////////////////////
+
+#ifndef INCLUDE_BpSizeDef
+#define INCLUDE_BpSizeDef
+
+#include <CCMMessages/BpMsgDefine.h>
+#endif
+
+// EOF BpSizeDef.h

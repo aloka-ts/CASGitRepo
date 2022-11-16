@@ -1,0 +1,11 @@
+## This script is used to fetch all configuration parameters in INC. 
+## The output is saved in /tmp/INC_AllParams file.
+#!/usr/bin/ksh
+
+. ~/profile.ingw
+. $INSTALLROOT/$SUBSYS_DIR/sol28g/conf/hssenv.sh
+
+date_stamp=`date +%b_%d_%H_%M_%S`
+FILE_NAME="AllParams_${date_stamp}"
+
+$INSTALLROOT/$SUBSYS_DIR/sol28g/bin/INGwProbe -s $SIP_LISTENER_HOST -c "get all-param-val" 1>/tmp/${FILE_NAME} 2>&1

@@ -1,0 +1,46 @@
+//***********************************************************************************
+//GENBAND, Inc. Confidential and Proprietary
+//
+//This work contains valuable confidential and proprietary
+//information.
+//Disclosure, use or reproduction without the written authorization of
+//GENBAND, Inc. is prohibited. This unpublished work by GENBAND, Inc.
+//is protected by laws of United States and other countries.
+//If publication of work should occur the following notice shall
+//apply:
+//
+//"Copyright 2007 GENBAND, Inc. All right reserved."
+//***********************************************************************************
+
+
+//***********************************************************************************
+//
+//		File:	EvaluationVersion.java
+//
+//		Desc:	This file contains a public interface class which will
+//				have one static final boolean flag indicating whether the SAS is to
+//				software is to be compiled in Evaluation Version mode or Normal mode.
+//
+//		Author							Date			Description
+//		----------------------------------------------------------------------
+// 		Neeraj Jain						26-Dec-07		File version with Evaluation
+//														Version flag is true.
+//
+//***********************************************************************************
+
+
+package com.baypackets.ase.util;
+
+/**
+ * This interface is exposed to different internal modules of SAS software so that
+ * they can determine, at runtime or compile time, that if the SAS is compiled/running
+ * in Evaluation Version mode or Normal mode.
+ * <p>
+ * For Evaluation Version mode, various kind of licensing restrictions are introduced
+ * in order to prevent illegal use of software.
+ *
+ * @author Neeraj Jain
+ */
+public interface EvaluationVersion {
+	public static final boolean FLAG = false;
+}

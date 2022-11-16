@@ -1,0 +1,30 @@
+RULES = lib
+TARGET=libINGwInfraStatMgr
+
+EXTRA_INCLUDES += $(INSTALLROOT)/$(PLTFRM_DIR)/include
+EXTRA_INCLUDES += $(XERCESROOT)/include
+
+EXTRA_LIBDIRS += /usr/lib $(XERCESROOT)/lib
+
+EXTRA_LIBS += xerces-c
+
+EXTRA_DEFINES += _REENTRANT
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+EXTRA_FLAGS += pic
+
+SRCS = INGwInfraStatMgr/INGwIfrSmStatMgr.C         \
+       INGwInfraStatMgr/INGwIfrSmXmlParse.C        \
+       INGwInfraStatMgr/INGwIfrSmDeferredThread.C  \
+       INGwInfraStatMgr/INGwIfrSmStatParam.C       \
+       INGwInfraStatMgr/INGwIfrSmStatThreshold.C   \
+       INGwInfraStatMgr/INGwIfrSmStatValue.C
+
+HDRS = INGwInfraStatMgr/INGwIfrSmStatMgr.h         \
+       INGwInfraStatMgr/INGwIfrSmCommon.h          \
+       INGwInfraStatMgr/INGwIfrSmXmlParse.h        \
+       INGwInfraStatMgr/INGwIfrSmDeferredThread.h  \
+       INGwInfraStatMgr/INGwIfrSmStatParam.h       \
+       INGwInfraStatMgr/INGwIfrSmStatThreshold.h   \
+       INGwInfraStatMgr/INGwIfrSmStatValue.h

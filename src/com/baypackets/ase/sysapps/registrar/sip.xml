@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+   "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+    
+<sip-app>
+
+  <display-name>A Sample Registrar Application</display-name>
+  <distributable/>
+ 
+	<listener>
+	<listener-class>com.baypackets.ase.sysapps.registrar.common.Listener</listener-class>
+	</listener> 
+
+	<listener>
+	<listener-class>com.baypackets.ase.sysapps.registrar.common.Notifier</listener-class>
+	</listener>
+  <servlet>
+    <servlet-name>RegistrarServlet</servlet-name>
+    <servlet-class>com.baypackets.ase.sysapps.registrar.servlets.RegistrarServlet</servlet-class>
+	<init-param>
+		<param-name>sip:test@192.168.8.122:5061</param-name>
+		<param-value>sip:sipp@192.168.1.106:5061;sip:neeraj@192.168.1.106:5062</param-value>
+		</init-param>
+	<init-param>
+		<param-name>DAO_CLASS</param-name>
+		<param-value>com.baypackets.ase.sysapps.registrar.dao.rdbms.BindingsDAOImpl</param-value>
+	</init-param>
+    <load-on-startup>6</load-on-startup>    
+  </servlet>    
+
+  <servlet-mapping>
+    <servlet-name>RegistrarServlet</servlet-name>
+    <pattern>
+	<or>
+            <equal>
+                <var>request.method</var>
+                <value>REGISTER</value>
+            </equal>
+            <equal>
+                <var>request.method</var>
+                <value>SUBSCRIBE</value>
+            </equal>
+	</or>
+    </pattern>
+  </servlet-mapping>  
+      
+  <session-config>
+    <session-timeout>5</session-timeout>
+  </session-config>
+	
+	<!-- SIP Request Authentication Part-->
+	<!--
+ 	<security-constraint> 
+    <display-name>Registrar Security Constraints</display-name>
+    <resource-collection>
+        <resource-name>Registrar resource</resource-name>
+        <description>Registrar resource</description>
+        <servlet-name>RegistrarServlet</servlet-name>
+        <sip-method>REGISTER</sip-method>
+    </resource-collection>
+    <auth-constraint>
+        <description>Registrar Authentication constraints</description>
+        <role-name>Registrar</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+        <description>User Data Constraints</description>
+        <transport-guarantee>NONE</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+
+	<login-config>
+        <auth-method>DIGEST</auth-method>
+        <realm-name>Registrar</realm-name>
+  </login-config> -->
+
+
+
+</sip-app>

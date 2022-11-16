@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!-- ==================================================== -->
+<!-- Build file: Application Logic Controller -->
+<!-- ==================================================== -->
+<project name="Application Logic Controller Extension" default="all">
+  <property name="JAVA_HOME" Value="${JAVA_HOME}"/>
+	<import file="${ALCML_HOME}/src/build-macros.xml"/>
+	
+	<target name="all">
+		<path id="classpath">
+			<fileset dir="${plugin_lib}">
+				<include name="alc_JAXB.jar"/>
+				<include name="log4j-1.2.8.jar"/>
+				<include name="sipservlet.jar"/>
+				<include name="servlet-2.4.jar"/>
+				<include name="alc.jar"/>
+				<include name="bpsbb.jar"/>
+				<include name="bpresource.jar"/>
+		   </fileset>	
+		</path>
+		<property name="additionalclasspath" refid="classpath"/>
+<!--		<delete dir="${xsdOutputDir}"/>
+		   <mkdir dir="${xsdOutputDir}"/>-->
+		<echo message="Addional Class path is..........${additionalclasspath}"/>
+		<alcmlc classpath="${additionalclasspath}"
+			               destdir="${implPath}"
+			               srcdir="${implPath}"
+		                   input="java"/>
+		
+		<mkdir dir="${basedir}/tmp"/>
+				<javac srcdir="${ALCML_HOME}/src" destdir="${basedir}/tmp">
+							<classpath refid="classpath"/>
+				</javac> 
+				
+				<jar jarfile="${plugin_lib}/alc_JAXB.jar" basedir="${basedir}/tmp"/> 
+		        <jar jarfile="${ASE_HOME}/alcjars/alc_JAXB.jar" basedir="${basedir}/tmp"/>
+	    <delete dir="${basedir}/tmp"/> 
+		
+		
+		<delete dir="${basedir}/build"/>
+		<mkdir dir="${basedir}/build"/>
+		
+		
+		<javac srcdir="${basedir}/src" destdir="${basedir}/build">
+			  <classpath refid="classpath"/>
+		</javac>
+		
+		<jar jarfile="${ASE_HOME}/alcjars/${PROJECT_NAME}.jar" basedir="${basedir}/build">
+		</jar>	
+		
+	</target>
+	   
+	 <target name="echo">
+	    <echo message="ASE_HOME property is ${ASE_HOME}"/>
+		<echo message="BASE_DIR is ${basedir}"/>
+	 	<echo message="JAVA_HOME is property is ${JAVA_HOME}"/>
+	</target>
+</project>
+
+

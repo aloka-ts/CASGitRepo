@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************
+*	 GENBAND, Inc. Confidential and Proprietary
+*
+* This work contains valuable confidential and proprietary 
+* information.
+* Disclosure, use or reproduction without the written authorization of
+* GENBAND, Inc. is prohibited.  This unpublished work by GENBAND, Inc.
+* is protected by the laws of the United States and other countries.
+* If publication of the work should occur the following notice shall 
+* apply:
+* 
+* "Copyright 2007 GENBAND, Inc.  All rights reserved."
+**********************************************************************/
+-->
+
+<portlet-app
+   xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+   version="1.0">
+    <portlet>
+      <portlet-name>ownDetails_org_1_2_1</portlet-name>
+      <display-name>Your Details</display-name>
+      <portlet-class>org.jboss.portal.faces.portlet.JSFMetaBridgePortlet</portlet-class>
+      <init-param>
+         <name>VIEW</name>
+         <value>/WEB-INF/jsf/ownDetails.xhtml</value>
+      </init-param>
+	  <!--always expired-->
+      <expiration-cache>0</expiration-cache>
+      <supports>
+         <mime-type>text/html</mime-type>
+         <portlet-mode>VIEW</portlet-mode>
+      </supports>
+      <portlet-info>
+         <title>Your Details</title>
+         <keywords>management,admin</keywords>
+      </portlet-info>
+   		<security-role-ref>
+           	<role-name>SPA</role-name>
+           	<role-link>SPA</role-link>
+		</security-role-ref>            
+   		<security-role-ref>
+           	<role-name>NPM</role-name>
+           	<role-link>NPM</role-link>
+		</security-role-ref>               
+    </portlet>
+    <portlet>
+      <portlet-name>childOrganizationList_org_2_2_1</portlet-name>
+      <display-name>childOrganizationList</display-name>
+      <portlet-class>org.jboss.portal.faces.portlet.JSFMetaBridgePortlet</portlet-class>
+      <init-param>
+         <name>VIEW</name>
+         <value>/WEB-INF/jsf/childOrganizationList.xhtml</value>
+      </init-param>
+	  <!--always expired-->
+      <expiration-cache>0</expiration-cache>
+      <supports>
+         <mime-type>text/html</mime-type>
+         <portlet-mode>VIEW</portlet-mode>
+      </supports>
+      <portlet-info>
+         <title>childOrganizationList</title>
+         <keywords>management,admin</keywords>
+      </portlet-info>
+   		<security-role-ref>
+           	<role-name>SPA</role-name>
+           	<role-link>SPA</role-link>
+		</security-role-ref>            
+   		<security-role-ref>
+           	<role-name>NPM</role-name>
+           	<role-link>NPM</role-link>
+		</security-role-ref>               
+    </portlet>
+    <portlet>
+      <portlet-name>DeployedAppList_2_1</portlet-name>
+      <display-name>DeployedAppList</display-name>
+      <portlet-class>org.jboss.portal.faces.portlet.JSFMetaBridgePortlet</portlet-class>
+      <init-param>
+         <name>VIEW</name>
+         <value>/WEB-INF/jsf/ld20.xhtml</value>
+      </init-param>
+	  <!--always expired-->
+      <expiration-cache>0</expiration-cache>
+      <supports>
+         <mime-type>text/html</mime-type>
+         <portlet-mode>VIEW</portlet-mode>
+      </supports>
+      <portlet-info>
+         <title>DeployedAppList</title>
+         <keywords>management,admin</keywords>
+      </portlet-info>
+   		<security-role-ref>
+           	<role-name>NPA</role-name>
+           	<role-link>NPA</role-link>
+		</security-role-ref>               
+    </portlet>
+</portlet-app>

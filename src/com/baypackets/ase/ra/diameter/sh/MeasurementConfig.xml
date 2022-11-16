@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementMgr minScanIntervalInSec="100"
+	minAccumulationIntervalInSec="300">
+
+<!-- counters for client mode -->
+
+	<MeasurementCounter id="Number of UDRs OUT" refType="name"
+		mode="event" scanInterval="60" oid="30.20.201">
+		<param name="Number of UDRs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of PURs OUT" refType="name"
+		mode="event" scanInterval="60" oid="30.20.202">
+		<param name="Number of PURs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of SNRs OUT" refType="name"
+		mode="event" scanInterval="60" oid="30.20.203">
+		<param name="Number of SNRs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of PNRs IN" refType="name"
+		mode="event" scanInterval="60" oid="30.20.204">
+		<param name="Number of PNRs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 1xxx UDAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.205">
+		<param name="Number of 1xxx UDAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 2xxx UDAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.206">
+		<param name="Number of 2xxx UDAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 3xxx UDAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.207">
+		<param name="Number of 3xxx UDAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 4xxx UDAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.208">
+		<param name="Number of 4xxx UDAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 5xxx UDAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.209">
+		<param name="Number of 5xxx UDAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 1xxx PUAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.210">
+		<param name="Number of 1xxx PUAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 2xxx PUAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.211">
+		<param name="Number of 2xxx PUAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 3xxx PUAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.212">
+		<param name="Number of 3xxx PUAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 4xxx PUAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.213">
+		<param name="Number of 4xxx PUAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 5xxx PUAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.214">
+		<param name="Number of 5xxx PUAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 1xxx SNAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.215">
+		<param name="Number of 1xxx SNAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 2xxx SNAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.216">
+		<param name="Number of 2xxx SNAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 3xxx SNAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.217">
+		<param name="Number of 3xxx SNAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 4xxx SNAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.218">
+		<param name="Number of 4xxx SNAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 5xxx SNAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.219">
+		<param name="Number of 5xxx SNAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 1xxx PNAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.220">
+		<param name="Number of 1xxx PNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 2xxx PNAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.221">
+		<param name="Number of 2xxx PNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 3xxx PNAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.222">
+		<param name="Number of 3xxx PNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 4xxx PNAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.223">
+		<param name="Number of 4xxx PNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 5xxx PNAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.224">
+		<param name="Number of 5xxx PNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of error count UDR OUT"
+						refType="name" mode="event" scanInterval="60" oid="30.20.224">
+		<param name="Number of error count UDR OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of error count PUR OUT"
+						refType="name" mode="event" scanInterval="60" oid="30.20.224">
+		<param name="Number of error count PUR OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of error count SNR OUT"
+						refType="name" mode="event" scanInterval="60" oid="30.20.224">
+		<param name="Number of error count SNR OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of error count PNR OUT"
+						refType="name" mode="event" scanInterval="60" oid="30.20.224">
+		<param name="Number of error count PNR OUT" />
+	</MeasurementCounter>
+
+	<!-- counters for client mode ends -->
+	
+	<!-- counters for server mode -->
+	
+	
+	<MeasurementCounter id="Number of UDRs IN" refType="name"
+		mode="event" scanInterval="60" oid="30.20.201">
+		<param name="Number of UDRs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of PURs IN" refType="name"
+		mode="event" scanInterval="60" oid="30.20.202">
+		<param name="Number of PURs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of SNRs IN" refType="name"
+		mode="event" scanInterval="60" oid="30.20.203">
+		<param name="Number of SNRs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of PNRs OUT" refType="name"
+		mode="event" scanInterval="60" oid="30.20.204">
+		<param name="Number of PNRs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 1xxx UDAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.205">
+		<param name="Number of 1xxx UDAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 2xxx UDAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.206">
+		<param name="Number of 2xxx UDAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 3xxx UDAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.207">
+		<param name="Number of 3xxx UDAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 4xxx UDAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.208">
+		<param name="Number of 4xxx UDAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 5xxx UDAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.209">
+		<param name="Number of 5xxx UDAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 1xxx PUAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.210">
+		<param name="Number of 1xxx PUAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 2xxx PUAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.211">
+		<param name="Number of 2xxx PUAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 3xxx PUAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.212">
+		<param name="Number of 3xxx PUAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 4xxx PUAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.213">
+		<param name="Number of 4xxx PUAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 5xxx PUAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.214">
+		<param name="Number of 5xxx PUAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 1xxx SNAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.215">
+		<param name="Number of 1xxx SNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 2xxx SNAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.216">
+		<param name="Number of 2xxx SNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 3xxx SNAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.217">
+		<param name="Number of 3xxx SNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 4xxx SNAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.218">
+		<param name="Number of 4xxx SNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 5xxx SNAs OUT"
+		refType="name" mode="event" scanInterval="60" oid="30.20.219">
+		<param name="Number of 5xxx SNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 1xxx PNAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.220">
+		<param name="Number of 1xxx PNAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 2xxx PNAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.221">
+		<param name="Number of 2xxx PNAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 3xxx PNAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.222">
+		<param name="Number of 3xxx PNAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 4xxx PNAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.223">
+		<param name="Number of 4xxx PNAs IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of 5xxx PNAs IN"
+		refType="name" mode="event" scanInterval="60" oid="30.20.224">
+		<param name="Number of 5xxx PNAs OUT" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of error count UDR IN"
+						refType="name" mode="event" scanInterval="60" oid="30.20.224">
+		<param name="Number of error count UDR IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of error count PUR IN"
+						refType="name" mode="event" scanInterval="60" oid="30.20.224">
+		<param name="Number of error count PUR IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of error count SNR IN"
+						refType="name" mode="event" scanInterval="60" oid="30.20.224">
+		<param name="Number of error count SNR IN" />
+	</MeasurementCounter>
+
+	<MeasurementCounter id="Number of error count PNR IN"
+						refType="name" mode="event" scanInterval="60" oid="30.20.224">
+		<param name="Number of error count PNR IN" />
+	</MeasurementCounter>
+
+
+	<!-- counters for server mode ends -->
+	
+<!-- Measurement Set Definition -->
+	
+	<MeasurementSet id="Sh Interface MeasurementSet"
+		version="1" accumulationInterval="300" priority="0">
+		
+		<!-- Measurement Set Definition for client mode  -->
+	
+		<MeasurementCounter id="Number of UDRs OUT" />
+		<MeasurementCounter id="Number of PURs OUT" />
+		<MeasurementCounter id="Number of SNRs OUT" />
+		<MeasurementCounter id="Number of PNRs IN" />
+		<MeasurementCounter id="Number of 1xxx UDAs IN" />
+		<MeasurementCounter id="Number of 2xxx UDAs IN" />
+		<MeasurementCounter id="Number of 3xxx UDAs IN" />
+		<MeasurementCounter id="Number of 4xxx UDAs IN" />
+		<MeasurementCounter id="Number of 5xxx UDAs IN" />
+		<MeasurementCounter id="Number of 1xxx PUAs IN" />
+		<MeasurementCounter id="Number of 2xxx PUAs IN" />
+		<MeasurementCounter id="Number of 3xxx PUAs IN" />
+		<MeasurementCounter id="Number of 4xxx PUAs IN" />
+		<MeasurementCounter id="Number of 5xxx PUAs IN" />
+		<MeasurementCounter id="Number of 1xxx SNAs IN" />
+		<MeasurementCounter id="Number of 2xxx SNAs IN" />
+		<MeasurementCounter id="Number of 3xxx SNAs IN" />
+		<MeasurementCounter id="Number of 4xxx SNAs IN" />
+		<MeasurementCounter id="Number of 5xxx SNAs IN" />
+		<MeasurementCounter id="Number of 1xxx PNAs OUT" />
+		<MeasurementCounter id="Number of 2xxx PNAs OUT" />
+		<MeasurementCounter id="Number of 3xxx PNAs OUT" />
+		<MeasurementCounter id="Number of 4xxx PNAs OUT" />
+		<MeasurementCounter id="Number of 5xxx PNAs OUT" />
+		<MeasurementCounter id="Number of error count UDR OUT" />
+		<MeasurementCounter id="Number of error count PUR OUT" />
+		<MeasurementCounter id="Number of error count SNR OUT" />
+		<MeasurementCounter id="Number of error count PNR OUT" />
+
+		<!-- Measurement Set Definition for Server mode  -->
+	
+		<MeasurementCounter id="Number of UDRs IN" />
+		<MeasurementCounter id="Number of PURs IN" />
+		<MeasurementCounter id="Number of SNRs IN" />
+		<MeasurementCounter id="Number of PNRs OUT" />
+		<MeasurementCounter id="Number of 1xxx UDAs OUT" />
+		<MeasurementCounter id="Number of 2xxx UDAs OUT" />
+		<MeasurementCounter id="Number of 3xxx UDAs OUT" />
+		<MeasurementCounter id="Number of 4xxx UDAs OUT" />
+		<MeasurementCounter id="Number of 5xxx UDAs OUT" />
+		<MeasurementCounter id="Number of 1xxx PUAs OUT" />
+		<MeasurementCounter id="Number of 2xxx PUAs OUT" />
+		<MeasurementCounter id="Number of 3xxx PUAs OUT" />
+		<MeasurementCounter id="Number of 4xxx PUAs OUT" />
+		<MeasurementCounter id="Number of 5xxx PUAs OUT" />
+		<MeasurementCounter id="Number of 1xxx SNAs OUT" />
+		<MeasurementCounter id="Number of 2xxx SNAs OUT" />
+		<MeasurementCounter id="Number of 3xxx SNAs OUT" />
+		<MeasurementCounter id="Number of 4xxx SNAs OUT" />
+		<MeasurementCounter id="Number of 5xxx SNAs OUT" />
+		<MeasurementCounter id="Number of 1xxx PNAs IN" />
+		<MeasurementCounter id="Number of 2xxx PNAs IN" />
+		<MeasurementCounter id="Number of 3xxx PNAs IN" />
+		<MeasurementCounter id="Number of 4xxx PNAs IN" />
+		<MeasurementCounter id="Number of 5xxx PNAs IN" />
+		<MeasurementCounter id="Number of error count UDR IN" />
+		<MeasurementCounter id="Number of error count PUR IN" />
+		<MeasurementCounter id="Number of error count SNR IN" />
+		<MeasurementCounter id="Number of error count PNR IN" />
+	</MeasurementSet>
+</MeasurementMgr>

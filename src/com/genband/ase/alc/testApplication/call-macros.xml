@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application-logic-control xmlns:x0="http://www.w3.org/2001/XMLSchema">
+
+      <service name="is-subscriber">
+            <attribute name="ani"/>
+            
+            <set variable="return" equal-to="yes"/>
+            <define-local variable="firstName" value="null"/>
+            
+            <get-table-information table="voicemailuser" where="number=${ani}" field="first" resultant="firstName">
+                  <results value="TupleNotFound">
+                        <set variable="return" equal-to="no"/>
+                  </results>
+            </get-table-information>
+      </service>
+
+</application-logic-control>

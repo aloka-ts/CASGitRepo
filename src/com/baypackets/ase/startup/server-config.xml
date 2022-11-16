@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<AseServer>
+      <!--
+            The Component classes specified here needs to
+            1. Provide a public constructor with type ConfigRepository as argument
+                            (OR)
+               Provide a public Constructor with no arguments.
+            
+            The components will be created in the order they are specified here.
+            The components will be stopped in the reverse order in which they are created.
+            
+            The name specified with each component will be used
+            to register that object instance with the Registry.
+            If no name specified, then the component will not be registered.
+            
+            If a component implements the MComponent interface, then it will be
+            registered with the component manager with the priority of the position
+            listed in this XML.
+      -->
+
+      <!-- The trace service component -->
+      <Component name="TraceService">
+            <Class>com.baypackets.ase.util.AseTraceService</Class>
+      </Component>
+
+      <!-- The thread monitor component -->
+      <Component name="ThreadMonitor">
+            <Class>com.baypackets.ase.util.AseThreadMonitor</Class>
+      </Component>
+
+      <!-- The EmsAgent delegate class -->
+      <Component name="com.baypackets.ase.common.AgentDelegate">
+            <Class>com.baypackets.ase.common.AgentDelegate</Class>
+      </Component>
+
+     <!-- Background Processor -->
+    <Component name="BackgroundProcessor">
+         <Class>com.baypackets.ase.common.AseBackgroundProcessor</Class>
+    </Component>
+      
+      <!-- The telnet server component -->
+      <Component name="TelnetServer">
+            <Class>com.baypackets.ase.util.TelnetServer</Class>
+      </Component>
+
+      <!-- Embedded Tomcat server component -->
+      <!-- <Component name="TomcatServer">
+            <Class>com.baypackets.ase.tomcat.EmbeddedTomcat</Class>
+      </Component> -->
+      
+      <!-- Web Container component -->
+      <Component name="com.baypackets.ase.container.SasWebContainer">
+            <Class>com.baypackets.ase.container.WebContainerImpl</Class>
+      </Component>
+      
+      <!-- The alarm service component -->
+      <Component name="AlarmService">
+            <Class>com.baypackets.ase.util.AseAlarmService</Class>
+      </Component>
+      
+      <!-- The Engine component -->
+      <Component name="Engine">
+            <Class>com.baypackets.ase.container.AseEngine</Class>
+      </Component>
+
+      <!-- The overload control management component -->
+      <Component name="OverloadControlManager">
+            <Class>com.baypackets.ase.ocm.OverloadControlManager</Class>
+      </Component>
+            
+      <!-- The Host component -->
+      <Component name="Host">
+            <Class>com.baypackets.ase.container.AseHost</Class>
+      </Component>
+      
+    <!-- Measurement Manager -->
+    <Component name="MeasurementManager">
+            <Class>com.baypackets.ase.measurement.AseMeasurementManager</Class>
+    </Component>
+
+      <!-- Print Info Handler -->
+    <Component name="PrintInfoHandler">
+            <Class>com.baypackets.ase.util.PrintInfoHandler</Class>
+    </Component>
+      
+      <!-- Logging Handler -->       
+    <Component name="LoggingHandler">
+        <Class>com.baypackets.ase.common.logging.LoggingHandler</Class>
+    </Component>
+    
+      <!-- Control Manager -->
+      <Component name="ControlManager">
+            <Class>com.baypackets.ase.control.ControlManager</Class>
+      </Component>
+      
+      <!-- Cluster Manager -->      
+      <Component name="ClusterManager">
+            <Class>com.baypackets.ase.control.ClusterManager</Class>
+      </Component>
+
+      <!-- <Component name="VersionManager">
+            <Class>com.baypackets.ase.control.VersionManager</Class>
+      </Component>-->
+
+    <Component name="com.baypackets.ase.soa.fw.SoaFrameworkContext">
+            <Class>com.baypackets.ase.soa.fw.SoaFrameworkContext</Class>
+    </Component>
+    
+      <!-- SBB Deployment Component -->
+      <Component name="SBBDeployment">
+            <Class>com.baypackets.ase.sbbdeployment.SBBDeployerComponent</Class>
+      </Component>
+ 
+    <!-- The Rules Repository component -->
+    <Component name="RulesRepository">
+            <Class>com.baypackets.ase.dispatcher.RulesRepositoryImpl</Class>
+    </Component>
+    
+    <Component name="PolicyManager">
+        <Class>com.baypackets.ase.replication.PolicyManagerImpl</Class>
+    </Component>
+      
+        <!-- The Replication Manager -->
+      <Component name="RedisManager">
+            <Class>com.baypackets.ase.util.redis.RedisManager</Class>
+      </Component>
+      
+      <!-- The Replication Manager -->
+      <Component name="ReplicationManager">
+            <Class>com.baypackets.ase.replication.ReplicationManagerImpl</Class>
+      </Component>
+
+    <Component name="CallTraceService">
+        <Class>com.baypackets.ase.container.sip.CallTraceServiceImpl</Class>
+    </Component>
+
+      <!-- Trust Verifier -->
+      <Component name="TrustVerifier">
+      <Class>com.baypackets.ase.security.OIDBasedTrustVerifier</Class>
+      </Component>
+
+    <!-- SysApp Deployer -->    
+      <Component name="com.baypackets.ase.container.SysAppDeployer">
+          <Class>com.baypackets.ase.container.SysAppDeployer</Class>
+      </Component>
+      
+      <!-- The Deployer Factory component -->
+      <!--  <Component name="com.baypackets.ase.spi.deployer.DeployerFactory">
+            <Class>com.baypackets.ase.deployer.DeployerFactoryImpl</Class>
+      </Component>-->
+        
+      <!-- The SAS Service Manager component -->
+       <!-- <Component name="SasServiceManager">
+            <Class>com.baypackets.ase.servicemgmt.SasServiceManager</Class>
+      </Component> -->
+      
+      <!-- SIP Connector -->
+      <Component name="SIP.Connector">
+            <Class>com.baypackets.ase.sipconnector.AseSipConnector</Class>
+      </Component>
+
+      <!-- SIP Connector Stub -->
+      <Component name="SIP.Connector.stub">
+            <Class>com.baypackets.ase.teststubs.DriverConnector</Class>
+      </Component>
+
+      <!-- Sip Protocol Adapter for Container -->
+      <Component name="SIP.adapter">
+            <Class>com.baypackets.ase.container.sip.SipProtocolAdapter</Class>
+      </Component>
+
+      <!-- Sip Servlet Timer Service -->
+      <Component name="javax.servlet.sip.TimerService">
+            <Class>com.baypackets.ase.container.sip.TimerServiceImpl</Class>
+      </Component>
+
+      <!-- The SAS security policy manager -->
+      <Component name="com.baypackets.ase.security.SasPolicy">
+            <Class>com.baypackets.ase.security.SasPolicy</Class>
+      </Component>
+      
+      <!-- The default CDRContext implementation -->
+      <Component name="com.baypackets.ase.cdr.CDRContextWrapper">
+            <Class>com.baypackets.ase.cdr.CDRContextWrapper</Class>
+      </Component>
+
+      <!-- Factory implementation used to return CDRFormat objects -->
+      <Component name="com.baypackets.ase.cdr.CDRFormatFactory">
+            <Class>com.baypackets.ase.cdr.SimpleCDRFormatFactory</Class>
+      </Component>
+
+      <!-- The factory for obtaining the media server info data access object -->
+      <Component name="com.baypackets.ase.mediaserver.MediaServerDAOFactory">
+            <Class>com.baypackets.ase.mediaserver.FileBasedMsDAOFactory</Class>
+      </Component>
+
+      <!-- The component used to manage the media servers -->
+      <Component name="com.baypackets.ase.mediaserver.MediaServerManager">
+            <Class>com.baypackets.ase.mediaserver.MediaServerManagerImpl</Class>
+      </Component>
+
+        <!-- The factory for obtaining the outbound gateway info data access object -->
+        <Component name="com.baypackets.ase.externaldevice.outboundgateway.OutboundGatewayDAOFactory">
+                <Class>com.baypackets.ase.externaldevice.outboundgateway.FileBasedGwDAOFactory</Class>
+        </Component>
+
+        <!-- The component used to manage the outbound gateways -->
+        <Component name="com.baypackets.ase.externaldevice.outboundgateway.SasOutboundGatewayManager">
+                <Class>com.baypackets.ase.externaldevice.outboundgateway.OutboundGatewayManagerImpl</Class>
+        </Component>
+
+      <!-- The factory for obtaining the system app info data access object. -->
+      <Component name="com.baypackets.ase.container.SasSystemAppInfoDAOFactory">
+            <Class>com.baypackets.ase.container.XmlSysAppInfoDAOFactory</Class>
+      </Component>
+
+      <!-- The factory for initializing and binding the datasources -->
+    <Component name="com.baypackets.ase.jndi.ds.SasDataSourceFactory">
+            <Class>com.baypackets.ase.jndi.ds.SasDataSourceFactory</Class>
+    </Component>
+
+
+    <Component name="com.baypackets.ase.jmxmanagement.JMXManager">
+            <Class>com.baypackets.ase.jmxmanagement.JMXManager</Class>
+    </Component>
+
+      <!-- The component for ENUM . -->
+      <Component name="com.baypackets.ase.enumclient.EnumResolver">
+            <Class>com.baypackets.ase.enumclient.EnumResolver</Class>
+      </Component>
+      
+       <!-- The component for ENUM . -->
+      <!-- <Component name="com.baypackets.ase.enumServer.EnumReceiver">
+            <Class>com.baypackets.ase.enumServer.EnumReceiver</Class>
+      </Component>-->
+      
+      <!-- The component for DB Library. --> 
+      <!--<Component name="com.baypackets.ase.dblib.DBLibComponent">
+            <Class>com.baypackets.ase.dblib.DBLibComponent</Class>
+      </Component>-->
+
+      <!-- The component used to deploy the system apps -->
+      <!--<Component name="com.baypackets.ase.container.SysAppDeployer">
+            <Class>com.baypackets.ase.container.SysAppDeployer</Class>
+      </Component>-->
+
+    <Component name="com.baypackets.ase.router.AseSipApplicationRouterManager">
+            <Class>com.baypackets.ase.router.AseSipApplicationRouterManager</Class>
+    </Component>
+    
+      <Component name="com.baypackets.ase.router.acm.AseAppChainManager">
+            <Class>com.baypackets.ase.router.acm.AseAppChainManagerImpl</Class>
+    </Component>
+    
+     <Component name="com.baypackets.ase.util.stpool.AseSharedTokenPool">
+            <Class>com.baypackets.ase.util.stpool.AseSharedTokenPool</Class>
+      </Component>
+
+      <!-- The Deployer Factory component -->
+      <Component name="com.baypackets.ase.spi.deployer.DeployerFactory">
+            <Class>com.baypackets.ase.deployer.DeployerFactoryImpl</Class>
+      </Component>
+      
+      <Component name="SasServiceManager">
+      	<Class>com.baypackets.ase.servicemgmt.SasServiceManager</Class>
+      </Component>
+      
+      <!-- The Radius Server component -->
+      <Component name="AseRadiusServer">
+            <Class>com.baypackets.ase.radius.AseRadiusServer</Class>
+      </Component>
+
+      <!-- Embedded ActiveMQ component -->
+      <Component name="com.baypackets.ase.activemq.EmbeddedActiveMQ">
+            <Class>com.baypackets.ase.activemq.EmbeddedActiveMQ</Class>
+      </Component>
+      
+    <!-- Uncomment this if DbAccessService is to be initialized
+      <Component name="DbAccessService">
+            <Class>com.baypackets.bayprocessor.slee.internalservices.SleeDbAccessService</Class>
+      </Component>
+    -->
+    
+     <!-- The Heap/Non Heap Memory Usage Manager Component  -->
+      <Component name="com.baypackets.ase.memorymanagement.AseMemoryUsageManager">
+            <Class>com.baypackets.ase.memorymanagement.AseMemoryUsageManager</Class>
+      </Component>
+      
+       <!-- TcapRouting Controller  component -->
+      <Component name="com.genband.jain.protocol.ss7.tcap.router.TcapRoutingControllerImpl">
+            <Class>com.genband.jain.protocol.ss7.tcap.router.TcapRoutingControllerImpl</Class>
+      </Component>
+      
+        <!-- AseComponent monitor  component -->
+      <Component name="com.baypackets.ase.monitor.AseComponentMonitorManager">
+            <Class>com.baypackets.ase.monitor.AseComponentMonitorManager</Class>
+      </Component>
+   
+       <!-- Supported extensions -->
+       <Supported-Extensions>
+              <Ext>100rel</Ext>
+              <Ext>histinfo</Ext>
+              <Ext>replaces</Ext>
+              <Ext>join</Ext>
+              <Ext>path</Ext>
+              <Ext>gruu</Ext>
+              <Ext>resource-priority</Ext>
+              <Ext>pref</Ext>
+              <Ext>outbound</Ext>	
+          <!-- Add another Ext if you want -->
+       </Supported-Extensions>
+       
+       <!-- SIP methods supported by the SAS -->
+       <Supported-Methods>
+            <Method>INVITE</Method>
+            <Method>CANCEL</Method>
+            <Method>ACK</Method>
+            <Method>BYE</Method>
+            <Method>OPTIONS</Method>
+            <Method>INFO</Method>
+            <Method>PRACK</Method>
+            <Method>REFER</Method>
+            <Method>NOTIFY</Method>
+            <Method>MESSAGE</Method>
+            <Method>REGISTER</Method>
+            <Method>UPDATE</Method>
+            <Method>SUBSCRIBE</Method>            
+            <Method>PUBLISH</Method>            
+            <!-- Add SIP methods as needed -->
+        </Supported-Methods>
+
+      <!-- 
+            This is the list of SIP Servlet applications used internally by the 
+            platform.  The archive file specified in each "App" element must reside in 
+            the "sysapps" sub-directory of the platform install root.
+            The optional "deploy-on-role" and "start-on-role" attributes specify on 
+            which cluster role to deploy and start the app respectively.  If either of
+            these attributes are missing, the app will be deployed and/or started at 
+            platform startup regardless of cluster role.
+            Each specified SAR file MUST contain a "sas.xml" deployment descriptor
+            specifying at least the app's name, version and triggering priority.
+      
+            Ex.
+            <System-Apps>
+                  Deploys and starts the "msheartbeat.sar" app when the platform's 
+                  cluster role is ACTIVE.  When the role changes to any non ACTIVE role,
+                  the app is subsequently stopped and undeployed. 
+                  
+                  <App archive="msheartbeat.sar" deploy-on-role="ACTIVE" start-on-role="ACTIVE"/>
+                  
+                  Deploys and starts the app "foo.sar" when the platform is started.
+                  
+                  <App archive="foo.sar"/>
+                  
+                  Deploys the app when the role is STANDBY but only starts it when the
+                  role changes to ACTIVE.
+                  
+                  <App archive="bar.sar" deploy-on-role="STANDBY" start-on-role="ACTIVE"/>
+            </System-Apps>
+      -->
+      <System-Apps>
+            <App name="msheartbeat" archive="msheartbeat.sar" deploy-on-role="ACTIVE" start-on-role="ACTIVE"/>
+          <App name="obgwapp" archive="obgwapp.sar" deploy-on-role="ACTIVE" start-on-role="ACTIVE"/>
+            <!--<App archive="foo.sar"/>
+            <App archive="bar.sar" deploy-on-role="ACTIVE" start-on-role="STANDBY"/>-->
+
+            <App name="registrar" archive="registrar.sar"/>
+            <App name="tcap-provider" archive="tcap-provider.sar"/>
+            <App name="alcml" archive="alcml.sar"/>
+            <App name="pac" archive="pac.war"/>
+            <App name="cab" archive="cab.war"/>
+            <App name="cim" archive="cim.war"/>
+      </System-Apps>
+      
+
+</AseServer>

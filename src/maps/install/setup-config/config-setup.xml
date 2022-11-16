@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config_Setup>
+
+<ConfigSection>
+        <!-- This config set up is for FT and RAC setup -->
+	<!--We are dividing the host attributes into two sets of information, first one containing the physical host information while the second part contain the interface information on the host.-->
+
+	<!--Following is the physical information of the HOST. Here the HOSTID will identify a host in the network, while CPU specifies the no of CPUs the host will have. RAM will specify the RAM size, in MB, on this host. OS_VER will specify the version of the OS, which is installed on the host.-->
+
+	<Hosts>
+		<Host HostId="H1">	
+                <AttributeList>
+                   <Attribute Name="CPU" Value="2"/>
+                   <Attribute Name="RAM" Value="1900"/>
+                   <Attribute Name="OS_VER" Value="5.10"/>
+                   <Attribute Name="OS_TYPE" Value="SunOS"/> <!-- Can be Linux or SunOS-->
+                   <Attribute Name="DisplayName" Value="gbidcsun23_1"/>
+                </AttributeList>
+                </Host>
+                <Host HostId="H3">
+                <AttributeList>
+                   <Attribute Name="CPU" Value="2"/>
+                   <Attribute Name="RAM" Value="1000"/>
+                   <Attribute Name="OS_VER" Value="5.10"/>
+                   <Attribute Name="OS_TYPE" Value="SunOS"/>  
+                   <Attribute Name="DisplayName" Value="bplinux90"/>
+                </AttributeList>
+                </Host>
+                <Host HostId="H4">
+                <AttributeList>
+                   <Attribute Name="CPU" Value="2"/>
+                   <Attribute Name="RAM" Value="1900"/>
+                   <Attribute Name="OS_VER" Value="5.10"/>
+                   <Attribute Name="OS_TYPE" Value="SunOS"/>  
+                   <Attribute Name="DisplayName" Value="gbidcsun22_3"/>
+                </AttributeList>
+                </Host>
+	</Hosts>
+	<!--In the following description we assume that the host H1 has one interface (IF11). The interface IF11 is used for accessing EMS from the outside world (e.g. OSS, SNMP), signaling (SIP, MGCP), mgmt-s (i.e. for connectivity bw EMS and other component). The Enums are like
+
+	0- None(For a Database Server)
+	1- Management North
+	2- Management South
+	3- Signaling -->
+
+	<!-- The Management Interface for any Host, must be placed before the Signaling Interface, if it is not same -->	
+	<Interfaces>
+		<Interface IFID="IF11" HostId="H1" Name="gbidcsun23_1" IP="10.32.8.136" Intf="0" Intf_Type="1,2"/>
+		<Interface IFID="IF12" HostId="H4" Name="gbidcsun22_3" IP="10.32.8.135" Intf="0" Intf_Type="1,2"/>
+                <Interface IFID="IF31" HostId="H3" Name="bplinux90" IP="192.168.1.83" Intf="0" Intf_Type="0"/>
+	</Interfaces>
+
+	<!--Following is the database machine details with the Service Name (SVCNAME). Here we are keeping reference to the HOSTID. All the parameters are self-explanatory.-->
+
+	<Databases>
+		<Database DBID="DB1" HOSTID="H3" SVCNAME="bplin90" VERSION="10.2.0.1.0" ADMIN_PASSWD="oracle123" USER_PASSWD="USER_PASSWD" />
+	</Databases>
+
+        <DB_USERS>
+                <DB_USER UserId="EMS" Name="ems" Passwd="ems"/>
+                <DB_USER UserId="SAS" Name="maps" Passwd="maps"/>
+        </DB_USERS>
+
+	<Misc>
+        <UnixUser UserName="mapsha" Passwd="mapsha"  Group="mapsha" HomeDir="/home/mapsha" Shell="bash"/>
+
+		<OracleClientInfo ORACLE_HOME="/usr/local/10gclient" ORACLE_VERSION="10.2.0.1.0"/>
+		<JDK>
+			<JDKInfo JDK_ID="JDK1.6" VERSION="1.6.0_02" JDK_HOME="/usr/java"/>
+		</JDK>
+		<REF_IPS>
+			<REF_IP REF_IP_ID="REF_IP1" IP="192.168.1.101"/>
+		</REF_IPS>
+		<FIPS>
+			<FIP FIP_ID="FIP_EMS" IP="10.32.8.171"/> 
+			<FIP FIP_ID="FIP_MAPS" IP="10.32.8.170"/> 
+		</FIPS>
+		<MULTICAST_IPS>
+			<MULTICAST_IP MULTICAST_IP_ID="MULTICAST_IP1" IP="aa12.bb12.cc12.dd12"/>
+			<MULTICAST_IP MULTICAST_IP_ID="MULTICAST_IP2" IP="aa14.bb14.cc14.dd14"/> 
+		</MULTICAST_IPS>
+		
+		<REPORT_SERVERS>
+		         <REPORT_SERVER REPORT_SERVER_ID="REPORT_SERVER1" IP="i1.j1.k1.l1" port="7777"/>
+        </REPORT_SERVERS>
+
+		<CLUSTERS>
+			<CLUSTER CLU_ID="CLU1" NAME="EMS" REGION="INDIA"/>
+			<CLUSTER CLU_ID="CLU2" NAME="MAPS" REGION="INDIA"/>
+		</CLUSTERS>
+
+		<CONTACT_INFO>
+			<INFO CON_INFO_ID="CON1" Name="Arpana Prajapati" Phone_Number="+91120420" Mail_Id="arpana.prajapati@genband.com" Address="C-42 GENBAND INDIA"/>
+		</CONTACT_INFO>
+	</Misc>
+</ConfigSection>
+
+<SetupSection>
+
+   <Cluster value="CLU1">
+
+	<System Name="EMS SYSTEM" Type="rsiEms" BuildDir="EMS_BUILD">
+	<CONTACT_INFO value="CON1"/>
+	<INSTALLATION_TYPE value="FT"/>
+	<INSTALL_ROOT value="/home/mapsha/EMS_INSTALL"/>
+	<HOSTS value="H1,H4"/>
+	<DB_USER value="EMS"/>
+        <DBFT_STATUS value="0"/> 
+	<DBS value="DB1"/>
+        <SNMP_AGENT_PORT value="5161"/>
+        <DB_HOST_SNMP_PORT value="5161"/>
+        <DB_SNMP_PORT value="3161"/>
+        <LICENSE_KEY value="99819C31N3788949"/>
+	<AIN_FEATURE value="disabled"/>
+        <ANSI_ENABLED value="false"/>
+        <ITU_ENABLED value="false"/>
+        <CREATE_NEW_TABLES value="Y"/>
+        <REF_IPS value="REF_IP1"/>
+        <FIP value="FIP_EMS"/>
+    </System>
+
+  </Cluster>
+  <Cluster value="CLU2">
+
+	<System Name="SAS" Type="rsiAse" BuildDir="MAPS_BUILD/MAPS6.0.0">
+		<INSTALLATION_TYPE value="FT"/>
+		<INSTALL_ROOT value="/home/mapsha/MAPS_INSTALL"/>
+		<HOSTS value="H1,H4"/>
+		<DB_USER value="SAS"/>
+		<DBS value="DB1"/>
+		<REF_IPS value="REF_IP1"/>
+                <DBFT_STATUS value="0" />
+		<SERVER_CONF value="maps-ha" />
+		<TEMP_LOCATION value="/tmp/MAPS" />
+		<DB_VENDOR value="Oracle" />
+		<DB_DRIVER_NAME value="oracle.jdbc.driver.OracleDriver" />
+		<DB_LISTENER_PORT value="1521" />
+		<DB_LISTENER_PORT_2 value="1521" />
+		<DB_MIN_CON_THRESHOLD value="1" />
+		<DB_MAX_CON_THRESHOLD value="25" />
+                <WWW_BIND_IP value="0.0.0.0" />
+                <WWW_PORT value="8080" />
+                <WS_PORT value="8080" />
+                <WWW_SERVER_SSL value="1" />
+                <WWW_SSL_PORT value="8443" />
+                <WS_SSL value="1" />
+                <WS_SSL_PORT value="8443" />
+                <NS_PORT value="1099" />
+                <HANS_PORT value="1100" />
+                <LOG_LOCATION value="/LOGS/MAPS" />
+                <LOG_LEVEL value="ERROR" />
+                <Subsystems>
+			<Subsystem Type="MmAppProvServer" Hosts="H1,H4" Fips="FIP_MAPS" Jdk_Ver="JDK1.6" />
+		</Subsystems>
+	</System>
+
+  </Cluster>
+</SetupSection>
+
+</Config_Setup>

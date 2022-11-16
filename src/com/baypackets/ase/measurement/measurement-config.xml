@@ -1,0 +1,937 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementMgr minScanIntervalInSec="100" minAccumulationIntervalInSec="300">
+
+	<!-- Number of Active SIP Sessions -->
+    <MeasurementCounter id="Number of Active SIP Sessions" 
+                            refType="name" mode="usage" 
+                            supplier="com.baypackets.ase.measurement.AseMeasurementSupplier"
+			    			perfOid="30.10.1"
+                            scanInterval="60" oid="30.10.1">
+          <param name="Number of Active SIP Sessions"/>
+    </MeasurementCounter>
+	
+	<!-- Number of Active Application Sessions -->
+    <MeasurementCounter id="Number of Active Application Sessions" 
+                            refType="name" mode="usage"
+                            supplier="com.baypackets.ase.measurement.AseMeasurementSupplier" 
+						    perfOid="30.10.2"
+                            scanInterval="60" oid="30.10.2">
+          <param name="Number of Active Application Sessions"/>
+	</MeasurementCounter>
+
+    <!-- Number of calls currently replicated -->
+    <MeasurementCounter id="Number of calls currently replicated" 
+                            refType="name" mode="usage" 
+                            supplier="com.baypackets.ase.measurement.AseMeasurementSupplier"
+                            scanInterval="60" oid="30.10.3">
+          <param name="Number of calls currently replicated"/>
+    </MeasurementCounter>
+    
+     <!-- Average Network Transactions per second -->
+   <MeasurementCounter id="Average Network Transactions Per Second" 
+                       refType="name" mode="usage" 
+                       supplier="com.baypackets.ase.measurement.AseMeasurementSupplier" 
+                       perfOid="30.10.5"
+                       scanInterval="60" oid="30.10.5">
+         <param name="Average Network Transactions Per Second"/>
+   </MeasurementCounter>
+   
+    
+        <!-- Average Aggregated Transactions per second -->
+   <MeasurementCounter id="Average Aggregated Transactions Per Second" 
+                       refType="name" mode="usage" 
+                       supplier="com.baypackets.ase.measurement.AseMeasurementSupplier" 
+                       perfOid="30.10.6"
+                       scanInterval="60" oid="30.10.6">
+       <param name="Average Aggregated Transactions Per Second"/>
+   </MeasurementCounter>
+    
+
+	<!-- Total Number of Application Sessions -->
+    <MeasurementCounter id="Total Number of Application Sessions" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.201">
+          <param name="Total Number of Application Sessions"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of SIP Sessions -->
+    <MeasurementCounter id="Total Number of SIP Sessions" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.202">
+          <param name="Total Number of SIP Sessions"/>
+    </MeasurementCounter>
+
+	<!-- Number of Rejected Requests -->
+    <MeasurementCounter id="Number of Rejected Requests" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.203">
+          <param name="Number of Rejected Requests"/>
+    </MeasurementCounter>
+
+	<!-- Requests failed to trigger an application -->
+    <MeasurementCounter id="Requests failed to trigger an application" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.204">
+          <param name="Requests failed to trigger an application"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of INVITEs IN -->
+    <MeasurementCounter id="Total Number of INVITEs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.205">
+          <param name="Total Number of INVITEs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of INVITEs OUT -->
+    <MeasurementCounter id="Total Number of INVITEs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.206">
+          <param name="Total Number of INVITEs OUT"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of ACKs IN -->
+    <MeasurementCounter id="Total Number of ACKs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.207">
+          <param name="Total Number of ACKs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of ACKs OUT -->
+    <MeasurementCounter id="Total Number of ACKs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.208">
+          <param name="Total Number of ACKs OUT"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of BYEs IN -->
+    <MeasurementCounter id="Total Number of BYEs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.209">
+          <param name="Total Number of BYEs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of BYEs OUT -->
+    <MeasurementCounter id="Total Number of BYEs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.210">
+          <param name="Total Number of BYEs OUT"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of CANCELs IN -->
+    <MeasurementCounter id="Total Number of CANCELs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.211">
+          <param name="Total Number of CANCELs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of CANCELs OUT -->
+    <MeasurementCounter id="Total Number of CANCELs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.212">
+          <param name="Total Number of CANCELs OUT"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of OPTIONs IN -->
+    <MeasurementCounter id="Total Number of OPTIONs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.213">
+          <param name="Total Number of OPTIONs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of OPTIONs OUT -->
+    <MeasurementCounter id="Total Number of OPTIONs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.214">
+          <param name="Total Number of OPTIONs OUT"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of REGISTERs IN -->
+    <MeasurementCounter id="Total Number of REGISTERs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.215">
+          <param name="Total Number of REGISTERs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of REGISTERs OUT -->
+    <MeasurementCounter id="Total Number of REGISTERs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.216">
+          <param name="Total Number of REGISTERs OUT"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of INFOs IN -->
+    <MeasurementCounter id="Total Number of INFOs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.217">
+          <param name="Total Number of INFOs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of INFOs OUT -->
+    <MeasurementCounter id="Total Number of INFOs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.218">
+          <param name="Total Number of INFOs OUT"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of PRACKs IN -->
+    <MeasurementCounter id="Total Number of PRACKs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.219">
+          <param name="Total Number of PRACKs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of PRACKs OUT -->
+    <MeasurementCounter id="Total Number of PRACKs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.220">
+          <param name="Total Number of PRACKs OUT"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of REFERs IN -->
+    <MeasurementCounter id="Total Number of REFERs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.221">
+          <param name="Total Number of REFERs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of REFERs OUT -->
+    <MeasurementCounter id="Total Number of REFERs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.222">
+          <param name="Total Number of REFERs OUT"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of NOTIFYs IN -->
+    <MeasurementCounter id="Total Number of NOTIFYs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.223">
+          <param name="Total Number of NOTIFYs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of NOTIFYs OUT -->
+    <MeasurementCounter id="Total Number of NOTIFYs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.224">
+          <param name="Total Number of NOTIFYs OUT"/>
+    </MeasurementCounter>
+    
+	<!-- Total Number of SUBSCRIBEs IN -->
+    <MeasurementCounter id="Total Number of SUBSCRIBEs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.225">
+          <param name="Total Number of SUBSCRIBEs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of SUBSCRIBEs OUT -->
+    <MeasurementCounter id="Total Number of SUBSCRIBEs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.226">
+          <param name="Total Number of SUBSCRIBEs OUT"/>
+    </MeasurementCounter>
+    
+	<!-- Total Number of UPDATEs IN -->
+    <MeasurementCounter id="Total Number of UPDATEs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.227">
+          <param name="Total Number of UPDATEs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of UPDATEs OUT -->
+    <MeasurementCounter id="Total Number of UPDATEs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.228">
+          <param name="Total Number of UPDATEs OUT"/>
+    </MeasurementCounter>
+	
+	<!-- Total Number of Requests IN -->
+    <MeasurementCounter id="Total Number of Requests IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.229">
+          <param name="Total Number of Requests IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of Requests OUT -->
+    <MeasurementCounter id="Total Number of Requests OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.230">
+          <param name="Total Number of Requests OUT"/>
+    </MeasurementCounter>
+    
+	<!-- Total Number of 1xx Responses IN -->
+    <MeasurementCounter id="Total Number of 1xx Responses IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.231">
+          <param name="Total Number of 1xx Responses IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of 1xx Responses OUT -->
+    <MeasurementCounter id="Total Number of 1xx Responses OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.232">
+          <param name="Total Number of 1xx Responses OUT"/>
+    </MeasurementCounter>
+    
+	<!-- Total Number of 2xx Responses IN -->
+    <MeasurementCounter id="Total Number of 2xx Responses IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.233">
+          <param name="Total Number of 2xx Responses IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of 2xx Responses OUT -->
+    <MeasurementCounter id="Total Number of 2xx Responses OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.234">
+          <param name="Total Number of 2xx Responses OUT"/>
+    </MeasurementCounter>
+    
+	<!-- Total Number of 3xx Responses IN -->
+    <MeasurementCounter id="Total Number of 3xx Responses IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.235">
+          <param name="Total Number of 3xx Responses IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of 3xx Responses OUT -->
+    <MeasurementCounter id="Total Number of 3xx Responses OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.236">
+          <param name="Total Number of 3xx Responses OUT"/>
+    </MeasurementCounter>
+    
+	<!-- Total Number of 4xx Responses IN -->
+    <MeasurementCounter id="Total Number of 4xx Responses IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.237">
+          <param name="Total Number of 4xx Responses IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of 4xx Responses OUT -->
+    <MeasurementCounter id="Total Number of 4xx Responses OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.238">
+          <param name="Total Number of 4xx Responses OUT"/>
+    </MeasurementCounter>
+    
+	<!-- Total Number of 5xx Responses IN -->
+    <MeasurementCounter id="Total Number of 5xx Responses IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.239">
+          <param name="Total Number of 5xx Responses IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of 5xx Responses OUT -->
+    <MeasurementCounter id="Total Number of 5xx Responses OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.240">
+          <param name="Total Number of 5xx Responses OUT"/>
+    </MeasurementCounter>
+    
+	<!-- Total Number of 6xx Responses IN -->
+    <MeasurementCounter id="Total Number of 6xx Responses IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.241">
+          <param name="Total Number of 6xx Responses IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of 6xx Responses OUT -->
+    <MeasurementCounter id="Total Number of 6xx Responses OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.242">
+          <param name="Total Number of 6xx Responses OUT"/>
+    </MeasurementCounter>
+    
+	<!-- Total Number of Responses IN -->
+    <MeasurementCounter id="Total Number of Responses IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.243">
+          <param name="Total Number of Responses IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of Responses OUT -->
+    <MeasurementCounter id="Total Number of Responses OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.244">
+          <param name="Total Number of Responses OUT"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of calls replicated -->
+    <MeasurementCounter id="Total Number of calls replicated" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.245">
+          <param name="Total Number of calls replicated"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of calls cleaned up -->
+    <MeasurementCounter id="Total Number of calls cleaned up" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.246">
+          <param name="Total Number of calls cleaned up"/>
+    </MeasurementCounter>
+
+    <!-- Total Number of calls activated -->
+    <MeasurementCounter id="Total Number of calls activated" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.247">
+          <param name="Total Number of calls activated"/>
+    </MeasurementCounter>
+    
+	<!-- Total Number of Timedout Application Sessions -->
+    <MeasurementCounter id="Total Number of Timedout Application Sessions" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.248">
+          <param name="Total Number of Timedout Application Sessions"/>
+    </MeasurementCounter>
+    
+
+	<!-- Total Number of ACK's Timeout -->
+	<MeasurementCounter id="Total Number of ACK Timedout"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="30.10.249">
+          <param name="Total Number of ACK Timedout"/>
+    </MeasurementCounter>
+
+
+	<!-- Total Number of PRACK's Timeout -->
+    <MeasurementCounter id="Total Number of PRACK Timedout"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="30.10.250">
+          <param name="Total Number of PRACK Timedout"/>
+    </MeasurementCounter>
+
+    <!-- Total Number of Serialization Failures -->
+    <MeasurementCounter id="Total Number of Serialization Failures" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.251">
+          <param name="Total Number of Serialization Failures"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Deserialization Failures -->
+    <MeasurementCounter id="Total Number of Deserialization Failures" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.252">
+          <param name="Total Number of Deserialization Failures"/>
+    </MeasurementCounter>
+	
+	<!-- Total Number of MESSAGEs IN -->
+    <MeasurementCounter id="Total Number of MESSAGEs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.253">
+          <param name="Total Number of MESSAGEs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of MESSAGEs OUT -->
+    <MeasurementCounter id="Total Number of MESSAGEs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.254">
+          <param name="Total Number of MESSAGEs OUT"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of PUBLISHs IN -->
+    <MeasurementCounter id="Total Number of PUBLISHs IN" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.255">
+          <param name="Total Number of PUBLISHs IN"/>
+    </MeasurementCounter>
+
+	<!-- Total Number of PUBLISHs OUT -->
+    <MeasurementCounter id="Total Number of PUBLISHs OUT" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.256">
+          <param name="Total Number of PUBLISHs OUT"/>
+    </MeasurementCounter>
+        
+    <!-- Number of Active Tcap Calls -->
+    <MeasurementCounter id="Number of Active Tcap Calls"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="30.10.257">
+          <param name="Number of Active Tcap Calls"/>
+    </MeasurementCounter>
+    
+    <!-- Number of Tcap Notify Received-->
+    <MeasurementCounter id="Number of Tcap Notify Received"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="30.10.258">
+          <param name="Number of Tcap Notify Received"/>
+    </MeasurementCounter>
+    
+     <!-- Number of HTTP Request Received-->
+    <MeasurementCounter id="Total Number of HTTP Requests IN"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="30.10.259">
+          <param name="Total Number of HTTP Requests IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of HTTP GET Request Received-->
+    <MeasurementCounter id="Total Number of HTTP GET Requests IN"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="30.10.260">
+          <param name="Total Number of HTTP GET Requests IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of HTTP POST Request Received-->
+    <MeasurementCounter id="Total Number of HTTP POST Requests IN"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="30.10.261">
+          <param name="Total Number of HTTP POST Requests IN"/>
+    </MeasurementCounter>
+        
+     <!-- Number of HTTP Success Response Sent-->
+    <MeasurementCounter id="Total Number of HTTP Success Response OUT"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="30.10.262">
+          <param name="Total Number of HTTP Success Response OUT"/>
+    </MeasurementCounter>
+    
+    <!-- Number of HTTP Error Response Sent-->
+    <MeasurementCounter id="Total Number of HTTP Error Response OUT"
+                            refType="name" mode="event"
+                            scanInterval="60" oid="30.10.263">
+          <param name="Total Number of HTTP Error Response OUT"/>
+    </MeasurementCounter>
+    
+    <!-- Number of Active HTTP Sessions -->
+    <MeasurementCounter id="Number of Active HTTP Sessions" 
+                            refType="name" mode="event" 
+                            supplier="com.baypackets.ase.measurement.AseMeasurementSupplier"
+                            scanInterval="60" oid="30.10.264">
+          <param name="Number of Active SIP Sessions"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of HTTP Sessions -->
+    <MeasurementCounter id="Total Number of HTTP Sessions" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.265">
+          <param name="Total Number of HTTP Sessions"/>
+    </MeasurementCounter>
+    
+        <!--Number of New Calls per second-->
+    <MeasurementCounter id="Number of New Calls per second" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.266">
+          <param name="Number of New Calls per second"/>
+    </MeasurementCounter>
+    
+        <!-- Number of Calls currently in Progress -->
+    <MeasurementCounter id="Number of Calls currently in Progress" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.267">
+          <param name="Number of Calls currently in Progress"/>
+    </MeasurementCounter>
+    
+        <!-- Total Number of Calls in Progress -->
+    <MeasurementCounter id="Total Number of Calls in Progress" 
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.268">
+          <param name="Total Number of Calls in Progress"/>
+    </MeasurementCounter>
+    
+        <!-- Average Call Hold Time (in seconds) -->
+    <MeasurementCounter id="Average Call Hold Time (in seconds)"  
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="30.10.269">
+          <param name="Average Call Hold Time (in seconds)"/>
+    </MeasurementCounter>
+    
+    <!-- Number of TC-Begin IN -->
+    <MeasurementCounter id="Number of TC-Begin IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.270">
+    		<param name="Number of TC-Begin IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Begin OUT -->
+    <MeasurementCounter id="Number of TC-Begin OUT"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.271">
+    		<param name="Number of TC-Begin OUT"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-UniDirectional IN -->
+    <MeasurementCounter id="Number of TC-UniDirectional IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.272">
+    		<param name="Number of TC-UniDirectional IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-UniDirectional OUT -->
+    <MeasurementCounter id="Number of TC-UniDirectional OUT"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.273">
+    		<param name="Number of TC-UniDirectional OUT"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Notice IN -->
+    <MeasurementCounter id="Number of TC-Notice IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.274">
+    		<param name="Number of TC-Notice IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Notice OUT -->
+    <MeasurementCounter id="Number of TC-Notice OUT"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.275">
+    		<param name="Number of TC-Notice OUT"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-U-Abort IN -->
+    <MeasurementCounter id="Number of TC-U-Abort IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.276">
+    		<param name="Number of TC-U-Abort IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-U-Abort OUT -->
+    <MeasurementCounter id="Number of TC-U-Abort OUT"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.277">
+    		<param name="Number of TC-U-Abort OUT"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Continue IN -->
+    <MeasurementCounter id="Number of TC-Continue IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.278">
+    		<param name="Number of TC-Continue IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Continue OUT -->
+    <MeasurementCounter id="Number of TC-Continue OUT"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.279">
+    		<param name="Number of TC-Continue OUT"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-End IN -->
+    <MeasurementCounter id="Number of TC-End IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.280">
+    		<param name="Number of TC-End IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-End OUT -->
+    <MeasurementCounter id="Number of TC-End OUT"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.281">
+    		<param name="Number of TC-End OUT"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-P-Abort IN -->
+    <MeasurementCounter id="Number of TC-P-Abort IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.282">
+    		<param name="Number of TC-P-Abort IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Invokes IN -->
+    <MeasurementCounter id="Number of TC-Invokes IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.283">
+    		<param name="Number of TC-Invokes IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Invokes OUT -->
+    <MeasurementCounter id="Number of TC-Invokes OUT"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.284">
+    		<param name="Number of TC-Invokes OUT"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-ReturnResult IN -->
+    <MeasurementCounter id="Number of TC-ReturnResult IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.285">
+    		<param name="Number of TC-ReturnResult IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-ReturnResult OUT -->
+    <MeasurementCounter id="Number of TC-ReturnResult OUT"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.286">
+    		<param name="Number of TC-ReturnResult OUT"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Errors IN -->
+    <MeasurementCounter id="Number of TC-Errors IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.287">
+    		<param name="Number of TC-Errors IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Errors OUT -->
+    <MeasurementCounter id="Number of TC-Errors OUT"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.288">
+    		<param name="Number of TC-Errors OUT"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Reject IN -->
+    <MeasurementCounter id="Number of TC-Reject IN"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.289">
+    		<param name="Number of TC-Reject IN"/>
+    </MeasurementCounter>
+    
+     <!-- Number of TC-Reject OUT -->
+    <MeasurementCounter id="Number of TC-Reject OUT"
+			    		refType="name" mode="event"
+			    		scanInterval="60" oid="30.10.290">
+    		<param name="Number of TC-Reject OUT"/>
+    </MeasurementCounter>
+    
+	<!--
+	*** Following are loopback message counters to be used in context of application compositio.
+	*** These are provided with dummy OID value as they are not intended to be accessible by EMS.
+	-->
+
+    <!-- Total Number of Loopback INVITEs -->
+    <MeasurementCounter id="Total Number of Loopback INVITEs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback INVITEs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback ACKs -->
+    <MeasurementCounter id="Total Number of Loopback ACKs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback ACKs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback BYEs -->
+    <MeasurementCounter id="Total Number of Loopback BYEs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback BYEs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback CANCELs -->
+    <MeasurementCounter id="Total Number of Loopback CANCELs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback CANCELs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback OPTIONs -->
+    <MeasurementCounter id="Total Number of Loopback OPTIONs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback OPTIONs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback REGISTERs -->
+    <MeasurementCounter id="Total Number of Loopback REGISTERs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback REGISTERs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback INFOs -->
+    <MeasurementCounter id="Total Number of Loopback INFOs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback INFOs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback PRACKs -->
+    <MeasurementCounter id="Total Number of Loopback PRACKs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback PRACKs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback REFERs -->
+    <MeasurementCounter id="Total Number of Loopback REFERs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback REFERs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback NOTIFYs -->
+    <MeasurementCounter id="Total Number of Loopback NOTIFYs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback NOTIFYs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback SUBSCRIBEs -->
+    <MeasurementCounter id="Total Number of Loopback SUBSCRIBEs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback SUBSCRIBEs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback UPDATEs -->
+    <MeasurementCounter id="Total Number of Loopback UPDATEs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback UPDATEs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback MESSAGEs -->
+    <MeasurementCounter id="Total Number of Loopback MESSAGEs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback MESSAGEs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback PUBLISHs -->
+    <MeasurementCounter id="Total Number of Loopback PUBLISHs"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback PUBLISHs"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback Requests -->
+    <MeasurementCounter id="Total Number of Loopback Requests"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback Requests"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback 1xx Responses -->
+    <MeasurementCounter id="Total Number of Loopback 1xx Responses"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback 1xx Responses"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback 2xx Responses -->
+    <MeasurementCounter id="Total Number of Loopback 2xx Responses"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback 2xx Responses"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback 3xx Responses -->
+    <MeasurementCounter id="Total Number of Loopback 3xx Responses"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback 3xx Responses"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback 4xx Responses -->
+    <MeasurementCounter id="Total Number of Loopback 4xx Responses"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback 4xx Responses"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback 5xx Responses -->
+    <MeasurementCounter id="Total Number of Loopback 5xx Responses"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback 5xx Responses"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback 6xx Responses -->
+    <MeasurementCounter id="Total Number of Loopback 6xx Responses"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback 6xx Responses"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback Responses -->
+    <MeasurementCounter id="Total Number of Loopback Responses"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback Responses"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback ACK Timedout -->
+    <MeasurementCounter id="Total Number of Loopback ACK Timedout"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback ACK Timedout"/>
+    </MeasurementCounter>
+    
+    <!-- Total Number of Loopback PRACK Timedout -->
+    <MeasurementCounter id="Total Number of Loopback PRACK Timedout"
+                            refType="name" mode="event" 
+                            scanInterval="60" oid="0.0.0">
+          <param name="Total Number of Loopback PRACK Timedout"/>
+    </MeasurementCounter>
+    
+    
+	
+	<!-- Measurement Set Definition -->
+	<MeasurementSet id="CAS MeasurementSet" version="1"
+				accumulationInterval="300" priority="0">
+		<MeasurementCounter id="Number of Active Application Sessions"/> 
+    	<MeasurementCounter id="Number of Active SIP Sessions"/>
+	    <MeasurementCounter id="Number of calls currently replicated"/>
+		<MeasurementCounter id="Total Number of Application Sessions"/>
+    	<MeasurementCounter id="Total Number of SIP Sessions"/>
+		<MeasurementCounter id="Number of Rejected Requests"/>
+    	<MeasurementCounter id="Requests failed to trigger an application"/>
+		<MeasurementCounter id="Total Number of INVITEs IN"/>
+		<MeasurementCounter id="Total Number of INVITEs OUT"/>
+    	<MeasurementCounter id="Total Number of ACKs IN"/>
+		<MeasurementCounter id="Total Number of ACKs OUT"/>
+        <MeasurementCounter id="Total Number of BYEs IN"/>
+        <MeasurementCounter id="Total Number of BYEs OUT"/>
+        <MeasurementCounter id="Total Number of CANCELs IN"/>
+        <MeasurementCounter id="Total Number of CANCELs OUT"/>
+        <MeasurementCounter id="Total Number of OPTIONs IN"/>
+        <MeasurementCounter id="Total Number of OPTIONs OUT"/>
+        <MeasurementCounter id="Total Number of REGISTERs IN"/>
+        <MeasurementCounter id="Total Number of REGISTERs OUT"/>
+        <MeasurementCounter id="Total Number of INFOs IN"/>
+        <MeasurementCounter id="Total Number of INFOs OUT"/>
+        <MeasurementCounter id="Total Number of PRACKs IN"/>
+        <MeasurementCounter id="Total Number of PRACKs OUT"/>
+        <MeasurementCounter id="Total Number of REFERs IN"/>
+        <MeasurementCounter id="Total Number of REFERs OUT"/>
+        <MeasurementCounter id="Total Number of NOTIFYs IN"/>
+        <MeasurementCounter id="Total Number of NOTIFYs OUT"/>
+    	<MeasurementCounter id="Total Number of SUBSCRIBEs IN"/>
+        <MeasurementCounter id="Total Number of SUBSCRIBEs OUT"/>
+		<MeasurementCounter id="Total Number of UPDATEs IN"/>
+        <MeasurementCounter id="Total Number of UPDATEs OUT"/>
+		<MeasurementCounter id="Total Number of MESSAGEs IN"/>
+		<MeasurementCounter id="Total Number of MESSAGEs OUT"/>
+		<MeasurementCounter id="Total Number of PUBLISHs IN"/>
+		<MeasurementCounter id="Total Number of PUBLISHs OUT"/>
+		<MeasurementCounter id="Number of Active Tcap Calls"/>
+    	<MeasurementCounter id="Total Number of Requests IN"/>
+        <MeasurementCounter id="Total Number of Requests OUT"/>
+		<MeasurementCounter id="Total Number of 1xx Responses IN"/>
+        <MeasurementCounter id="Total Number of 1xx Responses OUT"/>
+    	<MeasurementCounter id="Total Number of 2xx Responses IN"/>
+        <MeasurementCounter id="Total Number of 2xx Responses OUT"/>
+		<MeasurementCounter id="Total Number of 3xx Responses IN"/>
+        <MeasurementCounter id="Total Number of 3xx Responses OUT"/>
+    	<MeasurementCounter id="Total Number of 4xx Responses IN"/>
+        <MeasurementCounter id="Total Number of 4xx Responses OUT"/>
+		<MeasurementCounter id="Total Number of 5xx Responses IN"/>
+        <MeasurementCounter id="Total Number of 5xx Responses OUT"/>
+    	<MeasurementCounter id="Total Number of 6xx Responses IN"/>
+        <MeasurementCounter id="Total Number of 6xx Responses OUT"/>
+		<MeasurementCounter id="Total Number of Responses IN"/>
+        <MeasurementCounter id="Total Number of Responses OUT"/>
+	    <MeasurementCounter id="Total Number of calls replicated"/>
+	    <MeasurementCounter id="Total Number of calls cleaned up"/>
+	    <MeasurementCounter id="Total Number of calls activated"/>
+    	<MeasurementCounter id="Total Number of Timedout Application Sessions"/>
+		<MeasurementCounter id="Total Number of ACK Timedout"/>
+		<MeasurementCounter id="Total Number of PRACK Timedout"/>
+    	<MeasurementCounter id="Total Number of Serialization Failures"/>    	
+    	<MeasurementCounter id="Total Number of Deserialization Failures"/>
+    	<MeasurementCounter id="Number of Active HTTP Sessions"/>
+    	<MeasurementCounter id="Total Number of HTTP Sessions"/>
+    	<MeasurementCounter id="Total Number of HTTP Requests IN"/>
+    	<MeasurementCounter id="Total Number of HTTP GET Requests IN"/>
+    	<MeasurementCounter id="Total Number of HTTP POST Requests IN"/>
+    	<MeasurementCounter id="Total Number of HTTP Success Response OUT"/>
+    	<MeasurementCounter id="Total Number of HTTP Error Response OUT"/>
+    	<MeasurementCounter id="Number of New Calls per second"/> 
+        <MeasurementCounter id="Number of Calls currently in Progress"/>
+        <MeasurementCounter id="Total Number of Calls in Progress"/>
+        <MeasurementCounter id="Average Call Hold Time (in seconds)"/>    
+        <MeasurementCounter id="Average Network Transactions Per Second"/>
+        <MeasurementCounter id="Average Aggregated Transactions Per Second"/>
+   </MeasurementSet>
+   
+	
+</MeasurementMgr>

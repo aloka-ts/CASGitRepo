@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementConfig>
+
+<!-- Directory where all the measurement files will be created -->
+<MeasurementDirectory>${ase.home}/../LOGS</MeasurementDirectory>
+
+<!-- Name of the measurement file --> 
+<MeasurementFileName>measurement.dat</MeasurementFileName>
+
+<!-- Maximum measurement file size in KBs -->
+<MaxFileSize>1024</MaxFileSize>
+
+<!-- Maximum number of backup files for measurements -->
+<MaxBackupFiles>10</MaxBackupFiles>
+
+<!-- Header that appears on  the top of all the measurement files -->
+<Header>
+<ValueOf><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<MeasurementInfo>]]></ValueOf>
+<Field id="NewLine"/>
+</Header>
+
+<!-- Format for printing the measurements -->
+<!-- This part will be repeated for each measurement set reported -->
+<Body>
+<ValueOf><![CDATA[
+<MeasurementSet id="]]></ValueOf><Field id="MeasurementSet"/>
+<ValueOf><![CDATA[" timestamp="]]></ValueOf><Field id="Timestamp"/>
+<ValueOf><![CDATA[">]]></ValueOf>
+<ForEachOf id="MeasurementCounter">
+<ValueOf><![CDATA[
+	<MeasurementCounter id="]]></ValueOf>
+<Field id="Name"/>
+<ValueOf><![CDATA[">]]></ValueOf>
+<Field id="Value"/>
+<ValueOf><![CDATA[</MeasurementCounter>]]></ValueOf>
+</ForEachOf>
+<ValueOf><![CDATA[
+</MeasurementSet>]]></ValueOf>
+</Body>
+
+<!-- Footer text that will be appended on all the measurement files -->
+<!-- Footer will be written only when the measurement file reaches the max. size -->
+<!-- In case, the process is killed, the footer will not get appended --> 
+<Footer>
+<ValueOf><![CDATA[
+</MeasurementInfo>]]></ValueOf>
+</Footer>
+</MeasurementConfig>

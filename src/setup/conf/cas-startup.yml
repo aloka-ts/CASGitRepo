@@ -1,0 +1,46 @@
+# Loco yaml export: Simple YAML object
+# Project: cas-startup.properties conversion
+# Release: Working copy
+# Locale: en-IN, English (India)
+# Exported by: Unregistered user
+# Exported at: Mon, 25 May 2020 15:08:28 +0530
+---
+self.subsystem.name: cas0001
+networkaddress.cache.ttl: "0"
+networkaddress.cache.negative.ttl: "0"
+redis.fqdn: redis-11896.rediscluster.agnity.com
+redis.port: "11896"
+primary.ip.address: ""
+secondary.ip.address: ""
+max.pool.connections: "10"
+max.pubsub.client.connections: "10"
+max.serialize.connect.connections: "10"
+command.timeout: "1"
+oems.sitesIds: "00"
+oems.selfInstenceId: CAS0001
+oems.bootStrapServer: kb0001.agnity.com:9092,kb0002.agnity.com:9092
+oems.componenttype: CAS
+oems.alarm.message.type: ALL
+oems.measurement.set.message.type: ALL
+oems.calltrace.message.type: ALL
+oems.inventory.message.type: PRODUCER
+oems.heratbeat.message.type: PRODUCER
+oems.consumerGroup: CAS00
+oems.heartbeat.interval.seconds: "5000"
+host.name: aconyx
+installation.user: aconyx
+oems.subscribed.siteIds: "80"
+oems.tuiEnabled: "true"
+oems.subscribed.siteIds: "00"
+app.routing.enabled: "false"
+#app.routing.ade.enabled: "false"
+#app.routing.ade.servlet.name: "triggeringcriteria"
+#app.routing.ade.service.name: "triggeringcriteria"
+#app.routing.ade.service.id: "100"
+#app.routing.ade.service.version: "PKG_1.0"
+mset.wait.counter: "1"
+mset.sleep.time.ms: "2000"
+subscribe.config.channel: "true"
+...
+
+

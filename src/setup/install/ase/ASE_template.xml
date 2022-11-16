@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Subsystem Type="ASE Subsystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="K:\Installer\samples\schema\subsysInstallationTemplate.xsd" ParamFileRequired="true">
+   <!--Subsystem Type="ASE"-->
+   <Macros>
+   	<!--
+     <Macro name="SAS_PRI_CDR_LOC" question="Please provide the URI of the primary CDR write location : "/>
+     <Macro name="SAS_SEC_CDR_LOC" question="Please provide the URI of the secondary CDR write location : "/>
+	 -->
+   </Macros>
+   <DefinedMacros>
+      <Macro name="SUBSYS_VERSION" value="ASE_VERSION"/>
+   </DefinedMacros>
+   <Package Name="ase.tar" Location="ASEASE_VERSION"/>
+   <Scripts>
+      <UserScript name="setup/ase/macroconfig.sh"/>
+      <UserScript name="setup/ase/dbconfig.sh"/>
+      <OSScript name="setup/ase/osconfig.sh"/>
+      <ExecutionScript name="ASESubsystem/scripts/ase" role="primary"/>
+      <ExecutionScript name="ASESubsystem/scripts/ase" role="secondary"/>
+      <ExecutionScript name="ASESubsystem/scripts/ase"/>
+   </Scripts>
+   <Oids>
+        <Oid name="1.1.1" defaultValue="ERROR"/> 
+        <Oid name="1.1.2" defaultValue="/LOGS/CAS">
+	<!-- <alias>INSTALL_ROOT</alias>
+            <extraString>/LOGS</extraString>	-->
+        </Oid>
+        <Oid name="1.1.3" defaultValue="FALSE"/>
+        <Oid name="1.1.4" defaultValue="TRUE"/>
+        <Oid name="1.2.17" defaultValue="1"/>
+        <Oid name="1.1.5" defaultValue="TRUE"/>
+        <Oid name="1.1.6" defaultValue="TRUE"/>
+        <Oid name="1.1.7" defaultValue="CAS.log">
+   	<!--         <alias>MY_SUBSYS_NAME</alias> -->
+        </Oid>
+    <!-- Database Related Parameters -->
+		<!--<Oid name="1.2.1" defaultValue="">
+			<alias>DB_USER</alias>
+		</Oid>
+		<Oid name="1.2.2" defaultValue="">
+			<alias>DB_PASSWD</alias>
+		</Oid>-->
+		<Oid name="1.2.4" defaultValue="2"/>
+		<Oid name="1.2.10" defaultValue="1521"/>
+		<!--<Oid name="1.2.11" defaultValue="">
+			<alias>DB1_SID</alias>
+		</Oid>-->
+		<Oid name="1.2.12" defaultValue="oracle.jdbc.driver.OracleDriver"/>
+		<Oid name="1.2.14" defaultValue="1"/>
+		<Oid name="1.2.15" defaultValue="20"/>
+		<!--<Oid name="1.2.16" defaultValue="">
+			<alias>DB1_HOST_IP</alias>
+		</Oid>-->
+		<Oid name="1.2.17" defaultValue="1"/>
+
+        <Oid name="1.7.1" defaultValue="100"/>
+	<Oid name="1.3.1" defaultValue="">
+		<alias>MY_HOST_IP</alias>
+	</Oid>
+	<Oid name="1.11.1" defaultValue="ASE_VERSION">
+		<extraString>ASE_VERSION</extraString>
+	</Oid>
+	<Oid name="1.11.2" defaultValue="">
+		<alias>CURRENTDATE_STRING</alias>
+	</Oid>
+	<Oid name="1.11.3" defaultValue="">
+		<alias>CURRENTDATE_STRING</alias>
+	</Oid>
+	<Oid name="1.11.4" defaultValue="10"/>
+	<!--	
+	<Oid name="30.1.24" defaultValue="">
+		This should be done until there is MOP to fill signalling IP in a dual-lan setup
+		<alias>MY_HOST_IP</alias>
+	</Oid>
+	-->
+	<!--Oid name="NO_OID" defaultValue="">
+		<alias>DUAL_LAN</alias>
+		<IF value="yes">
+			<Oid name="30.1.24" defaultValue="">
+				<alias>SIGNALLING_IP</alias>
+			</Oid>
+		</IF>
+		<IF value="no">
+			<Oid name="30.1.24" defaultValue="">
+				<alias>MY_HOST_IP</alias>
+			</Oid>
+		</IF>
+	</Oid-->
+	<Oid name="NO_OID" defaultValue="">
+		<alias>FT_MODE</alias>
+		<IF value="2">
+			<Oid name="30.1.11" defaultValue="0.0.0.0"/>
+			<Oid name="1.12.1" defaultValue="Standby">
+				<alias>MY_ROLE</alias>
+				<IF value="Active">
+					<Oid name="30.1.31" defaultValue="">
+						<alias>MACHINE2_SIG_IP</alias>
+					</Oid>
+					<Oid name="30.1.13" defaultValue="">
+						<alias>MACHINE2_IP</alias>
+					</Oid>
+					<Oid name="30.1.24" defaultValue="">
+						<alias>MACHINE1_SIG_IP</alias>
+					</Oid>
+				</IF>
+				<IF value="Standby">
+					<Oid name="30.1.31" defaultValue="">
+						<alias>MACHINE1_SIG_IP</alias>
+					</Oid>
+					<Oid name="30.1.13" defaultValue="">
+						<alias>MACHINE1_IP</alias>
+					</Oid>
+					<Oid name="30.1.24" defaultValue="">
+						<alias>MACHINE2_SIG_IP</alias>
+					</Oid>
+				</IF>
+			</Oid>
+		</IF>
+		<IF value="3">
+			<Oid name="30.1.11" defaultValue="0.0.0.0"/>
+			<Oid name="1.12.1" defaultValue="Standby">
+				<alias>MY_ROLE</alias>
+				<!--IF value="Active">
+					<Oid name="30.1.31" defaultValue="">
+						<alias>MACHINE2_IP</alias>
+					</Oid>
+				</IF>
+				<IF value="Standby">
+					<Oid name="30.1.31" defaultValue="">
+						<alias>MACHINE1_IP</alias>
+					</Oid>
+				</IF-->
+			</Oid>
+			<Oid name="30.1.31" defaultValue="NO">
+				<alias>MACHINE1_IP</alias>
+			</Oid>
+			<Oid name="30.1.64" defaultValue="0.0.0.0">
+				<alias>SAS_SIPLB_FIP</alias>
+			</Oid>
+			<Oid name="30.1.65" defaultValue="0">
+				<alias>SAS_SIPLB_PORT</alias>
+			</Oid>
+
+			<!-- Number of floating IP addresses, incase of N+1
+	     		this number shall always be = N -->
+			<!--
+			<Oid name="30.1.72" defaultValue="2"/>
+			-->
+		</IF>
+	</Oid>
+
+	<!--
+	<Oid name="30.1.59" defaultValue="kamesh/kamesh@bplin03"> 
+                <alias>DB_USER</alias>
+				<extraString>/</extraString>
+                <alias>DB_PASSWD</alias>
+				<extraString>@</extraString>
+                <alias>DB1_SID</alias>
+	</Oid>
+	<Oid name="30.1.58" defaultValue="192.168.1.82"> 
+			<alias>DB1_HOST_IP</alias>
+	</Oid>
+	-->
+
+
+	<Oid name="30.1.1" defaultValue="23999"/>
+
+      <!-- SIP connector listener port -->   
+      <Oid name="30.1.7" defaultValue="5060"/>
+
+      <!-- SIP connector TLS listener port -->   
+      <Oid name="30.1.46" defaultValue="5061"/>
+
+	  <!-- keystore file path -->
+	  <!--
+	  <Oid name="30.1.47" defaultValue=" ">
+	  <alias>KEYSTORE_PATH</alias>
+	  </Oid>
+	  -->
+
+	  <!-- keystore password -->
+	  <!--
+	  <Oid name="30.1.48" defaultValue=" ">
+	  <alias>KEYSTORE_PASSWORD</alias>
+	  </Oid>
+	  -->
+
+	  <!-- truststore file path -->
+	  <!--
+	  <Oid name="30.1.49" defaultValue=" ">
+	  <alias>TRUSTSTORE_PATH</alias>
+	  </Oid>
+	  -->
+
+      <!-- HTTP Connector PORT -->
+      <Oid name="30.1.12" defaultValue="8080"/>
+     
+      <Oid name="30.1.8" defaultValue=" "/>
+      <!-- OB SIP entity -->   
+     
+      <!-- SIP Debug Trace -->
+      <Oid name="30.1.9" defaultValue="0"/>
+
+      <!-- SIP Debug Trace File -->
+      <Oid name="30.1.10" defaultValue="/LOGS/CAS/sipDebug.log">
+       <!--     <alias>INSTALL_ROOT</alias>
+      	    <extraString>/LOGS/sipDebug.log</extraString>	-->
+      </Oid>
+
+      <!-- Installation Mode, 1 for Non FT, 2 for FT, 3 for 1+N Mode, 4 for HA Mode -->
+      <Oid name="30.1.33" defaultValue="2">
+            <alias>FT_MODE</alias>
+      </Oid>
+
+	<Oid name="30.1.32" defaultValue="">
+		<alias>IM_USER</alias>
+		<extraString>_</extraString>
+		<alias>MY_HOST</alias>
+	</Oid>
+
+	<Oid name="NO_OID" defaultValue="">
+		<alias>FT_MODE</alias>
+		<IF value="3">
+		<!-- Susbsystem current role -->
+                        <Oid name="30.1.27" defaultValue="Standby"/>
+
+                        <!-- Reload container policy -->
+                        <Oid name="30.1.29" defaultValue="0"/>
+
+                        <!-- Enforce repl policy -->
+                        <Oid name="30.1.30" defaultValue="0"/>
+
+            <!--Oid name="30.1.11" defaultValue="">
+                <alias>SAS_SIG_FIP</alias>
+            </Oid-->
+            <!--Oid name="30.1.13" defaultValue="">
+                <alias>HTTP_SIG_FIP</alias>
+            </Oid-->
+	<!--
+            Oid name="30.1.73" defaultValue="">
+                <alias>SAS_SIG_FIP</alias>
+            </Oid>
+	-->
+            <Oid name="30.1.25" defaultValue="">
+                <alias>SAS_NW_REF_IP</alias>
+            </Oid>
+            <Oid name="30.1.28" defaultValue="">
+                <alias>IM_USER</alias>
+                <extraString>_</extraString>
+                <alias>MACHINE1</alias>
+                <extraString>,</extraString>
+                <alias>IM_USER</alias>
+                <extraString>_</extraString>
+                <alias>MACHINE2</alias>
+            </Oid>
+	
+		</IF>
+		<IF value="4">
+                        <!-- Susbsystem current role -->
+                        <Oid name="30.1.27" defaultValue="Standby"/>
+
+                        <!-- Reload container policy -->
+                        <Oid name="30.1.29" defaultValue="0"/>
+
+                        <!-- Enforce repl policy -->
+                        <Oid name="30.1.30" defaultValue="0"/>
+
+			<Oid name="30.1.11" defaultValue="">
+				<alias>SAS_SIG_FIP</alias>
+			</Oid>
+			<!--Oid name="30.1.13" defaultValue="">
+				<alias>HTTP_SIG_FIP</alias>
+			</Oid-->
+			<Oid name="30.1.25" defaultValue="">
+				<alias>SAS_NW_REF_IP</alias>
+			</Oid>
+			<Oid name="30.1.28" defaultValue="">
+				<alias>IM_USER</alias>
+				<extraString>_</extraString>
+				<alias>MACHINE1</alias>
+				<extraString>,</extraString>
+				<alias>IM_USER</alias>
+				<extraString>_</extraString>
+				<alias>MACHINE2</alias>
+			</Oid>
+		</IF>
+		<IF value="2">
+		<!-- Susbsystem current role -->
+       <Oid name="30.1.27" defaultValue="Standby"/>
+
+       <!-- Reload container policy -->
+       <Oid name="30.1.29" defaultValue="0"/>
+                        
+	
+		<!-- Enforce repl policy -->
+		<Oid name="30.1.30" defaultValue="0"/>
+
+		<Oid name="30.1.11" defaultValue="">
+		<alias>SAS_SIG_FIP</alias>
+		</Oid>
+		<!--
+		<Oid name="30.1.24" defaultValue="">
+			<alias>MY_HOST_SIG_IP</alias>
+		</Oid>
+		-->
+		<!--Oid name="30.1.13" defaultValue="">
+			<alias>HTTP_SIG_FIP</alias>
+		</Oid-->
+		<Oid name="30.1.25" defaultValue="">
+			<alias>SAS_NW_REF_IP</alias>
+		</Oid>
+		<Oid name="30.1.28" defaultValue="">
+			<alias>IM_USER</alias>
+			<extraString>_</extraString>
+			<alias>MACHINE1</alias>
+			<extraString>,</extraString>
+			<alias>IM_USER</alias>
+			<extraString>_</extraString>
+			<alias>MACHINE2</alias>
+		</Oid>
+		</IF>
+		<IF value="1">
+			<Oid name="30.1.11" defaultValue="">
+				<alias>MY_HOST_SIG_IP</alias>
+			</Oid>
+			<Oid name="30.1.24" defaultValue="">
+				<alias>MY_HOST_SIG_IP</alias>
+			</Oid>
+			<!--Oid name="30.1.13" defaultValue="">
+				<alias>HTTP_SIG_IP</alias>
+			</Oid-->
+            <Oid name="30.1.25" defaultValue="">
+            	<alias>SAS_NW_REF_IP</alias>
+            </Oid>
+			<Oid name="30.1.28" defaultValue="">
+				<alias>IM_USER</alias>
+				<extraString>_</extraString>
+				<alias>MACHINE1</alias>
+			</Oid>
+		</IF>
+	</Oid>
+
+		<!-- 
+      <Oid name="30.1.13" defaultValue=" ">
+           <alias>MY_HOST_IP</alias>
+      </Oid>
+		-->
+      <!-- Maximum Number of INVITEs to start Call Gapping -->
+      <Oid name="30.1.15" defaultValue="1500"/>
+
+      <!-- CPU Scan Interval in seconds -->
+      <Oid name="30.1.16" defaultValue="5"/>
+
+      <!-- Maximum CPU percentage to start Call Gapping -->
+      <Oid name="30.1.17" defaultValue="75"/>
+
+      <!-- Maximum Number of SIP Protocol Sessions to start Call Gapping -->
+      <Oid name="30.1.18" defaultValue="30000"/>
+
+      <!-- Maximum Number of Application Sessions to start Call Gapping -->
+      <Oid name="30.1.19" defaultValue="30000"/>
+
+      <!-- Flag to indicate whether or not enable the Overload Control (OCM) -->
+      <Oid name="30.1.21" defaultValue="1"/>
+
+      <!-- Format string for writing the CDRs -->
+      <Oid name="30.1.36" defaultValue=" "/>
+
+	<!-- Primary CDR write location -->
+	<!--
+	<Oid name="30.1.37" defaultValue=" ">
+	<alias>SAS_PRI_CDR_LOC</alias>
+	</Oid>
+	-->
+
+	<!-- Primary CDR write location -->
+	<Oid name="30.1.37" defaultValue=" ">
+      <extraString>file:</extraString>	
+      <alias>INSTALL_ROOT</alias>
+      <extraString>/CDR1</extraString>	
+	</Oid>
+
+	<!-- Primary CDR location status -->
+	<Oid name="30.1.38" defaultValue="AVAILABLE"/>
+
+	<!-- Secondary CDR write location -->
+	<!--
+	<Oid name="30.1.39" defaultValue=" ">
+	<alias>SAS_SEC_CDR_LOC</alias>
+	</Oid>
+	-->
+
+	<!-- Secondary CDR write location -->
+	<Oid name="30.1.39" defaultValue=" ">
+      <extraString>file:</extraString>	
+      <alias>INSTALL_ROOT</alias>
+      <extraString>/CDR2</extraString>	
+	</Oid>
+
+	<!-- Secondary CDR location status -->
+	<Oid name="30.1.40" defaultValue="AVAILABLE"/>
+
+	<!-- Max CDR write per file -->
+	<Oid name="30.1.41" defaultValue="100"/>
+
+	<!-- CDR file rollover interval (in mins) -->
+	<Oid name="30.1.42" defaultValue="15"/>
+
+	<!-- Media server heartbeat interval -->
+	<Oid name="30.1.43" defaultValue="10"/>
+
+	<!-- Number of heartbeat retries -->
+	<Oid name="30.1.44" defaultValue="4"/>
+
+	<!-- IVR Play/Collect response timeout -->
+	<Oid name="30.1.45" defaultValue="300"/>
+
+	<!-- IN Gateway IP and Port -->
+	<Oid name="30.1.67" defaultValue=" ">
+		<alias>INGW_LIST</alias>
+	</Oid>
+
+	<!-- Performance OID for number of current SIP sessions -->
+	<Oid name="30.10.1" defaultValue="0"/>
+
+	<!-- Performance OID for number of current Application sessions -->
+	<Oid name="30.10.2" defaultValue="0"/>
+
+	<!-- Latency Logging Level - Possible values [0|1|2]
+	     0 - Logging Disabled
+	     1 - First level details
+	     2 - Second level details 
+         -->
+	<Oid name="30.1.70" defaultValue="0"/>
+
+	<!-- Latency Logging Time in sec. Latency framework 
+      	     shall dump details in log file [to be provided in
+	     ase.properties sip.latency.log.file=
+         -->
+	<Oid name="30.1.71" defaultValue="100"/>
+	
+	<!-- Parsing rule for INAP messages
+         -->
+	<Oid name="30.1.74" defaultValue="false"/>
+	
+	<!--OIDS for Cogestion Control -->
+	<!-- OID_CONTENTION_LEVEL_ONE_MEMORY_USAGE-->
+	<Oid name="30.1.75" defaultValue="60"/>
+	<!-- OID_CONTENTION_LEVEL_TWO_MEMORY_USAGE-->
+    <Oid name="30.1.76" defaultValue="70"/>
+	<!-- OID_CONTENTION_LEVEL_THREE_MEMORY_USAGE-->
+    <Oid name="30.1.77" defaultValue="80"/>
+	<!-- OID_CONTENTION_LEVEL_ONE_CPU_USAGE-->
+    <Oid name="30.1.78" defaultValue="60"/>
+	<!-- OID_CONTENTION_LEVEL_TWO_CPU_USAGE-->
+    <Oid name="30.1.79" defaultValue="70"/> 
+	<!-- OID_CONTENTION_LEVEL_THREE_CPU_USAGE-->	
+    <Oid name="30.1.80" defaultValue="80"/>
+	<!-- OID_CONTENTION_LEVEL_ONE_ACTIVE_CALLS-->
+    <Oid name="30.1.81" defaultValue="500"/>
+    <!-- OID_CONTENTION_LEVEL_TWO_ACTIVE_CALLS-->
+	<Oid name="30.1.82" defaultValue="1000"/>
+	<!-- OID_CONTENTION_LEVEL_THREE_ACTIVE_CALLS-->	
+    <Oid name="30.1.83" defaultValue="1500"/>
+	<!-- OID_CONTENTION_ALLOWED_ACTIVE_CALLS-->
+    <Oid name="30.1.84" defaultValue="10"/>
+	<!-- OID_CONTENTION_REJECTED_ACTIVE_CALLS-->
+    <Oid name="30.1.85" defaultValue="5"/> 
+    <!-- OID_MEMORY_LEAK_DETECTION-->
+    <Oid name="30.1.86" defaultValue="0"/>
+	<!-- OID_SOFT_SHUTDOWN_INTERVAL-->
+    <Oid name="30.1.87" defaultValue="5"/>
+	<!-- OID_HOST SNMP PORT-->
+    <Oid name="30.1.88" defaultValue="5161"/>
+	<!-- OID_HOST SNMP COMMUNITY-->
+    <Oid name="30.1.89" defaultValue="public"/>
+    <!-- OID_PVT_IF_IPS_LIST--> 
+    <Oid name="30.1.90" defaultValue="0"/> 
+   <!--OID_NETWORK_TRANSACTIONS_PER_SECOND--> 
+   <Oid name="30.1.91" defaultValue="1500"/>    
+   <!--OID_AGGREGATED_TRANSACTIONS_PER_SECOND--> 
+   <Oid name="30.1.92" defaultValue="2000"/>  
+    <!--OID_NEW_CALLS_PER_SECOND--> 
+    <Oid name="30.1.93" defaultValue="100"/> 
+   <!--OID_HTTP_MSG_LOGGING_ENABLE-->
+   <Oid name="30.1.94" defaultValue="0"/> 
+   <!--OID_HTTP_MSG_LOGFILE-->    
+   <Oid name="30.1.95" defaultValue="/LOGS/CAS/httpDebug.log"/> 
+  <!--OID_COMP_MON_ENABLE-->  
+   <Oid name="30.1.96" defaultValue="0"/> 
+  <!--OID_COMP_MON_CONFIG_FILE--> 
+   <Oid name="30.1.97" defaultValue="${ase.home}/conf/config.json"/> 
+</Oids>   
+</Subsystem>

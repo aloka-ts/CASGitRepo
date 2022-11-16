@@ -1,0 +1,54 @@
+# Loco yaml export: Simple YAML object
+# Project: ase.properties conversion
+# Release: Working copy
+# Locale: ase, American Sign Language
+# Exported by: Unregistered user
+# Exported at: Mon, 24 Feb 2020 19:21:29 +0530
+---
+### Network Reference IP
+30.1.25: someip.agnity.com
+### Subsystem (SELF) IP
+30.1.24: casnode1.agnity.com
+### Subsystem Name/self Instance Id
+30.1.32: cas0001
+### Peer Subsystem IP
+30.1.31: casnode2.agnity.com
+### Peer SubystemName (FT)
+peer.subsystem.name: ""
+### Management reference IP
+1.3.1: casnode1.agnity.com
+### Telnet server port
+30.1.1: "23999"
+### SIP Public IP/FIP Address
+30.1.11: casfip.agnity.com
+###  SIP Connector port
+30.1.7: "5060"
+### SIP Connector TLS port
+30.1.46: "5061"
+### HTTP Connector IP Address
+30.1.13: casfip.agnity.com
+### HTTP Connector port
+30.1.12: "8080"
+### HTTPS Connector port
+ssl.connector.port: "8443"
+### Self JMX Port ###
+self.jmx.port: "14000"
+### Peer JMX Port ###
+peer.jmx.port: "14000" 
+### Self JMX URL ##
+self.jmx.url: "1"
+### managed ref ip ###
+managed.network.refIP: mgmtnetref00.agnity.com
+## CDR1 and CDR2 locations###
+30.1.37: file:/STORE/CDR1
+30.1.39: file:/STORE/CDR2
+####### INGW List. Comma separated list of INGW detail in the form of  <INGW Virtual IP>:<SIP Port>
+####### For eg, to configure 2 INGW clusters, the configuration might looks like the following:
+####### 30.1.67=192.168.2.89:7070,192.168.2.90:5060
+30.1.67: ingwfip.agnity.com:5060
+##Enum Server Port##
+30.1.98: "9999"
+### Outbound Proxy IP and port - format { <IP>"|"[Port] }
+### Port number is optional and the default value is "5060"
+#30.1.8: "192.168.2.100|5060"
+...

@@ -1,0 +1,2054 @@
+#pragma section-numbers on
+attachment:header_logo.gif
+
+
+'''~+ Application Logic Control+~'''
+
+''Version 1.0''
+
+Document Number: [http://intra/menu/3/9/pnr/build/new1.cfm 000-000000-00]
+
+Author: C. Bourne
+
+ * Email: [[MailTo(cbourne@genband.com)]]
+Date: 05/17/08
+||'''Approvals''' ||'''Signature''' ||'''Date''' ||
+|| || || ||
+|| || || ||
+|| || || ||
+|| || || ||
+|| || || ||
+
+
+~+Revision History +~
+||'''Rev''' ||'''Date''' ||'''Author''' ||'''Reviewers''' ||'''Description''' ||
+|| 0.1 ||05/17/08 || || || Initial Version ||
+
+
+[[TableOfContents]]
+
+= Acronyms and Abbreviations =
+ SIP:: ''[http://www.ietf.org/rfc/rfc3261.txt Session Initiation Protocol] ''
+ ALC :: '' Application Logic Controller ''
+ alcml :: '' Application Logic Control Markup Language ''
+ SAS :: '' [http://www.genband.com Genband] Sip Application Server [http://jcp.org/en/jsr/detail?id=116 JSR 116/289] ''
+ APT :: '' Java [http://java.sun.com/j2se/1.5.0/docs/guide/apt/index.html Annotation Processing tool] ''
+= Application Logic Controller =
+The Application Logic Controller (ALC) is a telecommunications purpose-built scripting language.  It is intended to allow for quicker delivery and customization of software delivered on the Genband's Sip Application Server.  It's syntax is defined in an [http://www.w3.org/XML/Schema XML Schema] definition and is referred to as Application Logic Control Markup Language (alcml) attachment:ALCML.xsd
+
+The ALCML can be extended through a java enabled compiler.  This allows java developers to extend the markup definition by simply annotating java source and executing the compiler task on the source.
+
+The ALC has interfaces for java developers to provide access to services for definition of compliant xml instances and subsequent execution of the defined services.  Interfaces also exist for java developers to listen for execution events, provide context to services and extract results from service executions.
+
+= ALC Compiler =
+The ALC compiler is provided in the current distribution as a Java Archive.  It is located in the installation at <ase.home>/!AlcClasses/ApplicationLogicController/build/alc-compiler.jar.
+
+Requirements to use the compiler:
+
+ * jdk 1.6 (or later)
+ * ant 1.7 (or later)
+== Environment ==
+To properly install the alc-compiler.jar on a target:
+
+ * move the archive to a generally available location.
+ * extract the archive.
+Users of the compiler must have the following set in their environment:
+
+ * ALCML_HOME=<root directory for the alc compiler>
+ * JAVA_HOME=<jdk home>
+== ANT task ==
+The compiler is currently defined in an ant macro file (build-macros.xml) with the alc-compiler.jar distribution and is accessed like an ant task element in the form:
+
+<alcmlc> attributes:
+
+ * classpath="<users classpath>" - User supplied class path (for ALC bindings)
+ * destdir="<output directory>" - An output directory in the user's space that should be cleaned prior to this task. The user must also compile java source (and make available class definition) in this directory
+ * srcdir="<source directory>" - Where the compiler should start it's search for the input files.  The compiler will transcend this directory structure searching for <input> filter.
+ * bindingOutputDir="<binding output>" - Where the compiler should place the XML Schema java bindings (JAXB).  User should compile this directory and package produced classes.
+{{{
+Therefore an build.xml fragment could look like,
+        <?xml version="1.0"?>
+        <!-- ==================================================== -->
+        <!-- Build file: Application Logic Controller -->
+        <!-- ==================================================== -->
+        <project name="Application Logic Controller Extension" default="all" basedir=".">
+                <property environment="env"/>
+                <property name="ALCML_HOME" Value="${env.ALCML_HOME}"/>
+                <property name="JAVA_HOME" Value="${env.JAVA_HOME}"/>
+                <property name="INSTALL_ALC" Value="${env.INSTALL_ALC}"/>
+                <import file="${ALCML_HOME}/src/build-macros.xml"/>
+                <target name="all">
+                        <path id="classpath">
+                                <fileset dir="${ALCML_HOME}">
+                                        <include name="**/*.jar"/>
+                                </fileset>
+                        </path>
+                        <property name="additionalclasspath" refid="classpath"/>
+                        <delete dir="${basedir}/src/alcmltemp"/>
+                        <mkdir dir="${basedir}/src/alcmltemp"/>
+                        <delete dir="${basedir}/src/com/genband/ase/alc/alcml/jaxb/xjc/"/>
+                        <mkdir dir="${basedir}/src/com/genband/ase/alc/alcml/jaxb/xjc/"/>
+                        <alcmlc srcdir="${basedir}/src" destdir="${basedir}/src/alcmltemp"
+                                classpath="${additionalclasspath}" bindingOutputDir="${basedir}/src"/>
+                        <mkdir dir="${basedir}/build"/>
+                        <javac srcdir="${basedir}/src" destdir="${basedir}/build">
+                                <classpath refid="classpath"/>
+                        </javac>
+                        <jar jarfile="${INSTALL_ALC}/MyExtJAXB.jar" basedir="${basedir}/build"/>
+                </target>
+        </project>
+** currently the SAS has to be restarted when a new extension is installed in <ase.home>/alcjars
+}}}
+Output of the compiler is java source that is created in two locations:
+
+ * User space bindings - this is java source code that is output into the directory described by the ''srcdir'' attribute.  It is a mangled-named class that will be packaged into the unnamed java package.
+ * XML Schema bindings - this is java source code that re-binds the new schema to the ALC Engine.  It is output into the <''bindingOutputDir''>/com/genband/ase/alc/alcml/jaxb/xjc/.
+All generated software needs to be compiled and archived into the <ase.home>/alcjars directory on a SAS install.  Currently, the SAS must be restarted for the changes to take affect.  This is subject to change in future releases and should not be relied upon as design intent.
+
+== Java Annotation Interfaces ==
+The compiler is based on the Java Annotation Processing tool (APT) (that is available in jdk 1.5 and beyond)  The tool allows for annotation classes to be written and utilized by developers to describe meta-information to an external compiler. The ALC environment has three annotation classes for interacting user space java source with the ALC engine.
+
+ * ALCMLActionClass - class level annotation. attachment:ALCMLActionClass.html
+ * ALCMLActionMethod - method level annotation. attachment:ALCMLActionMethod.html
+ * ALCMLMethodParameter - method parameter level annotation. attachment:ALCMLMethodParameter.html
+{{{
+Example usage:
+@ALCMLActionClass(
+        name="A Trivial Extension to ALC"
+)
+public class myALCExt extends ALCServiceInterfaceImpl
+{
+        @ALCMLActionMethod( name="cat-string", help="concatenates strings")
+        public void catString(ServiceContext sContext,
+                @ALCMLMethodParameter(name="prefix-value", asAttribute=true, required=true) String A,
+                @ALCMLMethodParameter(name="suffix-value", asAttribute=true, required=true) String B,
+                @ALCMLMethodParameter(name="results-in", asAttribute=true, required=true) String resultsIn) throws ServiceActionExecutionException
+        {
+                sContext.setAttribute(resultsIn, A + B);
+                sContext.ActionCompleted();
+        }
+}}}
+The previous example would result in a xml binding in the form of: <cat-string prefix-value="Hello " suffix-value="World" results-in="resultant-string"/>
+
+== Programmatic Interfaces for Java Extensions ==
+=== Service Context Interface ===
+The !ServiceContext object is the execution context that is available throughout an individual execution of a service definition.  It is the primary interface for java extension to communicate with the ALC engine and the service user.  In the above example, one can see how the extension is responsible for communicating the results of the execution through the !ActionCompleted primitive.  Here are some often used !ServiceContext interfaces:
+
+ * Object getAttribute(String name);  -- gets an attribute from context by name.
+ * void   setAttribute(String name, Object value);  -- sets an object attribute in context by name.
+ * void   !ActionCompleted(); -- indicates that the extension has completed the action without a failure condition.
+ * void   !ActionFailed(); -- indicates that the extension has encountered a catastrophic error that should halt service execution on this context.
+A requirement of a compliant method definition is that the first parameter to the function is the Service Context.  This is really a simple way to ensure that disciplined developers understand the Service Context implications in their method definitions.
+
+=== ALC Service Interface ===
+The ALCServiceInterface (and ALCServiceInterfaceImpl) provide additional information about the class to the alc engine.  The class is responsible for returning a unique string that will be used to identify the object within context. Upon first utilization in a service flow, the extension object will be instantiated (using default construction) and placed into the Service Context.  All subsequent access to the extension (with the context), will result in this single instance being reused. The class instance also has the opportunity to return context to the ALC engine (through the getContext primitive).  This context will be used to recover information prior to resolution of context variables in method invocation.  This can be useful in providing a default value for context variables in service extensions.
+
+= Programmatic Interfaces for Java ALC Users =
+== Service Creation ==
+A service is created via the following static interface on the !ServiceDefinition class:
+
+ * public static !ServiceDefinition !CreateALCMLDefinition(String nameSpace, URL arg) throws !ServiceCreationException
+=== Canonical "Hello World" Example ===
+The following is an alcml example of the canonical hello world.
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<application-logic-control>
+    <service name="helloWorld">
+        <set variable="ATestForYou" equal-to="Hello World"/>
+        <print value="The canonical ${ATestForYou} example"/>
+    </service>
+</application-logic-control>
+}}}
+The example illustrates a simple function that outputs a string to standard output.
+
+Notice that the contents of string literals (as element attributes) have special meaning within the ALCML. Context variables can be embedded into string literals using the syntax ${<variable>}. These string literals are realized from context at execution time and therefore can be set by any component that has access to the service context. These special expressions are known as ALCMLExpressions.
+
+To create the hello world service
+
+{{{
+        import com.genband.ase.alc.alcml.jaxb.ServiceDefinition;
+        import com.genband.ase.alc.alcml.jaxb.ServiceCreationException;
+
+        try
+        {
+                ServiceDefinition.Initialize();
+                ServiceDefinition.CreateALCMLDefinition("TestNameSpace", new URL("<my url>");
+        }
+        catch (ServiceCreationException sce)
+        {
+                // something went wrong.
+        }
+}}}
+Two concepts introduced above are:
+
+ * Namespaces -- These are literals that the !ServiceDefinition class stores compiled execution units against.  They help to delineate conflicts in service names and insulates global context variables to a namespace.
+ * Initialization -- The !ServiceDefinition class must be initialized prior to usage.  This initialization can be called multiple times (subsequent calls are benign).  If the Sip Servlet Stand alone telnet interfaces are deployed, then the initialization is done prior to execution of user applications in the Genband SAS.
+== Service Execution ==
+A service is executed via the following interface on a !ServiceDefinition instance:
+
+ * public void execute(!ServiceContext context) throws !ServiceActionExecutionException
+The execute primitive utilizes the java object synchronization mechanism on the given !ServiceContext object to ensure that only one execution thread is running on any given context.
+
+=== Execution "Hello World" Example ===
+To execute the hello world example from java source.
+
+{{{
+        import com.genband.ase.alc.alcml.jaxb.ServiceDefinition;
+        import com.genband.ase.alc.alcml.jaxb.ServiceActionExecutionException;
+
+        ...
+        try
+        {
+                ServiceDefinition helloWorldService =
+                        ServiceDefinition getServiceDefinition("TestNameSpace", "helloWorld");
+                ServiceContext myContext = new ServiceContext();
+                helloWorldService.execute(myContext);
+                String resultant = (String)myContext.getAttribute("ATestForYou");
+        }
+        catch (ServiceActionExecutionException saee)
+        {
+                // something went wrong.
+        }
+}}}
+In the above example,
+
+ * the hello world service is retrieved by name ("helloWorld") from the existing name space ("TestNameSpace")
+ * a context is created for execution
+ * the service is executed, and a resultant is retrieved by name ("ATestForYou") from the context.
+== Service Listening ==
+In the hello world example, the xml elements that are executed are atomic in nature.  But, one could consider an example wherein the execution is not complete upon return of execution of the service. All service executions are non-blocking. Therefore, a listener paradigm exists to afford the java user an opportunity to provide behavior at varying points of execution.
+
+Consider
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<application-logic-control>
+    <service name="helloWorld">
+        <play uri="file:///helloworld.wav"/>
+        <set variable="ATestForYou" equal-to="Hello World"/>
+        <print value="The canonical ${ATestForYou} example"/>
+    </service>
+</application-logic-control>
+}}}
+Upon execution, the ALC engine would return to the user from ...
+
+ . helloWorldService.execute(myContext);
+... while the media service was playing to a user.
+
+=== Simple "Hello World" Listener Example ===
+An example to handle this asynchronous execution scenario,
+
+{{{
+        ...
+        import com.genband.ase.alc.alcml.jaxb.ServiceContext;
+        import com.genband.ase.alc.alcml.jaxb.ServiceAction;
+        import com.genband.ase.alc.alcml.jaxb.ServiceContextEvent;
+        import com.genband.ase.alc.alcml.jaxb.ServiceListenerResults;
+        ...
+        class AsynchListener implements ServiceContextListener
+        {
+                public ServiceListenerResults beforeExecute(ServiceContext sContext, ServiceAction sAction)
+                {
+                        return ServiceListenerResults.Continue;
+                }
+                public ServiceListenerResults afterExecute(ServiceContext sContext, ServiceAction sAction)
+                {
+                        return ServiceListenerResults.Continue;
+                }
+                public ServiceListenerResults handleEvent(ServiceContextEvent event, String message, ServiceContext sContext,
+                                ServiceAction sAction)
+                {
+                        if (event == ServiceContextEvent.Complete || event == ServiceContextEvent.ActionFailed)
+                        {
+                                // ** play has completed
+                                String resultant = (String)myContext.getAttribute("ATestForYou");
+                                return ServiceListenerResults.RemoveMeAsListener;
+                        }
+                        return ServiceListenerResults.Continue;
+                }
+        }
+
+        ...
+                try
+                {
+                        ServiceDefinition helloWorldService =
+                                ServiceDefinition getServiceDefinition("TestNameSpace", "helloWorld");
+                        ServiceContext myContext = new ServiceContext();
+                        myContext.addServiceContextListener(new AsynchListener());
+                        helloWorldService.execute(myContext);
+                }
+                catch (ServiceActionExecutionException saee)
+                {
+                        // something went wrong.
+                }
+        ...
+}}}
+As can be seen, the user would simply add a listener to the Service Context prior to execution.  Reflection into the service context for extraction of the resultant, now happens upon a !ServiceContextEvent being placed into the listener.
+
+== Service Context ==
+A formal definition of the !ServiceContext interface exists in the javadoc for this object. attachment:ServiceContext.html
+
+= Distribution of ALC elements for fault tolerance =
+This sections attempt to clarify the distribution of constructs defined in the ALC environment.
+
+== OA&MP ==
+The creation and destruction of services is of local significance within an instance of the ALC environment.  The user is responsible for ensuring that service creation and destruction happens on all ALC instances in which a user would desire to access the defined services.
+
+Garden-variety SAS example. If you are creating an application that uses the !ServiceDefinition library, the application needs to ensure that the namespace/URL are created on an active/standby component.  This should be a relatively simple exercise in the construction/destruction of the application.
+
+Note:  When using the stand alone service definition, a Sip Servlet is created that has mechanism to instantiate and destroy service namespaces in a distributed environment.
+
+== Service Execution ==
+The distribution of information relative to the execution of a service is contained wholly in the !ServiceContext object.  The !ServiceContext object is serializable and contains a representation of all extensions and context listeners that are serialized when the !ServiceContext object is serialized.  It is the responsibility of the user to decide when and how the !ServiceContext object is distributed to other architecture components to ensure fault tolerance.
+
+Garden-variety SAS example. Put the !ServiceContext object in the Application Session.
+
+Note:  When using the stand alone service definition, a Sip Servlet is created that associates !ServiceContext's with !SipApplicationSession's.  Thus on SIP Methods, the !ServiceContext will flow based on the distribution model of the !SipApplicationSession.
+
+= Stand Alone Service Definition =
+In the current distribution, there exists a mechanism to define a "stand alone" ALCML namespace. To utilize this mechanism, one must deploy the system application alcml.  This initializes the ALC engine, provides the Sip servlet mechanism to create a stand alone service and adds a telnet interface to deploy this new application.
+
+This mechanism is a JSR 116 compliant Sip Servlet that is distributable.  Upon initialization of the servlet, the given alcml URL (see below) will be brought into the system under a mangled namespace (based on the application name), a primitive called "initialization" will be exercised (if defined in the namespace).  Upon destruction of the application, a primitive called "destruct" will be exercised (if defined in the namespace).
+
+This is currently how the Jain Tcap (JSR-0011) alcml test application is utilized.
+
+== Telnet Interface ==
+The current distribution contains a telnet interface that allows for standalone alcml services to be defined.
+
+Usage: deploy-alcml-service <service name> [<version>] [<priority>] <ALC URL>
+
+Deploys a service based on the alcml in the <ALC URL> parameter.
+
+Upon deployment, a service namespace is created for the URL (which helps to isolate the service from other alcml activities).
+
+A service named "initialize" is searched for and if found is executed.
+
+A service named "destruct" is searched for and if found is executed upon the undeploying of the service. The namespace is also removed.
+
+== Beyond "Hello World" Example ==
+A standalone Sip application is defined below that introduces the alc service definition element into the hello world example.
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<application-logic-control>
+   <alc-service-definition>
+      <pattern>
+         <equal>
+            <var>request.method</var>
+            <value>INVITE</value>
+         </equal>
+      </pattern>
+   </alc-service-definition>
+   <service name="initialize">
+        <define-global variable="MediaType" equal-to="MSML"/>
+        <define-global variable="MEDIA_SERVER_IP" equal-to="192.168.3.38"/>
+    </service>
+
+    <service name="do-invite">
+        <connect-to-mediaserver/>
+        <play uri="file:///helloworld.wav"/>
+        <set variable="ATestForYou" equal-to="Hello World"/>
+        <print value="The canonical ${ATestForYou} example"/>
+        <disconnect-from-mediaserver/>
+    </service>
+</application-logic-control>
+}}}
+This application now receives an INVITE method and connects the user to an hello world announcement.
+
+It could be deployed on the Genband SAS by, 
+  SAS> deploy-alcml-service hello_world file:///helloworld.xml 
+  SAS> start hello_world
+
+The interface from JSR-116 interfaces to service methods are as follows:
+
+ * doInvite - service "do-invite"
+ * doAck - service "do-ack"
+ * doOptions - service "do-options"
+ * doBye - service "do-ack"
+ * doCancel - service "do-cancel"
+ * doRegister - service "do-register"
+ * doSubscribe - service "do-subscribe"
+ * doNotify - service "do-notify"
+ * doMessage - service "do-message"
+ * doInfo - service "do-info"
+ * doPrack - service "do-prack"
+ * doProvisionalResponse - service "do-provisional-response"
+ * doSuccessResponse - service "do-success-response"
+ * doRedirectResponse - service "do-redirect-response"
+ * doErrorResponse - service "do-error-response"
+ * init - service "initialize"  called when the servlet is start'd
+ * destroy - service "destruct"  called when the servlet is stop'd
+= ALCML Formal Definition =
+== ALC Built-In Element ==
+=== application-logic-control ===
+ . <application-logic-control> - This is the root element for the Application Logic Control Markup Language. It contains a set (1-n) of named service elements.
+ . ''''' <List> '''''
+  . {{{
+* This is a required list.
+And elements can occur as often as desired.
+          }}}
+   . '' service ''
+   '' include ''
+   '' form ''
+   '' alc-service-definition ''
+=== service ===
+ . <service> - This is the main element for the Application Service Control Markup Language.  It encapsulate a series of actions for subsequent execution via the Genband Application Logic Controller.
+==== Attributes ====
+ . ''''' name '''''
+  . '' A name to identify the service logic contained within to be later referenced by other components. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' io-form '''''
+  . '' An attribute which identifies a <form> for description of http interfaces for this service. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' start-action '''''
+  . '' An attribute which identifies the label name of the starting point for execution. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+==== Elements ====
+ . ''''' attribute '''''
+  . '' Designates variables that can be passed by a calling ALCML instance using the execute element.  Otherwise, they are ignored. ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur as many times as desired.
+          }}}
+ ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+   . '' condition ''
+   '' loop ''
+   '' regex ''
+   . '' next-action ''
+    . '' execute ''
+    '' label ''
+    '' next ''
+    '' last ''
+    '' log ''
+    '' create-timer ''
+    '' cancel-timer ''
+    '' wait ''
+    '' set ''
+    '' define-local ''
+    '' get-current-time ''
+    '' define-global ''
+    '' increment-counter ''
+    '' compare ''
+    '' print ''
+    '' get-tcap-dialogue-id ''
+    '' add-jain-listener ''
+    '' remove-jain-listener ''
+    '' send-tcap-req-event ''
+    '' connect-to-mediaserver ''
+    '' dial-out-to-mediaserver ''
+    '' disconnect-from-mediaserver ''
+    '' add-to-playlist ''
+    '' clear-current-playlist ''
+    '' play ''
+    '' play-collect ''
+    '' play-record ''
+    '' end-playback ''
+    '' hold ''
+    '' resync ''
+    '' disconnect ''
+    '' database-config ''
+    '' execute-query ''
+    '' execute-update ''
+    '' get-from-results ''
+    '' next-row ''
+    '' get-from-user ''
+    '' get-to-user ''
+    '' create-response ''
+    '' cleanup ''
+    '' route ''
+    '' set-route-directive ''
+    '' add-telnet-command ''
+{{{
+Example:
+      <application-logic-control>
+            <service name="helloWorld">
+            <set variable="ATestForYou" equal-to="Hello World"/>
+            <print value="The canonical ${ATestForYou} example"/>
+      </service>
+}}}
+=== results ===
+ . <results> - This element defines the actions to be taken upon another action (parent element) reaching a conclusion
+==== Attributes ====
+ . ''''' value '''''
+  . '' This attribute defines a results value.  The value returned by the parent action will be tested against this key; a match will result in execution of the results that follow. A regular expression can be contained in this key. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+==== Elements ====
+ . ''''' input '''''
+  . '' This element defines an alternative context for results. The default input for results bodies is governed by the action definition and is outside of the scope of this schema definition. ''
+   . {{{
+* Type: string literal.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+ ''''' next-action '''''
+  . '' Indicates the next action (by label) to be executed in the current execution flow. ''
+   . {{{
+* Type: string literal.
+          }}}
+ ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+   . '' condition ''
+   '' loop ''
+   '' regex ''
+   '' execute ''
+   '' label ''
+   '' next ''
+   '' last ''
+   '' log ''
+   '' create-timer ''
+   '' cancel-timer ''
+   '' wait ''
+   '' set ''
+   '' define-local ''
+   '' get-current-time ''
+   '' define-global ''
+   '' increment-counter ''
+   '' compare ''
+   '' print ''
+   '' get-tcap-dialogue-id ''
+   '' add-jain-listener ''
+   '' remove-jain-listener ''
+   '' send-tcap-req-event ''
+   '' connect-to-mediaserver ''
+   '' dial-out-to-mediaserver ''
+   '' disconnect-from-mediaserver ''
+   '' add-to-playlist ''
+   '' clear-current-playlist ''
+   '' play ''
+   '' play-collect ''
+   '' play-record ''
+   '' end-playback ''
+   '' hold ''
+   '' resync ''
+   '' disconnect ''
+   '' database-config ''
+   '' execute-query ''
+   '' execute-update ''
+   '' get-from-results ''
+   '' next-row ''
+   '' get-from-user ''
+   '' get-to-user ''
+   '' create-response ''
+   '' cleanup ''
+   '' route ''
+   '' set-route-directive ''
+   '' add-telnet-command ''
+=== match ===
+ . <match> - These elements appear in condition elements.  They encapsulate actions to be taken upon input matches.
+==== Attributes ====
+ . ''''' value '''''
+  . '' This attribute defines the value for this match. The value returned by the parent action will be tested against this value; a match will result in execution of the results that follow. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+==== Elements ====
+ . ''''' next-action '''''
+  . '' Indicates the next action (by label) to be executed in the current execution flow. ''
+   . {{{
+* Type: string literal.
+          }}}
+ ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+   . '' condition ''
+   '' loop ''
+   '' regex ''
+   '' execute ''
+   '' label ''
+   '' next ''
+   '' last ''
+   '' log ''
+   '' create-timer ''
+   '' cancel-timer ''
+   '' wait ''
+   '' set ''
+   '' define-local ''
+   '' get-current-time ''
+   '' define-global ''
+   '' increment-counter ''
+   '' compare ''
+   '' print ''
+   '' get-tcap-dialogue-id ''
+   '' add-jain-listener ''
+   '' remove-jain-listener ''
+   '' send-tcap-req-event ''
+   '' connect-to-mediaserver ''
+   '' dial-out-to-mediaserver ''
+   '' disconnect-from-mediaserver ''
+   '' add-to-playlist ''
+   '' clear-current-playlist ''
+   '' play ''
+   '' play-collect ''
+   '' play-record ''
+   '' end-playback ''
+   '' hold ''
+   '' resync ''
+   '' disconnect ''
+   '' database-config ''
+   '' execute-query ''
+   '' execute-update ''
+   '' get-from-results ''
+   '' next-row ''
+   '' get-from-user ''
+   '' get-to-user ''
+   '' create-response ''
+   '' cleanup ''
+   '' route ''
+   '' set-route-directive ''
+   '' add-telnet-command ''
+=== else ===
+ . <else> - An else block that corresponds to an executed condition statement.
+ . ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+   . '' condition ''
+   '' loop ''
+   '' regex ''
+   '' execute ''
+   '' label ''
+   '' next ''
+   '' last ''
+   . '' next-action ''
+    . '' log ''
+    '' create-timer ''
+    '' cancel-timer ''
+    '' wait ''
+    '' set ''
+    '' define-local ''
+    '' get-current-time ''
+    '' define-global ''
+    '' increment-counter ''
+    '' compare ''
+    '' print ''
+    '' get-tcap-dialogue-id ''
+    '' add-jain-listener ''
+    '' remove-jain-listener ''
+    '' send-tcap-req-event ''
+    '' connect-to-mediaserver ''
+    '' dial-out-to-mediaserver ''
+    '' disconnect-from-mediaserver ''
+    '' add-to-playlist ''
+    '' clear-current-playlist ''
+    '' play ''
+    '' play-collect ''
+    '' play-record ''
+    '' end-playback ''
+    '' hold ''
+    '' resync ''
+    '' disconnect ''
+    '' database-config ''
+    '' execute-query ''
+    '' execute-update ''
+    '' get-from-results ''
+    '' next-row ''
+    '' get-from-user ''
+    '' get-to-user ''
+    '' create-response ''
+    '' cleanup ''
+    '' route ''
+    '' set-route-directive ''
+    '' add-telnet-command ''
+=== then ===
+ . <then> - A then block that corresponds to an executed condition statement. The <then> identifier is optional if an <else> block is not desired.
+ . ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+   . '' condition ''
+   '' loop ''
+   '' regex ''
+   '' execute ''
+   '' label ''
+   '' next ''
+   '' last ''
+   . '' next-action ''
+    . '' log ''
+    '' create-timer ''
+    '' cancel-timer ''
+    '' wait ''
+    '' set ''
+    '' define-local ''
+    '' get-current-time ''
+    '' define-global ''
+    '' increment-counter ''
+    '' compare ''
+    '' print ''
+    '' get-tcap-dialogue-id ''
+    '' add-jain-listener ''
+    '' remove-jain-listener ''
+    '' send-tcap-req-event ''
+    '' connect-to-mediaserver ''
+    '' dial-out-to-mediaserver ''
+    '' disconnect-from-mediaserver ''
+    '' add-to-playlist ''
+    '' clear-current-playlist ''
+    '' play ''
+    '' play-collect ''
+    '' play-record ''
+    '' end-playback ''
+    '' hold ''
+    '' resync ''
+    '' disconnect ''
+    '' database-config ''
+    '' execute-query ''
+    '' execute-update ''
+    '' get-from-results ''
+    '' next-row ''
+    '' get-from-user ''
+    '' get-to-user ''
+    '' create-response ''
+    '' cleanup ''
+    '' route ''
+    '' set-route-directive ''
+    '' add-telnet-command ''
+=== default-action ===
+ . <default-action> - Indicates the default action to be taken if a match is not found.
+ . ''''' <List> '''''
+  . {{{
+* This is a required list.
+And elements can occur as often as desired.
+          }}}
+   . '' condition ''
+   '' loop ''
+   '' regex ''
+   . '' next-action ''
+    . '' execute ''
+    '' label ''
+    '' next ''
+    '' last ''
+    '' log ''
+    '' create-timer ''
+    '' cancel-timer ''
+    '' wait ''
+    '' set ''
+    '' define-local ''
+    '' get-current-time ''
+    '' define-global ''
+    '' increment-counter ''
+    '' compare ''
+    '' print ''
+    '' get-tcap-dialogue-id ''
+    '' add-jain-listener ''
+    '' remove-jain-listener ''
+    '' send-tcap-req-event ''
+    '' connect-to-mediaserver ''
+    '' dial-out-to-mediaserver ''
+    '' disconnect-from-mediaserver ''
+    '' add-to-playlist ''
+    '' clear-current-playlist ''
+    '' play ''
+    '' play-collect ''
+    '' play-record ''
+    '' end-playback ''
+    '' hold ''
+    '' resync ''
+    '' disconnect ''
+    '' database-config ''
+    '' execute-query ''
+    '' execute-update ''
+    '' get-from-results ''
+    '' next-row ''
+    '' get-from-user ''
+    '' get-to-user ''
+    '' create-response ''
+    '' cleanup ''
+    '' route ''
+    '' set-route-directive ''
+    '' add-telnet-command ''
+=== condition ===
+ . <condition> - Allows execution of subsequent actions based on inputs.
+==== Attributes ====
+ . ''''' if '''''
+  . '' String that represents the value (be it literal or in context) that represents the input for consideration in this condition expression ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' equal-to '''''
+  . '' The variable in the if clause should be equal to the value here for the contained actions to be executed. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' not-equal-to '''''
+  . '' The variable in the if clause should be not equal to the value here for the contained actions to be executed. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' on-input '''''
+  . '' This string dictates the value to be considered in contained match elements. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' label '''''
+  . '' Indicates a label for this action. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+==== Elements ====
+ . ''''' then '''''
+  . '' Indicates the actions to be taken if an If clause is met. ''
+   . {{{
+* Type: complex type.
+          }}}
+ ''''' else '''''
+  . '' Indicates the actions to be taken if no match is found OR the if clause was NOT met. ''
+   . {{{
+* Type: complex type.
+          }}}
+ ''''' default-action '''''
+  . '' ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+ ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+   . '' condition ''
+   '' loop ''
+   '' regex ''
+   '' execute ''
+   '' label ''
+   '' next ''
+   '' last ''
+   . '' next-action ''
+    . '' log ''
+    '' create-timer ''
+    '' cancel-timer ''
+    '' wait ''
+    '' set ''
+    '' define-local ''
+    '' get-current-time ''
+    '' define-global ''
+    '' increment-counter ''
+    '' compare ''
+    '' print ''
+    '' get-tcap-dialogue-id ''
+    '' add-jain-listener ''
+    '' remove-jain-listener ''
+    '' send-tcap-req-event ''
+    '' connect-to-mediaserver ''
+    '' dial-out-to-mediaserver ''
+    '' disconnect-from-mediaserver ''
+    '' add-to-playlist ''
+    '' clear-current-playlist ''
+    '' play ''
+    '' play-collect ''
+    '' play-record ''
+    '' end-playback ''
+    '' hold ''
+    '' resync ''
+    '' disconnect ''
+    '' database-config ''
+    '' execute-query ''
+    '' execute-update ''
+    '' get-from-results ''
+    '' next-row ''
+    '' get-from-user ''
+    '' get-to-user ''
+    '' create-response ''
+    '' cleanup ''
+    '' route ''
+    '' set-route-directive ''
+    '' add-telnet-command ''
+ ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+   . '' match ''
+=== regex ===
+ . <regex> - Allows for regular expression functionality.
+==== Attributes ====
+ . ''''' applied-to '''''
+  . '' Defines the input for use with pattern. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' results-in '''''
+  . '' Indicates a context variable to place the results of the pattern match.  By default, uses the first sub-match in pattern ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' label '''''
+  . '' Indicates a label for this action. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+==== Elements ====
+ . ''''' pattern '''''
+  . '' Defines the pattern to be applied to input. ''
+   . {{{
+* Type: string literal.
+* This is a required element.
+   And can occur 1 times.
+          }}}
+=== loop ===
+ . <loop> - A looping construct.
+==== Attributes ====
+ . ''''' count '''''
+  . '' Indicates the number of times this loop is executed. ''
+   . {{{
+* Type: string literal.
+          }}}
+ ''''' label '''''
+  . '' Indicates a label for this action. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+   . '' condition ''
+   '' loop ''
+   '' regex ''
+   . '' next-action ''
+    . '' execute ''
+    '' label ''
+    '' next ''
+    '' last ''
+    '' log ''
+    '' create-timer ''
+    '' cancel-timer ''
+    '' wait ''
+    '' set ''
+    '' define-local ''
+    '' get-current-time ''
+    '' define-global ''
+    '' increment-counter ''
+    '' compare ''
+    '' print ''
+    '' get-tcap-dialogue-id ''
+    '' add-jain-listener ''
+    '' remove-jain-listener ''
+    '' send-tcap-req-event ''
+    '' connect-to-mediaserver ''
+    '' dial-out-to-mediaserver ''
+    '' disconnect-from-mediaserver ''
+    '' add-to-playlist ''
+    '' clear-current-playlist ''
+    '' play ''
+    '' play-collect ''
+    '' play-record ''
+    '' end-playback ''
+    '' hold ''
+    '' resync ''
+    '' disconnect ''
+    '' database-config ''
+    '' execute-query ''
+    '' execute-update ''
+    '' get-from-results ''
+    '' next-row ''
+    '' get-from-user ''
+    '' get-to-user ''
+    '' create-response ''
+    '' cleanup ''
+    '' route ''
+    '' set-route-directive ''
+    '' add-telnet-command ''
+=== list ===
+ . <list> -
+==== Elements ====
+ . ''''' item '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is a required element.
+   And can occur as many times as desired.
+          }}}
+=== attribute ===
+ . <attribute> -
+==== Attributes ====
+ . ''''' name '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' value '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' reference '''''
+  . '' ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is false.
+          }}}
+=== next ===
+ . <next> - Indicates that the current loop should immediately continue to next iteration.
+=== last ===
+ . <last> - Indicates that the current loop should immediately terminate from this iteration and not conduct another
+=== execute ===
+ . <execute> - Executes a service function.
+==== Attributes ====
+ . ''''' name '''''
+  . '' Attribute "Name" is a parameter that identifies the name of the function to be executed given the parameters set aside above. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' label '''''
+  . '' Attribute "label" is a label that can be used in subsequent logic to access this action. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+==== Elements ====
+ . ''''' attribute '''''
+  . '' ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur as many times as desired.
+          }}}
+   . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== label ===
+ . <label> - Generates a label for this current location in the execution flow for later reference.
+==== Attributes ====
+ . ''''' name '''''
+  . '' Attribute "name" is a label that can be used in subsequent logic to access this action. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+=== include ===
+ . <include> - Includes another alcml url in this current definition.
+==== Attributes ====
+ . ''''' service-location '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+=== attribute-input ===
+ . <attribute-input> - Defines input for a form.
+==== Attributes ====
+ . ''''' name '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+=== prologue ===
+ . <prologue> - Defines prologue for a form.
+ . ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+=== action ===
+ . <action> - Defines an action for input on a form.
+ . ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+=== output ===
+ . <output> - Defines an action output for a form.
+ . ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+=== epilogue ===
+ . <epilogue> - Defines an epilogue for a form.
+ . ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+=== form ===
+ . <form> - Defines an input/output form.
+==== Attributes ====
+ . ''''' name '''''
+  . '' Name of the form. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' use-defaults '''''
+  . '' Defines whether this form uses defaults in io. ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+          }}}
+==== Elements ====
+ . ''''' prologue '''''
+  . '' ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+ ''''' action '''''
+  . '' ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+ ''''' output '''''
+  . '' ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+ ''''' epilogue '''''
+  . '' ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+ ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+   . '' attribute-input ''
+=== pattern ===
+ . <pattern> - This element describes patterns for the deployment descriptor that will accompany this markup instance in a JSR-116 M5 SAS.
+ . ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+=== context-param ===
+ . <context-param> - This element describes context parameters that will be defined for this application.  It is a direct contribution to the sip.xml configuration that will accompany this markup instance.
+ . ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+=== alc-service-definition ===
+ . <alc-service-definition> - This element describes interfaces to the Sip Servlet Application Server.  It allows for standalone markup language to exist on the Genband M5 SAS.
+ . ''''' <List> '''''
+  . {{{
+* This is an optional list.
+And elements can occur as often as desired.
+          }}}
+   . '' pattern ''
+   '' context-param ''
+== Expressions Extensions for ALC ==
+=== log ===
+ . <log> - Log a string to standard logging
+==== Attributes ====
+ . ''''' level '''''
+  . '' Level at which this value should be displayed.  INFO, DEBUG, ERROR ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' value '''''
+  . '' The ALCMLExpression to be displayed. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== create-timer ===
+ . <create-timer> - Creates a timer on a new application session
+==== Attributes ====
+ . ''''' handler '''''
+  . '' Name of service handler to be called on timeout. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' context-reference '''''
+  . '' A literal handle for future reference to this time creation. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' recurrance-ms '''''
+  . '' How often this timer should recur in milli-seconds. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' delay-ms '''''
+  . '' Delay prior to the start of this timer in milli-seconds. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== cancel-timer ===
+ . <cancel-timer> - Cancels a timer, given it,s reference
+==== Attributes ====
+ . ''''' context-reference '''''
+  . '' The context handle for this timer. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== wait ===
+ . <wait> - Waits for specified time
+==== Attributes ====
+ . ''''' seconds '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== set ===
+ . <set> - Sets a context variable to given value or null
+==== Attributes ====
+ . ''''' variable '''''
+  . '' Name of the variable. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' equal-to '''''
+  . '' What to set this variable equal to. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' is-literal '''''
+  . '' Instructs the ALC engine that the equal-to attribute describes a literal that is NOT an ALCMLExpession.  Therefore a ${variable} could be stored without resolution. ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is false.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== define-local ===
+ . <define-local> - Defines a local context variable to given value or null
+==== Attributes ====
+ . ''''' variable '''''
+  . '' Name of the variable. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' equal-to '''''
+  . '' What to set this variable equal to. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' is-literal '''''
+  . '' Instructs the ALC engine that the equal-to attribute describes a literal that is NOT an ALCMLExpession.  Therefore a ${variable} could be stored without resolution. ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is false.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== get-current-time ===
+ . <get-current-time> - Defines a local context variable to given value or null
+==== Attributes ====
+ . ''''' results-in '''''
+  . '' Where in context to put the results. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== define-global ===
+ . <define-global> - Defines a global context variable to given value or null
+==== Attributes ====
+ . ''''' variable '''''
+  . '' Name of the variable. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' equal-to '''''
+  . '' What to set this variable equal to. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' is-literal '''''
+  . '' Instructs the ALC engine that the equal-to attribute describes a literal that is NOT an ALCMLExpession.  Therefore a ${variable} could be stored without resolution. ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is false.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== increment-counter ===
+ . <increment-counter> - Increments a counter variable in the current context.
+==== Attributes ====
+ . ''''' variable '''''
+  . '' The counter reference in context. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== compare ===
+ . <compare> - Compares two values
+==== Attributes ====
+ . ''''' identifier '''''
+  . '' the left-hand side of comparison ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' to-identifier '''''
+  . '' the right-hand side of comparison ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== print ===
+ . <print> - Display a string to standard output
+==== Attributes ====
+ . ''''' value '''''
+  . '' Value to be sent to standard output ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+== Jain TCAP ALC Extensions ==
+=== get-tcap-dialogue-id ===
+ . <get-tcap-dialogue-id> - gets a tcap dialogue id
+==== Attributes ====
+ . ''''' results-in '''''
+  . '' Where to put results into. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== add-jain-listener ===
+ . <add-jain-listener> - adds tcap listener
+==== Attributes ====
+ . ''''' name '''''
+  . '' naming prefix. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' ssn '''''
+  . '' ssn to listen on. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' member '''''
+  . '' point code member. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' cluster '''''
+  . '' point code cluster. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' zone '''''
+  . '' point code zone. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== remove-jain-listener ===
+ . <remove-jain-listener> - removes tcap listener
+==== Attributes ====
+ . ''''' name '''''
+  . '' naming prefix. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== send-tcap-req-event ===
+ . <send-tcap-req-event> - sends a tcap request on a dialogue
+==== Attributes ====
+ . ''''' content-url '''''
+  . '' content to send. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+== Media Service ALC Extensions ==
+=== connect-to-mediaserver ===
+ . <connect-to-mediaserver> - Connects to a media server
+==== Attributes ====
+ . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== dial-out-to-mediaserver ===
+ . <dial-out-to-mediaserver> - Connects to a media server
+==== Attributes ====
+ . ''''' from-address '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' originating-address '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== disconnect-from-mediaserver ===
+ . <disconnect-from-mediaserver> - Disconnects from a media server
+==== Attributes ====
+ . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== add-to-playlist ===
+ . <add-to-playlist> - adds variable announcement components to a play list for future access on a connected media server
+==== Attributes ====
+ . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . ''''' media-specification-list '''''
+  . '' ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+   . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== clear-current-playlist ===
+ . <clear-current-playlist> - clears playlist.
+==== Attributes ====
+ . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== play-item ===
+ . <play-item> -
+ . Type that contains a URI and URI Type
+==== Elements ====
+ . ''''' value '''''
+  . '' ''
+   . ''The value for this media content type. This could be a URI if the Media Type is of type Audio. This could be a data if the Media Type is of type Date. ''
+   . {{{
+* Type: string literal.
+* This is a required element.
+   And can occur 1 times.
+          }}}
+ ''''' media-content-type '''''
+  . '' ''
+   . ''Describes the media content type. Literal name of the ASIML instance ''
+   ''for <ActionClass>MediaService</ActionClass> ''
+    . ''><ActionMethod>AddToPlayList</ActionMethod> ''
+   Example values: MSCMLMoney, MSCMLTime, MSCMLAudio.
+   . {{{
+* Type: string literal.
+* This is a required element.
+   And can occur 1 times.
+          }}}
+=== media-specification-list ===
+ . <media-specification-list> -
+ . List of !PlayIttype items. 1-n
+==== Elements ====
+ . ''''' play-item '''''
+  . '' ''
+   . {{{
+* Type: complex type.
+* This is a required element.
+   And can occur as many times as desired.
+          }}}
+=== play ===
+ . <play> - Plays a prompt on a connected media server.  Example:    <play prompt-uri="file:////foo.bar.wav">
+==== Attributes ====
+ . ''''' prompt-uri '''''
+  . '' The URI prompt to be played on the connected media server.  If this is not present the current (or included) play list  will be used. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' specification '''''
+  . '' Media Specification that governs the presentation to the media server.  Most all applications can use the default values (Thus ignoring this attribute).  These values are contained in the ASIML distribution file as MSMLProfiles.xml  and MSCMLProfiles.xml ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+* It's default value is Default.
+          }}}
+ ''''' use-current-playlist '''''
+  . '' Indicates whether to use current play list.  If set to false, the current play  list remains intact/unchanged.  If the current play list is used, the URI components that are additionally  specified in this action will be amended at the end of the list prior to execution. ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is true.
+          }}}
+ ''''' clear-current-playlist '''''
+  . '' Indicates whether to clear current play list.  If set to false, the current play  list remains intact but can be used. NOTE: if you are not using the current play list,  use-current-play-list = false, then this value is always assumed false.  If the current play list is used, the URI components that are additionally  specified in this action will be amended at the end of the list prior to execution. ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is true.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . ''''' media-specification-list '''''
+  . '' A play list, that allows the user to play multiple prompts and/or variable announcements ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+   . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== play-collect ===
+ . <play-collect> - plays a prompt and performs a digit collection, given a uri and an optional specification attribute
+==== Attributes ====
+ . ''''' prompt-uri '''''
+  . '' optional URIPrompt, if not present the current (or included) play list is used. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' specification '''''
+  . '' optional Specification, these govern the presentation to the media server. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+* It's default value is Default.
+          }}}
+ ''''' use-current-playlist '''''
+  . '' optional boolean, indicates whether to use current play list. ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is true.
+          }}}
+ ''''' clear-current-playlist '''''
+  . '' Indicates whether to clear current play list.  If set to false, the current play  list remains intact but can be used.  If the current play list is used, the URI components that are additionally  specified in this action will be amended at the end of the list prior to execution. ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is true.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . ''''' media-specification-list '''''
+  . '' optional play list ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+   . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== play-record ===
+ . <play-record> - plays a prompt and records audio, given a uri and an optional specification attribute
+==== Attributes ====
+ . ''''' prompt-uri '''''
+  . '' optional URIPrompt, if not present the current (or included) play list is used. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' destination-uri '''''
+  . '' mandatory URI File Location, destination for the recording. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' specification '''''
+  . '' optional Specification, these govern the presentation to the media server. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+* It's default value is Default.
+          }}}
+ ''''' use-current-playlist '''''
+  . '' optional boolean, indicates whether to use current play list. ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is true.
+          }}}
+ ''''' clear-current-playlist '''''
+  . '' Indicates whether to clear current play list.  If set to false, the current play  list remains intact but can be used.  If the current play list is used, the URI components that are additionally  specified in this action will be amended at the end of the list prior to execution. ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is true.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . ''''' media-specification-list '''''
+  . '' optional play list ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+   . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== end-playback ===
+ . <end-playback> - ends an ongoing playback. optional specification attribute
+==== Attributes ====
+ . ''''' specification '''''
+  . '' optional Specification, these govern the presentation to the media server. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+* It's default value is Default.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+== MidCall Service ==
+=== hold ===
+ . <hold> - Puts the current call on-hold.
+==== Attributes ====
+ . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== resync ===
+ . <resync> - Resync the SDP.
+==== Attributes ====
+ . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== disconnect ===
+ . <disconnect> - Disconnect both incoming and outgoing legs.
+==== Attributes ====
+ . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+== Database Service ALC Extensions ==
+=== database-config ===
+ . <database-config> - !DatabaseConfig
+==== Attributes ====
+ . ''''' database-url '''''
+  . '' Database URL. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' database-driver '''''
+  . '' Database Driver. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' username '''''
+  . '' Database Username. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' password '''''
+  . '' Database Password. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== execute-query ===
+ . <execute-query> - !ExecuteQuery
+==== Attributes ====
+ . ''''' statement '''''
+  . '' This statement. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' results-in '''''
+  . '' Optional place to store results. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . ''''' query-specification '''''
+  . '' list of qualifiers ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+   . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== execute-update ===
+ . <execute-update> - !ExecuteUpdate
+==== Attributes ====
+ . ''''' statement '''''
+  . '' This statement. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' commit-work '''''
+  . '' ''
+   . {{{
+* Type: a boolean value (true/false)
+* This is an optional attribute.
+* It's default value is true.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . ''''' update '''''
+  . '' This statement... if statement is not present. ''
+   . {{{
+* Type: string literal.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+ ''''' query-specification '''''
+  . '' list of qualifiers ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+   . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== get-from-results ===
+ . <get-from-results> - Gets information from a Database Query.
+==== Attributes ====
+ . ''''' column '''''
+  . '' !ColumnName. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' results-from '''''
+  . '' Where to get results from. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' results-in '''''
+  . '' Where to put results into. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== string-specifier ===
+ . <string-specifier> -
+==== Attributes ====
+ . ''''' position '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' value '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+=== integer-specifier ===
+ . <integer-specifier> -
+==== Attributes ====
+ . ''''' position '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' value '''''
+  . '' ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+=== query-specification ===
+ . <query-specification> - List of Database Query Specifications. 1-n
+ . ''''' <List> '''''
+  . {{{
+* This is a required list.
+And elements can occur as often as desired.
+          }}}
+   . '' string-specifier ''
+   '' integer-specifier ''
+=== next-row ===
+ . <next-row> - Gets next row from a Database Query.
+==== Attributes ====
+ . ''''' results-from '''''
+  . '' Where to get results from. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+== Sip Servlet ALC Extensions ==
+=== get-from-user ===
+ . <get-from-user> - gets user portion of From Header Address in Sip request
+==== Attributes ====
+ . ''''' results-in '''''
+  . '' place to store results. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== get-to-user ===
+ . <get-to-user> - gets user portion of To Header Address in Sip request
+==== Attributes ====
+ . ''''' results-in '''''
+  . '' place to store results. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== create-response ===
+ . <create-response> - creates and sends response to Sip request
+==== Attributes ====
+ . ''''' message '''''
+  . '' number of sip message ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' text '''''
+  . '' text description ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+== Routing Service ==
+=== cleanup ===
+ . <cleanup> - Invalidates the Application Session
+==== Attributes ====
+ . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== route ===
+ . <route> - Routes the Call as per the mode
+==== Attributes ====
+ . ''''' mode '''''
+  . '' Mode for routing this call. Values {B2BUA, TBCT, UNATTENDED_TRANSFER} ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+* It's default value is B2BUA.
+          }}}
+ ''''' timeout '''''
+  . '' Timeout in seconds. Default to 30 seconds ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+* It's default value is 30.
+          }}}
+ ''''' disconnect-handler '''''
+  . '' A handler to be called on disconnect. ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+ ''''' destination-uri '''''
+  . '' destination uri ''
+   . {{{
+* Type: string literal.
+* This is an optional attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+=== set-route-directive ===
+ . <set-route-directive> - Sets a new Routing Directive
+==== Attributes ====
+ . ''''' mode '''''
+  . '' Mode for routing this call. Values {B2BUA, TBCT, UNATTENDED_TRANSFER} ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' type '''''
+  . '' Type of routing. Values {SERIAL, PARALLEL} ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' timeout '''''
+  . '' Timeout in seconds. Default to 30 seconds ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . ''''' destinations '''''
+  . '' ''
+   . {{{
+* Type: complex type.
+          }}}
+   . - Has ALC common action elements. (<default-action>, <next-action>, <results>)
+== Telnet ALC Extensions ==
+=== option ===
+ . <option> - Type that contains command line option information.
+==== Attributes ====
+ . ''''' name '''''
+  . '' ''
+   . ''This indicates the name of the option. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+ ''''' use '''''
+  . '' ''
+   . ''This indicates whether this option is optional. Values are optional or required. ''
+   . {{{
+* Type: string literal.
+* It's default value is optional.
+          }}}
+ ''''' takes-argument '''''
+  . '' ''
+   . ''This indicates whether this option takes an argument. If this option does not take an argument, the form taken ''
+   ''will be -<argumentName> OR -no<argumentName>, with corresponding values in the service context being opt_<argumentName> equals true or false, respectively. ''
+   . {{{
+* Type: a boolean value (true/false)
+* It's default value is true.
+          }}}
+==== Elements ====
+ . ''''' description '''''
+  . '' ''
+   . ''This is a description for this interface provided to the user through the help and/or getUsage interfaces. ''
+   . {{{
+* Type: string literal.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+=== options-list ===
+ . <options-list> - List of Optiontype items. 1-n
+==== Attributes ====
+ . ''''' auto-abbreviate '''''
+  . '' ''
+   . ''This indicates whether this command will allow for auto abbreviations for options. ''
+   . {{{
+* Type: a boolean value (true/false)
+* It's default value is true.
+          }}}
+==== Elements ====
+ . ''''' option '''''
+  . '' ''
+   . ''This is the formal definition of an option.  It will result in ''
+   ''a service context variable set of the form opt_<argumentName> ''
+   . {{{
+* Type: complex type.
+* This is a required element.
+   And can occur as many times as desired.
+          }}}
+=== add-telnet-command ===
+ . <add-telnet-command> - adds telnet command
+==== Attributes ====
+ . ''''' command-name '''''
+  . '' name of command. ''
+   . {{{
+* Type: string literal.
+* This is a required attribute.
+          }}}
+   . - Has ALC common action attributes. (label="<literal>", asynch="true|false")
+==== Elements ====
+ . ''''' description '''''
+  . '' description of functionality of command. ''
+   . {{{
+* Type: string literal.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+ ''''' options-list '''''
+  . '' options for this command. ''
+   . {{{
+* Type: complex type.
+* This is an optional element.
+   And can occur 1 times.
+          }}}
+   . - Has ALC common action elements. (<default-action>, <next-action>, <results>)

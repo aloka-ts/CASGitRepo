@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!-- ==================================================== -->
+<!-- Build file: ServiceDefinitionApp -->
+<!-- ==================================================== -->
+<project name="ServiceDefinitionApp" default="all" basedir=".">
+      <import file="${alcml.dir}/src/alcml-macros.xml"/>
+
+      <!-- ***************************************** -->
+      <!-- Main target -->
+      <target name="all" depends="buildapp">
+      </target>
+      <!-- ***************************************** -->
+
+      <target name="init">
+            <property name="app.name" value="alcml"/>
+            <property name="app.lib.dir" value="${app.build.dir}/WebContent/WEB-INF/lib/"/>
+      </target>
+
+      <target name="make-real-clean" depends="alc-compilation-setup">
+            <delete dir="${app.src.dir}/alcmltemp"/>
+            <delete file="${sar.dest}/${app.name}.sar"/>
+            <delete file="${jar.dest}/${app.name}.jar"/>
+      </target>
+
+      <target name="circular-build" depends="alc-compilation-setup">
+            <dependset>
+                  <sources>
+                      <fileset dir="${basedir}/../">
+                        <include name="TelnetInterface/src/**/*.java"/>
+                        <include name="ServiceDefinitionApp/src/**/*.java"/>
+                      </fileset>
+                  </sources>
+                  <targets>
+                      <fileset dir="${app.build.dir}">
+                        <include name="build.current"/>
+                      </fileset>
+                  </targets>
+            </dependset>  
+
+            <available file="${app.build.dir}/build.current" property="build-upToDate"/>
+      </target>
+
+      <target name="circular-compile" depends="circular-build" unless="build-upToDate">
+            <mkdir dir="${app.build.dir}"/>
+            <mkdir dir="${app.build.dir}/classes"/>
+
+            <javac srcdir="${basedir}/../" destdir="${app.build.dir}/classes" debug="true">
+                  <include name="TelnetInterface/src/**/*.java"/>
+                  <include name="ServiceDefinitionApp/src/**/*.java"/>
+                  <classpath refid="classpath"/>
+            </javac>
+
+            <!-- Copy the alc unnamed package files -->
+            <copy todir="${app.build.dir}/classes" flatten="true">
+                  <fileset dir="${app.build.dir}/classes">
+                        <include name="**/alcmltemp/*.class"/>
+                  </fileset>                        
+            </copy> 
+
+            <touch file="${app.build.dir}/build.current"/>
+      </target>
+
+      <target name="buildapp" depends="circular-compile">
+            <copy todir="${app.build.dir}/com/genband/sip/ServiceDefinitionApp/" flatten="true">
+                  <fileset dir="${app.build.dir}/classes">
+                      <include name="**/SipServletALC.class"/>
+                      <include name="**/ApplicationLogicControlSipService.class"/>
+                  </fileset>                        
+            </copy> 
+            <copy todir="${app.build.dir}/com/genband/ase/alc/http/" flatten="true">
+                  <fileset dir="${app.build.dir}/classes">
+                      <include name="**/HttpServletALC.class"/>
+                      <include name="**/ApplicationLogicControlHttpService.class"/>
+                  </fileset>
+            </copy>
+ 
+            <copy todir="${app.build.dir}/" flatten="true">
+                  <fileset dir="${app.build.dir}/classes">
+                        <include name="**/*ServiceUserAction.class"/>
+                  </fileset>                        
+            </copy> 
+
+            <copy todir="${alc.jar.dest}/">
+                  <fileset dir="${app.src.dir}">
+                        <include name="sipxmltemplate.xml"/>
+                        <include name="sasxmltemplate.xml"/>
+                        <include name="webxmltemplate.xml"/> 
+                  </fileset>                        
+            </copy> 
+
+            <jar update="true" jarfile="${jar.dest}/${app.name}.jar" basedir="${app.build.dir}/">
+                  <include name="*ServiceUserAction.class"/>
+                  <include name="**/SipServletALC.class"/>
+                  <include name="**/HttpServletALC.class"/> 
+                  <include name="**/ApplicationLogicControlSipService.class"/>
+                  <include name="**/ApplicationLogicControlHttpService.class"/> 
+            </jar>
+
+            <war update="true" destfile="${sar.dest}/${app.name}.sar" webxml="${basedir}/WebContent/WEB-INF/web.xml">
+                  <webinf dir="${basedir}/WebContent/WEB-INF"/>
+                  <classes dir="${app.build.dir}/classes">
+                        <exclude name="**/*ServiceUserAction.class"/>
+                        <exclude name="**/ApplicationLogicControlSipService.class"/>
+                  </classes>                        
+             <!-- <fileset dir="${app.src.dir}/xml"/>-->
+                  
+            </war>
+      </target>
+</project>

@@ -1,0 +1,6 @@
+If you are compiling the servlets outside of VOB then change the ase.properties and the SRC parameter to the build dir (the INSTALLROOT when you compile ase). 
+
+Also since the <if> task is not working with ant, please search for "if" and 
+comment out the copying over of the src to dest. (As these are the same 
+location no need to copy).
+

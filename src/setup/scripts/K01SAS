@@ -1,0 +1,128 @@
+#!/sbin/sh
+#
+# @(#)sas.sh    1.10 04/01/15
+#
+# Copyright 2002 Sun Microsystems, Inc. All Rights Reserved
+# SUN PROPRIETARY/CONFIDENTIAL
+# Use is subject to license terms.
+#
+# Permission to use, copy, modify, and distribute this software
+# and its documentation for NON-COMMERCIAL purposes and without
+# fee is hereby granted provided that this copyright notice
+# appears in all copies. Please refer to the file "copyright.html"
+# for further important copyright and licensing information.
+#
+# SUN MAKES NO REPRESENTATIONS OR WARRANTIES ABOUT THE SUITABILITY OF
+# THE SOFTWARE, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+# TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE, OR NON-INFRINGEMENT. SUN SHALL NOT BE LIABLE FOR
+# ANY DAMAGES SUFFERED BY LICENSEE AS A RESULT OF USING, MODIFYING OR
+# DISTRIBUTING THIS SOFTWARE OR ITS DERIVATIVES.
+#
+######
+#
+# Script for Killing SAS Process incase of init5/reboot
+#
+# This script stops the SAS process and unplumb SAS FIP
+#
+# To debug this script, set the environmental variable
+# DEBUG to 1 (true)
+#
+# K5SAS link in rc0.d, rc1.d and rc2.d will bring
+# down SAS after unplumbing FIP
+#
+
+#
+SAS_LOG_DIR="/LOGS/SAS"
+# error "description"
+error () {
+  echo $0: $* 2>&1
+  exit 1
+}
+
+## Create File in which logging shall be done
+createFileName() {
+ fileName="/LOGS/SAS/SASStopInfo_$1.txt"
+ touch $fileName
+ echo $fileName
+}
+
+#unplumb IP before killing SAS Proc ID
+unplumbFip() {
+#check if FIP exists
+ status=`ifconfig -a| grep $1`
+ if [ -n "$status" ]
+ then
+
+   if [ $DEBUG ] ; then
+     echo FIP $1 is set on this server
+   fi
+
+   name=`ifconfig -a |grep -i flags|grep -v lo|grep -v enc|awk -F":" '{if($2 !~ /flags/) print $1":"$2}'`
+   for X in $name
+   do
+     command=`ifconfig $X |grep $1`
+     if [ -n "$command" ]
+     then
+
+       if [ $DEBUG ] ; then
+          echo FIP is set on interface $X. Unplumbing
+       fi
+
+       ifconfig $X unplumb
+
+       echo `date` Unplumping FIP from interface $X >> $2
+     fi
+   done
+ fi
+}
+
+# find the named process
+findproc() {
+  pid=`/usr/ucb/ps -auxww |grep -i asesubs|grep -v "grep" |awk '{print $2}'`
+  echo $pid
+}
+
+# find the SAS fip
+findFip() {
+  fip=`cat /etc/hosts |grep 'SAS_FIP'|awk '{print $1}'`
+  echo $fip
+}
+
+# kill the named process
+killproc() {
+   pid=`findproc`
+   fip=`findFip`
+
+   if [ -n "$pid" ]
+   then
+     if [ $DEBUG ] ; then
+        echo SAS Process ID is $pid
+     fi
+
+     fileName=`createFileName $pid`
+
+     if [ $DEBUG ] ; then
+        echo Filename created : $fileName
+        echo Going for unpluming FIP $fip
+     fi
+
+     echo `date` SAS FIP is $fip >> $fileName
+
+     unplumbFip $fip $fileName
+
+     if [ $DEBUG ] ; then
+        echo FIP unplumbed.. Killing Process $pid
+     fi
+
+     [ "$pid" != "" ] && kill -9 $pid
+
+     echo `date` - SAS Process Killed from /etc/init.d/K01SAS  >> $fileName
+   fi
+}
+
+#
+# stop SAS
+#
+
+killproc

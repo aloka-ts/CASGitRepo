@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>PAC</display-name>
+ <servlet>
+		<servlet-name>PAC</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>com.baypackets.ase.sysapps.pac.receiver</param-value>
+		</init-param>
+		
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PAC</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- REST Authentication related part-->
+	<!--	
+	<login-config>
+    <auth-method>DIGEST</auth-method>
+  </login-config>
+  
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Secured part</web-resource-name>
+      <url-pattern>/pac/admin/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>PAC Admin</role-name>
+    </auth-constraint>
+  </security-constraint>
+  
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Secured part</web-resource-name>
+      <url-pattern>/pac/service/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>PAC User</role-name>
+      <role-name>PAC Admin</role-name>
+    </auth-constraint>
+  </security-constraint>
+  
+  <security-role>
+    <role-name>PAC Admin</role-name>
+  </security-role>
+  
+  <security-role>
+    <role-name>PAC User</role-name>    
+  </security-role>-->
+</web-app>

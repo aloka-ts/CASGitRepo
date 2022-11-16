@@ -1,0 +1,36 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="cdrConfigBean"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders">
+			<value>true</value>
+		</property>
+
+		<property name="locations">
+			<list>
+				<value>
+					classpath:/CdrPushConfig.properties
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Script property-->
+	<bean id="cdrPushToDSIConfig"
+		class="com.agnity.utility.cdr.CDRPushConfig">
+		<property name="dsiIP" value="${dsi.ip}" />
+		<property name="dsiPort" value="${dsi.port}" />
+		<property name="dsiUser" value="${dsi.username}" />
+		<property name="dsiPassword" value="${dsi.password}" />
+		<property name="dsiPushDir" value="${dsi.push.dir}" />
+		<property name="cdrPushWaitInterval" value="${cdrpush.wait.interval}" />
+		<property name="cdrPushLocalDirName" value="${cdrpush.local.dir.name}" />
+		<property name="cdrPushLocalFileExtension" value="${cdrpush.local.file.extension}" />		
+		<property name="cdrPushLocalFilePrefix" value="${cdrpush.local.file.Prefix}" />
+		<property name="cdrPushLocalLocType" value="${cdrpush.local.dir.type}" />
+		<property name="cdrPushNonDSIIdentifier" value="${cdrpush.nondsi.identifier}" />
+		<property name="cdrStartIndex" value="${cdrpush.startIndex}"/>
+	</bean>
+</beans>

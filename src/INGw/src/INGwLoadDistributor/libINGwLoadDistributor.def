@@ -1,0 +1,15 @@
+RULES  = lib
+TARGET = libINGwLoadDistributor
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+SRCS = INGwLoadDistributor/INGwLdDstMgr.C 		\
+       INGwLoadDistributor/INGwLdDstMap.C 	 	\
+       INGwLoadDistributor/INGwLdDstBucket.C 	\
+       INGwLoadDistributor/INGwLdDstPattern.C 
+
+HDRS = 	INGwLoadDistributor/INGwLdDstBucket.h  \
+				INGwLoadDistributor/INGwLdDstInclude.h \
+				INGwLoadDistributor/INGwLdDstMap.h		 \
+				INGwLoadDistributor/INGwLdDstMgr.h		 \
+				INGwLoadDistributor/INGwLdDstPattern.h

@@ -1,0 +1,29 @@
+TARGET = TcapProviderStub
+RULES = bin
+
+EXTRA_RULES += vbroker
+
+#TCAP_INCLUDE_DIRS= -I./ -I/home/ingw/chip/tcap/xsd-3.0.0-sparc-solaris/libxsd -I/home/ingw/chip/tcap/xerces/include
+#XERCES_LIB=/home/ingw/chip/tcap/xerces/lib/libxerces-c.so
+##DOM_LIB=/home/ingw/chip/tcap/xerces/lib/libxerces-depdom.so
+
+
+EXTRA_INCLUDE += $(INSTALLROOT)/sol28g/include
+EXTRA_INCLUDE_DIRS  += /home/ingw/chip/tcap/xsd-3.0.0-sparc-solaris/libxsd /home/ingw/chip/tcap/xerces/include $(XERCESROOT)/include
+EXTRA_LIBDIRS   += $(XERCESROOT)/lib
+
+EXTRA_INCLUDES  += $(XERCESROOT)/include
+
+EXTRA_LIBS += Util INGwLoadDistributor INGwInfraUtil INGwInfraMsrMgr INGwIwf \
+							INGwSipProviderDummy INGwTcapProvider TcapMessage xerces-c xerces-depdom \
+							INGwInfraParamRepository INGwInfraTelnetIface INGwInfraManager EmsAgent EmsCommon \
+							EmsIdl
+
+#include ../../INGwCommonDefs/telesys-stack.def 
+#include ../../INGwCommonDefs/trillium-ainstack.def
+include ../INGwCommonDefs/ccpu-stack.def
+
+EXTRA_LIBS += nsl elf kstat rt
+EXTRA_LIBDIRS += $(INSTALLROOT)/sol28g/lib
+
+SRCS = TcapStub/TcapProviderStub.C

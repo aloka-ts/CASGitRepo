@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sip-app xmlns="http://www.jcp.org/xml/ns/sipservlet"
+           xmlns:javaee="http://java.sun.com/xml/ns/javaee">
+</sip-app>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+       <xs:complexType name="param-listtype">
+                <xs:annotation>
+                        <xs:documentation>
+                                List params for Action class. 1-n
+                        </xs:documentation>
+                  <xs:appinfo>
+                        <source>Third Party Invocation ALC Extensions</source>
+                  </xs:appinfo>
+                </xs:annotation>
+                
+            <xs:sequence>
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                       <xs:element name="param-specifier" type="param-specifiertype"/>
+                      </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+      
+      
+       <xs:complexType name="param-specifiertype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>Third Party Invocation ALC Extensions</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            
+            <xs:attribute name="type" type="xs:string" use="required"/>
+             <xs:attribute name="value" type="xs:string" use="required"/>
+             <xs:attribute name="isArray" type="xs:boolean" use="optional"/>
+            
+       </xs:complexType>
+        
+        
+         <xs:complexType name="return-param-specifiertype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>Third Party Invocation ALC Extensions</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:attribute name="type" type="xs:string" use="required"/> 
+            <xs:attribute name="results-in" type="xs:string" use="required"/>
+            <xs:attribute name="isArray" type="xs:boolean" use="optional"/>
+            
+        </xs:complexType>
+        
+        
+        
+         <xs:complexType name="library-listtype">
+                <xs:annotation>
+                        <xs:documentation>
+                                List of libraries to be loaded 
+                         </xs:documentation>
+                  <xs:appinfo>
+                        <source>Third Party Invocation ALC Extensions</source>
+                  </xs:appinfo>
+                </xs:annotation>
+                
+            <xs:sequence>
+                  <xs:choice minOccurs="1" maxOccurs="unbounded">
+                       <xs:element name="library" type="librarytype"/>
+                      </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+        
+        <xs:complexType name="librarytype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>Third Party Invocation ALC Extensions</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:attribute name="absolute-path" type="xs:string" use="required"/>
+        </xs:complexType>
+        
+
+</xs:schema>

@@ -1,0 +1,81 @@
+AIN-Operations
+DEFINITIONS ::=
+BEGIN
+IMPORTS
+OPERATION,
+ERROR
+FROM TCAPPackage{iso memberbody usa t1-114};
+
+TR533ProviderInstruction ::= OPERATION
+ARGUMENT TR533ProviderInstructionArg
+ERRORS
+{ 
+  applicationError
+}
+
+TR533ProviderInstructionArg ::=SET {
+endUserNumber            [10] TR533ServiceKey,
+callingPartyAni          [4]IMPLICIT TR533Digits,
+cgpLata                  [4]IMPLICIT TR533Digits,
+oli                      [PRIVATE 37] IMPLICIT TR533OriginatingStationType OPTIONAL,
+cicSupport               [PRIVATE 72] IMPLICIT TR533CICExpansion OPTIONAL         
+}
+
+TR533ConnetionControl ::= OPERATION
+ARGUMENT TR533ConnectionControlArg
+ERRORS
+{ 
+  TR533applicationError
+}
+
+TR533ConnectionControlArg ::=SET {
+carrierId                    [1] IMPLICIT TR533Digits,
+networkRoutingNumber         [2] IMPLICIT TR533Digits,
+billingIndicators            [4] IMPLICIT TR533Digits,
+featureType                  [PRIVATE 116] TR533FeatureType,
+noAnswerTime                 [PRIVATE 127] TR533NoAnswerTimer OPTIONAL, 
+specialRouting               [PRIVATE 126] TR533SpecialRouting OPTIONAL
+}
+
+TR533ServiceKey ::=CHOICE{
+ digits [4]IMPLICIT TR533Digits
+}
+
+TR533OriginatingStationType ::= OCTET STRING
+TR533NoAnswerTimer ::= OCTET STRING (SIZE(2))
+TR533SpecialRouting ::= OCTET STRING (SIZE(1))
+TR533FeatureType ::= OCTET STRING (SIZE(3))
+
+TR533CICExpansion ::= ENUMERATED{
+expandedCICSupport    (1)
+}
+
+-- ERRORS{
+-- unexpectedComponentSequence,
+-- unexpectedDataValue,
+-- dataUnavailable
+-- }
+-- LINKED{
+-- connectionControl
+-- }
+-- }
+
+--unexpectedComponentSequence ::= SET{}
+
+--::= nationalError 1
+--UnexpectedDataValue ::= ERROR 
+--ARGUMENT UnexpectedDataValueArg
+
+TR533UnexpectedDataValue ::= SET{
+unexpectedValue  ProblemData
+} 
+
+-- ::= nationalError 2
+-- dataUnavailable ::= SET{}
+-- ::= nationalError 6
+
+TR533Digits ::= OCTET STRING
+
+ProblemData ::= [6] IMPLICIT OCTET STRING
+
+END

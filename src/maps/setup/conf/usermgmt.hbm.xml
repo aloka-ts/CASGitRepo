@@ -1,0 +1,389 @@
+<?xml version="1.0"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ JBoss, a division of Red Hat                                              ~
+  ~ Copyright 2006, Red Hat Middleware, LLC, and individual                   ~
+  ~ contributors as indicated by the @authors tag. See the                    ~
+  ~ copyright.txt in the distribution for a full listing of                   ~
+  ~ individual contributors.                                                  ~
+  ~                                                                           ~
+  ~ This is free software; you can redistribute it and/or modify it           ~
+  ~ under the terms of the GNU Lesser General Public License as               ~
+  ~ published by the Free Software Foundation; either version 2.1 of          ~
+  ~ the License, or (at your option) any later version.                       ~
+  ~                                                                           ~
+  ~ This software is distributed in the hope that it will be useful,          ~
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of            ~
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU          ~
+  ~ Lesser General Public License for more details.                           ~
+  ~                                                                           ~
+  ~ You should have received a copy of the GNU Lesser General Public          ~
+  ~ License along with this software; if not, write to the Free               ~
+  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA        ~
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.                  ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+   "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+   <class
+      name="org.jboss.portal.identity.db.HibernateUserImpl"
+      table="jbp_users">
+       <id
+          name="key"
+          column="jbp_uid"
+          type="java.lang.Long">
+          <generator class="native">
+             <param name="sequence">user_seq</param>
+          </generator>
+       </id>
+      <property
+         name="userName"
+         column="jbp_uname"
+         type="java.lang.String"
+         update="false"
+         insert="true"
+         unique="true"/>
+       <map
+          name="dynamic"
+          table="jbp_user_prop"
+          lazy="false"
+          sort="unsorted"
+          cascade="all">
+          <key column="jbp_uid"/>
+          <index
+             column="jbp_name"
+             type="java.lang.String"/>
+          <element
+             column="jbp_value"
+             type="java.lang.String"
+             not-null="false"
+             unique="false"/>
+       </map>
+      <property
+         name="givenName"
+         column="jbp_givenname"
+         type="java.lang.String"
+         update="true"
+         insert="true"
+         unique="false"/>
+       <property
+          name="familyName"
+          column="jbp_familyname"
+          type="java.lang.String"
+          update="true"
+          insert="true"
+          unique="false"/>
+       <property
+          name="password"
+          column="jbp_password"
+          type="java.lang.String"
+          update="true"
+          insert="true"
+          unique="false"/>
+       <property
+          name="realEmail"
+          column="jbp_realemail"
+          type="java.lang.String"
+          update="true"
+          insert="true"
+          unique="false"/>
+       <property
+          name="fakeEmail"
+          column="jbp_fakeemail"
+          type="java.lang.String"
+          update="true"
+          insert="true"
+          unique="false"/>
+       <property
+          name="registrationDate"
+          column="jbp_regdate"
+          type="java.util.Date"
+          update="false"
+          insert="true"
+          unique="false"/>
+       <property
+          name="viewRealEmail"
+          column="jbp_viewrealemail"
+          type="boolean"
+          update="true"
+          insert="true"
+          unique="false"/>
+       <property
+          name="enabled"
+          column="jbp_enabled"
+          type="boolean"
+          update="true"
+          insert="true"
+          unique="false"/>
+       <set
+          name="roles"
+          table="jbp_role_membership"
+          lazy="false"
+          inverse="false"
+          cascade="none"
+          sort="unsorted">
+          <key column="jbp_uid"/>
+          <many-to-many
+             class="org.jboss.portal.identity.db.HibernateRoleImpl"
+             column="jbp_rid"
+             outer-join="true"/>
+       </set>
+	   <many-to-one
+			name="merchantAccount"
+			class="com.genband.m5.maps.common.entity.Organization"
+			column="gb_merchant_id"/>
+   </class>
+      <class
+      name="com.genband.m5.maps.common.entity.Organization"
+      table="gb_organization">
+      <cache usage="read-write"/>
+      <id
+         name="organizationId"
+         column="org_id"
+         type="java.lang.Long">
+         <generator class="hilo">
+         </generator>
+      </id>
+      <property
+         name="name"
+         column="org_name"
+         type="java.lang.String"
+         length="25"
+		 not-null="true"/>
+      <property
+         name="account_Type"
+         column="org_account_type"
+         type="java.lang.Character"
+		 not-null="true"/>
+      <property
+         name="domainName"
+         column="org_domain_name"
+         type="java.lang.String"
+		 not-null="true"
+         length="30"
+         unique="true"/>
+      <property
+         name="customerId"
+         column="org_customer_id"
+         type="java.lang.String"
+		 not-null="true"
+         unique="true"/>
+      <property
+         name="displayName"
+         column="org_display_name"
+         type="java.lang.String"
+         length="40"/>
+      <property
+         name="description"
+         column="org_description"
+         type="java.lang.String"/>
+      <property
+         name="timezone"
+         column="org_timezone"
+         length="20"
+         type="java.lang.String"/>
+      <property
+         name="status"
+         column="org_status"
+         type="java.lang.Integer"
+         not-null="true"/>
+       <property
+          name="activationDate"
+          column="org_activation_date"
+          type="java.sql.Date"
+          not-null="true"/>
+       <property
+          name="expirationDate"
+          column="org_expiration_date"
+          type="java.sql.Date"
+          not-null="true"/>
+       <property
+          name="lastUpdated"
+          column="org_last_updated_date"
+          type="java.sql.Timestamp"/>
+	   <many-to-one
+			name="merchantAccount"
+			class="com.genband.m5.maps.common.entity.Organization"
+			column="merchant_id"/>
+	   
+      <set
+         name="childOrgnizationAccounts"
+         lazy="true"
+		 inverse="true"
+         cascade="none"
+         sort="unsorted">
+         <cache usage="read-write"/>
+         <key column="merchant_id"/>
+         <one-to-many
+            class="com.genband.m5.maps.common.entity.Organization"/>
+      </set>
+   </class>
+   <class
+      name="org.jboss.portal.identity.db.HibernateRoleImpl"
+      table="jbp_roles">
+      <id
+         name="key"
+         column="jbp_rid"
+         type="java.lang.Long">
+         <generator class="native">
+            <param name="sequence">user_seq</param>
+         </generator>
+      </id>
+      <property
+         name="name"
+         column="jbp_name"
+         type="java.lang.String"
+         update="false"
+         insert="true"
+         unique="true"/>
+      <property
+         name="displayName"
+         column="jbp_displayname"
+         type="java.lang.String"
+         update="true"
+         insert="true"
+         unique="true"/>
+      <set
+         name="users"
+         table="jbp_role_membership"
+         lazy="true"
+         inverse="true"
+         cascade="none"
+         sort="unsorted">
+         <key column="jbp_rid"/>
+         <many-to-many
+            class="org.jboss.portal.identity.db.HibernateUserImpl"
+            column="jbp_uid"
+            outer-join="false"/>
+      </set>
+   </class>
+   <class
+      name="com.genband.m5.maps.common.entity.OrganizationAddress"
+      table="gb_org_address">
+      <cache usage="read-write"/>
+      <id
+         name="organizationAddressId"
+         column="org_address_id"
+         type="java.lang.Long">
+         <generator class="hilo">
+         </generator>
+      </id>
+      <property
+         name="city"
+         column="org_address_city"
+         type="java.lang.String"
+         length="25"
+		 not-null="true"/>
+      <property
+         name="state"
+         column="org_address_state"
+         type="java.lang.String"
+         length="25"
+		 not-null="true"/>
+      <property
+         name="streetAddress1"
+         column="org_address_street1"
+         type="java.lang.String"
+         length="40"
+		 not-null="true"/>
+      <property
+         name="streetAddress2"
+         column="org_address_street2"
+         type="java.lang.String"
+         length="40"/>
+      <property
+         name="zip"
+         column="org_address_zip"
+         type="java.lang.String"
+         length="10"
+		 not-null="true"/>
+	   <many-to-one
+			name="country"
+			class="com.genband.m5.maps.common.entity.Country"
+			column="country_id"
+            not-null="true"/>
+
+   </class>
+   
+   <class
+      name="com.genband.m5.maps.common.entity.OrganizationContactInfo"
+      table="gb_org_contact_info">
+      <cache usage="read-write"/>
+      <id
+         name="contactId"
+         column="org_contact_id"
+         type="java.lang.Long">
+         <generator class="hilo">
+         </generator>
+      </id>
+      <property
+         name="contactPerson"
+         column="org_contact_person"
+         type="java.lang.String"
+         length="25"
+		 not-null="true"/>
+      <property
+         name="emailId1"
+         column="org_contact_email_id1"
+         type="java.lang.String"
+         length="35"
+		 not-null="true"/>
+      <property
+         name="emailId2"
+         column="org_contact_email_id2"
+         type="java.lang.String"
+         length="35"/>
+      <property
+         name="phoneNumber"
+         column="org_contact_phone_number"
+         type="java.lang.String"
+         length="20"
+		 not-null="true"/>
+      <property
+         name="alternatePhoneNumber"
+         column="org_alternate_number"
+         type="java.lang.String"
+         length="20"/>
+      <property
+         name="mobileNumber"
+         column="org_contact_mobile_number"
+         type="java.lang.String"
+         length="15"/>
+      <property
+         name="faxNumber"
+         column="org_contact_fax_number"
+         type="java.lang.String"
+         length="20"/>
+
+   </class>
+
+   
+   <class
+      name="com.genband.m5.maps.common.entity.Country"
+      table="gb_country">
+      <cache usage="read-write"/>
+      <id
+         name="countryId"
+         column="country_id"
+         type="java.lang.Long">
+         <generator class="hilo">
+         </generator>
+      </id>
+      <property
+         name="isoCode"
+         column="country_iso_code"
+         type="java.lang.String"
+         length="10"/>
+      <property
+         name="countryName"
+         column="country_name"
+         type="java.lang.String"
+         length="30"/>
+	   <many-to-one
+			name="merchantAccount"
+			class="com.genband.m5.maps.common.entity.Organization"
+			column="merchant_id"/>
+
+   </class>
+</hibernate-mapping>

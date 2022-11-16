@@ -1,0 +1,44 @@
+RULES = lib
+
+EXTRA_INCLUDES += $(INSTALLROOT)/include 
+
+TARGET = libINGwSipMsgHandler
+
+EXTRA_RULES += vbroker
+
+include ../../INGwCommonDefs/hss-sipstack.def
+include ../../INGwCommonDefs/ccpu-stack.def
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+#define to trace call thread 
+EXTRA_DEFINES += INGW_TRACE_CALL_THREAD 
+EXTRA_DEFINES += QUEUE_CHANGES 
+#EXTRA_DEFINES += RES_PRIORITY_HDR
+
+CODE_HOME=INGwSipMsgHandler
+
+SRCS = $(CODE_HOME)/INGwSpMsgBaseHandler.C                   \
+       $(CODE_HOME)/INGwSpMsgInviteStateContext.C            \
+       $(CODE_HOME)/INGwSpMsgSipSpecificAttr.C               \
+       $(CODE_HOME)/INGwSpMsgParseInvite.C                   \
+       $(CODE_HOME)/INGwSpMsgFormInvite.C                    \
+       $(CODE_HOME)/INGwSpMsgInviteHandler.C                 \
+       $(CODE_HOME)/INGwSpMsgCancelHandler.C                 \
+       $(CODE_HOME)/INGwSpMsgByeHandler.C                    \
+       $(CODE_HOME)//INGwSpMsgNotifyHandler.C                \
+       $(CODE_HOME)/INGwSpMsgOptionsHandler.C                \
+       $(CODE_HOME)/INGwSpMsgByeStateContext.C               \
+       $(CODE_HOME)/INGwSpMsgInfoHandler.C
+
+
+HDRS = $(CODE_HOME)/INGwSpMsgBaseHandler.h             \
+       $(CODE_HOME)/INGwSpMsgInviteStateContext.h      \
+       $(CODE_HOME)/INGwSpMsgSipSpecificAttr.h         \
+       $(CODE_HOME)/INGwSpMsgInviteHandler.h           \
+       $(CODE_HOME)/INGwSpMsgCancelHandler.h           \
+       $(CODE_HOME)/INGwSpMsgByeHandler.h              \
+       $(CODE_HOME)/INGwSpMsgByeStateContext.h         \
+       $(CODE_HOME)/INGwSpMsgNotifyHandler.h           \
+       $(CODE_HOME)/INGwSpMsgOptionsHandler.h          \
+       $(CODE_HOME)/INGwSpMsgInfoHandler.h
+

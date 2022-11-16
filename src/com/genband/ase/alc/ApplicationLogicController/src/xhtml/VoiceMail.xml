@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application-logic-control xmlns:x0="http://www.w3.org/2001/XMLSchema">
+        <include service-location="media-macros.xml"/>
+        <include service-location="database-macros.xml"/>
+        <include service-location="database-schema.xml"/>
+        <include service-location="call-macros.xml"/>
+        
+        <service name="initialize">
+                <database-config
+                        username="testuser"
+                        password="genband"
+                        database-url="jdbc:postgresql://172.20.10.229:5432/postgres"
+                        database-driver="org.postgresql.Driver"/>
+        
+            <database-initialization reload-schema="true" reload-tuples="true"/>
+            
+            <initialize-global-media/>
+        </service>
+
+        <service name="do-invite">
+            <get-from-user results-in="userNumber"/>
+            <get-to-user results-in="destinationNumber"/>
+            
+            <!-- subscriber (ANI) validation comes first -->
+            <is-subscriber ani="${userNumber}">
+                  <results value="no">
+                        <!-- *** ALARM ALARM subscriber (ANI) not found in database -->
+                        <log level="WARN" value="ani ${userNumber} is not a sub"/>
+                        <create-response message="503" text="Service Not Available"/>
+                        <next-action>ServiceComplete</next-action>
+                  </results>
+            </is-subscriber>
+            
+            <!-- next, let us see if this is a call to the call jump configuration menu -->           
+            <condition if="${destinationNumber}" equal-to="${voicemailmenudestination}">
+                  <then>
+                        <log level="INFO" value="call from user to destination menu"/>
+                        <execute-call-jump-menu/>
+                  </then>
+                  <else>
+                        <log level="INFO" value="call from user to other party"/>
+                        <route-call/>
+                  </else>
+            </condition>
+            
+        </service>
+
+      
+      <service name="execute-call-jump-menu">
+            <log level="INFO" value="The User is ${userName}"/>
+            <log level="INFO" value="The Dest is ${destinationNumber}"/>
+            <log level="INFO" value="The voicemailmenudestination is ${voicemailmenudestination}"/>
+
+            <get-current-time results-in="LongTime"/>
+            <log level="INFO" value="The current time is ${userNumber}${LongTime}.wav"/>
+            
+                <connect-to-mediaserver/>
+      
+            <define-local variable="AccessPin"/>
+            <define-local variable="DestinationNumber"/>
+            
+            <loop>
+                  <!-- collect a pin and destination number from user -->
+                      <media-menu prompt-uri="${VoiceMailProvisioningMenu}" invalid-entry-prompt="${MasterCallJumpProvisioningInvalidEntry}" valid-regex="[1-2]{1}" max-digits="1" loop-repeat="10"> 
+                        <results value="1">
+                              <media-menu prompt-uri="${CallJumpAccessPrompt}" loop-repeat="3">
+                                    <results value="/[0-9]+/">
+                                          <set variable="AccessPin" equal-to="${return}"/>
+                                    </results>
+                              </media-menu>
+                        </results>
+                        <results value="2">
+                              <media-menu prompt-uri="${CallJumpDestinatoinPrompt}" loop-repeat="3">
+                                    <results value="/[0-9]+/">
+                                          <set variable="DestinationNumber" equal-to="${return}"/>
+                                    </results>
+                              </media-menu>
+                        </results>
+                  </media-menu>
+                  
+                  <!-- Loop until I have a pin and destination -->
+                  <condition if="${AccessPin}" not-equal-to="null">
+                        <condition if="${DestinationNumber}" not-equal-to="null">
+                              <last/>
+                        </condition>      
+                  </condition>
+            </loop>                 
+            
+            <log level="INFO" value="**** ${AccessPin}"/>
+            <log level="INFO" value="**** ${DestinationNumber}"/>
+            
+            <execute-update statement="insert into calljump values('${destinationNumber}', '${AccessPin}', '${DestinationNumber}')"/>
+            
+                <disconnect-from-mediaserver/>
+      </service>
+
+      <service name="route-call">
+      </service>
+      
+</application-logic-control>
+

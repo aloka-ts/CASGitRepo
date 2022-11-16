@@ -1,0 +1,701 @@
+-----------------------------------------------
+------------------------------------------------------------------------------------
+Setting Base Directory: /home/reeta/CASGitRepo_colt/src
+------------------------------------------------------------------------------------
+
+Using Linux Envt.
+-----------------------------------------------
+Using INSTALLROOT=/home/reeta/CAS_9.0_BUILD
+Using JAVA_HOME=/home/reeta/thirdPartyCASGitRepo7.5/jdk1.6.0_24/
+Using ANT_HOME=/home/reeta/thirdPartyCASGitRepo7.5/apache-ant-1.7.1/
+Using DS_HOME=/home/reeta/CASStackGitRepo7.5/stacks/SIPStack/DySIPUAJava_6.4/src/dsua
+Using CAP_HOME=/home/reeta/CASGitRepo_colt/src/tcap/cap
+Using BN_HOME=/home/reeta/thirdPartyCASGitRepo7.5/BinaryNotes1.5.2
+Using CAS_THIRDPARTY_ROOT=/home/reeta/thirdPartyCASGitRepo7.5
+Using CAS_STACK_ROOT=/home/reeta/CASStackGitRepo7.5
+Using BAYPROCESSOR_ROOT=/home/reeta/BayProcessorGitRepo
+Using EMS_COMMON_ROOT=/home/reeta/CommonEMSGitRepo
+-----------------------------------------------
+
+Apache Ant version 1.7.1 compiled on June 27 2008
+
+Running default Target
+
+Buildfile: build.xml
+
+variablesetup:
+
+all:
+   [delete] Deleting directory /home/reeta/CAS_9.0_BUILD
+
+variablesetup:
+
+init:
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/bpjars
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/otherjars
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/dsjars
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/httpjars
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/soapserver/Axis
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/tools/jibx
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/sbb
+     [copy] Copying 13 files to /home/reeta/CAS_9.0_BUILD/lib
+     [copy] Copying 3 files to /home/reeta/CAS_9.0_BUILD/schema
+     [copy] Copying 6 files to /home/reeta/CAS_9.0_BUILD/xsd
+     [copy] Copying 2 files to /home/reeta/CAS_9.0_BUILD/msml
+     [copy] Copying 19 files to /home/reeta/CAS_9.0_BUILD/scripts
+     [copy] Copying 45 files to /home/reeta/CAS_9.0_BUILD/conf
+     [copy] Copying 24 files to /home/reeta/CAS_9.0_BUILD/setup
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/otherjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/dsjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/dsjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/dsjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/dsjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/dsjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/dsjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/dsjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/dsjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/dsjars
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/soapserver/Axis
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/tools/jibx
+
+stack-state-table-exists:
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/dsclasses
+
+stack-table:
+     [echo] Building state table.
+
+stack:
+    [javac] Compiling 436 source files to /home/reeta/CAS_9.0_BUILD/dsclasses
+------------------------------------------------------------------------------------
+Setting Base Directory: /home/reeta/CASGitRepo_colt/src
+------------------------------------------------------------------------------------
+
+Using Linux Envt.
+-----------------------------------------------
+Using INSTALLROOT=/home/reeta/CAS_9.0_BUILD
+Using JAVA_HOME=/home/reeta/thirdPartyCASGitRepo7.5/jdk1.6.0_24/
+Using ANT_HOME=/home/reeta/thirdPartyCASGitRepo7.5/apache-ant-1.7.1/
+Using DS_HOME=/home/reeta/CASStackGitRepo7.5/stacks/SIPStack/DySIPUAJava_6.4/src/dsua
+Using CAP_HOME=/home/reeta/CASGitRepo_colt/src/tcap/cap
+Using BN_HOME=/home/reeta/thirdPartyCASGitRepo7.5/BinaryNotes1.5.2
+Using CAS_THIRDPARTY_ROOT=/home/reeta/thirdPartyCASGitRepo7.5
+Using CAS_STACK_ROOT=/home/reeta/CASStackGitRepo7.5
+Using BAYPROCESSOR_ROOT=/home/reeta/BayProcessorGitRepo
+Using EMS_COMMON_ROOT=/home/reeta/CommonEMSGitRepo
+-----------------------------------------------
+
+Apache Ant version 1.7.1 compiled on June 27 2008
+
+Ant Targets to Execute:  ra-radius
+
+Buildfile: build.xml
+
+variablesetup:
+
+init:
+
+rainit:
+     [echo] Init the Resource Adaptor build
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/ra
+
+ra-radius:
+     [echo] Building the Radius Resource Adaptor
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/ra/tmp
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/ra/radius
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/ra/radius/lib
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/ra/radius/classes
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/ra/radius/classes/com/baypackets/ase/ra/radius/rarouter/rulesmanager
+     [copy] Copying 1 file to /home/reeta/CAS_9.0_BUILD/ra/radius/classes/com/baypackets/ase/ra/radius/rarouter/rulesmanager
+    [javac] Compiling 54 source files to /home/reeta/CAS_9.0_BUILD/ra/tmp
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/radius/RadiusRequest.java:8: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.Request;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/radius/RadiusRequest.java:9: cannot find symbol
+    [javac] symbol: class Request
+    [javac] public interface RadiusRequest extends Request{
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/radius/RadiusResponse.java:6: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.Response;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/radius/RadiusResponse.java:8: cannot find symbol
+    [javac] symbol: class Response
+    [javac] public interface RadiusResponse extends Response {
+    [javac]                                         ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/radius/RadiusResourceException.java:3: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceException;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/radius/RadiusResourceException.java:5: cannot find symbol
+    [javac] symbol: class ResourceException
+    [javac] public class RadiusResourceException extends ResourceException {
+    [javac]                                              ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/radius/RadiusMessage.java:10: package com.baypackets.ase.dispatcher does not exist
+    [javac] import com.baypackets.ase.dispatcher.Destination;
+    [javac]                                     ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/radius/RadiusMessage.java:19: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.Message;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/radius/RadiusMessage.java:20: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceSession;
+    [javac]                                   ^
+------------------------------------------------------------------------------------
+Setting Base Directory: /home/reeta/CASGitRepo_colt/src
+------------------------------------------------------------------------------------
+
+Using Linux Envt.
+-----------------------------------------------
+Using INSTALLROOT=/home/reeta/CAS_9.0_BUILD
+Using JAVA_HOME=/home/reeta/thirdPartyCASGitRepo7.5/jdk1.6.0_24/
+Using ANT_HOME=/home/reeta/thirdPartyCASGitRepo7.5/apache-ant-1.7.1/
+Using DS_HOME=/home/reeta/CASStackGitRepo7.5/stacks/SIPStack/DySIPUAJava_6.4/src/dsua
+Using CAP_HOME=/home/reeta/CASGitRepo_colt/src/tcap/cap
+Using BN_HOME=/home/reeta/thirdPartyCASGitRepo7.5/BinaryNotes1.5.2
+Using CAS_THIRDPARTY_ROOT=/home/reeta/thirdPartyCASGitRepo7.5
+Using CAS_STACK_ROOT=/home/reeta/CASStackGitRepo7.5
+Using BAYPROCESSOR_ROOT=/home/reeta/BayProcessorGitRepo
+Using EMS_COMMON_ROOT=/home/reeta/CommonEMSGitRepo
+-----------------------------------------------
+
+Apache Ant version 1.7.1 compiled on June 27 2008
+
+Ant Targets to Execute:  ra-http
+
+Buildfile: build.xml
+
+variablesetup:
+
+init:
+
+rainit:
+     [echo] Init the Resource Adaptor build
+
+ra-http:
+     [echo] Building the Http Resource Adaptor
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/ra/http
+    [mkdir] Created dir: /home/reeta/CAS_9.0_BUILD/ra/http/classes
+    [javac] Compiling 25 source files to /home/reeta/CAS_9.0_BUILD/ra/tmp
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptor.java:5: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceException;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptor.java:6: package com.baypackets.ase.spi.resource does not exist
+    [javac] import com.baypackets.ase.spi.resource.ResourceAdaptor;
+    [javac]                                       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptor.java:7: package com.baypackets.ase.spi.resource does not exist
+    [javac] import com.baypackets.ase.spi.resource.ResourceContext;
+    [javac]                                       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptor.java:9: cannot find symbol
+    [javac] symbol: class ResourceAdaptor
+    [javac] public interface HttpResourceAdaptor extends ResourceAdaptor{
+    [javac]                                              ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpResponse.java:6: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.Response;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpResponse.java:8: cannot find symbol
+    [javac] symbol: class Response
+    [javac] public interface HttpResponse extends Response{
+    [javac]                                       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptor.java:17: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: interface com.baypackets.ase.ra.http.HttpResourceAdaptor
+    [javac] 	public void deliverResponse(HttpResponse httpResponse) throws ResourceException;
+    [javac] 	                                                              ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/event/HttpResourceEvent.java:6: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.Message;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/event/HttpResourceEvent.java:7: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceEvent;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/event/HttpResourceEvent.java:9: cannot find symbol
+    [javac] symbol: class ResourceEvent
+    [javac] public class HttpResourceEvent extends ResourceEvent{
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptor.java:28: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: interface com.baypackets.ase.ra.http.HttpResourceAdaptor
+    [javac] 	public void deliverEvent(HttpResourceEvent event) throws ResourceException;
+    [javac] 	                                                         ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptor.java:35: cannot find symbol
+    [javac] symbol  : class ResourceContext
+    [javac] location: interface com.baypackets.ase.ra.http.HttpResourceAdaptor
+    [javac] 	public ResourceContext getResourceContext();
+    [javac] 	       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:13: package com.baypackets.ase.container does not exist
+    [javac] import com.baypackets.ase.container.AseIc;
+    [javac]                                    ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:14: package com.baypackets.ase.container.sip does not exist
+    [javac] import com.baypackets.ase.container.sip.SipApplicationSessionImpl;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:16: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.Message;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:17: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceSession;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:18: package com.baypackets.ase.spi.container does not exist
+    [javac] import com.baypackets.ase.spi.container.AbstractSasMessage;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:19: package com.baypackets.ase.spi.container does not exist
+    [javac] import com.baypackets.ase.spi.container.SasMessage;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:20: package com.baypackets.ase.spi.container does not exist
+    [javac] import com.baypackets.ase.spi.container.SasMessageContext;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:21: package com.baypackets.ase.spi.container does not exist
+    [javac] import com.baypackets.ase.spi.container.SasProtocolSession;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:23: cannot find symbol
+    [javac] symbol: class AbstractSasMessage
+    [javac] public class HttpMessage extends AbstractSasMessage implements Message{
+    [javac]                                  ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:23: cannot find symbol
+    [javac] symbol: class Message
+    [javac] public class HttpMessage extends AbstractSasMessage implements Message{
+    [javac]                                                                ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/event/HttpResourceEvent.java:89: cannot find symbol
+    [javac] symbol  : class Message
+    [javac] location: class com.baypackets.ase.ra.http.event.HttpResourceEvent
+    [javac]     public void setMessage(Message msg) {
+    [javac]                            ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:40: cannot find symbol
+    [javac] symbol  : class SasProtocolSession
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessage
+    [javac] 	private SasProtocolSession session;
+    [javac] 	        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:80: cannot find symbol
+    [javac] symbol  : class SasProtocolSession
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessage
+    [javac] 	public SasProtocolSession getProtocolSession() {
+    [javac] 	       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:85: cannot find symbol
+    [javac] symbol  : class SasProtocolSession
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessage
+    [javac] 	public SasProtocolSession getProtocolSession(boolean create) {
+    [javac] 	       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:129: cannot find symbol
+    [javac] symbol  : class ResourceSession
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessage
+    [javac] 	public ResourceSession getSession() {
+    [javac] 	       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessage.java:204: cannot find symbol
+    [javac] symbol  : class SasProtocolSession
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessage
+    [javac] 	public void setProtocolSession(SasProtocolSession session) {
+    [javac] 	                               ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:8: package com.baypackets.ase.container.exceptions does not exist
+    [javac] import com.baypackets.ase.container.exceptions.AseInvocationFailedException;
+    [javac]                                               ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:14: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceException;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:15: package com.baypackets.ase.spi.container does not exist
+    [javac] import com.baypackets.ase.spi.container.SasMessage;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:16: package com.baypackets.ase.spi.deployer does not exist
+    [javac] import com.baypackets.ase.spi.deployer.DeployableObject;
+    [javac]                                       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:17: package com.baypackets.ase.spi.resource does not exist
+    [javac] import com.baypackets.ase.spi.resource.ResourceContext;
+    [javac]                                       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:41: cannot find symbol
+    [javac] symbol  : class DeployableObject
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	private ArrayList<DeployableObject> appList = new ArrayList<DeployableObject>();
+    [javac] 	                  ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:47: cannot find symbol
+    [javac] symbol  : class ResourceContext
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	private ResourceContext context;
+    [javac] 	        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/web/WebManager.java:34: package com.baypackets.ase.common does not exist
+    [javac] import com.baypackets.ase.common.Registry;
+    [javac]                                 ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/web/WebManager.java:35: package com.baypackets.ase.common.logging does not exist
+    [javac] import com.baypackets.ase.common.logging.AseHttpMsgLoggingInterface;
+    [javac]                                         ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/web/WebManager.java:41: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceException;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/web/WebManager.java:42: package com.baypackets.bayprocessor.slee.common does not exist
+    [javac] import com.baypackets.bayprocessor.slee.common.ConfigRepository;
+    [javac]                                               ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/qm/HttpQueueManagerImpl.java:7: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceException;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/qm/HttpQueueManager.java:5: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceException;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:66: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void deliverEvent(HttpResourceEvent event) throws ResourceException {
+    [javac] 	                                                         ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:105: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 			throws ResourceException {
+    [javac] 			       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:125: cannot find symbol
+    [javac] symbol  : class ResourceContext
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public ResourceContext getResourceContext() {
+    [javac] 	       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:133: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 			throws ResourceException {
+    [javac] 			       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:139: cannot find symbol
+    [javac] symbol  : class ResourceContext
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void init(ResourceContext context) throws ResourceException {
+    [javac] 	                 ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:139: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void init(ResourceContext context) throws ResourceException {
+    [javac] 	                                                 ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:187: cannot find symbol
+    [javac] symbol  : class SasMessage
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void sendMessage(SasMessage message) throws IOException {
+    [javac] 	                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:222: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void start() throws ResourceException {
+    [javac] 	                           ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:268: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void stop() throws ResourceException {
+    [javac] 	                          ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:306: cannot find symbol
+    [javac] symbol  : class DeployableObject
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void registerApp(DeployableObject ctx) {
+    [javac] 	                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:315: cannot find symbol
+    [javac] symbol  : class DeployableObject
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void unregisterApp(DeployableObject ctx) {
+    [javac] 	                          ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:325: cannot find symbol
+    [javac] symbol  : class DeployableObject
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public Iterator<DeployableObject> getAllRegisteredApps(){
+    [javac] 	                ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:332: cannot find symbol
+    [javac] symbol  : class SasMessage
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void failed(SasMessage arg0, AseInvocationFailedException arg1) {
+    [javac] 	                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:332: cannot find symbol
+    [javac] symbol  : class AseInvocationFailedException
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void failed(SasMessage arg0, AseInvocationFailedException arg1) {
+    [javac] 	                                    ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceAdaptorImpl.java:338: cannot find symbol
+    [javac] symbol  : class SasMessage
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceAdaptorImpl
+    [javac] 	public void processed(SasMessage arg0) {
+    [javac] 	                      ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/exception/HttpResourceException.java:7: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceException;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/exception/HttpResourceException.java:15: cannot find symbol
+    [javac] symbol: class ResourceException
+    [javac] public class HttpResourceException extends ResourceException {
+    [javac]                                            ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/web/WebManager.java:56: cannot find symbol
+    [javac] symbol  : class ConfigRepository
+    [javac] location: class com.baypackets.ase.ra.http.web.WebManager
+    [javac] 	ConfigRepository configRepositery = (ConfigRepository) Registry
+    [javac] 	^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpRequest.java:6: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.Request;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpRequest.java:8: cannot find symbol
+    [javac] symbol: class Request
+    [javac] public interface HttpRequest extends Request {
+    [javac]                                      ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/web/WebManager.java:586: cannot find symbol
+    [javac] symbol  : class AseHttpMsgLoggingInterface
+    [javac] location: class com.baypackets.ase.ra.http.web.WebManager
+    [javac] 	public static void setMessageLoggingInterface(AseHttpMsgLoggingInterface loggingInf) {
+    [javac] 	                                              ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/web/WebManager.java:591: cannot find symbol
+    [javac] symbol  : class AseHttpMsgLoggingInterface
+    [javac] location: class com.baypackets.ase.ra.http.web.WebManager
+    [javac] 	public static AseHttpMsgLoggingInterface getMessageLoggingInterface() {
+    [javac] 	              ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/web/WebManager.java:596: cannot find symbol
+    [javac] symbol  : class AseHttpMsgLoggingInterface
+    [javac] location: class com.baypackets.ase.ra.http.web.WebManager
+    [javac] 	static AseHttpMsgLoggingInterface loggingInterface=null;
+    [javac] 	       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/qm/HttpQueueManagerImpl.java:38: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.qm.HttpQueueManagerImpl
+    [javac] 	public boolean enQueueRequest(HttpRequest request) throws ResourceException {
+    [javac] 	                                                          ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/qm/HttpQueueManager.java:22: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: interface com.baypackets.ase.ra.http.qm.HttpQueueManager
+    [javac] 	public boolean enQueueRequest(HttpRequest request) throws ResourceException;
+    [javac] 	                                                          ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactory.java:5: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.DefaultResourceFactory;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactory.java:6: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceException;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactory.java:8: cannot find symbol
+    [javac] symbol: class DefaultResourceFactory
+    [javac] public interface HttpResourceFactory extends DefaultResourceFactory{
+    [javac]                                              ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactory.java:10: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: interface com.baypackets.ase.ra.http.HttpResourceFactory
+    [javac] 	public HttpRequest createRequest(SipApplicationSession appSession, String url, String httpMethod) throws ResourceException;
+    [javac] 	                                                                                                         ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:11: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.Request;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:12: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceException;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:13: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceSession;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:14: package com.baypackets.ase.spi.container does not exist
+    [javac] import com.baypackets.ase.spi.container.SasApplicationSession;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:15: package com.baypackets.ase.spi.container does not exist
+    [javac] import com.baypackets.ase.spi.container.SasMessage;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:16: package com.baypackets.ase.spi.container does not exist
+    [javac] import com.baypackets.ase.spi.container.SasProtocolSession;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:17: package com.baypackets.ase.spi.resource does not exist
+    [javac] import com.baypackets.ase.spi.resource.ResourceContext;
+    [javac]                                       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:18: package com.baypackets.ase.spi.resource does not exist
+    [javac] import com.baypackets.ase.spi.resource.SessionFactory;
+    [javac]                                       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactory.java:3: package com.baypackets.ase.spi.resource does not exist
+    [javac] import com.baypackets.ase.spi.resource.MessageFactory;
+    [javac]                                       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactory.java:5: cannot find symbol
+    [javac] symbol: class MessageFactory
+    [javac] public interface HttpMessageFactory extends MessageFactory {
+    [javac]                                             ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:28: cannot find symbol
+    [javac] symbol  : class SessionFactory
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceFactoryImpl
+    [javac] 	private SessionFactory sessionFactory;
+    [javac] 	        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:30: cannot find symbol
+    [javac] symbol  : class ResourceContext
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceFactoryImpl
+    [javac] 	private ResourceContext context;
+    [javac] 	        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:32: cannot find symbol
+    [javac] symbol  : class ResourceContext
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceFactoryImpl
+    [javac] 	public void init(ResourceContext context) {
+    [javac] 	                 ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:63: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceFactoryImpl
+    [javac] 			String url, String httpMethod) throws ResourceException {
+    [javac] 			                                      ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:87: cannot find symbol
+    [javac] symbol  : class Request
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceFactoryImpl
+    [javac] 	public Request createRequest(int arg0) throws ResourceException {
+    [javac] 	       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:87: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceFactoryImpl
+    [javac] 	public Request createRequest(int arg0) throws ResourceException {
+    [javac] 	                                              ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:93: cannot find symbol
+    [javac] symbol  : class ResourceSession
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceFactoryImpl
+    [javac] 	public ResourceSession createSession(SipApplicationSession arg0)
+    [javac] 	       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/HttpResourceFactoryImpl.java:94: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.HttpResourceFactoryImpl
+    [javac] 			throws ResourceException {
+    [javac] 			       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:3: package com.baypackets.ase.spi.resource does not exist
+    [javac] import com.baypackets.ase.spi.resource.MessageFactory;
+    [javac]                                       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:5: package com.baypackets.ase.resource does not exist
+    [javac] import com.baypackets.ase.resource.ResourceException;
+    [javac]                                   ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:6: package com.baypackets.ase.spi.container does not exist
+    [javac] import com.baypackets.ase.spi.container.SasMessage;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:7: package com.baypackets.ase.spi.container does not exist
+    [javac] import com.baypackets.ase.spi.container.SasProtocolSession;
+    [javac]                                        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:8: package com.baypackets.ase.spi.resource does not exist
+    [javac] import com.baypackets.ase.spi.resource.ResourceContext;
+    [javac]                                       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:19: cannot find symbol
+    [javac] symbol  : class MessageFactory
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessageFactoryImpl
+    [javac] 	private MessageFactory msgFactory;
+    [javac] 	        ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:38: cannot find symbol
+    [javac] symbol  : class ResourceContext
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessageFactoryImpl
+    [javac] 	public void init(ResourceContext context) throws ResourceException {
+    [javac] 	                 ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:38: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessageFactoryImpl
+    [javac] 	public void init(ResourceContext context) throws ResourceException {
+    [javac] 	                                                 ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:55: cannot find symbol
+    [javac] symbol  : class SasProtocolSession
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessageFactoryImpl
+    [javac] 	public SasMessage createRequest(SasProtocolSession session, int type)
+    [javac] 	                                ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:55: cannot find symbol
+    [javac] symbol  : class SasMessage
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessageFactoryImpl
+    [javac] 	public SasMessage createRequest(SasProtocolSession session, int type)
+    [javac] 	       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:56: cannot find symbol
+    [javac] symbol  : class ResourceException
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessageFactoryImpl
+    [javac] 			throws ResourceException {
+    [javac] 			       ^
+    [javac] /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/message/HttpMessageFactoryImpl.java:82: cannot find symbol
+    [javac] symbol  : class SasMessage
+    [javac] location: class com.baypackets.ase.ra.http.message.HttpMessageFactoryImpl
+    [javac] 	public SasMessage createResponse(SasMessage arg0, int arg1)
+    [javac] 	                                 ^
+    [javac] Note: /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/web/WebManager.java uses or overrides a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: /home/reeta/CASGitRepo_colt/src/com/baypackets/ase/ra/http/web/WebManager.java uses unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 100 errors
+------------------------------------------------------------------------------------
+Setting Base Directory: /home/reeta/CASGitRepo_colt/src
+------------------------------------------------------------------------------------
+
+Using Linux Envt.
+-----------------------------------------------
+Using INSTALLROOT=/home/reeta/CAS_9.0_BUILD
+Using JAVA_HOME=/home/reeta/thirdPartyCASGitRepo7.5/jdk1.6.0_24/
+Using ANT_HOME=/home/reeta/thirdPartyCASGitRepo7.5/apache-ant-1.7.1/
+Using DS_HOME=/home/reeta/CASStackGitRepo7.5/stacks/SIPStack/DySIPUAJava_6.4/src/dsua
+Using CAP_HOME=/home/reeta/CASGitRepo_colt/src/tcap/cap
+Using BN_HOME=/home/reeta/thirdPartyCASGitRepo7.5/BinaryNotes1.5.2
+Using CAS_THIRDPARTY_ROOT=/home/reeta/thirdPartyCASGitRepo7.5
+Using CAS_STACK_ROOT=/home/reeta/CASStackGitRepo7.5
+Using BAYPROCESSOR_ROOT=/home/reeta/BayProcessorGitRepo
+Using EMS_COMMON_ROOT=/home/reeta/CommonEMSGitRepo
+-----------------------------------------------
+
+Apache Ant version 1.7.1 compiled on June 27 2008
+
+Ant Targets to Execute:  ra-ro
+
+Buildfile: build.xml
+
+variablesetup:

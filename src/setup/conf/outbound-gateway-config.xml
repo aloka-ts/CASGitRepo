@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE outbound-gateway-config
+        PUBLIC "-//Baypackets SIP Application Server//DTD Outbound Gateway Config//EN"
+        "http://www.baypackets.com/dtd/outbound-gateway-config.dtd">
+
+<!--
+        This file contains the meta data on all media servers that are to be
+        provisioned with the platform and made available for use by SIP Servlet
+        applications.
+-->
+
+<outbound-gateway-config>
+<!--
+        <outbound-gateway>
+                <id>Gateway One</id>
+		<group-id>Default</group-id>
+                <ip-address>172.20.10.231</ip-address>
+                <port>5060</port>
+        </outbound-gateway>
+        <outbound-gateway>
+                <id>Gateway Two</id>
+		<group-id>Default</group-id>
+                <ip-address>172.20.10.231</ip-address>
+                <port>5061</port>
+        </outbound-gateway>
+
+-->
+</outbound-gateway-config>

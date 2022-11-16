@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BuildNavigator SystemType="rsiAse" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="K:\Installer\samples\schema\upgrade.xsd">
+	<Macros/>
+	<PackageInformation>
+		<Subsystem type="ASE Subsystem" version="ASE_VERSION" template="ASEASE_VERSION/ASE_upgrade_template.xml" presence="mandatory"/>
+	</PackageInformation>
+	<PreConfiguration>
+		<DefinedMacros>
+			<Macro name="NONE_ANS" value="NONE"/>
+			<Macro name="SUBSYS_ASE" value="ASE"/>
+			<Macro name="SYSTEM_VERSION" value="ASE_VERSION"/>
+			<Macro name="SYSTEM_DESCRIPTION" value="Sip Application Server (SAS)"/>
+			<Macro name="PRODUCT_ID" value="SAS"/>
+			<Macro name="CLEI_CODE" value="NOT SET"/>
+			<Macro name="ACCEPTANCE_DATE" value=" "/>
+			<Macro name="WARRANTY_PERIOD" value="180"/>
+			<Macro name="EXPIRY_DATE" value=" "/>
+			<Macro name="LICENSE_KEY" value=" "/>
+			<Macro name="VENDOR_NAME" value="SBTM "/>
+			<Macro name="BINARY_TYPE" value=" "/>
+		</DefinedMacros>
+        	<AlwaysToBePromptedMacros/>
+	</PreConfiguration>
+	<AliasMacros/>
+</BuildNavigator>

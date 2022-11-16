@@ -1,0 +1,4 @@
+DIRS += prog
+EXTRA_LIBS += Util
+
+EXTRA_LIBDIRS += $(INSTALLROOT)/${PLATFORM}/lib

@@ -1,0 +1,17 @@
+
+opCodes: "0x64 0x05,0x64 0x05,0x64 0x02,0x64 0x17"
+
+triggeringRules:
+        - ssn: "25"
+          opsCode: "0x64 0x03"
+          serviceKey: "10"
+          appId: "123"
+        - ssn: "251"
+          opsCode: "0x64 0x03"
+          appId: "10"
+        - ssn: "13"
+          opsCode: "9"
+          serviceKey: "19"
+          appId: "11"
+        - ssn: "14"
+          appId: "10"

@@ -1,0 +1,15 @@
+## This script is used to find the role of INC.
+## The output contains following information
+## DesignatedRole: Defines the default role of INC
+## CurrentRole   : Defines the current role of INC. This role may chnage
+##                 on FT.
+## RoleResolutionState : Defines the current state of role resolution. 
+##                     It is marked as completed once role resolution completes
+## PeerState       : Provide status of peer which could be down or up.
+
+#!/usr/bin/ksh
+
+. ~/profile.ingw
+. $INSTALLROOT/$SUBSYS_DIR/sol28g/conf/hssenv.sh
+
+$INSTALLROOT/$SUBSYS_DIR/sol28g/bin/INGwProbe -s 0.0.0.0 -c "get role-detail"

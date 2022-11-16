@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<!--
+ * Copyright Notice ============================================*
+ * This file contains proprietary information of BayPackets, Inc.
+ * Copying or reproduction without prior written approval is prohibited.
+ * Copyright (c) 2004-2006 =====================================
+ *
+-->
+
+
+<project name="B2B Test Application" default="build" basedir=".">
+
+	<target name="init" >
+		<property name="buildDir" Value="${INSTALLROOT}"/>
+		<property name="test.apps.build"  value="${buildDir}/test-apps/b2b"/>
+		
+		<path id="classpath">
+			<fileset dir="${buildDir}/bpjars">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${buildDir}/otherjars">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+	</target>
+	
+	<target name="build" depends="init">
+    <echo message="Building the B2B test app SAR file..."/>
+
+		<javac srcdir="${test.apps.build}/WEB-INF/classes" destdir="${test.apps.build}/WEB-INF/classes">
+			<classpath refid="classpath"/>
+		</javac>
+
+		<jar jarfile="${test.apps.build}/b2b.sar">
+			<fileset dir="${test.apps.build}" excludes="b2b.sar,build.sh,build.xml,b2b-config.xml,**/*.java"/>
+		</jar>
+	</target>
+
+</project>

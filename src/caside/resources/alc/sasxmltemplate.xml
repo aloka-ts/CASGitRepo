@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sas-app>
+        <name>${ServletName}</name>
+        <version>${ServletVersion}</version>
+        <priority>${ServletPriority}</priority>
+        <sbb/>
+</sas-app>
+
+

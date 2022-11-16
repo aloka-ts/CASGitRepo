@@ -1,0 +1,10 @@
+RULES  = lib
+TARGET = libINGwSipProviderDummy
+
+CXXFLAGS.debug:=-O5
+
+
+SRCS = INGwSipProvider/INGwSipIface.C        \
+			 INGwSipProvider/INGwSipProvider.C
+
+HDRS = $(wildcard */*.h)

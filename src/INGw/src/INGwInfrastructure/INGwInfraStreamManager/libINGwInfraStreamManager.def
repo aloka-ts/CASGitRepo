@@ -1,0 +1,15 @@
+RULES=lib
+
+TARGET=libINGwInfraStreamManager
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+SRCS = INGwInfraStreamManager/INGwIfrSmAppStreamer.C \
+       INGwInfraStreamManager/INGwIfrSmFileHandler.C \
+       INGwInfraStreamManager/INGwIfrSmStreamInf.C   \
+       INGwInfraStreamManager/INGwIfrSmStreamMgr.C
+
+HDRS = INGwInfraStreamManager/INGwIfrSmAppStreamer.h \
+       INGwInfraStreamManager/INGwIfrSmFileHandler.h \
+       INGwInfraStreamManager/INGwIfrSmStreamInf.h   \
+       INGwInfraStreamManager/INGwIfrSmStreamMgr.h

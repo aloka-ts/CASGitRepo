@@ -1,0 +1,80 @@
+<!--  
+DB pull script configuration File
+@author saneja
+bug 7667
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="cdrPullConfigBean"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders">
+			<value>true</value>
+		</property>
+
+		<property name="locations">
+			<list>
+				<value>
+					classpath:/CdrPullConfig.properties
+				</value>
+				<value>
+					classpath:/CdrPullDBSchema.properties
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Script property-->
+	<bean id="cdrPullFromDbConfig"
+		class="com.agnity.utility.cdrsftp.dbpull.utils.CDRPullConfig">
+		<property name="remoteIp" value="${cdrpull.sftp.remote.ip}" />
+		<property name="remoteSftpPort" value="${cdrpull.sftp.remote.port}" />
+		<property name="remoteSftpUser" value="${cdrpull.sftp.remote.user}" />
+		<property name="remoteSftpPassword" value="${cdrpull.sftp.remote.password}" />
+		<property name="remoteSftpDir" value="${cdrpull.sftp.remote.dir}" />
+		<property name="cdrPullWaitInterval" value="${cdrpull.wait.interval}" />
+		<property name="localDirName" value="${cdrpull.sftp.local.dir}" />
+		<property name="oemString" value="${cdrpull.cdr.file.header.oem}" />
+		<property name="camVersion" value="${cdrpull.cdr.file.header.cam}" />
+		<property name="cdrFileExtension" value="${cdrpull.cdr.file.extension}" />
+		<property name="cdrFilePrefix" value="${cdrpull.cdr.file.prefix}" />
+		<property name="maxCdrs" value="${cdrpull.cdr.file.maxsize}" />
+		<property name="rolloverTime" value="${cdrpull.cdr.file.maxTime}" />		
+		<property name="lockTable" value="${cdrpull.db.table.lock}"/>	
+		<property name="statusColumn" value="${cdrpull.db.table.cdr.column.status}"/>	
+		<property name="sentFileColumn" value="${cdrpull.db.table.cdr.column.sentfile}"/>	
+		<property name="cdrFileCntrIdentifier" value="${cdrpull.cdr.file.ctr.identifier}"/>
+		<property name="cdrFileSizeAdjFactor" value="${cdrpull.cdr.size.adjustmnet.factor}"/>
+		<property name="cdrFileSizeAdjApplyCrit" value="${cdrpull.cdr.size.adjustmnet.mincdr}"/>
+		<property name="fip" value="${cdrpull.mc.fip}" />
+	</bean>
+		
+	<bean id="cdrPullDaoImpl"
+		class="com.agnity.utility.cdrsftp.dbpull.dao.impl.CDRPullDaoImpl">
+		<property name="dataSource" ref="cdrPullDataSource"/>
+		<property name="cdrCntQuery" value="${cdrpull.db.query.cnt}"/>
+		<property name="attributeFetchQuery" value="${cdrpull.db.query.attribute.get}"/>
+		<property name="cdrFetchQuery" value="${cdrpull.db.query.cdr}"/>
+		<property name="updateAttributeQuery" value="${cdrpull.db.query.attribute.update}"/>
+		<property name="insertAttributeQuery" value="${cdrpull.db.query.attribute.insert}"/>
+		<property name="tsColumn" value="${cdrpull.db.table.cdr.column.ts}"/>
+	</bean>	
+	
+	<!-- creating jdbcTemplate 
+	<bean id = "cdrPullJdbcTemplate" 
+		class = "org.springframework.jdbc.core.simple.SimpleJdbcTemplate" >
+		<constructor-arg ref="cdrPullDataSource"/>
+	</bean> -->
+	
+	<!-- DataSource Property -->
+	<bean id="cdrPullDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${cdrpull.db.driver}" />
+		<property name="url" value="${cdrpull.db.url}" />
+		<property name="username" value="${cdrpull.db.user}" />
+		<property name="password" value="${cdrpull.db.password}" />
+	</bean>
+	
+</beans>

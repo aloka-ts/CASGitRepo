@@ -1,0 +1,5 @@
+<sas-app>
+        <name>ServiceDefinitionApp</name>
+        <version>1.0</version>
+        <priority>5</priority>
+</sas-app>

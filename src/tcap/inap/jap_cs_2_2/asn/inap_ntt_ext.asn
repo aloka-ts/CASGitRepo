@@ -1,0 +1,249 @@
+TTC-IN-CS2-classes {itu-t administration japan(440) isdn(102) inapl(3) jt-q1228-b(2) modules(0)
+in-cs2-classes (4) version3(2)}
+-- ??
+DEFINITIONS IMPLICIT TAGS ::=
+-- ??
+-- [The provisions of ???? are different in JT-Q1228-b]
+BEGIN
+IMPORTS
+id-rosObject-scf,
+id-rosObject-ssf,
+ros-InformationObjects,
+ssf-scf-Protocol,
+datatypes
+FROM TTC-IN-CS2-object-identifiers {itu-t administration japan(440) isdn(102) inapl(3) jt-q1228-b(2)
+modules(0) in-cs2-object-identifiers(7) version3(2)}
+ROS-OBJECT-CLASS,
+Code
+FROM Remote-Operations-Information-Objects ros-InformationObjects
+ttcInCs2SsfToScfGeneric
+FROM TTC-IN-CS2-SSF-SCF-pkgs-contracts-acs ssf-scf-Protocol
+CriticalityType,
+TtcConstractorNumber{},
+TtcChargeAreaInformation{},
+AdditionalCallingPartyNumber{},
+TtcCalledINNumber{},
+TtcAdditionalPartysCategory{},
+TtcCarrierInformation{},
+TtcCarrierInformationTransfer{},
+TtcCauseOfNoID{}
+FROM TTC-IN-CS2-datatypes datatypes;
+ssf ROS-OBJECT-CLASS ::= {
+INITIATES { ttcInCs2SsfToScfGeneric }
+RESPONDS { }
+ID id-rosObject-ssf }
+scf ROS-OBJECT-CLASS ::= {
+INITIATES { }
+RESPONDS { ttcInCs2SsfToScfGeneric }
+ID id-rosObject-scf}
+EXTENSION ::= CLASS {
+&ExtensionType,
+&criticality CriticalityType DEFAULT ignore,
+&id Code UNIQUE
+}
+WITH SYNTAX {
+EXTENSION-SYNTAX &ExtensionType
+CRITICALITY &criticality
+IDENTIFIED BY &id
+}
+-- Example of addition of an extension named 'Some Network Specific Indicator' of type
+-- BOOLEAN, with criticality 'abort' and to be identified as extension number 1
+-- Example of definition using the above information object class:
+--
+-- someNetworkSpecificIndicator EXTENSION ::= {
+-- EXTENSION-SYNTAX BOOLEAN
+-- CRITICALITY abort
+-- IDENTIFIED BY local : 1
+-- }
+-- Example of transfer syntax, using the ExtensionField datatype as specified in 4.1.
+-- Assuming the value of the extension is set to TRUE, the extensions parameter becomes
+--a Sequence of type INTEGER ::= 1, criticality ENUMERATED ::= 1 value [1], EXPLICIT
+--BOOLEAN ::= TRUE
+-- Indicates the extensions specific to TTC.
+connectExtension { PARAMETERS-BOUND : bound } EXTENSION ::=
+{
+EXTENSION-SYNTAX ConnectExtension
+CRITICALITY ignore
+IDENTIFIED BY local : -1
+}
+ConnectExtension { PARAMETERS-BOUND : bound } ::= SEQUENCE {
+additionalCallingPartyNumber [0] AdditionalCallingPartyNumber  OPTIONAL,
+ttcCarrierInformation [1] TtcCarrierInformation  OPTIONAL,
+ttcCauseOfNoID [2] TtcCauseOfNoID  OPTIONAL
+}
+establishTemporaryConnectionExtension  EXTENSION ::= {
+EXTENSION-SYNTAX EstablishTemporaryConnectionExtension 
+CRITICALITY ignore
+IDENTIFIED BY local: -3
+}
+EstablishTemporaryConnectionExtension  ::= SEQUENCE {
+ttcCarrierInformation [0] TtcCarrierInformation  OPTIONAL
+}
+initialDPExtension { PARAMETERS-BOUND : bound } EXTENSION ::= {
+EXTENSION-SYNTAX InitialDPExtension
+CRITICALITY ignore
+IDENTIFIED BY local : -2
+}
+InitialDPExtension { PARAMETERS-BOUND : bound } ::= SEQUENCE {
+ttcContractorNumber [0] TtcContractorNumber  OPTIONAL,
+ttcChargeAreaInformation [1] TtcChargeAreaInformation  OPTIONAL,
+ttcCalledINNumber [2] TtcCalledINNumber  OPTIONAL,
+ttcCarrierInformationTransfer [3] TtcCarrierInformationTransfer  OPTIONAL,
+ttcAdditionalPartysCategory [4] TtcAdditionalPartysCategory  OPTIONAL,
+ttcSSPChargeAreaInformation [5] TtcChargeAreaInformation  OPTIONAL
+}
+-- ?? ttcCalledINNumber parameter is not sent. ??
+-- [???? is not stipulated in JT-Q1228-b]
+TTCSupportedExtensions { PARAMETERS-BOUND : bound } EXTENSION ::=
+{
+connectExtension  |
+initialDPExtension |
+establishTemporaryConnectionExtension 
+}
+firstExtension EXTENSION ::= {
+EXTENSION-SYNTAX NULL
+CRITICALITY ignore
+IDENTIFIED BY local:1
+}
+-- The firstExtension is just an example
+SupportedExtensions  EXTENSION ::= {firstExtension 
+-- Full set of network operator extensions -- }
+-- The SupportedExtension is the full set of network operator extensions
+PARAMETERS-BOUND ::= CLASS
+{
+&maxBearerCapabilityLength INTEGER,
+&minCalledPartyNumberLength INTEGER,
+&maxCalledPartyNumberLength INTEGER,
+&minCallingPartyNumberLength INTEGER,
+&maxCallingPartyNumberLength INTEGER,
+&minCallingPartySubaddressLength INTEGER,
+&maxCallingPartySubaddressLength INTEGER,
+&maxCauseLength INTEGER,
+&minDigitsLength INTEGER,
+&maxDigitsLength INTEGER,
+&minEventSpecificInformationChargingLength INTEGER,
+&maxEventSpecificInformationChargingLength INTEGER,
+&minEventTypeChargingLength INTEGER,
+&maxEventTypeChargingLength INTEGER,
+&minGenericNumberLength INTEGER,
+&maxGenericNumberLength INTEGER,
+&minISDNAccessRelatedInformationLength INTEGER,
+&maxISDNAccessRelatedInformationLength INTEGER,
+&minReasonLength INTEGER,
+&maxReasonLength INTEGER,
+&minSCIBillingChargingLength INTEGER,
+&maxSCIBillingChargingLength INTEGER,
+&minScfIDLength INTEGER,
+&maxScfIDLength INTEGER,
+&numOfBCSMEvents INTEGER,
+&numOfChargingEvents INTEGER,
+&numOfCSs INTEGER,
+&numOfExtensions INTEGER,
+&numOfGenericNumbers INTEGER,
+&numOfLegs INTEGER,
+-- TTC specific
+&minTtcAdditionalPartysCategoryLength INTEGER,
+&maxTtcAdditionalPartysCategoryLength INTEGER,
+&minTtcCarrierInformationTransferLength INTEGER,
+&maxTtcCarrierInformationTransferLength INTEGER,
+&minTtcChargeAreaInformationLength INTEGER,
+&maxTtcChargeAreaInformationLength INTEGER,
+&minTtcContractorNumberLength INTEGER,
+&maxTtcContractorNumberLength INTEGER,
+&maxTtcCauseOfNoIDLength INTEGER,
+&numOfInitiateTemporaryConnections INTEGER
+}
+WITH SYNTAX
+{
+MAXIMUM-FOR-BEARER-CAPABILITY &maxBearerCapabilityLength
+MINIMUM-FOR-CALLED-PARTY-NUMBER &minCalledPartyNumberLength
+MAXIMUM-FOR-CALLED-PARTY-NUMBER &maxCalledPartyNumberLength
+MINIMUM-FOR-CALLING-PARTY-NUMBER &minCallingPartyNumberLength
+MAXIMUM-FOR-CALLING-PARTY-NUMBER &maxCallingPartyNumberLength
+MINIMUM-FOR-CALLING-PARTY-SUBADDRESS &minCallingPartySubaddressLength
+MAXIMUM-FOR-CALLING-PARTY-SUBADDRESS &maxCallingPartySubaddressLength
+MAXIMUM-FOR-CAUSE &maxCauseLength
+MINIMUM-FOR-DIGITS &minDigitsLength
+MAXIMUM-FOR-DIGITS &maxDigitsLength
+MINIMUM-FOR-EVENT-SPECIFIC-INFORMATION-CHARGING
+&minEventSpecificInformationChargingLength
+MAXIMUM-FOR-EVENT-SPECIFIC-INFORMATION-CHARGING
+&maxEventSpecificInformationChargingLength
+MINIMUM-FOR-EVENT-TYPE-CHARGING &minEventTypeChargingLength
+MAXIMUM-FOR-EVENT-TYPE-CHARGING &maxEventTypeChargingLength
+MINIMUM-FOR-GENERIC-NUMBER &minGenericNumberLength
+MAXIMUM-FOR-GENERIC-NUMBER &maxGenericNumberLength
+MINIMUM-FOR-ISDN-ACCESS-RELATED-INFORMATION &minISDNAccessRelatedInformationLength
+MAXIMUM-FOR-ISDN-ACCESS-RELATED-INFORMATION &maxISDNAccessRelatedInformationLength
+MINIMUM-FOR-REASON &minReasonLength
+MAXIMUM-FOR-REASON &maxReasonLength
+MINIMUM-FOR-SCI-BILLING-CHARGING &minSCIBillingChargingLength
+MAXIMUM-FOR-SCI-BILLING-CHARGING &maxSCIBillingChargingLength
+MINIMUM-FOR-SCF-ID &minScfIDLength
+MAXIMUM-FOR-SCF-ID &maxScfIDLength
+NUM-OF-BCSM-EVENT &numOfBCSMEvents
+NUM-OF-CHARGING-EVENT &numOfChargingEvents
+NUM-OF-CSS &numOfCSs
+NUM-OF-EXTENSIONS &numOfExtensions
+NUM-OF-GENERIC-NUMBERS &numOfGenericNumbers
+NUM-OF-LEGS &numOfLegs
+-- TTC Specific
+MINIMUM-FOR-TTC-ADDITIONAL-PARTYS-CATEGORY &minTtcAdditionalPartysCategoryLength
+MAXIMUM-FOR-TTC-ADDITIONAL-PARTYS-CATEGORY &maxTtcAdditionalPartysCategoryLength
+MINIMUM-FOR-TTC-CARRIER-INFORMATION-TRANSFER &minTtcCarrierInformationTransferLength
+MAXIMUM-FOR-TTC-CARRIER-INFORMATION-TRANSFER &maxTtcCarrierInformationTransferLength
+MINIMUM-FOR-TTC-CONTRACTOR-NUMBER &minTtcContractorNumberLength
+MAXIMUM-FOR-TTC-CONTRACTOR-NUMBER &maxTtcContractorNumberLength
+MINIMUM-FOR-TTC-CHARGE-AREA-INFORMATION &minTtcChargeAreaInformationLength
+MAXIMUM-FOR-TTC-CHARGE-AREA-INFORMATION &maxTtcChargeAreaInformationLength
+MAXIMUM-FOR-TTC-CAUSE-OF-NO-ID &maxTtcCauseOfNoIDLength
+NUM-OF-INITIATE-TEMPORARY-CONNECTIONS &numOfInitiateTemporaryConnections
+}
+-- The instances of the parameter areas (bounds) listed below represent the values used in
+--the TTC Standards
+ttcSpecificBoundSet PARAMETERS-BOUND ::=
+{
+MAXIMUM-FOR-BEARER-CAPABILITY 10 -- NTT-Q931
+MINIMUM-FOR-CALLED-PARTY-NUMBER 3 -- NTT-Q763
+MAXIMUM-FOR-CALLED-PARTY-NUMBER 15 -- NTT-Q763
+MINIMUM-FOR-CALLING-PARTY-NUMBER 2 -- NTT-Q763
+MAXIMUM-FOR-CALLING-PARTY-NUMBER  12 -- NTT-Q763
+MINIMUM-FOR-CALLING-PARTY-SUBADDRESS 1 -- NTT-Q763
+MAXIMUM-FOR-CALLING-PARTY-SUBADDRESS 21 -- NTT-Q763
+MAXIMUM-FOR-CAUSE 34
+MINIMUM-FOR-DIGITS 2 -- NTT-Q763
+MAXIMUM-FOR-DIGITS 13 -- NTT-Q763
+MINIMUM-FOR-EVENT-SPECIFIC-INFORMATION-CHARGING 2 -- NTT-Q763
+MAXIMUM-FOR-EVENT-SPECIFIC-INFORMATION-CHARGING 140 -- Example value
+MINIMUM-FOR-EVENT-TYPE-CHARGING 2 -- NTT-Q763
+MAXIMUM-FOR-EVENT-TYPE-CHARGING 21 -- Example value
+MINIMUM-FOR-GENERIC-NUMBER 3 -- NTT-Q763
+MAXIMUM-FOR-GENERIC-NUMBER 13 -- NTT-Q763
+MINIMUM-FOR-ISDN-ACCESS-RELATED-INFORMATION 1
+MAXIMUM-FOR-ISDN-ACCESS-RELATED-INFORMATION 80
+MINIMUM-FOR-REASON 1
+MAXIMUM-FOR-REASON 1
+MINIMUM-FOR-SCI-BILLING-CHARGING 2 -- NTT-Q763
+MAXIMUM-FOR-SCI-BILLING-CHARGING 100 -- Example value
+MINIMUM-FOR-SCF-ID 1
+MAXIMUM-FOR-SCF-ID 20
+NUM-OF-BCSM-EVENT 7
+NUM-OF-CHARGING-EVENT 2 -- Example value
+NUM-OF-CSS 4
+NUM-OF-EXTENSIONS 1
+NUM-OF-GENERIC-NUMBERS 3
+NUM-OF-LEGS 2
+-- TTC specific
+MINIMUM-FOR-TTC-ADDITIONAL-PARTYS-CATEGORY 2 -- NTT-Q763
+MAXIMUM-FOR-TTC-ADDITIONAL-PARTYS-CATEGORY 16 -- Example value
+MINIMUM-FOR-TTC-CARRIER-INFORMATION-TRANSFER 1 -- NTT-Q763
+MAXIMUM-FOR-TTC-CARRIER-INFORMATION-TRANSFER 97 -- Example value
+MINIMUM-FOR-TTC-CONTRACTOR-NUMBER 2 -- NTT-Q763
+MAXIMUM-FOR-TTC-CONTRACTOR-NUMBER 10
+MINIMUM-FOR-TTC-CHARGE-AREA-INFORMATION 1 -- NTT-Q763
+MAXIMUM-FOR-TTC-CHARGE-AREA-INFORMATION 4
+MAXIMUM-FOR-TTC-CAUSE-OF-NO-ID 1 -- NTT-Q763
+NUM-OF-INITIATE-TEMPORARY-CONNECTIONS 2
+}
+
+END

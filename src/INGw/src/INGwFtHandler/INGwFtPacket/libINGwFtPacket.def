@@ -1,0 +1,13 @@
+RULES = lib
+TARGET = libINGwFtPacket
+
+#include ../../INGwCommonDefs/telesys-stack.def
+#include ../../INGwCommonDefs/trillium-ainstack.def
+include ../../INGwCommonDefs/ccpu-stack.def
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+EXTRA_DEFINES += SS7_ANS88 SS7_ANS92 SS7_ANS96
+
+SRCS = $(wildcard INGwFtPacket/*.C)
+HDRS = $(wildcard INGwFtPacket/*.h)
+

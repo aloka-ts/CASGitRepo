@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+
+	<!-- ==================================================== -->
+
+	<!-- Build file: CAS Centrex Application -->
+
+	<!-- ==================================================== -->
+
+<project name="${PROJECT_NAME}" default="all" basedir="." xmlns:sonar="antlib:org.sonar.ant">
+
+	<!-- ***************************************** -->
+
+	<!-- Main target -->
+
+	<target name="all" depends="clean,build">
+
+	</target>
+
+
+	<target name="clean" depends="variablesetup">
+		<delete dir="${dir.build}/${PROJECT_NAME}" />
+		<delete file="${dir.build}/${PROJECT_NAME}.sar"/>
+	</target>
+	
+	<target name="init" depends="variablesetup">		
+			<!-- Set the classpath for compiling the application -->
+
+			<path id="classpath">
+				<fileset dir="${CLASSPATH}">		
+					<include name="log4j-1.2.16.jar" /> 
+					<include name="servlet-api.jar" />
+					<include name="sbb-if.jar" />
+					<include name="sipservlet-1_1-api.jar" /> 
+					<include name="rf-if.jar"/>
+					<include name="ro-if.jar"/>
+					<include name="sh-if.jar"/>
+					<include name="gy-if.jar"/>
+					<include name="http-if.jar"/>
+					<include name="soa-iface.jar"/>
+					<include name="alc.jar"/>
+					<include name="alc_JAXB.jar"/>
+				</fileset>
+			</path>
+		</target>
+
+
+
+		<target name="variablesetup">
+			
+			
+			<property file="build.properties" />
+			<property name="app.name" value="${PROJECT_NAME}" />
+			<property name="dir.build" Value="${INSTALLROOT}" />
+			<property name="plugin.dir" Value="${INSTALLROOT}" />	
+			
+			<!-- Java source and lib related Porperties -->
+			<property name="app.src.dir" value="${basedir}/src/" />
+		<!--	<property name="CLASSPATH" value="${eclipse.home}/plugins/com.baypackets.sas.ide_8.0.0.1/library" />-->
+			<property name="CLASSPATH" value="${CASIDE_PLUGIN_HOME}/library" />
+			<property name="LIB_JARS" value="${basedir}/../lib/" />
+			
+		</target>
+
+
+	<!-- SAS Centrex Application -->
+
+	<target name="build" depends="init">
+
+		<!-- Create the directories for building -->
+		<delete dir="${dir.build}/${PROJECT_NAME}" />
+		<delete file="${dir.build}/${PROJECT_NAME}.sar"/> 
+		
+		<mkdir dir="${dir.build}/${PROJECT_NAME}/WEB-INF/classes" />
+		<mkdir dir="${dir.build}/${PROJECT_NAME}/WEB-INF/lib" />
+		<!-- Copy the Deployment Descriptor files -->
+
+		<copy todir="${dir.build}/${PROJECT_NAME}/WEB-INF">
+
+			<fileset file="web.xml" dir="${basedir}/WEB-INF/" />
+			<fileset file="cas.xml" dir="${basedir}/WEB-INF/" />
+			<fileset file="sip.xml" dir="${basedir}/WEB-INF/" />
+			<fileset file="sas.xml" dir="${basedir}/WEB-INF/" />
+			<fileset file="soa.xml" dir="${basedir}/WEB-INF/" />
+
+		</copy>
+
+		<!-- Compile the Source Code -->
+
+		<javac srcdir="${app.src.dir}" destdir="${dir.build}/${PROJECT_NAME}/WEB-INF/classes" debug="true">
+
+			<include name="**/*.java" />
+			<include name="**/*.xml" />
+			<classpath refid="classpath" />
+
+		</javac>
+		
+
+		 
+		
+		<!-- Package the application into a .sar file -->
+
+		<jar jarfile="${dir.build}/${app.name}.sar" basedir="${dir.build}/${PROJECT_NAME}" />
+
+		<!--<delete dir="${app.build.dir}/WEB-INF"/> -->
+
+	</target>
+
+
+</project>

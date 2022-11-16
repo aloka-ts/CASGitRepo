@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Phelim O'Doherty">
+<META name="GENERATOR" content="IBM WebSphere Homepage Builder V4.0.0 for Linux">
+<title>package</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#FF0000" vlink="#800080" alink="#0000FF">This package contains the main interfaces
+required to represent JAIN TCAP protocol
+stacks, JAIN TCAP applications, as well as
+the Classes and Exceptions needed to send
+and receive JAIN TCAP primitives. The implementation
+of the two stack vendor specific interfaces,
+namely JainTcapStack and JainTcapProvider
+will be vendor specific, however the naming
+of these proprietory implementations is mandated.
+The class name of the vendor specific implementations
+must be the JAIN TCAP &quot;InterfaceName&quot;
+of which that class implements with &quot;Impl&quot;
+appended to the end of it. For example a
+vendor implementation of the JainTcapStack
+Interface must be called &quot;JainTcapStackImpl&quot;.
+Therefore once each vendor has implemented
+the JAIN TCAP API specification they must
+has two proprietary classes called JainTcapStackImpl.class
+and JainTcapProviderImpl.class. The characteristics
+of the three main interfaces are listed below:
+<ul>
+<li>
+<a href="JainTcapStack.html">JainTcapStack</a>: This Interface defines
+the minimial management properties that enables the JAIN TCAP API specification
+to operate independently of the JAIN OAM API Specification. Therefore the
+JainTcapStack Object is a representation of the main management functionality
+of the TCAP layer, as well as the central point for the creation of JainTcapProviders.
+From within the JainTcapStack Object it is possible for any application
+to get a list of JainTcapProvider objects that are attached to the underlying
+JainTcapStack by using the <a href="JainTcapStack.html#getProviderList()">getProviderList</a>
+method with the JainTcapStack Object. This method returns an ArrayList
+of JainTcapProvider references of which a JainTcapListener Object may register.
+Similiarly if the JainTcapStack Object has no JainTcapProviders attached
+to it, the JainTcapListener may use the <a href="JainTcapStack.html#createProvider()">createProvider method</a> to create a new JainTcapProvider object.<br>
+<br>
+<BR></li>
+
+<li>
+<a href="JainTcapProvider.html">JainTcapProvider</a>: This Interface defines the methods for
+  adding JainTcapListeners to, and removing
+  JainTcapListeners from a list of registered
+  JainTcapListeners held within the JainTcapProvider.
+  The JainTcapListener registers with a JainTcapProvider
+  with a <a href="JainAddress.html">User Address</a>, this is explained in more detail in the definition of a <a href="JainTcapListener.html">JainTcapListener</a>
+below. Other methods defined within the JainTcapProvider provide the functionality
+for a JainTcapListener to obtain a Dialogue with another JainTcapListener
+based on a Dialogue Id. The JainTcapProvider also defines the functionality
+to obtain Invoke Id's based on a specific Dialogue Id, that enables a JainTcapListener
+to Invoke operations on another JainTcapListener to which a Dialogue has
+been initiated. In order for communication to take place between a local
+JainTcapListener and a remote JainTcapListener, the local JainTcapListener
+must send a number of <a href="ComponentReqEvent.html">Component Request
+Events</a> interspersed by <a href="DialogueReqEvent.html">Dialogue Request
+Events</a> to it's associated JainTcapProvider. The
+  Jain User Address of the remote JainTcapListener
+  should be set in the appropriate Dialogue
+  Request Events.<br>
+<br>
+<BR></li>
+
+<li>
+<a href="JainTcapListener.html">JainTcapListener</a>: This Interface defines
+the methods required by all JainTcapListeners to receive and process Events
+that are emitted by a JainTcapProvider. A remote JainTcapProvider which
+receives Component Indications and a Dialogue Indication (which were sent
+by the local JainTcapListener) out of the TCAP layer of its SS7 protocol
+stack, encapsulates them as Events and passes them to the remote JainTcapListener.
+As mentioned above this occurs by Event passing, were the remote JainTcapProvider
+invokes the <a href="JainTcapListener.html#processComponentIndEvent(jain.protocol.ss7.tcap.ComponentIndEvent)">processComponentIndEvent</a>
+and <a href="JainTcapListener.html#processDialogueIndEvent(jain.protocol.ss7.tcap.DialogueIndEvent)">processDialogueIndEvent</a> as appropriate and passes the relevant Event
+  within the method to the remote JainTcapListener.
+  The same process occurs when the local JainTcapProvider
+  passes Indication Events (received from the
+  remote JainTcapListener) to the local JainTcapListener.<br>
+<BR><ul>
+<li>A JainTcapListener registers with a JainTcapProvider
+    to become an Event Listener of that JainTcapProvider,
+    it registers with an object reference to
+    itself and its Jain User Address. These two
+    values are stored by the JainTcapProvider
+    and the Jain User Address is used as a lookup
+    to obtain an object reference to a specific
+    JainTcapListener. The Jain User Address is
+    used for the routing of Tcap messages between
+    various local and remote JainTcapListeners.&nbsp;<br>
+<BR></li>
+
+<li>A JainTcapListener may have multiple Tcap
+    User Addresses, which enables it to operate
+    over a number of Sub-Systems, however the
+    JainTcapListener may only register with a
+    JainTcapProvider, with only one Tcap User
+    Address at any specific time. For example
+    if a specific JainTcapListenerImpl (application
+    developer specific implementation of the
+    JainTcapListener interface), which operates
+    over two Jain User Addresses, wants to register
+    itself for both tcap User Adresses with the
+    same JainTcapProviderImpl (vendor specific
+    implementation of the JainTcapProvider interface),
+    then the JainTcapListenerImpl will have to
+    invoke the <a href="JainTcapProvider.html#addJainTcapListener(jain.protocol.ss7.tcap.JainTcapListener, jain.address.JainAddress)">addJainTcapListener</a> method within the JainTcapProviderImpl twice,
+    once for each Jain User Address.&nbsp; <br></li>
+
+<li>The Jain User Address methods defined within
+    the JainTcapListener interface, provide the
+    functionality that enables the JainTcapListenerImpl
+    to manipulate and maintain the list of Tcap
+    User Addresses it supports.</li>
+</ul></li>
+
+
+</ul>
+<b>Note:</b>
+<p>&nbsp;The cardinality of the relationship
+between JainTcapListeners and JainTcapProviders
+is not restricted in any way. The restriction
+of this cardinality is dependent on a vendors
+specific implementation of the JAIN TCAP
+API, were the necessary exceptions are thrown
+if the specificied cardinality is violated.
+However it is mandated that there may only
+be one JainTcapStack Object for the TCAP
+Layer of an SS7 protocol stack.</body>
+</html>

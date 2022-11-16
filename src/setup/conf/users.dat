@@ -1,0 +1,15 @@
+# 
+# This is the user auth info file used by the JAAS login module,
+# "com.baypackets.ase.security.FileBasedLoginModule".  Each line in this
+# file is a CSV entry that indicates a specific user's login name, password,
+# and assigned roles.
+#
+# The following sample entry is for a user named, "APaccino" whose password
+# is "alpaccino1" and whose assigned roles are "Role1" and "Role2":
+#
+# APaccino,alpaccino1,Role1,Role2
+#
+
+RDeniro,robdeniro1,Role1,Role2,Role3
+CEastwood,clinteastwood1,Role1,Role4
+JNicholson,jacknicholson1

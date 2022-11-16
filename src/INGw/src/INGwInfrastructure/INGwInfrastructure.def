@@ -1,0 +1,10 @@
+include ../INGwCommonDefs/hss-sipstack.def
+
+DIRS += INGwInfraUtil               \
+        INGwInfraMsrMgr             \
+        INGwInfraStreamManager      \
+        INGwInfraParamRepository    \
+        INGwInfraResourceMonitor    \
+        INGwInfraTelnetIface        \
+        INGwInfraStatMgr            \
+        INGwInfraManager

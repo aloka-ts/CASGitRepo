@@ -1,0 +1,75 @@
+// "Copyright 2007 GENBAND, Inc.  All rights reserved."
+//*********************************************************************
+//********************************************************************
+//
+//     File:     INGwIfrMgrParamRepository.icc
+//
+//     Desc:     This file contains inline function for Param Repository
+//
+//     Author           Date          Description
+//    ---------------------------------------------------------
+//     Pankaj Bathwal  26/11/07     Initial Creation
+//********************************************************************
+#include <INGwInfraUtil/INGwIfrUtlGlbFunc.h>
+long
+INGwIfrPrParamRepository::getSelfId(void) const { return mlSelfId; }
+
+long
+INGwIfrPrParamRepository::getPeerId(void) const { return mlPeerId; }
+
+const std::string& 
+INGwIfrPrParamRepository::getSelfIdStr(void) const { return mSelfIdStr; }
+
+const std::string& 
+INGwIfrPrParamRepository::getSelfIPAddr(void) const { return mSelfIPAddr; }
+
+const std::string& 
+INGwIfrPrParamRepository::getPeerIdStr(void) const { return mPeerIdStr; }
+
+const std::string& 
+INGwIfrPrParamRepository::getPeerIPAddr(void) const { return mPeerIPAddr; }
+
+long
+INGwIfrPrParamRepository::getAgentPort(void) const { return mlAgentPort; }
+
+int
+INGwIfrPrParamRepository::getMsgDebugLevel(void) const { return miMsgDebugLevel; }
+
+int 
+INGwIfrPrParamRepository::getPeerStatus(char *triggerPoint) 
+{
+ //triggerPoint = ((NULL == triggerPoint)?"":triggerPoint);
+ //char lBuf[256] = {0,};
+ //g_getCurrentTime(lBuf);
+ //printf("\ngetPeerStatus [%s] <%d> <%s>\n",lBuf,mPeerStatus, triggerPoint);
+ //fflush(stdout);
+ return mPeerStatus; 
+}
+
+int 
+INGwIfrPrParamRepository::getPeerStartTime()
+{
+   return mPeerStartTime;
+}
+
+void 
+INGwIfrPrParamRepository::setPeerStatus(int status, int startTime, char *triggerPoint) 
+{
+   mPeerStatus = status; 
+   //triggerPoint = ((NULL == triggerPoint)?"":triggerPoint);
+   //char lBuf[256] = {0,};
+   //g_getCurrentTime(lBuf);
+   //printf("\nsetPeerStatus [%s] <%d> <%s>\n",lBuf,status , triggerPoint);
+   //fflush(stdout);
+
+   if(mPeerStatus == 0)
+   {
+      mPeerStartTime = 0;
+   }
+   else
+   {
+      mPeerStartTime = startTime;
+   }
+}
+
+// EOF INGwIfrMgrParamRepository.icc

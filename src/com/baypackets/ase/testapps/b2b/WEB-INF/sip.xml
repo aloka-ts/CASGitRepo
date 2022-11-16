@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!--
+ * Copyright Notice ============================================*
+ * This file contains proprietary information of BayPackets, Inc.
+ * Copying or reproduction without prior written approval is prohibited.
+ * Copyright (c) 2004-2006 =====================================
+ *
+-->
+
+
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+   "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+<sip-app>
+    
+  <distributable/>
+
+  <servlet>
+    <servlet-name>B2bServlet</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.b2b.B2bServlet</servlet-class>
+    <init-param>
+			<param-name>config-file</param-name>
+			<param-value>ASESubsystem/test-apps/b2b/b2b-config.xml</param-value>
+    </init-param>
+    <init-param>
+        <param-name>reload-if-modified</param-name>
+        <param-value>true</param-value>
+    </init-param>
+    <load-on-startup/>
+  </servlet>
+    
+  <servlet-mapping>
+    <servlet-name>B2bServlet</servlet-name>
+    <pattern>
+          <equal>
+            <var>request.method</var>
+            <value>INVITE</value>
+          </equal>
+    </pattern>
+  </servlet-mapping>
+
+  <session-config>
+    <session-timeout>3</session-timeout>
+  </session-config>
+  
+</sip-app>

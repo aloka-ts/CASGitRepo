@@ -1,0 +1,1332 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <!-- Definition for Agnity Application Service Control Logic -->
+      <!-- USERDEFINED INCLUDES -->
+	<!-- GENERATED - DO NOT EDIT on Thu Mar 13 07:49:38 2008 -->
+	<!-- /vob/Sipservlet/src/com/genband/ase/alc/MediaService/src/alcmltemp/MediaServiceALCInterfacesDECL_TYPE.xsd -->
+<xs:include schemaLocation="MediaServiceALCInterfaces.xsd"/>
+	<!-- GENERATED -->
+
+	<!-- GENERATED - DO NOT EDIT on Thu Mar 13 07:49:38 2008 -->
+	<!-- /vob/Sipservlet/src/com/genband/ase/alc/DatabaseService/src/alcmltemp/DatabaseServiceDECL_TYPE.xsd -->
+<xs:include schemaLocation="DatabaseServiceALCInterfaces.xsd"/>
+	<!-- GENERATED -->
+
+
+      <!-- USERDEFINES -->
+	<!-- GENERATED - DO NOT EDIT on Thu Mar 13 07:49:38 2008 -->
+	<!-- /vob/Sipservlet/src/com/genband/ase/alc/Expressions/src/alcmltemp/ExpressionsDECL_TYPE.xsd -->
+	<!-- Expressions Extensions for ALC - No help available -->
+	<xs:complexType name="logtype">
+		<xs:annotation>
+			<xs:documentation>Log a string to standard logging</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="level" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="value" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="create-timertype">
+		<xs:annotation>
+			<xs:documentation>Creates a timer on a new application session</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="handler" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="context-reference" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="recurrance-ms" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="delay-ms" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="cancel-timertype">
+		<xs:annotation>
+			<xs:documentation>Cancels a timer, given it&#44;s reference</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="context-reference" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="waittype">
+		<xs:annotation>
+			<xs:documentation>Waits for specified time</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="seconds" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="settype">
+		<xs:annotation>
+			<xs:documentation>Sets a context variable to given value or null</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="variable" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="equal-to" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="is-literal" type="xs:boolean" default="false" use="optional">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="define-localtype">
+		<xs:annotation>
+			<xs:documentation>Defines a local context variable to given value or null</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="variable" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="equal-to" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="is-literal" type="xs:boolean" default="false" use="optional">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="get-current-timetype">
+		<xs:annotation>
+			<xs:documentation>Defines a local context variable to given value or null</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="results-in" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="define-globaltype">
+		<xs:annotation>
+			<xs:documentation>Defines a global context variable to given value or null</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="variable" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="equal-to" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="is-literal" type="xs:boolean" default="false" use="optional">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="increment-countertype">
+		<xs:annotation>
+			<xs:documentation>Increments a counter variable in the current context.</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="variable" type="xs:string" use="required">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="comparetype">
+		<xs:annotation>
+			<xs:documentation>Compares two values</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="identifier" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="to-identifier" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="printtype">
+		<xs:annotation>
+			<xs:documentation>Display a string to standard output</xs:documentation>
+			<xs:appinfo>
+				<source>Expressions Extensions for ALC</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="value" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+
+	<!-- GENERATED -->
+
+	<!-- GENERATED - DO NOT EDIT on Thu Mar 13 07:49:38 2008 -->
+	<!-- /vob/Sipservlet/src/com/genband/ase/alc/MediaService/src/alcmltemp/MediaServiceALCInterfacesDECL_TYPE.xsd -->
+	<!-- Media Service ALC Extensions - No help available -->
+	<xs:complexType name="connect-to-mediaservertype">
+		<xs:annotation>
+			<xs:documentation>Connects to a media server</xs:documentation>
+			<xs:appinfo>
+				<source>Media Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="dial-out-to-mediaservertype">
+		<xs:annotation>
+			<xs:documentation>Connects to a media server</xs:documentation>
+			<xs:appinfo>
+				<source>Media Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="to-address" type="xs:string" use="optional">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="disconnect-from-mediaservertype">
+		<xs:annotation>
+			<xs:documentation>Disconnects from a media server</xs:documentation>
+			<xs:appinfo>
+				<source>Media Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="add-to-playlisttype">
+		<xs:annotation>
+			<xs:documentation>adds variable announement components to a play list for future access on a connected media server</xs:documentation>
+			<xs:appinfo>
+				<source>Media Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="media-specification-list" type="media-specification-listtype" minOccurs="0" maxOccurs="1">
+			</xs:element>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="clear-current-playlisttype">
+		<xs:annotation>
+			<xs:documentation>clears playlist.<br/></xs:documentation>
+			<xs:appinfo>
+				<source>Media Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="playtype">
+		<xs:annotation>
+			<xs:documentation>Plays a prompt on a connected media server.<br/>Example:	play prompt-uri="file:////foo.bar.wav"</xs:documentation>
+			<xs:appinfo>
+				<source>Media Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="media-specification-list" type="media-specification-listtype" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>A play list, that allows the user to play multiple prompts and/or variable announcements</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="prompt-uri" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>The URI prompt to be played on the connected media server.<br/>If this is not present the current (or included) play list<br/>will be used.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="specification" type="xs:string" default="Default" use="optional">
+			<xs:annotation>
+				<xs:documentation>Media Specification that governs the presentation to the media server.<br/>Most all applications can use the default values (Thus ignoring this attibute).<br/>These values are contained in the ASIML distribution file as MSMLProfiles.xml<br/>and MSCMLProfiles.xml<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="use-current-playlist" type="xs:boolean" default="true" use="optional">
+			<xs:annotation>
+				<xs:documentation>Indicates whether to use current play list.  If set to false, the current play<br/>list remains intact/unchanged.<br/>If the current play list is used, the URI components that are additionally<br/>specified in this action will be amended at the end of the list prior to execution.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="clear-current-playlist" type="xs:boolean" default="true" use="optional">
+			<xs:annotation>
+				<xs:documentation>Indicates whether to clear current play list.  If set to false, the current play<br/>list remains intact but can be used. NOTE: if you are not using the current play list,<br/>use-current-play-list = false, then this value is always assumed false.<br/>If the current play list is used, the URI components that are additionally<br/>specified in this action will be amended at the end of the list prior to execution.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="play-collecttype">
+		<xs:annotation>
+			<xs:documentation>plays a prompt and performs a digit collection, given a uri and an optional specifiction attribute</xs:documentation>
+			<xs:appinfo>
+				<source>Media Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="media-specification-list" type="media-specification-listtype" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>optional play list</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="prompt-uri" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>optional URIPrompt, if not present the current (or included) play list is used.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="specification" type="xs:string" default="Default" use="optional">
+			<xs:annotation>
+				<xs:documentation>optional Specification, these govern the presentation to the media server.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="use-current-playlist" type="xs:boolean" default="true" use="optional">
+			<xs:annotation>
+				<xs:documentation>optional boolean, indicates whether to use current play list.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="clear-current-playlist" type="xs:boolean" default="true" use="optional">
+			<xs:annotation>
+				<xs:documentation>Indicates whether to clear current play list.  If set to false, the current play<br/>list remains intact but can be used.<br/>If the current play list is used, the URI components that are additionally<br/>specified in this action will be amended at the end of the list prior to execution.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="play-recordtype">
+		<xs:annotation>
+			<xs:documentation>plays a prompt and records audio, given a uri and an optional specifiction attribute</xs:documentation>
+			<xs:appinfo>
+				<source>Media Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="media-specification-list" type="media-specification-listtype" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>optional play list</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="prompt-uri" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>optional URIPrompt, if not present the current (or included) play list is used.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="destination-uri" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>mandatory URI File Location, destination for the recording.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="specification" type="xs:string" default="Default" use="optional">
+			<xs:annotation>
+				<xs:documentation>optional Specification, these govern the presentation to the media server.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="use-current-playlist" type="xs:boolean" default="true" use="optional">
+			<xs:annotation>
+				<xs:documentation>optional boolean, indicates whether to use current play list.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="clear-current-playlist" type="xs:boolean" default="true" use="optional">
+			<xs:annotation>
+				<xs:documentation>Indicates whether to clear current play list.  If set to false, the current play<br/>list remains intact but can be used.<br/>If the current play list is used, the URI components that are additionally<br/>specified in this action will be amended at the end of the list prior to execution.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+
+	<!-- GENERATED -->
+
+	<!-- GENERATED - DO NOT EDIT on Thu Mar 13 07:49:38 2008 -->
+	<!-- /vob/Sipservlet/src/com/genband/ase/alc/DatabaseService/src/alcmltemp/DatabaseServiceDECL_TYPE.xsd -->
+	<!-- Database Service ALC Extensions - No help available -->
+	<xs:complexType name="database-configtype">
+		<xs:annotation>
+			<xs:documentation>DatabaseConfig<br/></xs:documentation>
+			<xs:appinfo>
+				<source>Database Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="database-url" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>Database URL.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="database-driver" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Database Driver.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="username" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>Database Username.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="password" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>Database Password.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="execute-querytype">
+		<xs:annotation>
+			<xs:documentation>ExecuteQuery<br/></xs:documentation>
+			<xs:appinfo>
+				<source>Database Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="query-specification" type="query-specificationtype" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>list of qualifiers</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="statement" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>This statement.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="results-in" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Optional place to store results.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="execute-updatetype">
+		<xs:annotation>
+			<xs:documentation>ExecuteUpdate<br/></xs:documentation>
+			<xs:appinfo>
+				<source>Database Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="update" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>This statement... if statement is not present.<br/></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="query-specification" type="query-specificationtype" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>list of qualifiers</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="statement" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>This statement.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="commit-work" type="xs:boolean" default="true" use="optional">
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="get-from-resultstype">
+		<xs:annotation>
+			<xs:documentation>Gets information from a Database Query.</xs:documentation>
+			<xs:appinfo>
+				<source>Database Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="column" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>ColumnName.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="results-from" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Where to get results from.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="results-in" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Where to put results into.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="next-rowtype">
+		<xs:annotation>
+			<xs:documentation>Gets next row from a Database Query.</xs:documentation>
+			<xs:appinfo>
+				<source>Database Service ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="results-from" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Where to get results from.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+
+	<!-- GENERATED -->
+
+	<!-- GENERATED - DO NOT EDIT on Thu Mar 13 07:49:38 2008 -->
+	<!-- /vob/Sipservlet/src/com/genband/ase/alc/ServiceDefinitionApp/src/alcmltemp/SipServletALCDECL_TYPE.xsd -->
+	<!-- Sip Servlet ALC Extensions - No help available -->
+	<xs:complexType name="get-from-usertype">
+		<xs:annotation>
+			<xs:documentation>gets user portion of From Header Address in Sip request<br/></xs:documentation>
+			<xs:appinfo>
+				<source>Sip Servlet ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="results-in" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>place to store results.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="get-to-usertype">
+		<xs:annotation>
+			<xs:documentation>gets user portion of To Header Address in Sip request<br/></xs:documentation>
+			<xs:appinfo>
+				<source>Sip Servlet ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="results-in" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>place to store results.<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="create-responsetype">
+		<xs:annotation>
+			<xs:documentation>creates and sends response to Sip request<br/></xs:documentation>
+			<xs:appinfo>
+				<source>Sip Servlet ALC Extensions</source>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0"/>
+			<xs:element name="next-action" minOccurs="0" type="xs:string"/>
+			<xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="message" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>number of sip message<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="text" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>text description<br/></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="asynch" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+
+	<!-- GENERATED -->
+
+
+      <!--BUILT-IN-->   
+      <!-- ************************************************************************************ -->
+      <!-- Type Definition: resultstype -->
+      <!-- **************************** -->
+      <xs:complexType name="resultstype">                  
+            <xs:annotation>
+                  <xs:documentation>This element defines the actions to be taken upon another action (parent element) reaching a conclusion</xs:documentation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                  <xs:element name="input" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                              <xs:documentation>This element defines an alternative context for results. The default input for results bodies is governed by the action definition and is outside of the scope of this schema definition.</xs:documentation>
+                        </xs:annotation>
+                  </xs:element>
+            
+                  <!-- the actions of this result  -->
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="condition" maxOccurs="unbounded" type="conditiontype" minOccurs="0"/>
+                        <xs:element name="loop" type="looptype"/>
+                        <xs:element name="regex" maxOccurs="unbounded" type="regextype" minOccurs="0"/>
+                        <xs:element name="execute" type="executetype"/>
+                        <xs:element name="label" type="labeltype"/>
+                        <xs:element name="next" type="nexttype"/>
+                        <xs:element name="last" type="lasttype"/>
+                        <xs:group ref="UserDefinedFunctions"/>
+                  </xs:choice>
+                  
+                  <xs:element name="next-action" type="xs:string">                        
+                        <xs:annotation>
+                              <xs:documentation>Indicates the next action (by label) to be executed in the current execution flow.</xs:documentation>
+                        </xs:annotation>
+                  </xs:element>
+            </xs:sequence>
+            <xs:attribute name="value" type="xs:string" use="required">
+                  <xs:annotation>
+                        <xs:documentation>This attribute defines a results value.  The value returned by the parent action will be tested against this key; a match will result in execution of the results that follow. A regular expression can be contained in this key.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+      </xs:complexType>
+      <!-- **************************** -->
+
+      <!-- ************************************************************************************ -->
+      <!-- Type Definition: matchtype -->
+      <!-- A conditiontype element which defines records to be compared for matchs against an OnInput -->
+      <!-- attribute... and the subsequents actions that should be executed -->
+      <!-- ************************************************************************************ -->
+      <xs:complexType name="matchtype">
+            <xs:annotation>
+                  <xs:documentation>These elements appear in condition elements.  They encapsulate actions to be taken upon input matches.</xs:documentation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+
+            <xs:sequence>
+                  <!-- the actions of this loop ... could be more loops -->
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="condition" maxOccurs="unbounded" type="conditiontype" minOccurs="0"/>
+                        <xs:element name="loop" type="looptype"/>
+                        <xs:element name="regex" maxOccurs="unbounded" type="regextype" minOccurs="0"/>
+                        <xs:element name="execute" type="executetype"/>
+                        <xs:element name="label" type="labeltype"/>
+                        <xs:element name="next" type="nexttype"/>
+                        <xs:element name="last" type="lasttype"/>
+                        <xs:group ref="UserDefinedFunctions"/>
+                  </xs:choice>
+                  <xs:element name="next-action" type="xs:string">                        
+                        <xs:annotation>
+                              <xs:documentation>Indicates the next action (by label) to be executed in the current execution flow.</xs:documentation>
+                        </xs:annotation>
+                  </xs:element>
+            </xs:sequence>
+
+            <xs:attribute name="value" type="xs:string" use="required">
+                  <xs:annotation>
+                        <xs:documentation>This attribtue defines the value for this match. The value returned by the parent action will be tested against this value; a match will result in execution of the results that follow.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+
+      </xs:complexType>
+      <!-- **************************** -->
+      
+      <xs:complexType name="elsetype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                  <!-- the actions of this loop ... could be more loops -->
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="condition" maxOccurs="unbounded" type="conditiontype" minOccurs="0"/>
+                        <xs:element name="loop" type="looptype"/>
+                        <xs:element name="regex" maxOccurs="unbounded" type="regextype" minOccurs="0"/>
+                        <xs:element name="execute" type="executetype"/>
+                        <xs:element name="label" type="labeltype"/>
+                        <xs:element name="next" type="nexttype"/>
+                        <xs:element name="last" type="lasttype"/>
+                        <xs:element name="next-action" type="xs:string"/>
+                        <xs:group ref="UserDefinedFunctions"/>
+                  </xs:choice>
+            </xs:sequence>                
+      </xs:complexType>
+      <xs:complexType name="thentype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                  <!-- the actions of this loop ... could be more loops -->
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="condition" maxOccurs="unbounded" type="conditiontype" minOccurs="0"/>
+                        <xs:element name="loop" type="looptype"/>
+                        <xs:element name="regex" maxOccurs="unbounded" type="regextype" minOccurs="0"/>
+                        <xs:element name="execute" type="executetype"/>
+                        <xs:element name="label" type="labeltype"/>
+                        <xs:element name="next" type="nexttype"/>
+                        <xs:element name="last" type="lasttype"/>
+                        <xs:element name="next-action" type="xs:string"/>
+                        <xs:group ref="UserDefinedFunctions"/>
+                  </xs:choice>
+            </xs:sequence>                
+      </xs:complexType>
+      
+      <xs:complexType name="default-actiontype">
+            <xs:annotation>
+                  <xs:documentation>Indicates the default action to be taken if a match is not found.</xs:documentation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                  <xs:choice minOccurs="1" maxOccurs="unbounded">
+                        <xs:annotation>
+                              <xs:documentation>The following elements are actions to be executed by the Application Logic Controller in the sequence that they appear in the instance. They do not have an enveloping xml node.</xs:documentation>
+                        </xs:annotation>
+                        <xs:element name="condition" maxOccurs="unbounded" type="conditiontype" minOccurs="0"/>
+                        <xs:element name="loop" type="looptype"/>
+                        <xs:element name="regex" maxOccurs="unbounded" type="regextype" minOccurs="0"/>
+                        <xs:element name="next-action" type="xs:string">                        
+                              <xs:annotation>
+                                    <xs:documentation>Indicates the next action (by label) to be executed in the current execution flow.</xs:documentation>
+                              </xs:annotation>
+                        </xs:element>
+                        <xs:element name="execute" type="executetype"/>
+                        <xs:element name="label" type="labeltype"/>
+                        <xs:element name="next" type="nexttype"/>
+                        <xs:element name="last" type="lasttype"/>
+                        <xs:group ref="UserDefinedFunctions"/>
+                  </xs:choice>                        
+            </xs:sequence>
+      </xs:complexType>
+
+      <!-- ************************************************************************************ -->
+      <!-- Type Definition: conditiontype -->
+      <!-- A conditiontype element will define conditions to be met and the subsequents actions -->
+      <!-- ************************************************************************************ -->
+      <xs:complexType name="conditiontype">
+            <xs:annotation>
+                  <xs:documentation>Allows execution of subsequent actions based on inputs.</xs:documentation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                  <!-- the actions of this loop ... could be more loops -->
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="condition" maxOccurs="unbounded" type="conditiontype" minOccurs="0"/>
+                        <xs:element name="loop" type="looptype"/>
+                        <xs:element name="regex" maxOccurs="unbounded" type="regextype" minOccurs="0"/>
+                        <xs:element name="execute" type="executetype"/>
+                        <xs:element name="label" type="labeltype"/>
+                        <xs:element name="next" type="nexttype"/>
+                        <xs:element name="last" type="lasttype"/>
+                        <xs:element name="next-action" type="xs:string"/>
+                        <xs:group ref="UserDefinedFunctions"/>
+                  </xs:choice>
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="match" type="matchtype"/>
+                  </xs:choice>
+                  <xs:element name="then" type="thentype">
+                        <xs:annotation>
+                              <xs:documentation>Indicates the actions to be taken if an If clause is met.</xs:documentation>
+                        </xs:annotation>
+                  </xs:element>
+                  <xs:element name="else" type="elsetype">
+                        <xs:annotation>
+                              <xs:documentation>Indicates the actions to be taken if no match is found OR the if clause was NOT met.</xs:documentation>
+                        </xs:annotation>
+                  </xs:element>
+                  <xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1">
+                  </xs:element>                       
+            </xs:sequence>
+            
+            <xs:attribute name="if" type="xs:string" use="optional">
+                  <xs:annotation>
+                        <xs:documentation>String that represents the value (be it literal or in context) that represents the input for consideration in this condition expression</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+
+            <xs:attribute name="equal-to" type="xs:string" use="optional">
+                  <xs:annotation>
+                        <xs:documentation>The variable in the if clause should be equal to the value here for the contained actions to be executed.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+            
+            <xs:attribute name="not-equal-to" type="xs:string" use="optional">
+                  <xs:annotation>
+                        <xs:documentation>The variable in the if clause should be not equal to the value here for the contained actions to be executed.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+
+            <xs:attribute name="on-input" type="xs:string" use="optional">
+                  <xs:annotation>
+                        <xs:documentation>This string dictates the the value to be considered in contained match elements.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+      
+            <xs:attribute name="label" type="xs:string" use="optional">
+                  <xs:annotation>
+                        <xs:documentation>Indicates a label for this action.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+            
+      </xs:complexType>
+      <!-- ************************************************************************************ -->
+
+      <xs:complexType name="regextype">
+            <xs:annotation>
+                  <xs:documentation>Allows for regular expression functionality.</xs:documentation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+
+            <xs:sequence>
+                  <xs:element name="pattern" type="xs:string" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                              <xs:documentation>Defines the pattern to be applied to input.</xs:documentation>
+                        </xs:annotation>
+                  </xs:element>
+            </xs:sequence>
+
+            <xs:attribute name="applied-to" type="xs:string" use="required">
+                  <xs:annotation>
+                        <xs:documentation>Defines the input for use with pattern.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+            
+            <xs:attribute name="results-in" type="xs:string" use="optional">
+                  <xs:annotation>
+                        <xs:documentation>Indicates a context variable to place the results of the pattern match.  By default, uses the first sub-match in pattern</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+            
+            <!-- Attribute "label" is an optional string that represents the name -->
+            <xs:attribute name="label" type="xs:string" use="optional">
+                  <xs:annotation>
+                        <xs:documentation>Indicates a label for this action.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+            
+      </xs:complexType>
+            
+
+      <!-- ************************************************************************************ -->
+      <!-- Type Definition: looptype -->
+      <!-- A looptype constitutes the loop construct, the actions contained are executed until conditions -->
+      <!-- and/or counts are met -->
+      <!-- ************************************************************************************ -->
+      <xs:complexType name="looptype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                  <!-- the actions of this loop ... could be more loops -->
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="condition" maxOccurs="unbounded" type="conditiontype" minOccurs="0"/>
+                        <xs:element name="loop" type="looptype"/>
+                        <xs:element name="regex" maxOccurs="unbounded" type="regextype" minOccurs="0"/>
+                        <xs:element name="next-action" type="xs:string">                        
+                              <xs:annotation>
+                                    <xs:documentation>Indicates the next action (by label) to be executed in the current execution flow.</xs:documentation>
+                              </xs:annotation>
+                        </xs:element>
+                        <xs:element name="execute" type="executetype"/>
+                        <xs:element name="label" type="labeltype"/>
+                        <xs:element name="next" type="nexttype"/>
+                        <xs:element name="last" type="lasttype"/>
+                        <xs:group ref="UserDefinedFunctions"/>
+                  </xs:choice>
+            </xs:sequence>
+            
+            <xs:attribute name="count" type="xs:string">
+                  <xs:annotation>
+                        <xs:documentation>Indicates the number of times this loop is executed.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+
+            <xs:attribute name="label" type="xs:string" use="optional">
+                  <xs:annotation>
+                        <xs:documentation>Indicates a label for this action.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+            
+      </xs:complexType>
+
+      <xs:complexType name="listtype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                  <xs:element name="item" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="attributetype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="value" type="xs:string" use="optional"/>
+            <xs:attribute name="reference" type="xs:boolean" default="false" use="optional"/>
+      </xs:complexType>
+
+      <xs:complexType name="nexttype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+      </xs:complexType>
+
+      <xs:complexType name="lasttype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+      </xs:complexType>
+      
+      <xs:complexType name="executetype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                  <!-- Element "Attribute" is an optional list of parameters that will be passed to the service method -->
+                  <xs:element name="attribute" type="attributetype" minOccurs="0" maxOccurs="unbounded"/>
+                  <xs:element name="results" maxOccurs="unbounded" type="resultstype" minOccurs="0">
+                        <xs:annotation>
+                              <xs:documentation>Element "results" is a list of resultant actions to take after the method completes if certain criteria are met by the method.</xs:documentation>
+                        </xs:annotation>
+                  </xs:element>
+                  <xs:element name="next-action" type="xs:string">                        
+                        <xs:annotation>
+                              <xs:documentation>Indicates the next action (by label) to be executed in the current execution flow.</xs:documentation>
+                        </xs:annotation>
+                  </xs:element>
+                  <xs:element name="default-action" type="default-actiontype" minOccurs="0" maxOccurs="1">
+                  </xs:element>                       
+            </xs:sequence>
+            
+            <xs:attribute name="name" type="xs:string" use="required">
+                  <xs:annotation>
+                        <xs:documentation>Attribute "Name" is a parameter that identifies the name of the function to be executed given the parameters set aside above.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>               
+
+            <xs:attribute name="label" type="xs:string" use="optional">
+                  <xs:annotation>
+                        <xs:documentation>Attribute "label" is a label that can be used in subsequent logic to access this action.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+      </xs:complexType>
+      
+      <xs:complexType name="labeltype">
+            <xs:annotation>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:attribute name="name" type="xs:string" use="required">
+                  <xs:annotation>
+                        <xs:documentation>Attribute "name" is a label that can be used in subsequent logic to access this action.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+      </xs:complexType>
+
+      <xs:complexType name="includetype">
+            <xs:attribute name="service-location" type="xs:string" use="required">
+            </xs:attribute>
+      </xs:complexType>
+
+      <!-- ************************************************************************************ -->
+      <!-- Type Definition: servicetype -->
+      <!-- servicetype defines the service logic flow  -->
+      <!-- ************************************************************************************ -->
+      <xs:complexType name="servicetype">
+            <xs:annotation>
+                  <xs:documentation>This is the main element for the Application Service Control Markup Languange.  It encapsulate a series of actions for susbequent execution via the Agnity Application Logic Controller.</xs:documentation>
+                  <xs:appinfo>      
+                        <html><body><div style="font-weight: bold; font-size: 12pt; padding: 60 0 0 40;">Example:</div>
+                                    <div style="font-size: 10pt;"> 
+                                          <div style="padding: 0 0 0 60;">&lt;application-logic-control&gt;</div>
+                                                <div style="padding: 0 0 0 100;">&lt;service name="helloWorld"&gt;</div>
+                                                <div style="padding: 0 0 0 140;">&lt;set variable="ATestForYou" equal-to="Hello World"/&gt;</div>
+                                                <div style="padding: 0 0 0 140;">&lt;print value="The canonical ${ATestForYou} example"/&gt;</div>
+                                                <div style="padding: 0 0 0 100;">&lt;/service&gt;</div>
+                                          <div style="padding: 0 0 0 60;">&lt;/application-logic-control&gt;</div>
+                                    </div>                                          
+                        </body></html>
+                  </xs:appinfo>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                  <xs:element name="attribute" type="attributetype" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                              <xs:documentation>Designates variables that can be passed by a calling ALCML instance using the execute element.  Otherwise, they are ignored.</xs:documentation>
+                        </xs:annotation>
+                  </xs:element>
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                              <xs:documentation>The following elements are actions to be executed by the Application Logic Controller in the sequence that they appear in the instance. They do not have an enveloping xml node.</xs:documentation>
+                        </xs:annotation>
+                        <xs:element name="condition" maxOccurs="unbounded" type="conditiontype" minOccurs="0"/>
+                        <xs:element name="loop" type="looptype"/>
+                        <xs:element name="regex" maxOccurs="unbounded" type="regextype" minOccurs="0"/>
+                        <xs:element name="next-action" type="xs:string">                        
+                              <xs:annotation>
+                                    <xs:documentation>Indicates the next action (by label) to be executed in the current execution flow.</xs:documentation>
+                              </xs:annotation>
+                        </xs:element>
+                        <xs:element name="execute" type="executetype"/>
+                        <xs:element name="label" type="labeltype"/>
+                        <xs:element name="next" type="nexttype"/>
+                        <xs:element name="last" type="lasttype"/>
+                        <xs:group ref="UserDefinedFunctions"/>
+                  </xs:choice>
+            </xs:sequence>
+
+            <xs:attribute name="name" type="xs:string" use="required">
+                  <xs:annotation>
+                        <xs:documentation>A name to identify the service logic contained within to be later referenced by other components.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+            
+            <xs:attribute name="start-action" type="xs:string" use="optional">
+                  <xs:annotation>
+                        <xs:documentation>An attribute which identifies the label name of the starting point for execution. This is deprecated as of version 1.4.0.1.</xs:documentation>
+                  </xs:annotation>
+            </xs:attribute>
+      </xs:complexType>
+
+      <xs:complexType name="application-logic-controltype">
+            <xs:annotation>
+                  <xs:documentation>This is the root element for the Application Logic Control Markup Languange. It contains a set (1-n) of named service elements.</xs:documentation>
+                  <xs:appinfo>      
+                        <html><body><div style="font-weight: bold; font-size: 12pt; padding: 60 0 0 40;">Example:</div>
+                                    <div style="font-size: 10pt;"> 
+                                          <div style="padding: 0 0 0 60;">&lt;application-logic-control&gt;</div>
+                                                <div style="padding: 0 0 0 100;">&lt;service ... &gt;</div>
+                                                <div style="padding: 0 0 0 100;">&lt;/service&gt;</div>
+                                                <div style="padding: 0 0 0 100;">&lt;service .... &gt;</div>
+                                                <div style="padding: 0 0 0 100;">&lt;/service&gt;</div>
+                                                <div style="padding: 0 0 0 100;">...</div>
+                                          <div style="padding: 0 0 0 60;">&lt;/application-logic-control&gt;</div>
+                                    </div>
+                        </body></html>
+                  </xs:appinfo>
+                  <xs:appinfo>
+                        <source>ALC Built-In Element</source>
+                  </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                  <xs:choice minOccurs="1" maxOccurs="unbounded">
+                        <xs:element name="service" type="servicetype"/>
+                        <xs:element name="include" type="includetype"/>
+                  </xs:choice>
+            </xs:sequence>
+      </xs:complexType>
+
+      <xs:group name="UserDefinedFunctions">
+            <xs:sequence>
+            <!-- PREPROCESS -->
+<!-- GENERATED - DO NOT EDIT on Thu Mar 13 07:49:38 2008 -->
+<!-- /vob/Sipservlet/src/com/genband/ase/alc/Expressions/src/alcmltemp/ExpressionsDECL.xsd -->
+			<!-- Expressions Extensions for ALC - No help available -->
+			<xs:element name="log" maxOccurs="unbounded" type="logtype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Log a string to standard logging</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="create-timer" maxOccurs="unbounded" type="create-timertype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Creates a timer on a new application session</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cancel-timer" maxOccurs="unbounded" type="cancel-timertype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Cancels a timer, given it&#44;s reference</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="wait" maxOccurs="unbounded" type="waittype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Waits for specified time</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="set" maxOccurs="unbounded" type="settype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sets a context variable to given value or null</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="define-local" maxOccurs="unbounded" type="define-localtype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Defines a local context variable to given value or null</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="get-current-time" maxOccurs="unbounded" type="get-current-timetype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Defines a local context variable to given value or null</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="define-global" maxOccurs="unbounded" type="define-globaltype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Defines a global context variable to given value or null</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="increment-counter" maxOccurs="unbounded" type="increment-countertype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Increments a counter variable in the current context.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="compare" maxOccurs="unbounded" type="comparetype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Compares two values</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="print" maxOccurs="unbounded" type="printtype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Display a string to standard output</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+<!-- GENERATED -->
+
+<!-- GENERATED - DO NOT EDIT on Thu Mar 13 07:49:38 2008 -->
+<!-- /vob/Sipservlet/src/com/genband/ase/alc/MediaService/src/alcmltemp/MediaServiceALCInterfacesDECL.xsd -->
+			<!-- Media Service ALC Extensions - No help available -->
+			<xs:element name="connect-to-mediaserver" maxOccurs="unbounded" type="connect-to-mediaservertype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Connects to a media server</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dial-out-to-mediaserver" maxOccurs="unbounded" type="dial-out-to-mediaservertype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Connects to a media server</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="disconnect-from-mediaserver" maxOccurs="unbounded" type="disconnect-from-mediaservertype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Disconnects from a media server</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="add-to-playlist" maxOccurs="unbounded" type="add-to-playlisttype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>adds variable announement components to a play list for future access on a connected media server</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="clear-current-playlist" maxOccurs="unbounded" type="clear-current-playlisttype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>clears playlist.<br/></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="play" maxOccurs="unbounded" type="playtype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Plays a prompt on a connected media server.<br/>Example:	play prompt-uri="file:////foo.bar.wav"</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="play-collect" maxOccurs="unbounded" type="play-collecttype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>plays a prompt and performs a digit collection, given a uri and an optional specifiction attribute</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="play-record" maxOccurs="unbounded" type="play-recordtype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>plays a prompt and records audio, given a uri and an optional specifiction attribute</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+<!-- GENERATED -->
+
+<!-- GENERATED - DO NOT EDIT on Thu Mar 13 07:49:38 2008 -->
+<!-- /vob/Sipservlet/src/com/genband/ase/alc/DatabaseService/src/alcmltemp/DatabaseServiceDECL.xsd -->
+			<!-- Database Service ALC Extensions - No help available -->
+			<xs:element name="database-config" maxOccurs="unbounded" type="database-configtype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>DatabaseConfig<br/></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="execute-query" maxOccurs="unbounded" type="execute-querytype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>ExecuteQuery<br/></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="execute-update" maxOccurs="unbounded" type="execute-updatetype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>ExecuteUpdate<br/></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="get-from-results" maxOccurs="unbounded" type="get-from-resultstype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Gets information from a Database Query.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="next-row" maxOccurs="unbounded" type="next-rowtype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Gets next row from a Database Query.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+<!-- GENERATED -->
+
+<!-- GENERATED - DO NOT EDIT on Thu Mar 13 07:49:38 2008 -->
+<!-- /vob/Sipservlet/src/com/genband/ase/alc/ServiceDefinitionApp/src/alcmltemp/SipServletALCDECL.xsd -->
+			<!-- Sip Servlet ALC Extensions - No help available -->
+			<xs:element name="get-from-user" maxOccurs="unbounded" type="get-from-usertype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>gets user portion of From Header Address in Sip request<br/></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="get-to-user" maxOccurs="unbounded" type="get-to-usertype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>gets user portion of To Header Address in Sip request<br/></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="create-response" maxOccurs="unbounded" type="create-responsetype" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>creates and sends response to Sip request<br/></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+<!-- GENERATED -->
+
+            </xs:sequence>
+      </xs:group>
+      
+      <xs:element name="application-logic-control" type="application-logic-controltype">
+      </xs:element>
+</xs:schema> 
+
+
+

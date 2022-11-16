@@ -1,0 +1,150 @@
+<xhtml:style type="text/css">
+    @namespace xf url("http://www.w3.org/2002/xforms");
+    @namespace xhtml url("http://www.w3.org/1999/xhtml");
+
+#action-buttons {
+        float: right;
+        width: 280px;
+}
+
+group:enabled
+{
+        display:inline;
+}
+
+group[ref="NodeOptions"]:enabled output[id="indent"]
+{
+        letter-spacing: 0.5cm;
+}
+
+#ItemEditButton button 
+{
+        font-size: 8px;
+        background:url(AlienDb3.gif) no-repeat; 
+}
+
+group[id="ContainerDisplayDescendants"]:enabled trigger button 
+{
+        white-space: nowrap;    
+        color:#96D030;
+        background:url(layout.gif) no-repeat; 
+        padding:0px 0px 0px 18px;
+        display: inline;
+}
+
+#ContainerDisplayDescendants group:enabled
+{
+        white-space: nowrap;
+        display: inline;
+}
+
+#ContainerDisplayAll group:enabled
+{
+        white-space: nowrap;
+        display: inline;
+}
+
+#ContainerDisplayAll output[id="indent"]
+{
+        letter-spacing: 0.5cm;
+        display: inline;
+}
+
+#Editable:enabled 
+{
+        display: inline;
+}
+
+group[id="ContainerDisplayDescendants"]:enabled     
+{
+        display: inline;
+}
+
+group[id="ContainerDisplayAll"]:enabled     
+{
+        display: inline;
+}
+
+group[id="begOfContainer"] 
+{
+        white-space: nowrap
+}
+
+group[id="begOfContainer"] output[id="indent"]
+{
+        letter-spacing: 0.5cm;
+}
+
+group[id="begOfContainer"] output[id="begOfContainer"]
+{
+        text-decoration: line-through;
+}
+
+group[id="endOfContainer"] 
+{
+        white-space: nowrap
+}
+
+group[id="endOfContainer"] output[id="indent"]
+{
+        letter-spacing: 0.5cm;
+}
+
+group[id="endOfContainer"] output[id="endOfContainer"]
+{
+        text-decoration: line-through;
+}
+
+#ItemValue:enabled
+{
+        display: inline;
+}
+
+group[ref="ItemValue"] 
+{
+        white-space: nowrap;
+}
+
+group[ref="ItemValue"] output[id="indent"]
+{
+        white-space: nowrap;
+        letter-spacing: 0.5cm;
+}
+
+group[ref="ItemValue"] group[ref="Expression"]
+{
+        white-space: nowrap;
+}
+
+group[ref="ItemValue"] trigger[id="ItemEditButton"]
+{
+        white-space: nowrap;
+        padding:0px 0px 0px 18px;
+}
+
+group[ref="ItemValue"] output[ref="Expression/@Set"] label
+{
+        white-space: nowrap;
+        color: #50ADEA;
+}
+
+#ItemLabels:enabled
+{
+        font-size:9px;
+        color: teal;
+        display: block;
+}
+
+#ContainerLabels:enabled
+{
+        font-size:9px;
+        color: teal;
+        display: block; 
+}
+
+#Edits
+{
+        color: red;
+}
+
+</xhtml:style>

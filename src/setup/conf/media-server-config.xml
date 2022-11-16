@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE media-server-config
+	PUBLIC "-//Baypackets SIP Application Server//DTD Media Server Config//EN"
+	"http://www.baypackets.com/dtd/media-server-config.dtd">
+
+<!--
+	This file contains the meta data on all media servers that are to be 
+	provisioned with the platform and made available for use by SIP Servlet 
+	applications.
+-->
+
+<media-server-config>
+
+	<!--
+		The following demonstrates how to provision 2 media servers with 
+		the platform.  A media server's capability can either be expressed as a 
+		string representation of one of the public static constants defined
+		in the MediaServer interface or it can be an integer value representing
+		a bit set.
+		<is-remote> is optional element. Its value can be 0 or 1 (by default 0 i.e. local). 
+		It tells that whether media server is locally configured or remotely configured.
+	
+	 <media-server>
+                <id>MediaServer01</id>
+                <vendor-name>Convedea</vendor-name>
+                <ip-address>192.168.8.61</ip-address>
+                <port>5060</port>
+                <default-state>ACTIVE</default-state>
+                <heartbeaturi>sip:ivr@192.168.8.61:5060</heartbeaturi>
+                <adaptor-class-name>com.baypackets.ase.msadaptor.convedia.MsmlMomlAdaptor</adaptor-class-name>
+                <announcement-base-uri>file:////export/192.168.8.61</announcement-base-uri>
+                <recording-base-uri>file:////export/192.168.8.61</recording-base-uri>
+                <capabilities>
+                        <capability>CAPABILITY_VAR_ANNOUNCEMENT</capability>
+                        <capability>CAPABILITY_DIGIT_COLLECTION</capability>
+                        <capability>CAPABILITY_AUDIO_CONFERENCE</capability>
+                        <capability>CAPABILITY_AUDIO_RECORDING</capability>
+                        <capability>CAPABILITY_VOICE_XML</capability>
+                        <capability>32</capability>
+                        <capability>64</capability>
+                </capabilities>
+                <is-remote>0</is-remote>
+                <is-private>0</is-private>
+        </media-server>
+
+        <media-server>
+                <id>MediaServer02</id>
+                <vendor-name>SnowShore</vendor-name>
+                <ip-address>192.168.3.251</ip-address>
+                <port>5061</port>
+                <default-state>ACTIVE</default-state>
+                <heartbeaturi>sip:ivr@192.168.3.251:5060</heartbeaturi>
+                <adaptor-class-name>com.baypackets.ase.msadaptor.convedia.MsmlMomlAdaptor</adaptor-class-name>
+                <announcement-base-uri>file:/home/announcements</announcement-base-uri>
+                <recording-base-uri>file:/home/recordings</recording-base-uri>
+                <capabilities>
+                        <capability>CAPABILITY_VAR_ANNOUNCEMENT</capability>
+                        <capability>CAPABILITY_DIGIT_COLLECTION</capability>
+                        <capability>CAPABILITY_AUDIO_CONFERENCE</capability>
+                        <capability>CAPABILITY_AUDIO_RECORDING</capability>
+                </capabilities>
+                <is-remote>1</is-remote>
+                 <is-private>0</is-private>
+        </media-server>
+	
+	-->
+
+</media-server-config>
+	

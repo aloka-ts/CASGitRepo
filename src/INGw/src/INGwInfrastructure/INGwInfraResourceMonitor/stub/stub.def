@@ -1,0 +1,13 @@
+TARGET = ResMon
+RULES = bin
+
+EXTRA_RULES += vbroker
+
+EXTRA_INCLUDE += $(INSTALLROOT)/sol28g/include
+
+EXTRA_LIBS += Util INGwInfraResourceMonitor INGwInfraUtil INGwInfraParamRepository EmsAgent EmsCommon EmsIdl
+
+EXTRA_LIBS += nsl elf kstat rt
+EXTRA_LIBDIRS += $(INSTALLROOT)/sol28g/lib
+
+SRCS = stub/ResMonitorMain.C

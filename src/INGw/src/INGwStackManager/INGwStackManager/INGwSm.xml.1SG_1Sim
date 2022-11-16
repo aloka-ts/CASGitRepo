@@ -1,0 +1,603 @@
+<BayPackets>
+   <BP_AIN_SM>
+      <TAPA_CONF>
+         <layer id="SM" STsk="NEW"/>
+         <layer id="IU" STsk="OLD"/>
+         <layer id="IE" STsk="OLD"/>
+         <layer id="ST" STsk="OLD"/>
+         <layer id="SP" STsk="OLD"/>
+         <layer id="IT" STsk="OLD"/>
+         <layer id="SB" STsk="OLD"/>
+         <layer id="HI" STsk="OLD"/>
+      </TAPA_CONF>
+      <CONFIGURATION layer="inap" type="gen">
+         <oid name="nmbSaps" value="5">Maximum SAPs</oid>
+         <oid name="nmbDlgs" value="20000">Maximum Dialogues</oid>
+         <oid name="nmbOpr" value="20000">Maximum Operations</oid>
+         <oid name="range" value="20000">range of dialog ids</oid>
+         <oid name="timeRes" value="1">Timer Resolution</oid>
+      </CONFIGURATION>
+      <CONFIGURATION layer="inap" type="usap">
+         <index value="1">
+            <oid name="swtch" value="3">LIE_SW_AIN</oid>
+            <oid name="maxDlg" value="20000">Maximum Dialogues</oid>
+            <oid name="maxOpr" value="20000">Maximum Operations</oid>
+            <oid name="stDlgId" value="1000">Starting Dialog Id</oid>
+            <oid name="range" value="20000">Range for Dialogs</oid>
+            <oid name="waitRej" value="5">Wait for reject timer</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="inap" type="lsap">
+         <index value="1">
+            <oid name="swtch" value="5">LIE_SW_ANS96</oid>
+            <oid name="ssn" value="2">SSN - overridden by OID</oid>
+            <oid name="retOpt" value="0">LIE_SEC_NSO</oid>
+            <oid name="ueAction" value="2">CM_ASM_PASS_ELMNTS</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="tcap" type="gen">
+         <oid name="nmbSaps" value="8">Maximum SAPs</oid>
+         <oid name="nmbDlgs" value="20000">Maximum Dialogs</oid>
+         <oid name="nmbInvs" value="20000">Maximum Invokes</oid>
+         <oid name="nmbBins" value="120000">Maximum hash Bins</oid>
+         <oid name="timeRes" value="1">Timer Resolution</oid>
+         <oid name="sapTimeRes" value="1">SAP Timer Resolution</oid>
+         <oid name="loDlgId" value="1000">Lower Dialog Id</oid>
+         <oid name="hiDlgId" value="20000">Higher Dialog Id</oid>
+         <oid name="bitMapFlg" value="1">TRUE</oid>
+         <oid name="errCntrlFlg" value="0">FALSE</oid>
+      </CONFIGURATION>
+      <CONFIGURATION layer="tcap" type="usap">
+         <index value="1">
+            <oid name="swtch" value="5">LST_SW_ANS96</oid>
+            <oid name="t1" value="0">ITU Invoke Timer</oid>
+            <oid name="t2" value="0">ITU Reject Timer</oid>
+            <oid name="loDlgId" value="1000">Lower Limit on Dialog Id</oid>
+            <oid name="hiDlgId" value="20000">Higher Limit on dialog Id</oid>
+            <oid name="nmbDlgs" value="20000">Maximum Number of Concurrent TCAP Dialogs</oid>
+            <oid name="nmbInvs" value="20000">Maximum Number of Concurrent TCAP Inokes for all dialogs</oid>
+            <oid name="nmbBins" value="120000">Maximum Number of Hash List Bins for this SAP</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="tcap" type="lsap">
+         <index value="1">
+            <oid name="swtch" value="5">LST_SW_ANS96</oid>
+            <oid name="ssn" value="20">Subsystem Number - Overridden by OID</oid>
+            <oid name="spTmr" value="0">TCAP Provider connection Timer</oid>
+            <oid name="tIntTmr" value="0">Bind Confirm wait Timer</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="sccp" type="gen">
+         <oid name="nmbNws" value="2">Number of SCCP Networks</oid>
+         <oid name="nmbSaps" value="62">Number of SCCP Upper Saps</oid>
+         <oid name="nmbNSaps" value="8">Number of SCCP Network SAPs</oid>
+         <oid name="nmbAsso" value="11">Maximum number of associations configured for GTT</oid>
+         <oid name="nmbActns" value="16">Maximum number of actions configured for GTT</oid>
+         <oid name="nmbAddrs" value="506">Maximum number of STADRMAP entries for the GTT</oid>
+         <oid name="nmbRtes" value="7">Maximum number of Routes</oid>
+         <oid name="nmbXUdCb" value="20">Maximum Control Blocks used for reassembling segmented conectionless data</oid>
+         <oid name="mgmntOn" value="1">flag to turn off management messages status of SCCP</oid>
+         <oid name="sogThresh" value="1">Subsystem out of service grant threshold</oid>
+         <oid name="ssnTimeRes" value="10">Subsystem timer resolution</oid>
+         <oid name="AsmbTimeRes" value="10">Extended unit data reassembly timer resolution</oid>
+         <oid name="recTimeRes" value="10">recovery timer resolution</oid>
+         <oid name="maxRstLvl" value="2">maximum number of restriction levels</oid>
+         <oid name="maxRstSubLvl" value="4">maximum number of restriction sub-levels</oid>
+         <oid name="atkDecTimeRes" value="10">Attack/Decay timer resolution</oid>
+         <oid name="nmbCon" value="200">Maximum umber of simultaneous connection</oid>
+         <oid name="slrLowRange" value="300">SLR Low Range</oid>
+         <oid name="conThresh" value="8">Connection Threshold</oid>
+         <oid name="queThresh" value="3">Queue Threshold</oid>
+         <oid name="itThresh" value="8">Inactivity test send threshold</oid>
+         <oid name="conTimeRes" value="10">Connection Timer Resolution</oid>
+         <oid name="event" value="0">Event</oid>
+         <oid name="defGuaTmr" value="10">Default guard timer</oid>
+         <oid name="defRstEndTmr" value="1">default restart end timer</oid>
+         <oid name="tIntTmr" value="6">interface timer</oid>
+         <oid name="defStatusEnqTmr" value="5">default status enquiry timer</oid>
+         <oid name="defFrzTmr" value="2">default freeze timer</oid>
+         <oid name="defConTmr" value="7">default connection timer</oid>
+         <oid name="defIarTmr" value="12">default waiting to receive timer</oid>
+         <oid name="defIasTmr" value="8">default delay to send timer</oid>
+         <oid name="defRelTmr" value="4">default release timer</oid>
+         <oid name="defRepRelTmr" value="4">default repeat release timer</oid>
+         <oid name="defIntTmr" value="8">default interface timer</oid>
+         <oid name="defRstTmr" value="6">default reset timer</oid>
+      </CONFIGURATION>
+      <CONFIGURATION layer="sccp" type="lsap">
+         <index value="1">
+            <oid name="nwId" value="1">network identifier</oid>
+            <oid name="msgLen" value="256">maximum message length</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="sccp" type="usap">
+         <index value="1">
+            <oid name="nwId" value="1">network Id</oid>
+            <oid name="nmbBpc" value="1">
+               Number of Backup Point Codes
+  
+               <bpc dpc="1" prior="1">backup point code</bpc>
+            </oid>
+            <oid name="nmbConPc" value="1">
+               Number of Concerned Point Code
+  
+               <pc value="1">Point Code</pc>
+            </oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="sccp" type="rtecfg">
+         <index value="1">
+            <oid name="swtch" value="16">LSP_SW_ANS96</oid>
+            <oid name="dpc" value="2">Destination Point Code</oid>
+            <oid name="status" value="11">Route State Bitmask</oid>
+            <oid name="replicatedMode" value="1">DOMINANT - mode of replicated nodes/subsystems</oid>
+            <oid name="nmbBpc" value="0">number of backup point codes</oid>
+            <oid name="flag" value="1">Flag to indicate whether peer SCCP has broadband support</oid>
+            <oid name="nmbSsns" value="2"> Number of SSNs
+  
+               <ssn ssn="6" status="0" replicatedMode="1" nmbBpc="0" nmbConPc="0"> Subsystem Number </ssn>
+            </oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="sccp" type="nwcfg">
+         <oid name="nwId" value="1">Network Id</oid>
+         <oid name="variant" value="2">LSP_SW_ANS</oid>
+         <oid name="pcLen" value="1">DPC24 - Point Code length</oid>
+         <oid name="selfPc" value="1001">Self Point Code</oid>
+         <oid name="subService" value="2">SSF_NAT - Sub-Service Field</oid>
+         <oid name="defHopCnt" value="10">Default Hop Count</oid>
+         <oid name="sioPrioImpPres" value="1">
+            Flag indicating presence of SIO priority to importance mapping
+  
+            <sioPrioImp value="2">Mapping of SIO Priority to importance of message</sioPrioImp>
+         </oid>
+         <oid name="defIgnTmr" value="10">default ignore timer</oid>
+         <oid name="defCrdTmr" value="2">default coordinate state change timer</oid>
+         <oid name="defAsmbTmr" value="2">default extended unit data reassembly timer</oid>
+         <oid name="defAttackTmr" value="1">default Attack timer</oid>
+         <oid name="defDecayTmr" value="8">Default decay timer</oid>
+         <oid name="defCongTmr" value="1">default Congestion timer</oid>
+         <oid name="defFrzTmr" value="2">default freeze timer</oid>
+         <oid name="defConTmr" value="7">default connection timer</oid>
+         <oid name="defIasTmr" value="8">default delay to send timer</oid>
+         <oid name="defIarTmr" value="12">default waiting to receive timer</oid>
+         <oid name="defRelTmr" value="4">default release timer</oid>
+         <oid name="defRepRelTmr" value="4">default repeat release timer</oid>
+         <oid name="defIntTmr" value="8">default report abnormal release timer</oid>
+         <oid name="defRstTmr" value="6">default reset timer</oid>
+      </CONFIGURATION>
+      <CONFIGURATION layer="m3ua" type="gen">
+         <oid name="nodeType" value="2">LIT_TYPE_ASP</oid>
+         <oid name="dpcLrnFlag" value="1">DPC Learning mode flag</oid>
+         <oid name="maxNmbNSap" value="3">max number of Network SAPs</oid>
+         <oid name="maxNmbSctSap" value="1">max number of SCTP Saps</oid>
+         <oid name="maxNmbNwk" value="1">Maximum number of Network appearance</oid>
+         <oid name="maxNmbRtEnt" value="15">maximum number of routing entries</oid>
+         <oid name="maxNmbDpcEnt" value="25">maximum number of DPC entries</oid>
+         <oid name="maxNmbPs" value="10">maximum number of Peer Servers</oid>
+         <oid name="maxNmbLps" value="5">Maximum number of Local PS</oid>
+         <oid name="maxNmbPsp" value="10">Maximum number of PSP</oid>
+         <oid name="maxNmbMsg" value="20">maximum number of M3UA msg in transit</oid>
+         <oid name="drkmSupp" value="1">DRKM Support</oid>
+         <oid name="drstSupp" value="1">DRST Support</oid>
+         <oid name="maxNmbRndRbnLs" value="2">Max number of round robin loadshare contexts</oid>
+         <oid name="maxNmbSlsLs" value="8">max number of SLS bases loadshare contexts</oid>
+         <oid name="maxNmbSls" value="160">max number of SLS</oid>
+         <oid name="qSize" value="2000">Congestion Queue Size</oid>
+         <oid name="congLevel1" value="500">Congestion Level 1 in the queue</oid>
+         <oid name="congLevel2" value="1000">Congestion Level 2 in the queue</oid>
+         <oid name="congLevel3" value="1500">Congestion Level 3 in the queue</oid>
+         <oid name="tmrMtp3Sta" value="5">MTP3 Status poll timer</oid>
+         <oid name="tmrAsPend" value="10">ASP-PENDING timer</oid>
+         <oid name="tmrHeartbeat" value="0">heartbeat peariod</oid>
+         <oid name="tmrRestart" value="5">restart hold-off timer</oid>
+         <oid name="tmrAspUp1" value="2">initial timer between ASPUP</oid>
+         <oid name="tmrAspUp2" value="5">steady state time between ASP UP</oid>
+         <oid name="nmbAspUp1" value="3">initial number of ASPUP</oid>
+         <oid name="tmrAspDn" value="2">time between ASPDN</oid>
+         <oid name="tmrAspM" value="2">timeout for ASPM messages</oid>
+         <oid name="tmrDaud" value="5">time between DAUD</oid>
+         <oid name="tmrDrkm" value="5">time between DRKM</oid>
+         <oid name="maxNmbRkTry" value="3">initial number of DRKM msgs</oid>
+         <oid name="tmrDunaSettle" value="5">timer for DUNA settle</oid>
+         <oid name="timeRes" value="10">timer resolution</oid>
+      </CONFIGURATION>
+      <CONFIGURATION layer="m3ua" type="usap">
+         <index value="1">
+            <oid name="nifSap" value="0">TRUE if this is NIF SAP</oid>
+            <oid name="spId" value="0">NSAP Id</oid>
+            <oid name="nwkId" value="0">logical network Id</oid>
+            <oid name="suType" value="3">LIT_SU_SCCP</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="m3ua" type="lsap">
+         <index value="1">
+            <oid name="tmrPrim" value="5">lower SAP primitive timer</oid>
+            <oid name="tmrSta" value="5">congestion poll time</oid>
+            <oid name="srcPort" value="2905">source port for listening endpoint</oid>
+            <oid name="spId" value="0">service provider id</oid>
+            <oid name="suId" value="0">service user SAP id</oid>
+            <oid name="intfAddrType" value="4">CM_TPTADDR_IPV4</oid>
+            <oid name="intfAddr.u.ipv4NetAddr" value="0">CM_INET_INADDR_ANY</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="m3ua" type="nwcfg">
+         <oid name="nwkId" value="0">network id</oid>
+         <oid name="nwkApp" value="3">
+            Network appearance code
+  
+            <nwkApp value="16777216"/>
+            <nwkApp value="16777216"/>
+            <nwkApp value="16777216"/>
+         </oid>
+         <oid name="ssf" value="2">SSF_NAT</oid>
+         <oid name="dpcLen" value="1">DPC24</oid>
+         <oid name="slsLen" value="5">LIT_SLS5</oid>
+         <oid name="suSwtch" value="1">LIT_SW_ANS</oid>
+         <oid name="su2Swtch" value="7">LIT_SW2_ANS</oid>
+      </CONFIGURATION>
+      <CONFIGURATION layer="m3ua" type="pspcfg">
+         <index value="1">
+            <oid name="pspId" value="1">PSP Id</oid>
+            <oid name="dynRegRkAllwd" value="1">dynamic registration allowed</oid>
+            <oid name="dfltLshareMode" value="2">LIT_LOADSH_SLS</oid>
+            <oid name="nwAppIncl" value="1">netword appearance flag</oid>
+            <oid name="nwkId" value="0">network Id</oid>
+            <oid name="pspType" value="2">LIT_PSPTYPE_SGP</oid>
+            <oid name="dstPort" value="2905">destination port</oid>
+            <oid name="dstAddrLst" value="1">destination address. First address
+               is the primary destination address
+               <addr value="192.168.2.139"></addr>
+            </oid>
+            <oid name="srcAddrLst" value="1">source address
+               <addr value="192.168.2.111"></addr>
+            </oid>
+            <oid name="locOutStrms" value="5">number of local output streams</oid>
+            <oid name="monitorResource" value="1">Whether Stack Manager has to monitor the state of the PSP</oid>
+         </index>
+         <index value="2">
+            <oid name="pspId" value="2">PSP Id</oid>
+            <oid name="dynRegRkAllwd" value="1">dynamic registration allowed</oid>
+            <oid name="dfltLshareMode" value="2">LIT_LOADSH_SLS</oid>
+            <oid name="nwAppIncl" value="1">netword appearance flag</oid>
+            <oid name="nwkId" value="0">network Id</oid>
+            <oid name="pspType" value="2">LIT_PSPTYPE_SGP</oid>
+            <oid name="dstPort" value="2905">destination port</oid>
+            <oid name="dstAddrLst" value="1">destination address. First address
+               is the primary destination address
+               <addr value="192.168.2.88"></addr>
+            </oid>
+            <oid name="srcAddrLst" value="1">source address
+               <addr value="192.168.2.111"></addr>
+            </oid>
+            <oid name="locOutStrms" value="5">number of local output streams</oid>
+            <oid name="monitorResource" value="1">Whether Stack Manager has to monitor the state of the PSP</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="m3ua" type="pscfg">
+         <index value="1">
+            <oid name="nwkId" value="0">network appearance id</oid>
+            <oid name="psId" value="1">PS id</oid>
+            <oid name="lclFlag" value="0">local flag</oid>
+            <oid name="routCtx" value="10">routing context</oid>
+            <oid name="mode" value="2">LIT_MODE_LOADSHARE</oid>
+            <oid name="loadShareMode" value="1">LIT_LOADSH_RNDROBIN</oid>
+            <oid name="nmbActPspReqd" value="1">number of active PSP required</oid>
+            <oid name="nmbPsp" value="1"> Number of PSPs
+               <psp value="1"/>
+            </oid>
+         </index>
+         <index value="2">
+            <oid name="nwkId" value="0"/>
+            <oid name="psId" value="2"/>
+            <oid name="routCtx" value="10"/>
+            <oid name="lclFlag" value="1"/>
+            <oid name="mode" value="1">LIT_MODE_ACTSTANDBY</oid>
+            <oid name="loadShareMode" value="0"/>
+            <oid name="nmbActPspReqd" value="1"/>
+            <oid name="nmbPsp" value="2">
+               <psp value="1"/>
+               <psp value="2"/>
+            </oid>
+         </index>
+         <index value="3">
+            <oid name="nwkId" value="0">network appearance id</oid>
+            <oid name="psId" value="3">PS id</oid>
+            <oid name="lclFlag" value="0">local flag</oid>
+            <oid name="routCtx" value="10">routing context</oid>
+            <oid name="mode" value="2">LIT_MODE_LOADSHARE</oid>
+            <oid name="loadShareMode" value="1">LIT_LOADSH_RNDROBIN</oid>
+            <oid name="nmbActPspReqd" value="1">number of active PSP required</oid>
+            <oid name="nmbPsp" value="1"> Number of PSPs
+               <psp value="2"/>
+            </oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="m3ua" type="rtecfg">
+         <index value="1">
+            <oid name="nwkId" value="0">network id</oid>
+            <oid name="rtType" value="3">LIT_RTTYPE_PS</oid>
+            <oid name="psId" value="1">PS Id</oid>
+            <oid name="nSapId" value="0">network SAP Id</oid>
+            <oid name="noStatus" value="0">TRUE if status is suppressed</oid>
+            <oid name="dpcMask" value="16777215">DPC wildcard mask</oid>
+            <oid name="dpc" value="2">detination point code</oid>
+            <oid name="nSapIdPres" value="0">Upper SAP Id present</oid>
+            <oid name="opcMask" value="0">OPC wildcard mask</oid>
+            <oid name="opc" value="0">Originating point code</oid>
+            <oid name="slsMask" value="0">Wild card mask for SLS</oid>
+            <oid name="sls" value="0">Signalling link selector</oid>
+            <oid name="sio" value="0">Wildcard mask for SIO</oid>
+            <oid name="sioMask" value="0">Service identifier Octet</oid>
+            <oid name="includeCic" value="0">whether CIC is included in routing filter</oid>
+            <oid name="includeSsn" value="0">whether SSN is included in routing filter</oid>
+            <oid name="includeTrid" value="0">whether Transaction Id is used in routing filter</oid>
+         </index>
+         <index value="2">
+            <oid name="nwkId" value="0"/>
+            <oid name="rtType" value="1">LIT_RTTYPE_LOCAL</oid>
+            <oid name="psId" value="2"/>
+            <oid name="nSapId" value="0"/>
+            <oid name="noStatus" value="0"/>
+            <oid name="dpcMask" value="16777215"/>
+            <oid name="dpc" value="1001"/>
+            <oid name="nSapIdPres" value="0"/>
+            <oid name="opcMask" value="0"/>
+            <oid name="opc" value="0"/>
+            <oid name="slsMask" value="0"/>
+            <oid name="sls" value="0"/>
+            <oid name="sio" value="0"/>
+            <oid name="sioMask" value="0"/>
+            <oid name="includeCic" value="0"/>
+            <oid name="includeSsn" value="0"/>
+            <oid name="includeTrid" value="0"/>
+         </index>
+         <index value="3">
+            <oid name="nwkId" value="0">network id</oid>
+            <oid name="rtType" value="3">LIT_RTTYPE_PS</oid>
+            <oid name="psId" value="3">PS Id</oid>
+            <oid name="nSapId" value="0">network SAP Id</oid>
+            <oid name="noStatus" value="0">TRUE if status is suppressed</oid>
+            <oid name="dpcMask" value="16777215">DPC wildcard mask</oid>
+            <oid name="dpc" value="8">detination point code</oid>
+            <oid name="nSapIdPres" value="0">Upper SAP Id present</oid>
+            <oid name="opcMask" value="0">OPC wildcard mask</oid>
+            <oid name="opc" value="0">Originating point code</oid>
+            <oid name="slsMask" value="0">Wild card mask for SLS</oid>
+            <oid name="sls" value="0">Signalling link selector</oid>
+            <oid name="sio" value="0">Wildcard mask for SIO</oid>
+            <oid name="sioMask" value="0">Service identifier Octet</oid>
+            <oid name="includeCic" value="0">whether CIC is included in routing filter</oid>
+            <oid name="includeSsn" value="0">whether SSN is included in routing filter</oid>
+            <oid name="includeTrid" value="0">whether Transaction Id is used in routing filter</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="sctp" type="gen">
+         <oid name="serviceType" value="7">HI_SRVC_RAW_SCTP- TUCL Transport protocol</oid>
+         <oid name="maxNmbSctSaps" value="1">max number of SAPs at SCT interface</oid>
+         <oid name="maxNmbTSaps" value="1">max number of transport SAPs at HIT interface</oid>
+         <oid name="maxNmbAssoc" value="10">max number of simultaneous associations</oid>
+         <oid name="maxNmbEndp" value="4">max number of simultaneous endpoints</oid>
+         <oid name="maxNmbDstAddr" value="20">max number of destination address</oid>
+         <oid name="maxNmbSrcAddr" value="20">max number of source address</oid>
+         <oid name="maxNmbTxChunks" value="3000">max number of datagrams than can be queued before sending</oid>
+         <oid name="maxNmbRxChunks" value="3000">max number of datagram received that can be queued</oid>
+         <oid name="maxNmbInStrms" value="200">max number of incoming streams</oid>
+         <oid name="maxNmbOutStrms" value="200">max number of outgoing streams</oid>
+         <oid name="initARwnd" value="64000">initial advertized receiver window space</oid>
+         <oid name="mtuInitial" value="1500">initial value for path MTU</oid>
+         <oid name="mtuMinInitial" value="56">minimum value to be used for searching the optimal MTU size</oid>
+         <oid name="mtuMaxInitial" value="1500">max value to be used for searching the optimal MTU size</oid>
+         <oid name="performMtu" value="1">whether path MTU discovery shud be performed</oid>
+         <oid name="timeRes" value="1">timer resolution</oid>
+         <oid name="maxInitReTx" value="0">max association INIT re transmission</oid>
+         <oid name="maxAssocReTx" value="3">max associatoin datagram retransmissions</oid>
+         <oid name="maxPathReTx" value="3">max path datagram retransmissions</oid>
+         <oid name="altAcceptFlg" value="0">additional lifetime flag</oid>
+         <oid name="keyTm" value="600">initial value for MD5 key xpiry timer</oid>
+         <oid name="alpha" value="12">used in RTT calculation</oid>
+         <oid name="beta" value="25">used in RTT calculation</oid>
+         <oid name="hostname" value="0">own hostname</oid>
+         <oid name="useHstName" value="0">whether to use domain name in INIT/INIT-ack</oid>
+      </CONFIGURATION>
+      <CONFIGURATION layer="sctp" type="lsap">
+         <index value="1">
+            <oid name="swtch" value="1">protocol version of SCTP protocol</oid>
+            <oid name="srcNAddrLst" value="1">source address
+               <addr value="192.168.2.111"></addr>
+            </oid>
+            <oid name="tIntTmr" value="50">timer to wait for bind confirm</oid>
+            <oid name="maxBndRetry" value="2">max number for bind retries</oid>
+            <oid name="dnsAddr.type" value="0">type of DNS address</oid>
+            <oid name="dnsAddr.port" value="0">port to be used for DNS address</oid>
+            <oid name="dnsAddr.address" value="0">ip address of DNS address</oid>
+            <oid name="useDnsLib" value="0">whether to use DNS library for resolving Address</oid>
+            <oid name="dnsTmOut" value="0">DNS timer value</oid>
+            <oid name="maxRtxCnt" value="0">maximum number of retransmissions</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="sctp" type="usap">
+         <index value="1">
+            <oid name="swtch" value="1">protocol switch</oid>
+            <oid name="maxAckDelayTm" value="2">max SACK delay time</oid>
+            <oid name="maxAckDelayDg" value="2">max SACK delay in number of datagrams</oid>
+            <oid name="rtoInitial" value="100">initial RTO value</oid>
+            <oid name="rtoMin" value="50">Minimum RTO value</oid>
+            <oid name="rtoMax" value="400">Maximum RTO value</oid>
+            <oid name="cookieLife" value="500">lifetime for a valid cookie</oid>
+            <oid name="intervalTm" value="50">default heartbeat interval timer value</oid>
+            <oid name="freezeTm" value="15">default freeze timer value</oid>
+            <oid name="flcUpThr" value="1000">flow control upper threshold</oid>
+            <oid name="flcLowThr" value="900">flow control lower threshold</oid>
+            <oid name="negAbrtFlg" value="1">negotiate or abort if MIS less than OS</oid>
+            <oid name="handleInitFlg" value="0">hadnle INIT self flag</oid>
+            <oid name="hBeatEnable" value="1">flag for enabling heartbeat on assoc</oid>
+         </index>
+      </CONFIGURATION>
+      <CONFIGURATION layer="tucl" type="gen">
+         <oid name="numSaps" value="1">number of SAPs</oid>
+         <oid name="numCons" value="10">max number of connections</oid>
+         <oid name="numFdsPerSet" value="4">number of file descriptors per FD set</oid>
+         <oid name="numFdBins" value="4">number of hash list bins</oid>
+         <oid name="permTsk" value="1">permanent task flag</oid>
+         <oid name="poolStrtThr" value="5">start threshold for memory pool</oid>
+         <oid name="poolDropThr" value="6">drop threshold for memory pool</oid>
+         <oid name="poolStopThr" value="5">stop threshold for memory pool</oid>
+         <oid name="timeRes" value="10">timer resolutions</oid>
+         <oid name="selTimeout" value="10">select timeout</oid>
+         <oid name="numRawMsgsToRead" value="100">raw messages to read</oid>
+      </CONFIGURATION>
+      <CONFIGURATION layer="tucl" type="usap">
+         <index value="1">
+            <oid name="flcEnb" value="1">flow control enable flag</oid>
+            <oid name="txqCongStrtLim" value="128000">transmit queue congestion start limit in bytes</oid>
+            <oid name="txqCongDropLim" value="160000">transmit queue congestion drop limit in bytes</oid>
+            <oid name="txqCongStopLim" value="100000">transmit queue congestion stop limit in bytes</oid>
+            <oid name="numBins" value="16">number of hash list bins</oid>
+         </index>
+      </CONFIGURATION>
+      <STATISTICS>
+         <oid id="8.11.50" layer="inap" type="gen" element="28" level="1">invTx</oid>
+         <oid id="8.11.51" layer="inap" type="gen" element="29" level="1">invRx</oid>
+         <oid id="8.11.52" layer="inap" type="gen" element="30" level="1">rrTx</oid>
+         <oid id="8.11.53" layer="inap" type="gen" element="31" level="1">rrRx</oid>
+         <oid id="8.11.54" layer="inap" type="gen" element="32" level="1">reTx</oid>
+         <oid id="8.11.55" layer="inap" type="gen" element="33" level="1">reRx</oid>
+         <oid id="8.11.56" layer="inap" type="gen" element="34" level="1">rejTx</oid>
+         <oid id="8.11.57" layer="inap" type="gen" element="35" level="1">rejRx</oid>
+         <oid id="8.11.58" layer="inap" type="gen" element="78" level="1">cnclTx</oid>
+         <oid id="8.11.59" layer="inap" type="gen" element="79" level="1">cnclRx</oid>
+         <oid id="8.11.60" layer="inap" type="gen" element="80" level="1">cnclFailTx</oid>
+         <oid id="8.11.61" layer="inap" type="gen" element="81" level="1">cnclFailRx</oid>
+         <oid id="8.11.62" layer="inap" type="gen" element="82" level="1">dbErrTx</oid>
+         <oid id="8.11.63" layer="inap" type="gen" element="83" level="1">dbErrRx</oid>
+         <oid id="8.11.64" layer="inap" type="gen" element="84" level="1">etcFailTx</oid>
+         <oid id="8.11.65" layer="inap" type="gen" element="85" level="1">etcFailRx</oid>
+         <oid id="8.11.66" layer="inap" type="gen" element="86" level="1">impCallRspTx</oid>
+         <oid id="8.11.67" layer="inap" type="gen" element="87" level="1">impCallRspRx</oid>
+         <oid id="8.11.68" layer="inap" type="gen" element="88" level="1">infoKeyErrTx</oid>
+         <oid id="8.11.69" layer="inap" type="gen" element="89" level="1">infoKeyErrRx</oid>
+         <oid id="8.11.70" layer="inap" type="gen" element="90" level="1">missCustRecTx</oid>
+         <oid id="8.11.71" layer="inap" type="gen" element="91" level="1">missCustRecRx</oid>
+         <oid id="8.11.72" layer="inap" type="gen" element="92" level="1">missParamTx</oid>
+         <oid id="8.11.73" layer="inap" type="gen" element="93" level="1">missParamRx</oid>
+         <oid id="8.11.74" layer="tcap" type="gen" element="1" level="1">msgTx</oid>
+         <oid id="8.11.75" layer="tcap" type="gen" element="2" level="1">uniTx</oid>
+         <oid id="8.11.76" layer="tcap" type="gen" element="3" level="1">abtTx</oid>
+         <oid id="8.11.77" layer="tcap" type="gen" element="12" level="1">msgRx</oid>
+         <oid id="8.11.78" layer="tcap" type="gen" element="13" level="1">uniRx</oid>
+         <oid id="8.11.79" layer="tcap" type="gen" element="14" level="1">abtRx</oid>
+         <oid id="8.11.80" layer="tcap" type="gen" element="7" level="1">qwpTx</oid>
+         <oid id="8.11.81" layer="tcap" type="gen" element="8" level="1">qnpTx</oid>
+         <oid id="8.11.82" layer="tcap" type="gen" element="9" level="1">cwpTx</oid>
+         <oid id="8.11.83" layer="tcap" type="gen" element="10" level="1">cnpTx</oid>
+         <oid id="8.11.84" layer="tcap" type="gen" element="11" level="1">rspTx</oid>
+         <oid id="8.11.85" layer="tcap" type="gen" element="18" level="1">qwpRx</oid>
+         <oid id="8.11.86" layer="tcap" type="gen" element="19" level="1">qnpRx</oid>
+         <oid id="8.11.87" layer="tcap" type="gen" element="20" level="1">cwpRx</oid>
+         <oid id="8.11.88" layer="tcap" type="gen" element="21" level="1">cnpRx</oid>
+         <oid id="8.11.89" layer="tcap" type="gen" element="22" level="1">rspRx</oid>
+         <oid id="8.11.90" layer="sccp" type="gen" element="1" level="1">rfNTASN</oid>
+         <oid id="8.11.91" layer="sccp" type="gen" element="2" level="1">rfNTSA</oid>
+         <oid id="8.11.92" layer="sccp" type="gen" element="3" level="1">rfNetFail</oid>
+         <oid id="8.11.93" layer="sccp" type="gen" element="4" level="1">rfNetCong</oid>
+         <oid id="8.11.94" layer="sccp" type="gen" element="5" level="1">rfSsnFail</oid>
+         <oid id="8.11.95" layer="sccp" type="gen" element="6" level="1">rfSsnCong</oid>
+         <oid id="8.11.96" layer="sccp" type="gen" element="7" level="1">rfUnequip</oid>
+         <oid id="8.11.97" layer="sccp" type="gen" element="8" level="1">rfHopViolate</oid>
+         <oid id="8.11.98" layer="sccp" type="gen" element="9" level="1">synError</oid>
+         <oid id="8.11.99" layer="sccp" type="gen" element="10" level="1">rfUnknown</oid>
+         <oid id="8.11.100" layer="sccp" type="gen" element="11" level="1">ssCongRx</oid>
+         <oid id="8.11.101" layer="sccp" type="gen" element="12" level="1">ssProhRx</oid>
+         <oid id="8.11.102" layer="sccp" type="gen" element="13" level="1">uDataTx</oid>
+         <oid id="8.11.103" layer="sccp" type="gen" element="14" level="1">uDataSrvTx</oid>
+         <oid id="8.11.104" layer="sccp" type="gen" element="15" level="1">uDataRx</oid>
+         <oid id="8.11.105" layer="sccp" type="gen" element="16" level="1">uDataSrvRx</oid>
+         <oid id="8.11.106" layer="sccp" type="gen" element="17" level="1">xuDataTx</oid>
+         <oid id="8.11.107" layer="sccp" type="gen" element="18" level="1">xuDataSrvTx</oid>
+         <oid id="8.11.108" layer="sccp" type="gen" element="19" level="1">xuDataRx</oid>
+         <oid id="8.11.109" layer="sccp" type="gen" element="20" level="1">xuDataSrvRx</oid>
+         <oid id="8.11.110" layer="m3ua" type="gen" element="8" level="2">mtp3DataRx</oid>
+         <oid id="8.11.111" layer="m3ua" type="gen" element="9" level="2">mtp3PauseRx</oid>
+         <oid id="8.11.112" layer="m3ua" type="gen" element="10" level="2">mtp3ResumeRx</oid>
+         <oid id="8.11.113" layer="m3ua" type="gen" element="11" level="2">mtp3CongRx</oid>
+         <oid id="8.11.114" layer="m3ua" type="gen" element="12" level="2">mtp3RstBegRx</oid>
+         <oid id="8.11.115" layer="m3ua" type="gen" element="13" level="2">mtp3RstEndRx</oid>
+         <oid id="8.11.116" layer="m3ua" type="gen" element="14" level="2">mtp3UpuRx</oid>
+         <oid id="8.11.117" layer="m3ua" type="gen" element="1" level="2">mtp3DataTx</oid>
+         <oid id="8.11.118" layer="m3ua" type="gen" element="2" level="2">mtp3PauseTx</oid>
+         <oid id="8.11.119" layer="m3ua" type="gen" element="3" level="2">mtp3ResumeTx</oid>
+         <oid id="8.11.120" layer="m3ua" type="gen" element="4" level="2">mtp3CongTx</oid>
+         <oid id="8.11.121" layer="m3ua" type="gen" element="5" level="2">mtp3RstBegTx</oid>
+         <oid id="8.11.122" layer="m3ua" type="gen" element="6" level="2">mtp3RstEndTx</oid>
+         <oid id="8.11.123" layer="m3ua" type="gen" element="7" level="2">mtp3UpuTx</oid>
+         <oid id="8.11.124" layer="m3ua" type="gen" element="15" level="1">m3uaDataTx</oid>
+         <oid id="8.11.125" layer="m3ua" type="gen" element="16" level="1">m3uaDunaTx</oid>
+         <oid id="8.11.126" layer="m3ua" type="gen" element="17" level="1">m3uaDavaTx</oid>
+         <oid id="8.11.127" layer="m3ua" type="gen" element="18" level="1">m3uaDaudTx</oid>
+         <oid id="8.11.128" layer="m3ua" type="gen" element="19" level="1">m3uaSconTx</oid>
+         <oid id="8.11.129" layer="m3ua" type="gen" element="20" level="1">m3uaDupuTx</oid>
+         <oid id="8.11.130" layer="m3ua" type="gen" element="21" level="1">m3uaDrstTx</oid>
+         <oid id="8.11.131" layer="m3ua" type="gen" element="22" level="1">m3uaRegReqTx</oid>
+         <oid id="8.11.132" layer="m3ua" type="gen" element="23" level="1">m3uaDeregRegTx</oid>
+         <oid id="8.11.133" layer="m3ua" type="gen" element="24" level="1">m3uaRegRspTx</oid>
+         <oid id="8.11.134" layer="m3ua" type="gen" element="25" level="1">m3uaDeregRspTx</oid>
+         <oid id="8.11.135" layer="m3ua" type="gen" element="26" level="1">m3uaAspUpTx</oid>
+         <oid id="8.11.136" layer="m3ua" type="gen" element="27" level="1">m3uaAspUpAckTx</oid>
+         <oid id="8.11.137" layer="m3ua" type="gen" element="28" level="1">m3uaAspDnTx</oid>
+         <oid id="8.11.138" layer="m3ua" type="gen" element="29" level="1">m3uaAspDnAckTx</oid>
+         <oid id="8.11.139" layer="m3ua" type="gen" element="30" level="1">m3uaAspAcTx</oid>
+         <oid id="8.11.140" layer="m3ua" type="gen" element="31" level="1">m3uaAspAcAckTx</oid>
+         <oid id="8.11.141" layer="m3ua" type="gen" element="32" level="1">m3uaAspIaTx</oid>
+         <oid id="8.11.142" layer="m3ua" type="gen" element="33" level="1">m3uaAspIaAckTx</oid>
+         <oid id="8.11.143" layer="m3ua" type="gen" element="34" level="1">m3uaHbeatTx</oid>
+         <oid id="8.11.144" layer="m3ua" type="gen" element="35" level="1">m3uaHbeatAckTx</oid>
+         <oid id="8.11.145" layer="m3ua" type="gen" element="36" level="1">m3uaErrTx</oid>
+         <oid id="8.11.146" layer="m3ua" type="gen" element="37" level="1">m3uaNotifyTx</oid>
+         <oid id="8.11.147" layer="m3ua" type="gen" element="38" level="1">m3uaDataRx</oid>
+         <oid id="8.11.148" layer="m3ua" type="gen" element="39" level="1">m3uaDunaRx</oid>
+         <oid id="8.11.149" layer="m3ua" type="gen" element="40" level="1">m3uaDavaRx</oid>
+         <oid id="8.11.150" layer="m3ua" type="gen" element="41" level="1">m3uaDaudRx</oid>
+         <oid id="8.11.151" layer="m3ua" type="gen" element="42" level="1">m3uaSconRx</oid>
+         <oid id="8.11.152" layer="m3ua" type="gen" element="43" level="1">m3uaDupuRx</oid>
+         <oid id="8.11.153" layer="m3ua" type="gen" element="44" level="1">m3uaDrstRx</oid>
+         <oid id="8.11.154" layer="m3ua" type="gen" element="45" level="1">m3uaRegReqRx</oid>
+         <oid id="8.11.155" layer="m3ua" type="gen" element="46" level="1">m3uaDeregRegRx</oid>
+         <oid id="8.11.156" layer="m3ua" type="gen" element="47" level="1">m3uaRegRspRx</oid>
+         <oid id="8.11.157" layer="m3ua" type="gen" element="48" level="1">m3uaDeregRspRx</oid>
+         <oid id="8.11.158" layer="m3ua" type="gen" element="49" level="1">m3uaAspUpRx</oid>
+         <oid id="8.11.159" layer="m3ua" type="gen" element="50" level="1">m3uaAspUpAckRx</oid>
+         <oid id="8.11.160" layer="m3ua" type="gen" element="51" level="1">m3uaAspDnRx</oid>
+         <oid id="8.11.161" layer="m3ua" type="gen" element="52" level="1">m3uaAspDnAckRx</oid>
+         <oid id="8.11.162" layer="m3ua" type="gen" element="53" level="1">m3uaAspAcRx</oid>
+         <oid id="8.11.163" layer="m3ua" type="gen" element="54" level="1">m3uaAspAcAckRx</oid>
+         <oid id="8.11.164" layer="m3ua" type="gen" element="55" level="1">m3uaAspIaRx</oid>
+         <oid id="8.11.165" layer="m3ua" type="gen" element="56" level="1">m3uaAspIaAckRx</oid>
+         <oid id="8.11.166" layer="m3ua" type="gen" element="57" level="1">m3uaHbeatRx</oid>
+         <oid id="8.11.167" layer="m3ua" type="gen" element="58" level="1">m3uaHbeatAckRx</oid>
+         <oid id="8.11.168" layer="m3ua" type="gen" element="59" level="1">m3uaErrRx</oid>
+         <oid id="8.11.169" layer="m3ua" type="gen" element="60" level="1">m3uaNotifyRx</oid>
+         <oid id="8.11.170" layer="m3ua" type="gen" element="65" level="1">dropNoRouteUp</oid>
+         <oid id="8.11.171" layer="m3ua" type="gen" element="66" level="1">dropPcUnavailUp</oid>
+         <oid id="8.11.172" layer="m3ua" type="gen" element="67" level="1">dropPcCongUp</oid>
+         <oid id="8.11.173" layer="m3ua" type="gen" element="68" level="1">dropNoPspAvailUp</oid>
+         <oid id="8.11.174" layer="m3ua" type="gen" element="69" level="1">dropNoNSapAvailUp</oid>
+         <oid id="8.11.175" layer="m3ua" type="gen" element="70" level="1">dropLoadShFailUp</oid>
+         <oid id="8.11.176" layer="m3ua" type="gen" element="71" level="1">dropMmhFailUp</oid>
+         <oid id="8.11.177" layer="m3ua" type="gen" element="72" level="1">dataQCongUp</oid>
+         <oid id="8.11.178" layer="m3ua" type="gen" element="73" level="1">dataQAsPendUp</oid>
+         <oid id="8.11.179" layer="m3ua" type="gen" element="74" level="1">dropNoRouteDn</oid>
+         <oid id="8.11.180" layer="m3ua" type="gen" element="75" level="1">dropPcUnavailDn</oid>
+         <oid id="8.11.181" layer="m3ua" type="gen" element="76" level="1">dropPcCongDn</oid>
+         <oid id="8.11.182" layer="m3ua" type="gen" element="77" level="1">dropNoPspAvailDn</oid>
+         <oid id="8.11.183" layer="m3ua" type="gen" element="78" level="1">dropNoNSapAvailDn</oid>
+         <oid id="8.11.184" layer="m3ua" type="gen" element="79" level="1">dropLoadShFailDn</oid>
+         <oid id="8.11.185" layer="m3ua" type="gen" element="80" level="1">dropMmhFailDn</oid>
+         <oid id="8.11.186" layer="m3ua" type="gen" element="81" level="1">dataQCongDn</oid>
+         <oid id="8.11.187" layer="m3ua" type="gen" element="82" level="1">dataQAsPendDn</oid>
+         <oid id="8.11.188" layer="sctp" type="gen" element="1" level="1">totalChunkSts</oid>
+         <oid id="8.11.189" layer="sctp" type="gen" element="2" level="1">totalByteSts</oid>
+         <oid id="8.11.190" layer="sctp" type="gen" element="3" level="1">totalDnsSts</oid>
+      </STATISTICS>
+   </BP_AIN_SM>
+</BayPackets>

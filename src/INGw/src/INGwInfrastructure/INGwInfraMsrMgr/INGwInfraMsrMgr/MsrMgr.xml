@@ -1,0 +1,37 @@
+<!-- Configuration file --!>
+
+
+<BayPackets>
+  <CCM>
+    <MeasurementMgr  minSetAccumulationInterval="60" maxSetsCollectionNumber="5">
+        <!-- oid is applicable for mode=instantaneous only --!>
+        <MeasurementCounter id="testCounter1" refType="name/index" type="incOnly/incDec" mode="event/usage/instantaneous" oid="NULL">
+        </MeasurementCounter>
+
+      <MeasurementSet id="TestSet1" version="0.1" entityType="OSS" accumulationInterval="30" priority="0" operation="enable/disable">
+        <MeasurementCounter id="testCounter1"/>
+      </MeasurementSet>
+
+    </MeasurementMgr>
+  </CCM>
+</BayPackets>
+
+
+
+
+
+<!-- Re-Configuration file --!>
+
+<BayPackets>
+  <CCM>
+    <MeasurementMgr  MaxSetsCollectionNumber="5">
+
+      <MeasurementSet id="TestSet1" version="0.1" accumulationInterval="30" operation="enable/disable/delete">
+        <!-- Complete list of counters --!>
+        <MeasurementCounter id="testCounter1"/>
+      </MeasurementSet>
+
+    </MeasurementMgr>
+  </CCM>
+</BayPackets>
+

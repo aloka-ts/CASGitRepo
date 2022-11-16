@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ * Copyright Notice ============================================*
+ * This file contains proprietary information of BayPackets, Inc.
+ * Copying or reproduction without prior written approval is prohibited.
+ * Copyright (c) 2004-2006 =====================================
+ *
+-->
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+   "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+
+<sip-app>
+  <display-name>test servlet</display-name>
+  <distributable/>
+
+<listener>
+      <listener-class>com.baypackets.ase.sbb.impl.SBBServlet</listener-class>
+  </listener>  
+
+<servlet>
+    <servlet-name>SBBServlet</servlet-name>
+<servlet-class>com.baypackets.ase.sbb.impl.SBBServlet</servlet-class>
+    </servlet>
+
+  <servlet>
+    <servlet-name>mserver600</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>600</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+  <servlet>
+    <servlet-name>mserver601</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>601</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+  <servlet>
+    <servlet-name>mserver602</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>602</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+<servlet>
+    <servlet-name>mserver603</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>603</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+<servlet>
+    <servlet-name>mserver604</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>604</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+<servlet>
+    <servlet-name>mserver605</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>605</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+<servlet>
+    <servlet-name>mserver606</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>606</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+<servlet>
+    <servlet-name>mserver607</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>607</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+<servlet>
+    <servlet-name>mserver608</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>608</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+<servlet>
+    <servlet-name>mserver609</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>609</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+<servlet>
+    <servlet-name>mserver610</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>610</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+
+<servlet>
+    <servlet-name>mserver611</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>611</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+
+<servlet>
+    <servlet-name>mserver612</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>612</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+
+
+<servlet>
+    <servlet-name>mserver613</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>613</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+
+
+<servlet>
+    <servlet-name>mserver614</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>614</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+
+<servlet>
+    <servlet-name>mserver615</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>615</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+<servlet>
+    <servlet-name>mserver616</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>616</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+<servlet>
+    <servlet-name>mserver617</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>617</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+  
+<servlet>
+    <servlet-name>mserver618</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>618</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+  
+<servlet>
+    <servlet-name>mserver619</servlet-name>
+    <servlet-class>com.baypackets.ase.testapps.sbb.mscontroller.MsSessionCtrl</servlet-class>
+     <init-param>
+     	<param-name>check</param-name>
+		<param-value>619</param-value>
+		</init-param>
+    <load-on-startup/>
+  </servlet>
+
+
+
+<servlet-mapping>
+    <servlet-name>mserver600</servlet-name>
+    <pattern>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>600</value>
+	</equal>
+    </pattern>
+  </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>mserver601</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>601</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>mserver602</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>602</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+<servlet-mapping>
+    <servlet-name>mserver603</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>603</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>mserver604</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>604</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>mserver605</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>605</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>mserver606</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>606</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+<servlet-mapping>
+    <servlet-name>mserver607</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>607</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>mserver608</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>608</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>mserver609</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>609</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+<servlet-mapping>
+    <servlet-name>mserver610</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>610</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+
+<servlet-mapping>
+    <servlet-name>mserver611</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>611</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+
+<servlet-mapping>
+    <servlet-name>mserver612</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>612</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+
+<servlet-mapping>
+    <servlet-name>mserver613</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>613</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+
+<servlet-mapping>
+    <servlet-name>mserver614</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>614</value>
+	</equal>
+	</and>
+    </pattern>
+  </servlet-mapping>
+
+
+
+<servlet-mapping>
+    <servlet-name>mserver615</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>615</value>
+	</equal>
+	</and>
+    </pattern>
+</servlet-mapping>
+
+
+<servlet-mapping>
+    <servlet-name>mserver616</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>616</value>
+	</equal>
+	</and>
+    </pattern>
+</servlet-mapping>
+
+
+<servlet-mapping>
+    <servlet-name>mserver617</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>617</value>
+	</equal>
+	</and>
+    </pattern>
+</servlet-mapping>
+
+
+<servlet-mapping>
+    <servlet-name>mserver618</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>618</value>
+	</equal>
+	</and>
+    </pattern>
+
+</servlet-mapping>
+
+<servlet-mapping>
+    <servlet-name>mserver619</servlet-name>
+    <pattern>
+        <and>
+	<equal>
+          <var>request.method</var>
+          <value>INVITE</value>
+        </equal>
+	<equal>
+	     <var>request.uri.user</var>
+	     <value>619</value>
+	</equal>
+	</and>
+    </pattern>
+</servlet-mapping>
+    
+<session-config>
+    <session-timeout>300</session-timeout>
+  </session-config>
+</sip-app>

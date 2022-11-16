@@ -1,0 +1,3163 @@
+<?xml version="1.0"?>
+<!-- ==================================================== -->
+<!-- Build file : BayPackets ASE -->
+<!-- build.xml, Monday, August 9, 2004 -->
+<!-- Author : Ravi  -->
+<!-- ==================================================== -->
+<project name="BayPackets ASE" default="all" basedir=".">
+      <property name="dev" value="${dev}"/>
+
+      <!-- Target for running the JUnit test cases -->
+      <target name="runTests" depends="init">
+            <property name="testDir" value="${buildDir}"/>
+
+            <junit printsummary="yes">
+                  <classpath>
+                        <pathelement location="${buildDir}/bpjars/ase.jar"/>
+                        <pathelement location="${buildDir}/otherjars/junit.jar"/>
+                        <pathelement location="${buildDir}/otherjars/log4j-1.2.16.jar"/>
+                        <pathelement location="${buildDir}/otherjars/sipservlet-1_1-api.jar"/>
+                        <pathelement location="${buildDir}/otherjars/servlet-api.jar"/>
+                        <pathelement location="${ra.build}/rf-full.jar"/>
+                  </classpath>
+
+                  <formatter type="plain"/>
+
+                  <test name="com.baypackets.ase.security.tests.SipServletPermissionTest" todir="${testDir}" outfile="SipServletPermissionTest"/>
+                  <test name="com.baypackets.ase.security.tests.SasSecurityManagerTest" todir="${testDir}" outfile="SasSecurityManagerTest"/>
+                  <test name="com.baypackets.ase.security.tests.SasPolicyTest" todir="${testDir}" outfile="SasPolicyTest"/>
+                  <test name="com.baypackets.ase.security.tests.LdapLoginModuleTest" todir="${testDir}" outfile="LdapLoginModuleTest"/>
+                  <test name="com.baypackets.ase.security.tests.FileLoginModuleTest" todir="${testDir}" outfile="FileLoginModuleTest"/>   
+            </junit>
+      </target>
+
+      <target name="INGw">
+          <echo message="Compiling INGw "/>
+          <exec dir="." executable="${PARENT_BASE}/build/buildINGw.sh" failonerror="true">
+            <arg value="${INSTALLROOT}"/>
+            <arg value="${USE_IWF_STUB}"/>
+          </exec>
+      </target>
+ 
+
+      <target name="stack-state-table-exists" depends="init">
+            <mkdir dir="${buildDir}/dsjars"/>
+            <mkdir dir="${buildDir}/dsclasses"/>
+            <dependset>
+                  <sources>
+                      <fileset dir="${DS_HOME}/com/dynamicsoft/DsLibs/DsSipLlApi/">
+                        <include name="**/*.java"/>
+                      </fileset>
+                  </sources>
+                  <targets>
+                      <fileset dir="${buildDir}/dsclasses/">
+                        <include name="**/DsSipStateMachineDefinitions.class"/>
+                      </fileset>
+                  </targets>
+            </dependset>  
+    
+            <available file="${buildDir}/dsclasses/com/dynamicsoft/DsLibs/DsSipLlApi/DsSipStateMachineDefinitions.class" property=
+"state.table.present">
+                  <filepath>
+                        <fileset dir="${buildDir}/dsclasses"/>
+                  </filepath>
+            </available>
+      </target>
+      
+      <target name="stack-table" unless="state.table.present" depends="stack-state-table-exists">
+            <echo message="Building state table."/>
+            <exec dir="${DS_HOME}/com/dynamicsoft/DsLibs/DsSipLlApi/" executable="perl">
+                  <arg line="${DS_HOME}/com/dynamicsoft/DsLibs/DsSipLlApi/DsSipStateMachineDefinitions.pl"/>
+            </exec>
+      </target>
+      
+      <target name="stack" depends="stack-table">
+            <path id="stackclasspath">
+                <fileset dir="${DS_HOME}/lib">
+                  <include name="**/*.jar"/>
+                </fileset>
+                <fileset dir="${buildDir}/dsclasses">
+                  <include name="**/*.class"/>
+                </fileset>
+            </path>
+            <javac nowarn="on" srcdir="${DS_HOME}" destdir="${buildDir}/dsclasses" debug="true">
+                  <include name="**/*.java"/>
+                  <exclude name="**/DsApps/**"/>
+                  <exclude name="**/examples/**"/>
+                  <exclude name="**/test/**"/>
+                  <exclude name="**/jain/**"/>
+                  <classpath refid="stackclasspath"/>
+            </javac>
+            <jar update="true" jarfile="${buildDir}/dsjars/dsua.jar" basedir="${buildDir}/dsclasses/"/>
+      </target>
+
+      <!--
+      <target name="compileCapAsn" depends="init">
+          <echo message="Compiling CAMEL V2 ASN.1 "/>
+          <exec dir="." executable="${BN_HOME}/Dist/bin/bncompiler.cmd" failonerror="true">
+            <arg value="-m java -o ${CAP_HOME}/camelv2/codec/src/asnGenerated -ns asnGenerated -f ${CAP_HOME}/camelv2/asn/camel2+.asn"/>
+          </exec>
+      </target>
+      
+      <target name="capCodecs" depends="init">
+            <path id="bnclasspath">
+                  <fileset dir="${BN_HOME}/Dist/lib/java">
+                        <include name="binarynotes.jar"/>
+                  </fileset>
+            </path>
+
+            <mkdir dir="${buildDir}/cap"/>
+            <mkdir dir="${buildDir}/cap/camelv2"/>
+            <mkdir dir="${buildDir}/cap/camelv2/codecclasses"/>
+            <javac srcdir="${CAP_HOME}/camelv2/codec/src/asnGenerated" destdir="${buildDir}/cap/camelv2/codecclasses" debug="true">
+                  <include name="**/*.java"/>
+                  <classpath refid="bnclasspath"/>
+            </javac>
+
+            <mkdir dir="${buildDir}/bpjars/cap"/>
+            <jar update="true" jarfile="${buildDir}/bpjars/cap/sas-cap-v2.jar" basedir="${buildDir}/cap/camelv2/codecclasses"/>
+      </target>
+      -->
+
+      <target name="camel">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+            <property name="CAP_HOME" value="${PARENT_BASE}/tcap/cap"/>
+            <ant antfile="${CAP_HOME}/camelv2/sampleApplication/build.xml" target="build" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+			  <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+			  <property name="CAP_HOME" value="${CAP_HOME}"/>
+			  <property name="BN_HOME" value="${BN_HOME}"/>
+            </ant>
+      </target>
+
+      <target name="isup">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+            <property name="ISUP_HOME" value="${PARENT_BASE}/isup"/>
+            <ant antfile="${ISUP_HOME}/codec/build.xml" target="build" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+			  <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+			  <property name="ISUP_HOME" value="${ISUP_HOME}"/>
+            </ant>
+      </target>
+	  
+	  <target name="inap" depends="tcap-api">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+            <property name="INAP_HOME" value="${PARENT_BASE}/tcap/inap"/>
+            <ant antfile="${INAP_HOME}/jap_cs_2_2/codec/build.xml" target="build" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+			  <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+			  <property name="INAP_HOME" value="${INAP_HOME}"/>
+            </ant>
+      </target>
+
+ <target name="inapitu-t_cs2" depends="tcap-api">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+            <property name="INAP_HOME" value="${PARENT_BASE}/tcap/inap"/>
+            <ant antfile="${INAP_HOME}/itu-t/cs2/codec/build.xml" target="build" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+	      <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+            </ant>
+      </target>
+    <target name="map" depends="init">
+        <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+        <property name="MAP_HOME" value="${PARENT_BASE}/tcap/map"/>
+        <ant antfile="${MAP_HOME}/codec/build.xml" target="build" inheritAll="false">
+            <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+            <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+	    <property name="TCAP_HOME" value="${PARENT_BASE}/tcap"/>
+        </ant>
+    </target> 
+    <target name="ain" depends="init">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+            <property name="INAP_HOME" value="${PARENT_BASE}/tcap/inap"/>
+            <ant antfile="${INAP_HOME}/ain/codec/build.xml" target="build" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+	      <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+            </ant>
+      </target> 
+	  <target name="capv2" depends="tcap-api">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+			<property name="CAPV2_HOME" value="${PARENT_BASE}/tcap/cap/v2"/>
+            <!--<property name="CAPV2_HOME" value="/vob/Sipservlet/src/tcap/cap/v2"/>-->
+            <ant antfile="${CAPV2_HOME}/codec/build.xml" target="build" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+	      <property name="TCAP_HOME" value="${PARENT_BASE}/tcap"/>
+	      <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+            </ant>
+      </target>
+	  
+	  <target name="win" depends="tcap-api">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+            <!--<property name="WIN_HOME" value="/vob/Sipservlet/src/tcap/win"/>-->
+			<property name="WIN_HOME" value="${PARENT_BASE}/tcap/win"/>
+            <ant antfile="${WIN_HOME}/codec/build.xml" target="build" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+			  <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+			  <property name="PARENT_BASE" value="${PARENT_BASE}"/>
+            </ant>
+      </target>
+
+     <target name="service-data" depends="win,capv2,inapitu-t_cs2">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+		<property name="SVCDATA_HOME" value="${PARENT_BASE}/tcap/servicedata"/>	
+            <ant antfile="${SVCDATA_HOME}/build.xml" target="build" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+		<property name="SVCDATA_HOME" value="${SVCDATA_HOME}"/>
+            </ant>
+      </target> 
+      
+      <target name="mph-data" depends="variablesetup">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+		<property name="MPHDATA_HOME" value="${PARENT_BASE}/tcap/mphdata"/>	
+            <ant antfile="${MPHDATA_HOME}/build.xml" target="build" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+		<property name="MPHDATA_HOME" value="${MPHDATA_HOME}"/>
+            </ant>
+      </target> 
+      
+      
+      <target name="cdrutility" depends="variablesetup">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+             <echo message="THIRDPARTY: ${THIRDPARTY}"/>
+            <ant antfile="../setup/utility/build.xml" target="cdrsftp-utility" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+              <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+            </ant>
+      </target>
+	
+	<target name="atclient" depends="variablesetup">
+	    <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+	    <echo message="THIRDPARTY: ${THIRDPARTY}"/>
+		<ant antfile="../jmxclient/build.xml" target="at-client" inheritAll="false">
+			<property name="AT_SRC" value="../jmxclient/src"/>
+	    	<property name="INSTALLROOT" value="${INSTALLROOT}"/>
+	        <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+		</ant>
+	 </target>
+      
+	  
+	  <target name="tcap-api" depends="variablesetup">
+            <echo message="building tcap-api"/>
+            <ant antfile="../tcap/build.xml" target="tcap-api">
+				<property name="PARENT_BASE" value="${PARENT_BASE}"/>
+             </ant>
+      </target>
+	  
+	  <target name="tcaprouting" depends="inapitu-t_cs2,inap,ain" description ="builds tcap routing utility.">
+            <echo message="Building the Tcap Routing utility"/>
+            <property name="tcaprouting-app.name" value="tcap-routing"/>
+			<property name="tcaprouting.src.dir" value="../tcap"/>
+			<property name="tcaprouting.build.dir" Value="${INSTALLROOT}/TcapRoutingClasses"/>
+			<property name="bpjar.dir" Value="${INSTALLROOT}/bpjars"/>
+			<property name="otherjar.dir" Value="${INSTALLROOT}/otherjars"/>
+			
+			<path id="utilityclasspath">
+                <fileset dir="${bpjar.dir}" includes="*.jar" />
+		       <fileset dir="${otherjar.dir}" includes="*.jar"/>
+                     <fileset dir="${src}/mphlibs">
+                      <include name="mph.jar"/>
+                     </fileset>
+            </path>  
+			
+			<mkdir dir="${tcaprouting.build.dir}"/>
+            <javac srcdir="${tcaprouting.src.dir}" destdir="${tcaprouting.build.dir}" debug="true" >
+						<include name="**/router/*.java"/>
+                       <classpath refid="utilityclasspath"/>
+              </javac>
+
+              <jar update="true" jarfile="${bpjar.dir}/${tcaprouting-app.name}.jar" >
+					<fileset dir="${tcaprouting.build.dir}" defaultexcludes="yes"> 
+						<include name="**/router/*.class"/>
+	                  </fileset>
+              </jar>
+			  
+			  <delete dir="${tcaprouting.build.dir}"/>
+      </target>
+	  
+      <!-- ***************************************** -->
+      <!-- Main target -->
+      <!-- TODO: target 'alc' has been removed for compilation of SBB upgrade, it needs to added back after ALC has been updated -->
+      <!-- /////////////////////////////////////////////////////////   ///////////////// -->
+      <!--<target name="all-dev" depends="stack,init,ems,slee,ase,tcap,mph-data,ar,snar,sbb,sys-apps"/>-->
+      <target name="all-dev" depends="stack,init,ems,slee,comp-mon,ase,mph-data,ar,snar,tcap,acm,sbb,sys-apps"/> 
+      <target name="all" depends="variablesetup">
+           <delete dir="${buildDir}"/>
+
+            <antcall target="all-dev"/>
+            <antcall target="doc"/>
+            <antcall target="post-build-cleanup"/>
+      </target>
+
+      <!-- ***************************************** -->
+      <target name="checkeval">
+            <!-- Check EVAL flag value -->
+            <condition property="EvaluationVersion">
+                  <istrue value="${EVAL}"/>
+            </condition>
+      </target>
+
+      <target name="evaluation-compile" depends="checkeval" if="EvaluationVersion">
+            <echo message="#########################################################################"/>
+            <echo message="#########################################################################"/>
+            <echo message="###################### BUILDING EVALUATION VERSION ######################"/>
+            <echo message="#########################################################################"/>
+            <echo message="#########################################################################"/>
+
+            <copy tofile="${src}/com/baypackets/ase/util/EvaluationVersion.java"
+                  file="${src}/com/baypackets/ase/util/EvaluationVersion.java_true"/>
+      </target>
+
+      <target name="evaluation-config-specs" depends="checkeval" if="EvaluationVersion">
+            <exec dir="${src}/build" 
+              executable="sh" 
+              output="${buildDir}/AseClasses/config-specs"> 
+              <arg line="${src}/build/get_config_specs.sh EVALUATION VERSION"/> 
+            </exec>
+      </target>
+
+      <target name="standard-compile" depends="checkeval" unless="EvaluationVersion">
+            <copy tofile="${src}/com/baypackets/ase/util/EvaluationVersion.java"
+                  file="${src}/com/baypackets/ase/util/EvaluationVersion.java_false"/>
+      </target>
+
+      <target name="standard-config-specs" depends="checkeval" unless="EvaluationVersion">
+            <exec dir="${src}/build" 
+              executable="sh" 
+              output="${buildDir}/AseClasses/config-specs"> 
+              <arg line="${src}/build/get_config_specs.sh STANDARD VERSION"/> 
+            </exec>
+      </target>
+
+      <target name="obfuscate" depends="init">
+            <copy todir="${INSTALLROOT}"
+                  file="${PARENT_BASE}/build/allatori-config.xml"
+                  overwrite="true" />
+
+            <echo message="################ OBFUSCATION STARTED ##################"/>
+            <taskdef name="allatori" classname="com.allatori.ant.ObfuscatorTask" classpath="${THIRDPARTY}/otherjars/allatori.jar"/>
+            <allatori config="${INSTALLROOT}/allatori-config.xml"/>
+      </target>
+
+      <!-- ***************************************** -->
+      <target name="variablesetup" >
+            
+            <!-- Set the variables used inside -->
+            <property name="src" value="${PARENT_BASE}"/>
+            <property name="emssrc" value="${EMS_COMMON_ROOT}/src"/>
+            <property name="bpsrc" value="${BAYPROCESSOR_ROOT}/src"/>
+            <property name="cmsrc" value="${COMP_MON_ROOT}/src"/> 
+            <property file="ant.properties"/>
+            <property name="buildDir" Value="${INSTALLROOT}"/>
+            <property name="JACORB_HOME" value="${THIRDPARTY}/TAO/JacOrb/JacORB1_3_30"/>
+            <property name="DYNAMICSOFT_HOME" value="${DS_HOME}"/>
+            <property name="TOMCAT_HOME" value="${THIRDPARTY}/webserver/apache-tomcat-7.0.30/"/>
+            <property name="JDK_13_HOME" value="${JAVA_13_HOME}/bin"/>
+            <property name="test.apps.src" value="${src}/tools/servlets"/>
+            <property name="test.apps.build"  value="${buildDir}/test-apps"/>
+            <property name="sys.apps.build" value="${buildDir}/sysapps"/> 
+            <property name="sys.apps.src" value="${src}/sysapps"/> 
+            <property name="base.ra.stack.dir" value="${CAS_STACK_ROOT}/stacks/Diameter/diameterXL_release.4.1.1"/>
+            <property name="FEE_BUILD_ROOT" value="${FEE_BUILD_ROOT}"/>   
+            <!-- Define the classpath -->
+            <path id="classpath">
+
+                  <fileset dir="${JACORB_HOME}/lib">
+                        <include name="jacorb.jar"/>
+            </fileset>
+
+            <fileset dir="${JACORB_HOME}/lib">
+                        <include name="idl.jar"/>
+                  </fileset>
+
+                  <fileset dir="${buildDir}/bpjars">
+                        <include name="*.jar"/>
+                  </fileset>
+
+                  <fileset dir="${buildDir}/otherjars">
+                        <include name="*.jar"/>
+                  </fileset>
+
+                  <fileset dir="${buildDir}/dsjars">
+                        <include name="*.jar"/>
+                  </fileset>
+
+                  <fileset dir="${TOMCAT_HOME}/bin">
+                        <include name="*.jar"/>
+                  </fileset>
+
+                  <fileset dir="${TOMCAT_HOME}/lib">
+                        <include name="*.jar"/>
+                  </fileset>
+
+                  <fileset dir="${buildDir}/tools/jibx">
+                        <include name="*.jar"/>
+                  </fileset>
+
+                  <fileset dir="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/">
+                        <include name="*.jar"/>
+                  </fileset>
+
+            <pathelement path="${buildDir}/AseClasses"/>
+            </path>
+      </target>
+      
+      <target name="init" depends="variablesetup">
+            <!-- Create the output directory to create the jar files -->
+            <mkdir dir="${buildDir}/bpjars"/>
+            <mkdir dir="${buildDir}/otherjars"/>
+            <mkdir dir="${buildDir}/dsjars"/>
+            <mkdir dir="${buildDir}/httpjars"/>
+            <mkdir dir="${buildDir}/soapserver/Axis"/>
+            <mkdir dir="${buildDir}/tools/jibx"/>
+            <mkdir dir="${buildDir}/sbb"/>
+           <mkdir dir="${buildDir}/cas_service"/> 
+         
+            <mkdir dir="${buildDir}/mjds"/>  
+            <mkdir dir="${buildDir}/Common"/>
+            <mkdir dir="${buildDir}/Common/thirdParty"/>
+            <mkdir dir="${buildDir}/Common/thirdParty/jakarta-tomcat"/>
+            <mkdir dir="${buildDir}/Common/thirdParty/jakarta-tomcat/lib"/> 
+               
+            <copy todir="${buildDir}/Common/thirdParty/jakarta-tomcat/lib" file="${THIRDPARTY}/webserver/apache-tomcat-7.0.30/lib/tomcat-coyote.jar"/>  
+
+            <copy todir="${buildDir}/lib">
+                  <fileset dir="${src}/setup/platform_lib"/>
+            </copy>
+
+            <copy todir="${buildDir}/schema">
+                  <fileset dir="${src}/setup/schema"/>
+            </copy>
+
+            <copy todir="${buildDir}/cas_service">
+                  <fileset dir="${src}/setup/cas_service"/>
+            </copy> 
+
+            <copy todir="${buildDir}/xsd">
+                  <fileset dir="${src}/setup/xsd"/>
+            </copy>
+
+  	    <copy todir="${buildDir}/msml">
+                  <fileset dir="${src}/setup/msml"/>
+	    </copy>
+
+            <copy todir="${buildDir}/scripts">
+                  <fileset dir="${src}/setup/scripts"/>
+            </copy>
+
+            <copy todir="${buildDir}/schema">
+                  <fileset dir="${src}/setup/schema"/>
+            </copy>
+
+            <copy todir="${buildDir}/conf">
+                  <fileset dir="${src}/setup/conf"/>
+            </copy>
+
+            <copy todir="${buildDir}/setup">
+                  <fileset dir="${src}/setup/install"/>
+            </copy>
+
+          <copy todir="${buildDir}/mjds">
+                  <fileset dir="${THIRDPARTY}/mjds"/>
+            </copy>
+ 
+            <!-- Copy the thirdparty libraries to the otherjars & dsjars folders -->
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/TinyRadius-0.9.9.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/webserver/apache-tomcat-7.0.30/lib/servlet-api.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/sipservlet-1_1-api.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/junit.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/xalan-jboss.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/dnsjava-3.2.0.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/webserver/apache-tomcat-7.0.30/lib/jsp-api.jar"/>
+           <!-- <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/apache/commons-digester.jar"/>-->
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/apache/commons-fileupload-1.1.1.jar"/> 
+          <!--  <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/apache/commons-beanutils.jar"/>-->
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/apache/commons-logging-api.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/apache/commons-logging.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/apache/commons-collections-3.1.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${TOMCAT_HOME}/lib/el-api.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/log4j-1.2.16.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/commonj-twm.jar"/>
+           <!--<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jgroups-2.6.15.GA.jar"/>-->
+           <!--<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jgroups-3.5.0.Final.jar"/>-->
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/mail.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/activation.jar"/>
+            <!--copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/ojdbc14.jar"/-->
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/ojdbc6.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/ons.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jmxri.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jdom.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jmxremote.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jmxremote_optional.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/providerutil.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/fscontext.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/codegen.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/boot.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/runtime.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/resources.jar"/>
+			<!-- jdtcore jar is removed for running jsp files on tomcat, due to conflict with ecj3.7.2.jar in tomcat lib folder(fixed for bug 13576) -->
+           <!-- <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jdtcore.jar"/>-->
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/axis2-java2wsdl-1.3.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/axis2-codegen-1.3.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/wsdl4j-1.6.2.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/axis2-kernel-1.3.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jaxme2-0.5.2.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/xercesImpl-2.8.1.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/activemq-all-5.3.0.jar"/> 
+	    <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/simplefan.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/aopalliance-1.0.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/aspectjrt-1.6.7.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/aspects-5.3.0.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/commons-pool2-2.4.2.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/container-common-api-5.3.0.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/sipservlet-occas-api-5.3.0.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/sipservlet-common-api-5.3.0.jar"/> 
+	    <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/icmp4j-1018.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/asm-5.0.3.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/kryo-3.0.3.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/kryo-serializers-0.37.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/minlog-1.3.0.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/objenesis-2.1.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/reflectasm-1.10.1.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/java-uuid-generator-3.1.3.jar"/>
+	    <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/commons-collections4-4.1.jar"/>
+	    <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/commons-lang3-3.4.jar"/>
+          <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/guava-19.0.jar"/>
+          <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/postgresql-9.4.1212.jre7.jar"/>
+
+          <!--Removed for bug 14715 conflicting jars-->
+		  <!-- <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-beans-3.0.6.RELEASE.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-context-3.0.6.RELEASE.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-context-support-3.0.6.RELEASE.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-jms-3.0.6.RELEASE.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-core-3.0.6.RELEASE.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-web-3.0.6.RELEASE.jar"/> 
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-tx-3.0.6.RELEASE.jar"/> 
+	    <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-expression-3.0.6.RELEASE.jar"/> -->
+		
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/mysql-connector-java-5.1.22-bin.jar"/> 
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/c3p0-0.9.2.1.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/mchange-commons-java-0.2.3.4.jar"/>		
+            <!-- making 14 entry for jersy rest jars for emslite agent -->
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jackson-core-asl-1.9.2.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jackson-jaxrs-1.9.2.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jackson-mapper-asl-1.9.2.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jackson-xc-1.9.2.jar"/>
+          <!-- <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/java-mail-1.4.4.jar"/>-->
+         <!--  <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jersey-bundle-1.12.jar"/>-->
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jersey-client-1.18.1.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jersey-core-1.18.1.jar"/>
+		  <!-- <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/asm-3.1.jar"/> -->
+<!--	   <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/commons-codec-1.4.jar"/>-->
+	   <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/m4uapi.jar"/>
+ <!--      <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jersey-gf-server.jar"/>-->
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jersey-json-1.18.1.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jersey-server-1.18.1.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jersey-servlet-1.18.1.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jettison-1.1.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jsr311-api-1.1.1.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jsr311-api-1.1.1.jar"/>
+	   <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/snmp4j-2.3.4.jar"/>
+	   <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/nio_char.jar"/>
+	   <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/commons-compress-1.12.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/org.apache.commons.httpclient.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/commons-io-2.5.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/httpcore-4.4.3.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/httpmime-4.5.1.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/json-20160212.jar"/>     
+          <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/snakeyaml-1.9.jar"/> 
+            <copy todir="${buildDir}/dsjars" file="${DYNAMICSOFT_HOME}/lib/concurrent.jar"/>
+            <copy todir="${buildDir}/dsjars" file="${DYNAMICSOFT_HOME}/lib/dslicense.jar"/>
+            <copy todir="${buildDir}/dsjars" file="${DYNAMICSOFT_HOME}/lib/flexlm.jar"/>
+            <copy todir="${buildDir}/dsjars" file="${DYNAMICSOFT_HOME}/lib/JainSipApi1.0.jar"/>
+            <copy todir="${buildDir}/dsjars" file="${DYNAMICSOFT_HOME}/lib/log4j.jar"/>
+            <copy todir="${buildDir}/dsjars" file="${DYNAMICSOFT_HOME}/lib/mime.jar"/>
+            <copy todir="${buildDir}/dsjars" file="${DYNAMICSOFT_HOME}/lib/trove.jar"/>
+            <copy todir="${buildDir}/dsjars" file="${DYNAMICSOFT_HOME}/lib/xmlParserAPIs.jar"/>
+            <copy todir="${buildDir}/dsjars" file="${DYNAMICSOFT_HOME}/lib/Acme.jar"/>
+            <copy todir="${buildDir}/soapserver/Axis" file="${THIRDPARTY}/otherjars/axis2.war"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/bcel.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/jibx-bind.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/jibx-extras.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/jibx-javatools.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/qdox-1.6.1.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/jibx-run.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/stax-api.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/xmlpull_1_1_4.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/wstx-asl.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/xpp3.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/xsd2jibx.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/jaxme-js-0.3.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/commons-lang-2.5.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/commons-logging-1.0.4.jar"/>
+            <copy todir="${buildDir}/tools/jibx" file="${THIRDPARTY}/otherjars/jibx/log4j-1.2.16.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/redis_client_v_10_1.jar"/> 
+          <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/lettuce-core-5.2.0.RELEASE.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/mjds/mjdsbase.jar"/> 
+          <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/mjds/mjds3gppro.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/mjds/mjds3gppsh.jar"/> 
+        <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/mjds/mjdsaccounting.jar"/>
+      	  <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/oemsAgentLibrary.jar"/>
+      	  <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/kafkaClient.jar"/>
+      	  <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jackson-core-2.9.4.jar"/>
+           <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jackson-dataformat-yaml-2.9.2.jar"/> 
+      	  <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jackson-databind-2.9.4.jar"/>
+      	 <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/kafka-clients-1.1.0.jar"/>
+        <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/zkclient-0.10.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/zookeeper-3.4.10.jar"/>
+      	<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/tc.jar"/>
+      	<!--<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/binarynotes-1.6.0.jar"/>-->
+      	<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/commons-email-1.5.jar"/>
+      	<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/javax.mail-1.5.6.jar"/>
+      	<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/opensmpp-charset-3.0.3-SNAPSHOT.jar"/>
+      	 <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/opensmpp-client-3.0.3-SNAPSHOT.jar"/>
+      	  <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/opensmpp-core-3.0.3-SNAPSHOT.jar"/>
+     <!--<copy todir="${buildDir}/bpjars" file="${FEE_BUILD_ROOT}/fee.jar"/>
+          <copy todir="${buildDir}/bpjars" file="${FEE_BUILD_ROOT}/javanodeprocessor.jar"/>
+          <copy todir="${buildDir}/bpjars" file="${FEE_BUILD_ROOT}/mphhelper.jar"/>
+          <copy todir="${buildDir}/bpjars" file="${FEE_BUILD_ROOT}/xmlnodeprocessor.jar"/>
+         <copy todir="${buildDir}/bpjars" file="${FEE_BUILD_ROOT}/xmlparser.jar"/>-->
+<!--        <copy todir="${buildDir}/bpjars">
+                          <fileset dir="${MPH_BUILD_ROOT}" >
+                            <include name="mph*.jar"/>
+                          </fileset>
+            </copy>-->
+      </target>
+      <!-- ***************************************** -->
+
+      <!-- **************************************************** -->
+      <!-- *                  EMS build                       * -->
+      <!-- **************************************************** -->
+            <!-- **************************************************** -->
+            <!-- Check to see if idl needs to be rebuilt -->
+            <target name="ems-idl-exists" depends="init">
+                  <mkdir dir="${buildDir}/EmsIdl"/>
+            <mkdir dir="${buildDir}/EmsClasses"/>
+
+                  <dependset>
+                        <sources>
+                            <fileset dir="${emssrc}/EMS/Idl">
+                              <include name="**/*.idl"/>
+                            </fileset>
+                            <fileset dir="${bpsrc}/com/baypackets/bayprocessor">
+                              <include name="**/*.idl"/>
+                            </fileset>
+                        </sources>
+                        <targets>
+                            <fileset dir="${buildDir}/EmsIdl">
+                              <include name="**/built.txt"/>
+                            </fileset>
+                        </targets>
+                  </dependset>  
+
+                  <available file="${buildDir}/EmsIdl/built.txt" property="ems-idl-built"/>
+            </target>
+            <!-- **************************************************** -->
+
+      
+            <!-- **************************************************** -->
+            <!-- idl needs to be rebuilt                              -->
+            <target name="ems-idl-build" depends="ems-idl-exists" unless="ems-idl-built">
+           <java classname="org.jacorb.idl.parser">
+             <arg value="-d"/>
+             <arg value="${buildDir}/EmsIdl"/>
+             <arg value="-I${emssrc}/EMS/Idl"/>
+             <arg value="${emssrc}/EMS/Idl/EmsIdl/Agent.idl"/>
+             <arg value="${emssrc}/EMS/Idl/EmsIdl/ImMediateTypes.idl"/>
+            <arg value="${emssrc}/EMS/Idl/EmsIdl/RSIEmsTypes.idl"/>
+             <arg value="${emssrc}/EMS/Idl/EmsIdl/RSIRule.idl"/>
+             <arg value="${emssrc}/EMS/Idl/EmsIdl/RSIEms.idl"/>
+             <arg value="${emssrc}/EMS/Idl/EmsIdl/BayConsole.idl"/>
+             <arg value="${emssrc}/EMS/Idl/EmsIdl/ServiceMgmt.idl"/>
+             <classpath refid="classpath"/>
+           </java>
+           <java classname="org.jacorb.idl.parser">
+             <arg value="-d"/>
+             <arg value="${buildDir}/EmsIdl"/>
+             <arg value="-I${bpsrc}/com/baypackets/bayprocessor"/>
+             <arg value="${bpsrc}/com/baypackets/bayprocessor/idl/BayProcessor.idl"/>
+             <classpath refid="classpath"/>
+           </java>
+                  <touch file="${buildDir}/EmsIdl/built.txt"/>
+            </target>
+            <!-- **************************************************** -->
+
+      
+            <!-- **************************************************** -->
+            <!-- ems compile                                          -->
+            <target name="ems-compile" depends="ems-idl-build">
+            <javac srcdir="${buildDir}/EmsIdl" destdir="${buildDir}/EmsClasses" debug="true">
+              <include name="**/*.java"/>
+              <classpath refid="classpath"/>
+            </javac>
+
+                  <javac srcdir="${emssrc}" destdir="${buildDir}/EmsClasses" debug="true">
+                    <include name="com/baypackets/util/**/*.java"/>
+              <classpath refid="classpath"/>
+            </javac>
+            </target>
+            <!-- **************************************************** -->
+      
+
+            <!-- **************************************************** -->
+            <!-- check to see if I did anything                       -->
+            <target name="ems-jar-tag-exists" depends="ems-compile">
+                  <dependset>
+                        <sources>
+                            <fileset dir="${buildDir}/EmsClasses">
+                              <include name="**/*.class"/>
+                            </fileset>
+                        </sources>
+                        <targets>
+                            <fileset dir="${buildDir}/EmsClasses">
+                              <include name="**/config-specs"/>
+                            </fileset>
+                        </targets>
+                  </dependset>  
+
+                  <available file="${buildDir}/EmsClasses/config-specs" property="ems-jar-tag-upToDate"/>
+            </target>
+            <!-- **************************************************** -->
+      
+
+            <!-- **************************************************** -->
+            <!-- tag the jar file with date/cpec                      -->
+            <target name="ems-jar-tag" unless="ems-jar-tag-upToDate" depends="ems-jar-tag-exists">
+                  <exec dir="${src}/build"
+                        executable="sh"
+                        output="${buildDir}/EmsClasses/config-specs">
+                        <arg line="${src}/build/get_config_specs.sh"/>
+                  </exec>
+            </target>
+            <!-- **************************************************** -->
+           
+
+            <!-- **************************************************** -->
+            <!-- package ems, if necessary                            -->
+            <target name="ems">
+                  <antcall target="ems-nodeps"/>
+            </target>
+            
+            <target name="ems-nodeps" depends="ems-jar-tag">
+                  <jar update="true" jarfile="${buildDir}/bpjars/ems.jar" basedir="${buildDir}/EmsClasses"/>
+            </target>                  
+            <!-- **************************************************** -->
+      <!-- **************************************************** -->
+      <!-- *               END EMS build                      * -->
+      <!-- **************************************************** -->
+        
+      <!-- **************************************************** -->
+      <!-- *                  SLEE build                      * -->
+      <!-- **************************************************** -->
+            <!-- **************************************************** -->
+            <!-- slee compile                                         -->
+            <target name="slee-compile" depends="init">
+            <mkdir dir="${buildDir}/SleeClasses"/>
+                  <path id="slee.class.path">
+                        <path refid="classpath"/>     
+                  </path>
+                  <javac srcdir="${bpsrc}" destdir="${buildDir}/SleeClasses" debug="true">
+                      <include name="com/baypackets/bayprocessor/slee/common/*.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/internalservices/Alarm*.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/internalservices/Bp*.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/internalservices/SleeAlarmService.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/internalservices/Trace*.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/internalservices/Timer*.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/internalservices/Usage*.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/internalservices/MMUtils.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/threadmonitor/*.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/meascounters/*.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/threscounters/*.java"/>
+                      <include name="com/baypackets/bayprocessor/slee/genericdispatcher/*.java"/>
+                      <include name="com/baypackets/bayprocessor/baytalk/*.java"/>
+                      <include name="com/baypackets/bayprocessor/agent/*.java"/>
+                      <include name="com/baypackets/emsagent/*.java"/>
+                      <include name="com/baypackets/emsliteagent/*.java"/>
+                      <include name="com/baypackets/utils/calltracing/*.java"/>
+                      <exclude name="**/GenericResourceAgentInterface.java"/> <!-- the mystery file -->
+                      <classpath refid="slee.class.path"/>
+                </javac>
+            </target>
+      
+            <!-- **************************************************** -->
+            <!-- check to see if I did anything                       -->
+            <target name="slee-jar-tag-exists" depends="slee-compile">
+                  <dependset>
+                        <sources>
+                            <fileset dir="${buildDir}/SleeClasses">
+                              <include name="**/*.class"/>
+                            </fileset>
+                        </sources>
+                        <targets>
+                            <fileset dir="${buildDir}/SleeClasses">
+                              <include name="config-specs"/>
+                            </fileset>
+                        </targets>
+                  </dependset>  
+      
+                  <available file="${buildDir}/SleeClasses/config-specs" property="slee-jar-tag-upToDate"/>
+            </target>
+            <!-- **************************************************** -->
+      
+
+            <!-- **************************************************** -->
+            <!-- tag the jar file with date/cpec                      -->
+            <target name="slee-jar-tag" unless="slee-jar-tag-upToDate" depends="slee-jar-tag-exists">
+                  <exec dir="${src}/build"
+                        executable="sh"
+                        output="${buildDir}/SleeClasses/config-specs">
+                        <arg line="${src}/build/get_config_specs.sh"/>
+                  </exec>
+            </target>
+            <!-- **************************************************** -->
+           
+
+            <!-- **************************************************** -->
+            <!-- package slee, if necessary                            -->
+            <target name="slee">
+                  <antcall target="slee-nodeps"/>
+            </target>
+                 
+            <target name="slee-nodeps" depends="slee-jar-tag">
+                  <jar update="true" jarfile="${buildDir}/bpjars/slee.jar" basedir="${buildDir}/SleeClasses"/>
+            </target>                 
+
+
+          <target name="comp-mon" depends="slee">
+            <echo message="INSTALLROOT: ${INSTALLROOT}"/>
+            <property name="CM_HOME" value="${COMP_MON_ROOT}"/>
+            <ant antfile="${CM_HOME}/build.xml" target="build" inheritAll="false">
+              <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+              <property name="THIRDPARTY" value="${THIRDPARTY}"/>
+            </ant>
+         <copy todir="${buildDir}/bpjars" file="${COMP_MON_ROOT}/target/ComponentMonitor.jar"/> 
+         <copy todir="${buildDir}/bpjars" file="${COMP_MON_ROOT}/extlibs/BpIdl1.jar"/> 
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/commons-beanutils-core-1.8.0.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/commons-beanutils-1.7.0.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/commons-codec-1.9.jar"/>   
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/commons-collections-3.2.1.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/commons-configuration-1.6.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/commons-digester-1.8.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/commons-lang-2.4.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/commons-logging-1.1.1.jar"/> 
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/httpclient-4.5.1.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/spring-beans-4.3.12.RELEASE.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/spring-core-4.3.12.RELEASE.jar"/>
+         <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/spring-jdbc-4.3.12.RELEASE.jar"/>
+        <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/spring-tx-4.3.12.RELEASE.jar"/>  
+       <copy todir="${buildDir}/otherjars" file="${COMP_MON_ROOT}/extlibs/log4j-1.2.17.jar"/> 
+        </target>
+  
+            
+            <!-- **************************************************** -->
+      <!-- **************************************************** -->
+      <!-- *               END SLEE build                     * -->
+      <!-- **************************************************** -->
+ 
+      <!-- *************** Build the dblibrary classes ************************** -->
+     <target name="dblibrary" depends="init,ems,slee">
+        <mkdir dir="${buildDir}/DbLibrary"/>
+            
+            <exec dir="${src}/build"
+                  executable="sh"
+                  output="${buildDir}/DbLibrary/config-specs">
+                  <arg line="${src}/build/get_config_specs.sh"/>
+            </exec>
+      <path id="slee.class.path">
+            <path refid="classpath"/>
+      </path>
+        <javac srcdir="${bpsrc}" sourcepath="${bpsrc}" destdir="${buildDir}/DbLibrary" debug="true" fork="yes" executable=
+"${THIRDPARTY}/java/j2sdk1_3_1/bin/javac">
+          <include name="com/baypackets/dblibrary/*.java"/>
+          <classpath refid="slee.class.path"/>
+        </javac>
+
+        <jar jarfile="${buildDir}/bpjars/bpdblib.jar" basedir="${buildDir}/DbLibrary"/>
+        <copy todir="${buildDir}/conf" file="${bpsrc}/com/baypackets/dblibrary/dblib.properties"/>
+        <copy todir="${buildDir}/scripts" file="${bpsrc}/com/baypackets/dblibrary/zapConnections.expect"/>
+      <echo message="Generating the Javadoc files for DB Library..."/>
+            <delete dir="${buildDir}/DbLibrary/doc"/>
+      <mkdir dir="${buildDir}/DbLibrary/doc"/>
+      <javadoc destdir="${buildDir}/DbLibrary/doc" additionalparam="-Xdoclint:none">
+            <fileset dir="${bpsrc}" defaultexcludes="yes"> 
+                  <include name="com/baypackets/dblibrary/*.java"/>
+            </fileset> 
+            <classpath refid="classpath"/>
+      </javadoc>
+    </target>
+      <!-- ***************************************** -->
+
+      <!-- **************************************************** -->
+      <!-- *                  ase build                       * -->
+      <!-- **************************************************** -->
+            <!-- **************************************************** -->
+            <!-- ase                                                  -->
+            
+            <target name="ase" depends="init,ext,jetc">
+
+                  <antcall target="ase-nodeps"/>
+            <!--<antcall target="ar"/>--> 
+         <!-- <antcall target="snar"/> -->
+</target>
+
+
+   <target name="ar" > 
+
+    <!--<path id="arclasspath">
+      <fileset dir="${src}/mphlibs">
+        <include name="mph.jar"/>
+      </fileset>
+      </path> -->
+   <javac srcdir="${src}" destdir="${buildDir}/AseClasses" debug="true">
+      <!--<include name="**/router/*.java"/>-->
+      <!--<include name="com/baypackets/ase/**/router/*.java"/>-->
+     <include name="com/baypackets/ase/router/**/*.java"/>
+    <exclude name="**/router/acm/**"/> 
+   <!-- <classpath refid="arclasspath"/>  -->
+    <classpath refid="classpath"/> 
+    </javac>
+  
+      <jar update="true" jarfile="${buildDir}/bpjars/ar.jar">    
+     <fileset dir="${buildDir}/AseClasses" defaultexcludes="yes">
+     <include name="**/router/*.class"/>
+	<exclude name="**/router/customize/servicenode/**"/>
+        <exclude name="**/router/acm/**"/> 
+      </fileset>
+   </jar>
+   </target> 
+   
+
+<target name="snar">
+   <jar update="true" jarfile="${buildDir}/bpjars/snar.jar">    
+     <fileset dir="${buildDir}/AseClasses" defaultexcludes="yes">
+	<include name="**/router/customize/servicenode/*.class"/>
+      </fileset>
+   </jar>
+
+   </target>
+            
+<target name="acm">
+    <path id="arclasspath">
+      <fileset dir="${src}/mphlibs">
+        <include name="mph.jar"/>
+      </fileset>
+      </path>
+   <javac srcdir="${src}" destdir="${buildDir}/AseClasses" debug="true">
+      <!--<include name="**/router/*.java"/>-->
+      <!--<include name="com/baypackets/ase/**/router/*.java"/>-->
+     <include name="**/router/acm/**/*.java"/>
+    <classpath refid="arclasspath"/>
+    <classpath refid="classpath"/>
+    </javac> 
+   <jar update="true" jarfile="${buildDir}/bpjars/snar.jar">
+     <fileset dir="${buildDir}/AseClasses" defaultexcludes="yes">
+        <include name="**/router/acm/*.class"/>
+      </fileset>
+   </jar>
+   </target>
+
+<target name="ase-nodeps" depends="init">
+            <copy todir="${buildDir}/AseClasses/com">
+                  <fileset dir="${src}/com">
+                        <exclude name="**/EvaluationVersion.java_*"/>
+                        <exclude name="**/*.java"/>
+                        <exclude name="**/*contrib*"/>
+						<exclude name="**/alc/**"/>
+                  </fileset>
+            </copy>
+			
+			<path id="pacClasspath">
+                  <fileset dir="${THIRDPARTY}/otherjars">
+                        <include name="jersey-*.jar"/>
+						<include name="jackson-*.jar"/>
+						<include name="asm-5.0.3.jar"/>
+						<include name="jsr311-api-1.1.1.jar"/>
+						<include name="jettison-1.1.jar"/>
+                  </fileset>
+     		     <fileset dir="${THIRDPARTY}/apache/apache-activemq-5.3.0/lib/optional">
+                        <include name="commons-codec-1.2.jar"/>
+                  </fileset>
+			</path>
+                 
+                  <path id="cmclasspath">
+                 <fileset dir="${COMP_MON_ROOT}/target">
+                  <include name="ComponentMonitor.jar"/>
+                 </fileset>
+                  </path>
+ 	
+			
+                  <javac srcdir="${src}" destdir="${buildDir}/AseClasses" debug="true">
+                        <include name="com/baypackets/ase/**/*.java"/>
+	         	<exclude name="com/baypackets/ase/**/sbb/**"/> <!-- excluding SBB -->
+		        <exclude name="com/baypackets/ase/**/msadaptor/**"/> <!-- excluding msadaptor -->
+                        <exclude name="com/baypackets/ase/**/ra/**"/> <!-- excluding Resource Adaptors -->
+                        <exclude name="com/baypackets/ase/**/router/**"/> 
+                        <exclude name="com/baypackets/ase/**/ftjdbc/**"/>
+                        <exclude name="com/baypackets/ase/**/jndi_jdbc/**"/>
+                        <exclude name="com/baypackets/ase/**/dblib/**"/>
+			<exclude name="**/soa/codegenerator/jet/**"/>
+                        <exclude name="com/baypackets/ase/**/alc/**"/>
+                        <exclude name="**/MessageContraints.java"/> <!-- mystery mispellin -->
+                        <exclude name="**/ReDeploymentFailedException.java"/>  <!-- the mystery file -->
+                        <exclude name="**/sysapps/registrar/Listener.java"/> <!-- the mystery file -->
+                        <classpath refid="classpath"/>
+         		<classpath refid="pacClasspath"/>
+                        <classpath refid="cmclasspath"/> 
+                  </javac>
+
+                  <jar update="true" jarfile="${buildDir}/bpjars/bootstrap.jar">
+                  <fileset dir="${buildDir}/AseClasses" >
+                  <include name="**/config-specs"/>
+                  <include name="**/startup/Bootstrap.class"/>
+                  <include name="**/startup/AseClassLoader.class"/>
+                  </fileset>
+            </jar>
+
+                  <jar update="true" jarfile="${buildDir}/bpjars/ase.jar">
+                  <fileset dir="${buildDir}/AseClasses" >
+                        <exclude name="**/spi/**"/>
+                        <exclude name="**/ari/**"/>
+                        <exclude name="**/alc/**"/>
+                        <exclude name="**/sbb/**"/>
+                        <exclude name="**/msadaptor/**"/>
+                        <exclude name="**/testapps/**"/>
+                        <exclude name="**/sysapps/**"/>
+                      <exclude name="**/router/**"/>  <exclude name="**/resource/**"/>
+                        <exclude name="**/tomcat/**"/>
+                        <exclude name="**/jndi_jdbc/**"/>
+                        <exclude name="**/jndi/**"/>
+                        <exclude name="**/jmxmanagement/**"/>
+                        <exclude name="**/workmanager/**"/>
+                        <exclude name="**/soa/iface/**"/>
+                        <exclude name="**/startup/Bootstrap.class"/>
+                        <exclude name="**/startup/AseClassLoader.class"/>
+                        <exclude name="**/diameter/**"/>
+			<exclude name="com/baypackets/ase/http/**"/>
+                  </fileset>
+            </jar>
+
+                  <jar update="true" jarfile="${buildDir}/httpjars/ase-http.jar">
+                  <fileset dir="${buildDir}/AseClasses" >
+                  <include name="**/tomcat/**"/>
+               	  <include name="com/baypackets/ase/http/**"/>   
+		<include name="**/config-specs"/>
+                  </fileset>
+            </jar>
+
+                  <jar update="true" jarfile="${buildDir}/bpjars/asehttpServlet.jar">
+                  <fileset dir="${buildDir}/AseClasses" >
+                  <include name="com/baypackets/ase/ra/http/**"/>
+		  </fileset>
+            </jar>
+
+
+
+            <!-- ***************Building the soa-iface.jar file ******************* -->
+                  <!--echo message ="Building the soa-iface.jar JAR file... "/-->
+                  <jar update="true" jarfile="${buildDir}/bpjars/soa-iface.jar">
+                  <fileset dir="${buildDir}/AseClasses"
+                        includes="**/soa/iface/**"/>
+            </jar>
+
+            <!-- ***************Building the datareplication.jar file ******************* -->
+                  <!--jar update="true" jarfile="${buildDir}/bpjars/datareplication.jar"-->
+                  <jar update="true" jarfile="${buildDir}/bpjars/bpspi.jar">
+                  <fileset dir="${buildDir}/AseClasses" >
+                        <include name="**/spi/replication/appDataRep/**"/>
+                        <include name="**/spi/radius/**"/>
+                  </fileset>
+            </jar>
+
+            <!-- ***************Building the SBB impl jar file ******************* -->
+            <!--       <jar update="true" jarfile="${buildDir}/bpjars/bpsbbImpl.jar">
+                  <fileset dir="${buildDir}/AseClasses" 
+                         includes="**/sbb/**,**/msadaptor/**,**/config-specs"
+                         excludes="**/sbb/*.class,**/testapps/**"/>
+            </jar> -->
+           
+      <!-- *************** Building the jar for Application Counter Manager ******************* -->
+            <jar update="true" jarfile="${buildDir}/bpjars/appmsr.jar">
+                  <fileset dir="${buildDir}/AseClasses"
+                        includes="**/spi/measurement/AppCounterManager.class"/>
+            </jar>
+
+ 
+            <!-- ***************Building the enum if jar file ******************* -->
+                    <!--echo message="Building the ENUM Interface JAR file..."/-->
+              <jar update="true" jarfile="${buildDir}/bpjars/bpenumif.jar">
+            <fileset dir="${buildDir}/AseClasses" >
+                  <include name="**/enumclient/EnumClient.class"/>
+                  <include name="**/enumclient/EnumContext.class"/>
+                  <include name="**/enumclient/EnumException.class"/>
+                  <include name="**/enumclient/EnumListener.class"/>
+            </fileset>
+        </jar>
+      
+            <!-- ***************Building the enum impl jar file ******************* -->
+                    <!--echo message="Building the ENUM Implementation JAR file..."/-->
+              <jar update="true" jarfile="${buildDir}/bpjars/bpenum.jar">
+            <fileset dir="${buildDir}/AseClasses" >
+                  <include name="**/config-specs"/>
+                  <include name="**/enumclient/DDDSAlgorithm.class"/>
+                  <include name="**/enumclient/DNSPacket.class"/>
+                  <include name="**/enumclient/EnumResolver.class"/>
+                  <include name="**/enumclient/EnumServer.class"/>
+                  <include name="**/enumclient/Tree.class"/>
+                  <include name="**/enumclient/TreeNode.class"/>
+            </fileset>
+        </jar>
+
+                  <jar update="true" jarfile="${buildDir}/bpjars/jndids.jar">
+                  <fileset dir="${buildDir}/AseClasses"
+                        includes="**/jndi/**,**/config-specs"/>
+            </jar>
+
+                  <jar update="true" jarfile="${buildDir}/bpjars/jmxide.jar">
+                  <fileset dir="${buildDir}/AseClasses"
+                        includes="**/jmxmanagement/**,**/config-specs"/>
+            </jar>
+
+
+      <!-- ***************Building the workmanager.1.1.jar file ******************* -->
+                    <!--echo message ="Building the WorkManager v1.1 implementation JAR file... "/-->
+            <jar jarfile="${buildDir}/bpjars/workmanager.1.1.jar">
+                  <fileset dir="${buildDir}/AseClasses"
+                        includes="**/workmanager/**,**/config-specs"/>
+            </jar>
+
+            <antcall target="sys-apps"/>
+
+            <antcall target="test-apps"/>
+            </target>
+      <!-- ***************************************** -->
+
+      <!-- ************ Building JETC ***************************** -->
+      <target name="build_jetc" depends="init">
+            <javac srcdir="${src}" destdir="${buildDir}/AseClasses" debug="true">
+                  <include name="com/baypackets/ase/soa/util/JetTask.java"/>
+                  <classpath refid="classpath"/>
+            </javac>
+
+            <jar update="true" jarfile="${buildDir}/bpjars/jetc.jar">     
+                  <fileset dir="${buildDir}/AseClasses" >
+                  <include name="**/config-specs"/>
+                  <include name="**/soa/util/*.class"/>
+                  </fileset>
+            </jar>
+      </target>
+
+      <!-- ************ Defining JETC ***************************** -->
+       <target name="define_jetc" depends="build_jetc">
+       <taskdef name="jetc" classname="com.baypackets.ase.soa.util.JetTask" classpath="${buildDir}/otherjars">
+        <classpath>
+            <pathelement location="${buildDir}/bpjars/jetc.jar"/>
+                  <fileset dir="${buildDir}/otherjars">
+						<include name="boot.jar"/>
+						<include name="resources.jar"/>
+						<include name="runtime.jar"/>
+						<include name="codegen.jar"/>
+					</fileset>
+					<fileset dir="${THIRDPARTY}/otherjars">	
+						<include name="jdtcore.jar"/>
+					</fileset>
+        </classpath>
+    </taskdef>
+      </target>
+
+      <!-- ************ Running JETC ***************************** -->
+      <target name="jetc-compiled" depends="define_jetc">
+            <dependset>
+                  <sources>
+                        <fileset dir="${src}">
+                              <include name="com/baypackets/ase/soa/codegenerator/jet/*.jet"/>
+                        </fileset>
+                  </sources>
+                  <targets>
+                        <fileset dir="${buildDir}/AseClasses">
+                              <include name="com/baypackets/ase/soa/codegenerator/*Generator.java"/>
+                              <include name="com/baypackets/ase/soa/codegenerator/build.current"/>
+                        </fileset>
+                  </targets>
+            </dependset>  
+            <available file="${buildDir}/AseClasses/com/baypackets/ase/soa/codegenerator/build.current" property="jetc-up-to-date"/>
+      </target>
+          
+     <target name="run_jetc" unless="jetc-up-to-date" depends="jetc-compiled">
+            <jetc destdir="${buildDir}/AseClasses">
+                  <fileset dir="../com/baypackets/ase/soa/codegenerator/jet">
+                  <include name="*.jet"/>
+            </fileset>
+      </jetc>
+            <touch file="${buildDir}/AseClasses/com/baypackets/ase/soa/codegenerator/build.current"/>
+      </target>
+      
+      <target name="jetc" depends="run_jetc">
+            <javac srcdir="${src}" destdir="${buildDir}/AseClasses" debug="true">
+                  <include name="com/baypackets/ase/soa/codegenerator/ClassInspector.java"/>
+                  <classpath refid="classpath"/>
+            </javac>
+            <javac srcdir="${buildDir}/AseClasses" destdir="${buildDir}/AseClasses" debug="true">
+                  <include name="com/baypackets/ase/soa/codegenerator/*Generator.java"/>
+                  <classpath refid="classpath"/>
+            </javac>
+      </target>
+
+
+<!-- Target for building SBB component -->
+	 
+		<target name="sbb" depends="init" description ="SBB Deployable Unit">
+            <echo message ="Building the SBB as deployable unit"/>
+
+			<property name="sbb.build.dir" value="${buildDir}/sbb"/>
+		    <property name="sbb.src.dir" value="${src}/com/baypackets/ase/"/>
+			  <!-- Create the output directory for compiled classes -->
+            <property name="sbb.classes.dir" value="${buildDir}/SbbClasses"/>
+		    <mkdir dir="${sbb.classes.dir}"/>
+
+         	<copy todir="${sbb.classes.dir}/com/baypackets/ase/sbb">
+                <fileset dir="${sbb.src.dir}/sbb">
+                    <exclude name="**/*.java"/>
+                    <exclude name="**/*contrib*"/>
+			    </fileset>
+			</copy>
+			
+			<copy todir="${sbb.classes.dir}/com/baypackets/ase/msadaptor">
+				 <fileset dir="${sbb.src.dir}/msadaptor">
+                        <exclude name="**/*.java"/>
+                        <exclude name="**/*contrib*"/>
+                  </fileset>
+            </copy>
+			  
+			<javac srcdir="${sbb.src.dir}" destdir="${sbb.classes.dir}" debug="true">
+				<include name="**/msadaptor/**"/>
+				<include name="**/sbb/**"/>
+          		<classpath refid="classpath"/>
+            </javac>
+
+      		
+    <echo message ="Building the SBB Interface jar"/>
+	<jar update="true" jarfile="${buildDir}/bpjars/sbb-if.jar">    
+        <fileset dir="${sbb.classes.dir}" >
+             <include name="**/sbb/*.class"/>
+			 <include name="**/sbb/dialog/*.class"/>
+			 <include name="**/sbb/dialog/**/*.class"/>
+			 <include name="**/sbb/audit/*.class"/>
+             <include name="**/sbb/util/*.class"/>
+             <include name="**/sbb/impl/SBBOperationContext.class"/>
+             <include name="**/sbb/impl/SBBOperation.class"/>
+             <include name="**/sbb/impl/SBBSubscriptionState.class"/>
+             <include name="**/sbb/impl/SBBSessionActivationListener.class"/>
+	    </fileset>
+    </jar> 
+
+<!-- <copy todir="${buildDir}/bpjars" file="${sbb.build.dir}/sbb-if.jar"/>
+	<delete file="${sbb.build.dir}/sbb-if.jar"/> -->
+
+<!--	<echo message ="Building sbb-full.jar"/>
+    <jar jarfile="${sbb.build.dir}/sbb-full.jar">
+        <fileset dir="${sbb.classes.dir}">
+			<exclude name="**/testapps/**"/>
+		</fileset>
+    </jar> -->
+			
+	<echo message ="Building the SBB Deployable jar"/>
+<!--Commenting these lines as a solution for bug 7221-->	
+<!--<mkdir dir="${sbb.classes.dir}/classes/com"/>
+ 	
+	<copy todir="${sbb.classes.dir}/classes/com">
+		<fileset dir="${sbb.classes.dir}/com"/>
+    </copy>
+	<delete dir="${sbb.classes.dir}/com"/>-->
+    
+	<jar update="true" jarfile="${sbb.build.dir}/sbb-impl.jar">
+		<fileset dir="${sbb.classes.dir}" 
+            includes="**/sbb/**,**/msadaptor/**"
+            excludes="**/sbb/*.class,**/testapps/**,**/sbb/audit/**,**/sbb/dialog/**,"/>
+	</jar>
+
+    <delete dir="${sbb.classes.dir}"/>
+   </target>
+
+
+	<!-- ***************Building the alc project ******************* -->
+      <target name="alc" depends="ase, tcap">
+            <antcall target="alc-nodeps"/>
+      </target>
+      
+      <target name="alc-nodeps" depends="init">
+      <echo message ="Building the ALC project"/>
+            <property name="alc.build.dir" value="${buildDir}/AlcClasses/"/>
+            <mkdir dir="${alc.build.dir}"/>
+            <ant antfile="${src}/com/genband/ase/alc/build.xml" target="all" inheritAll="false">
+                <property name="alc.build.dir" value="${alc.build.dir}"/>
+                <!-- FIX ME, Chip -->
+                <property name="JAVA_HOME" value="${JAVA_HOME}"/>
+            </ant>
+      </target> 
+
+            <!-- **************************************************** -->
+      <!-- *                  ext build                       * -->
+      <!-- **************************************************** -->
+            <!-- **************************************************** -->
+            <!-- ext compile                                          -->
+            <target name="ext-compile" depends="init">
+                  <mkdir dir="${buildDir}/AseClasses"/>
+                  <antcall target="standard-compile"/>
+                  <antcall target="evaluation-compile"/>
+
+            	  <echo message="Compiling resource interface" />
+                  <javac srcdir="${src}" destdir="${buildDir}/AseClasses" debug="true">
+                        <include name="com/baypackets/ase/resource/**/*.java"/>
+                        <classpath refid="classpath"/>
+                  </javac>
+
+            	  <echo message="Compiling ASE interfaces" />
+                  <javac srcdir="${src}" destdir="${buildDir}/AseClasses" debug="true">
+                        <include name="com/baypackets/ase/spi/**/*.java"/>
+                        <exclude name="com/baypackets/ase/spi/replication/appDataRep/*.java"/>
+                        <exclude name="com/baypackets/ase/spi/radius/*.java"/>
+                  		<include name="com/baypackets/ase/ari/**/*.java"/>
+                        <include name="com/baypackets/ase/sipconnector/headers/*.java"/>
+                        <include name="com/baypackets/ase/common/Registry.java"/>
+                        <include name="com/baypackets/ase/util/*.java"/>
+                        <include name="com/baypackets/ase/util/threadpool/*.java"/>
+                        <include name="com/baypackets/ase/common/*.java"/>
+                        <exclude name="com/baypackets/ase/channel/*.java"/>
+                        <include name="com/baypackets/ase/container/exceptions/*.java"/>
+                        <exclude name="**/ReDeploymentFailedException.java"/>  <!-- the mystery file -->
+                        <include name="com/baypackets/ase/common/exceptions/*.java"/>
+                        <include name="com/baypackets/ase/util/exceptions/*.java"/>
+                        <classpath refid="classpath"/>
+                  </javac>
+
+            	  <!-- <echo message="Compiling SBBs" />
+                  <javac srcdir="${src}" destdir="${buildDir}/AseClasses" debug="true">
+                        <include name="com/baypackets/ase/sbb/**/*.java"/>
+                        <classpath refid="classpath"/>
+                  </javac> -->
+            </target>
+            
+            <!-- **************************************************** -->
+            <!-- check to see if I did anything                       -->
+            <target name="ext-jar-tag-exists" depends="ext-compile">
+                  <dependset>
+                        <sources>
+                            <fileset dir="${buildDir}/AseClasses">
+                              <include name="com/baypackets/ase/resource/**/*.class"/>
+                              <include name="com/baypackets/ase/spi/**/*.class"/>
+                              <include name="com/baypackets/ase/ari/**/*.class"/>
+                              <!-- <include name="com/baypackets/ase/sbb/**/*.class"/> -->
+                              <include name="com/baypackets/ase/container/schemas/*.dtd"/>
+                              <include name="com/baypackets/ase/sipconnector/headers/*.class"/>
+                              <include name="com/baypackets/ase/common/Registry.class"/>
+                              <include name="com/baypackets/ase/util/*.class"/>
+                              <include name="com/baypackets/ase/util/threadpool/*.class"/>
+                              <include name="com/baypackets/ase/common/*.class"/>
+                              <include name="com/baypackets/ase/channel/*.class"/>
+                              <include name="com/baypackets/ase/container/exceptions/*.class"/>
+                              <include name="com/baypackets/ase/common/exceptions/*.class"/>
+                              <include name="com/baypackets/ase/util/exceptions/*.class"/>
+                            </fileset>
+                        </sources>
+                        <targets>
+                            <fileset dir="${buildDir}/AseClasses">
+                              <include name="config-specs"/>
+                            </fileset>
+                        </targets>
+                  </dependset>  
+      
+                  <available file="${buildDir}/AseClasses/config-specs" property="ext-jar-tag-upToDate"/>
+            </target>
+            <!-- **************************************************** -->
+      
+
+            <!-- **************************************************** -->
+            <!-- tag the jar file with date/cpec                      -->
+            <target name="ext-jar-tag" unless="ext-jar-tag-upToDate" depends="ext-jar-tag-exists">
+                  <antcall target="standard-config-specs"/>
+                  <antcall target="evaluation-config-specs"/>
+            </target>
+            <!-- **************************************************** -->
+           
+
+            <!-- **************************************************** -->
+            <!-- package ext, if necessary                      -->
+            <target name="ext" depends="ext-jar-tag">
+                  <jar update="true" jarfile="${buildDir}/bpjars/bpresource.jar">     
+                        <fileset dir="${buildDir}/AseClasses" >
+                        <exclude name="**/ase/spi/**"/>
+                  <include name="**/config-specs"/>
+                  <include name="**/resource/**"/>
+                  </fileset>
+            </jar>
+
+                  <jar update="true" jarfile="${buildDir}/bpjars/bpspi.jar">    
+                        <fileset dir="${buildDir}/AseClasses" >
+                        <exclude name="**/ase/util/tests/**"/>
+                        <!-- <exclude name="**/ase/sbb/util/**"/> -->
+                        <exclude name="**/ase/sysapps/**"/>
+                        <exclude name="**/ase/common/logging/**"/>
+                        <exclude name="**/ase/jndi_jdbc/**"/>
+                        <exclude name="**/ase/ra/**"/>
+                        <!--<exclude name="**/ase/channel/jgroups/**"/>-->
+                        <exclude name="**/spi/replication/appDataRep/**"/>
+                        <exclude name="**/spi/radius/**"/>
+                        <include name="**/config-specs"/>
+                        <include name="**/common/**"/>
+                        <include name="**/common/exceptions/**"/>
+                        <include name="**/container/exceptions/**"/>
+                        <include name="**/util/**"/>
+                        <include name="**/util/exceptions/**"/>
+                        <include name="**/spi/**"/>
+						<exclude name="**/spi/measurement/AppCounterManager.class"/>
+                        <include name="**/channel/**"/>
+                        <include name="**/emsl/EmsLiteCoordinator.class"/>
+                  </fileset>
+            </jar>
+
+              <jar update="true" jarfile="${buildDir}/bpjars/bpari.jar">    
+                  <fileset dir="${buildDir}/AseClasses" >
+                        <include name="**/ari/**"/>
+                  </fileset>
+            </jar>
+	   
+            <!--  <jar update="true" jarfile="${buildDir}/bpjars/bpsbb.jar">    
+                  <fileset dir="${buildDir}/AseClasses" >
+                  <include name="**/config-specs"/>
+                  <include name="**/sbb/*.class"/>
+                  </fileset>
+            </jar> -->
+
+                  <jar update="true" jarfile="${buildDir}/bpjars/sasdd.jar"
+                  basedir="${src}"
+                  includes="**/container/schemas/**">
+            </jar>
+
+      </target>
+            <!-- **************************************************** -->
+      <!-- **************************************************** -->
+      <!-- *               END ext build                      * -->
+      <!-- **************************************************** -->
+
+      <target name="tcap" depends="tcaprouting">
+            <ant dir="../tcap"/>    
+      </target>
+
+      <target name="doc-exists" depends="init">
+            <mkdir dir="${buildDir}/doc"/>
+            <!-- crashes in ant 1.7.0 -->
+            <!--dependset>
+                  <sources>
+                        <fileset dir="${src}/"> 
+                              <include name="com/baypackets/ase/**"/>
+                              <include name="com/genband/ase/**"/>
+                              <include name="tcap/com/genband/tcap/**"/>
+                              <include name="tcap/jain/**"/>
+                        </fileset> 
+                  </sources>
+                  <targets>
+                      <fileset dir="${buildDir}/doc">
+                        <include name="build.current"/>
+                      </fileset>
+                  </targets>
+            </dependset>  
+
+            <available file="${buildDir}/doc/build.current" property="doc-upToDate"/-->
+      </target>
+      
+      <target name="doc" unless="doc-upToDate" depends="doc-exists"> 
+            <echo message="Generating the Javadoc files SAS specific extensions..."/>
+            <touch file="${buildDir}/doc/build.current"/>
+            <javadoc destdir="${buildDir}/doc/sasdoc" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes"> 
+                        <include name="com/baypackets/ase/soa/iface/*.java"/>
+                        <include name="com/baypackets/ase/sbb/**/*.java"/>
+                        <include name="com/baypackets/ase/common/exceptions/*.java"/>
+                        <include name="com/baypackets/ase/container/exceptions/*.java"/>
+                        <include name="com/baypackets/ase/spi/**/*.java"/>
+                        <include name="com/baypackets/ase/ari/**/*.java"/>
+                        <include name="com/baypackets/ase/resource/*.java"/>
+                        <include name="tcap/com/genband/tcap/**/*.java"/>
+                        <include name="tcap/jain/**/*.java"/>
+                  </fileset> 
+                  <classpath refid="classpath"/>
+            </javadoc>
+<!-- TODO: ALC has been commented for compilation of SBB upgrade (Bug 6765), it needs to added back after ALC has been updated -->
+       	<!--	<ant antfile="${src}/com/genband/ase/alc/ApplicationLogicController/build.xml" target="document" inheritAll="false">
+                  <property name="alc.build.dir" value="${buildDir}/AlcClasses/"/>
+                  <property name="alcml.dir" value="${src}/com/genband/ase/alc/ApplicationLogicController"/>
+            </ant>--> 
+      </target>
+
+    <!-- ***************************************** -->
+    <target name="post-build-cleanup" >
+            <delete>
+                <fileset dir="${buildDir}" includes="**/*.class"/>
+            </delete>
+            <delete>
+                <fileset dir="${buildDir}" includes="**/*.java"/>
+            </delete>
+
+            <delete file="${src}/com/baypackets/ase/util/EvaluationVersion.java"/>
+            <delete file="${INSTALLROOT}/allatori-config.xml"/>
+            <delete dir="${buildDir}/EmsClasses"/>
+            <delete dir="${buildDir}/Common"/>
+            <delete dir="${buildDir}/EmsIdl"/>
+            <delete dir="${buildDir}/SleeClasses"/>
+            <delete dir="${buildDir}/AseClasses"/>
+            <delete dir="${buildDir}/cap/camelv2/codecclasses"/>
+    </target>
+
+  <!-- TEST SERVLET APPLICATIONS -->
+
+      <target name="test-app-conf" depends="init">
+      <echo message="Building the Conference Controller test app SAR file..."/>
+            <mkdir dir="${buildDir}/AseClasses"/>
+
+            <javac srcdir="${src}/com/baypackets/ase/testapps/sbb/confcontroller" destdir="${buildDir}/AseClasses" debug="true">
+                  <include name="*.java"/>
+                  <classpath refid="classpath"/>
+            </javac>
+                                                                                                             
+            <property name="dest.dir"
+                  value="${test.apps.build}/confcontroller/WEB-INF/classes/com/baypackets/ase/testapps/sbb/confcontroller"/>
+            <mkdir dir="${dest.dir}"/>
+
+            <copy todir="${test.apps.build}/confcontroller">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/testapps/sbb/confcontroller">
+                        <exclude name="*.class"/>
+                  </fileset>
+            </copy>
+
+            <copy todir="${dest.dir}">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/testapps/sbb/confcontroller">
+                        <include name="*.class"/>
+                  </fileset>
+            </copy>
+
+            <copy todir="${test.apps.build}/confcontroller/WEB-INF">
+                  <fileset dir="${src}/com/baypackets/ase/testapps/sbb/confcontroller/WEB-INF">
+                        <include name="*.xml"/>
+                  </fileset>
+            </copy>
+
+            <copy todir="${dest.dir}">
+                  <fileset dir="${src}/com/baypackets/ase/testapps/sbb/confcontroller">
+                        <include name="*.java"/>
+                  </fileset>
+            </copy>
+
+            <jar jarfile="${test.apps.build}/confcontroller/conf.sar">
+                  <fileset dir="${test.apps.build}/confcontroller" excludes="conf.sar,build.sh,build.xml,*.java"/>
+            </jar>
+      </target>
+
+      <target name="test-app-b2bcontroller" depends="init">
+                <echo message="Building the B2b Session Controller test app SAR file..."/>
+                <mkdir dir="${buildDir}/AseClasses"/>
+                 <javac srcdir="${src}/com/baypackets/ase/testapps/sbb/b2b" destdir="${buildDir}/AseClasses" debug="true">
+                        <include name="*.java"/>
+                        <classpath refid="classpath"/>
+                </javac>
+                                                                                                                             
+                <property name="dest.dir"
+                        value="${test.apps.build}/b2b/WEB-INF/classes/com/baypackets/ase/testapps/sbb/b2b"/>
+                <mkdir dir="${dest.dir}"/>
+                <copy todir="${test.apps.build}/b2b">
+                        <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/testapps/sbb/b2b">
+                                <exclude name="*.class"/>
+                        </fileset>
+                </copy>
+                <copy todir="${dest.dir}">
+                        <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/testapps/sbb/b2b">
+                                <include name="*.class"/>
+                        </fileset>
+                </copy>
+                <copy todir="${test.apps.build}/b2b/WEB-INF">
+                        <fileset dir="${src}/com/baypackets/ase/testapps/sbb/b2b/WEB-INF">
+                                <include name="*.xml"/>
+                        </fileset>
+                </copy>
+                <copy todir="${dest.dir}">
+                        <fileset dir="${src}/com/baypackets/ase/testapps/sbb/b2b">
+                                <include name="*.java"/>
+                        </fileset>
+                </copy>
+                <jar jarfile="${test.apps.build}/b2b/b2b.sar">
+                        <fileset dir="${test.apps.build}/b2b" excludes="b2b.sar,build.sh,build.xml,*.java"/>
+                </jar>
+        </target>
+
+      <target name="test-app-mscontroller" depends="init">
+                <echo message="Building the MS Session Controller test app SAR file..."/>
+                <mkdir dir="${buildDir}/AseClasses"/>
+                 <javac srcdir="${src}/com/baypackets/ase/testapps/sbb/mscontroller" destdir="${buildDir}/AseClasses" debug="true">
+                        <include name="*.java"/>
+                        <classpath refid="classpath"/>
+                </javac>
+                                                                                                                             
+                <property name="dest.dir"
+                        value="${test.apps.build}/mscontroller/WEB-INF/classes/com/baypackets/ase/testapps/sbb/mscontroller"/>
+                <mkdir dir="${dest.dir}"/>
+                <copy todir="${test.apps.build}/mscontroller">
+                        <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/testapps/sbb/mscontroller">
+                                <exclude name="*.class"/>
+                        </fileset>
+                </copy>
+                <copy todir="${dest.dir}">
+                        <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/testapps/sbb/mscontroller">
+                                <include name="*.class"/>
+                        </fileset>
+                </copy>
+                <copy todir="${test.apps.build}/mscontroller/WEB-INF">
+                        <fileset dir="${src}/com/baypackets/ase/testapps/sbb/mscontroller/WEB-INF">
+                                <include name="*.xml"/>
+                        </fileset>
+                </copy>
+                <copy todir="${dest.dir}">
+                        <fileset dir="${src}/com/baypackets/ase/testapps/sbb/mscontroller">
+                                <include name="*.java"/>
+                        </fileset>
+                </copy>
+                <jar jarfile="${test.apps.build}/mscontroller/mscontroller.sar">
+                        <fileset dir="${test.apps.build}/mscontroller" excludes="mscontroller.sar,build.sh,build.xml,*.java"/>
+                </jar>
+        </target>
+
+  <!--<target name="test-apps" depends="init, test-app-uas, test-app-uac, test-app-b2bua"/>-->
+      <target name="test-apps" depends="test-app-b2b"/>
+
+      <target name="test-app-b2b" depends="init">
+            <property name="dest.dir" 
+                  value="${test.apps.build}/b2b/WEB-INF/classes/com/baypackets/ase/testapps/b2b"/>
+            <mkdir dir="${dest.dir}"/>
+            <property name="dtd.dir" 
+                  value="${test.apps.build}/b2b/WEB-INF/classes/com/baypackets/ase/testapps/b2b/schema"/>
+            <mkdir dir="${dtd.dir}"/>
+            <copy todir="${test.apps.build}/b2b">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/testapps/b2b">
+                        <exclude name="**/*.class"/>
+                  </fileset>
+            </copy>
+  	    <copy todir="${dtd.dir}">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/testapps/b2b/WEB-INF">
+                 	 <include name="**/b2b-config.dtd"/>  
+		  </fileset>
+            </copy>
+            <copy todir="${dest.dir}">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/testapps/b2b">
+                        <include name="**/*.class"/>
+                  </fileset>
+            </copy>
+            <copy todir="${dest.dir}">
+                  <fileset dir="${src}/com/baypackets/ase/testapps/b2b">
+                        <include name="**/*.java"/>
+                  </fileset>
+            </copy>
+            <jar jarfile="${test.apps.build}/b2b/b2b.sar">
+                  <fileset dir="${test.apps.build}/b2b" excludes="b2b.sar,build.sh,build.xml,b2b-config.xml,WEB-INF/b2b-config.dtd,**/*.java"/>
+            </jar>
+      </target>
+
+  <target name="test-app-uas" description="build uas app">
+    <antcall target="build-app">
+      <param name="app.name" value="uas"/>
+                  <param name="apps.src" value="${test.apps.src}"/>
+                  <param name="apps.build" value="${test.apps.build}"/>
+    </antcall>
+  </target>
+
+  <target name="test-app-uac" description="build uac app">
+    <antcall target="build-app">
+      <param name="app.name" value="uac"/>
+                  <param name="apps.src" value="${test.apps.src}"/>
+                  <param name="apps.build" value="${test.apps.build}"/>
+    </antcall>
+  </target>
+  
+  <target name="test-app-b2bua" description="build b2bua app">
+    <antcall target="build-app">
+      <param name="app.name" value="b2bua"/>
+                  <param name="apps.src" value="${test.apps.src}"/>
+                  <param name="apps.build" value="${test.apps.build}"/>
+    </antcall>
+  </target>
+
+      <!--  PLATFORM SERVLET APPLICATIONS -->
+
+      <target name="sys-apps" depends="init, msheartbeat ,registrar, obgwapp, pac,cab,cim" description="Builds all system applications."/>
+
+      <target name="msheartbeat" depends="init" description="Builds the system app used to ping the media servers.">
+            <property name="dest.dir" 
+                        value="${sys.apps.build}/msheartbeat/WEB-INF/classes/com/baypackets/ase/sysapps/msheartbeat"/>
+            <mkdir dir="${dest.dir}"/>
+            <copy todir="${sys.apps.build}/msheartbeat/WEB-INF">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/msheartbeat">
+                        <exclude name="**/*.class"/>
+                  </fileset>
+            </copy>
+            <copy todir="${dest.dir}">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/msheartbeat">
+                        <include name="**/*.class"/>
+                  </fileset>
+            </copy>
+            <jar update="true" jarfile="${sys.apps.build}/msheartbeat.sar" basedir="${sys.apps.build}/msheartbeat"/>
+            <delete dir="${dest.dir}"/>
+      </target>
+
+      <target name="registrar" depends="init" description ="To process register request.">
+            <property name="dest.dir1" value="${sys.apps.build}/registrar/WEB-INF/classes/com/baypackets/ase/sysapps/registrar"/>
+
+            <mkdir dir="${dest.dir1}"/>
+
+            <copy todir="${sys.apps.build}/registrar/WEB-INF">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/registrar/">
+                        <exclude name="**/*.class"/>
+                  </fileset>
+            </copy>
+
+            <copy todir="${dest.dir1}">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/registrar/">
+                        <include name="**/*.class"/>
+                  </fileset>
+            </copy>
+
+            <jar update="true" jarfile="${sys.apps.build}/registrar.sar" basedir="${sys.apps.build}/registrar"/>
+			<delete dir="${dest.dir1}"/>
+      </target>
+	  
+	   <target name="pac" depends="init" description ="pac system application">
+            <property name="dest.dir2" value="${sys.apps.build}/pac/WEB-INF/classes/com/baypackets/ase/sysapps/pac"/>
+
+            <mkdir dir="${dest.dir2}"/>
+
+            <copy todir="${sys.apps.build}/pac/WEB-INF">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/pac/">
+                        <exclude name="**/*.class"/>
+                  </fileset>
+            </copy>
+
+            <copy todir="${dest.dir2}">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/pac/">
+                        <include name="**/*.class"/>
+                  </fileset>
+            </copy>
+
+			<mkdir dir="${sys.apps.build}/pac/WEB-INF/lib"/>
+			
+			<!-- Copy some thirdparty libraries to the pac WEB-INF lib -->
+			<!--<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/apache/apache-activemq-5.3.0/lib/optional/commons-codec-1.2.jar"/>-->
+            		<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jackson-core-asl-1.9.2.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jackson-jaxrs-1.9.2.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jackson-mapper-asl-1.9.2.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jackson-xc-1.9.2.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-apache-client-1.12.jar"/>
+			
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-atom-abdera-1.12.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-client-1.18.1.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-core-1.18.1.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-guice-1.12.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-json-1.18.1.jar"/>
+			
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-multipart-1.12.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-server-1.18.1.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-servlet-1.18.1.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-simple-server-1.12.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-spring-1.12.jar"/>
+			
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jettison-1.1.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jsr311-api-1.1.1.jar"/>
+			<copy todir="${sys.apps.build}/pac/WEB-INF/lib" file="${THIRDPARTY}/otherjars/asm-5.0.3.jar"/>
+	
+            <jar update="true" jarfile="${sys.apps.build}/pac.war" basedir="${sys.apps.build}/pac"/>
+			<delete dir="${dest.dir2}"/>
+      </target>
+
+        <target name="obgwapp" depends="init" description="Builds the system app used to manage outbound gateways.">
+			<property name="dest.dir3"
+				value="${sys.apps.build}/obgwapp/WEB-INF/classes/com/baypackets/ase/sysapps/obgwapp"/>
+			<mkdir dir="${dest.dir3}"/>
+
+			<copy todir="${sys.apps.build}/obgwapp/WEB-INF">
+				<fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/obgwapp">
+					<exclude name="**/*.class"/>
+				</fileset>
+			</copy>
+
+			<copy todir="${dest.dir3}">
+				<fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/obgwapp">
+					<include name="**/*.class"/>
+				</fileset>
+			</copy>
+
+			<jar update="true" jarfile="${sys.apps.build}/obgwapp.sar" basedir="${sys.apps.build}/obgwapp"/>
+			<delete dir="${dest.dir3}"/>
+        </target>
+ 
+<target name="cab" depends="init" description ="cab system application">
+            <property name="dest.dir4" value="${sys.apps.build}/cab/WEB-INF/classes/com/baypackets/ase/sysapps/cab"/>
+
+            <mkdir dir="${dest.dir4}"/>
+
+            <copy todir="${sys.apps.build}/cab/WEB-INF">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/cab/">
+                        <exclude name="**/*.class"/>
+                  </fileset>
+            </copy>
+
+            <copy todir="${dest.dir4}">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/cab/">
+                        <include name="**/*.class"/>
+                  </fileset>
+            </copy>
+
+			<mkdir dir="${sys.apps.build}/cab/WEB-INF/lib"/>
+			
+			<!-- Copy some thirdparty libraries to the cab WEB-INF lib -->
+			
+            <copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jackson-core-asl-1.9.2.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jackson-jaxrs-1.9.2.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jackson-mapper-asl-1.9.2.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jackson-xc-1.9.2.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-apache-client-1.12.jar"/>
+			
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-atom-abdera-1.12.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-client-1.18.1.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-core-1.18.1.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-guice-1.12.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-json-1.18.1.jar"/>
+			
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-multipart-1.12.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-server-1.18.1.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-servlet-1.18.1.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-simple-server-1.12.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jersey-spring-1.12.jar"/>
+			
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jettison-1.1.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/jsr311-api-1.1.1.jar"/>
+			<copy todir="${sys.apps.build}/cab/WEB-INF/lib" file="${THIRDPARTY}/otherjars/asm-5.0.3.jar"/>
+	
+            <jar update="true" jarfile="${sys.apps.build}/cab.war" basedir="${sys.apps.build}/cab"/>
+			<delete dir="${dest.dir4}"/>
+			</target>
+			
+<target name="cim" depends="init" description ="cim system application">
+            <property name="dest.dir5" value="${sys.apps.build}/cim/WEB-INF/classes/com/baypackets/ase/sysapps/cim"/>
+            <mkdir dir="${dest.dir5}"/>
+            <copy todir="${sys.apps.build}/cim" file="${src}/com/baypackets/ase/sysapps/cim/Test.jsp"/>
+            <copy todir="${sys.apps.build}/cim/WEB-INF">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/cim/">
+                        <exclude name="**/*.class"/>
+                  </fileset>
+            </copy>
+            <copy todir="${dest.dir5}">
+                  <fileset dir="${buildDir}/AseClasses/com/baypackets/ase/sysapps/cim/">
+                        <include name="**/*.class"/>
+                  </fileset>
+            </copy>	
+            <jar update="true" jarfile="${sys.apps.build}/cim.war" basedir="${sys.apps.build}/cim"/>
+			<delete dir="${dest.dir5}"/>			
+      </target>
+
+      
+
+      <!-- Common target for building RA component -->
+
+      <target name="rainit" depends="init" description ="Init for Resource Adaptor">
+
+            <echo message ="Init the Resource Adaptor build"/>
+            <!-- Set the variables used inside -->
+            <property name="ra.build" value="${buildDir}/ra"/> 
+            <property name="ra.src" value="${src}/com/baypackets/ase/ra/"/> 
+
+            <!-- Create the output directory to create the jar files -->
+            <mkdir dir="${ra.build}"/>
+
+      </target>
+
+        <!-- Target for building SMPP RA component -->
+
+      <target name="ra-smpp" depends="init,rainit" description ="Smpp Resource Adaptor.">
+            <echo message ="Building the Smpp Resource Adaptor"/>
+
+            <property name="tmp.smpp.dir" value="${ra.build}/tmp"/>
+            <property name="smpp.dest.dir" value="${ra.build}/smpp"/>
+            <property name="smpp.doc.dir" value="${buildDir}/doc/smppdoc"/>
+            <property name="lib.smpp.dest.dir" value="${smpp.dest.dir}/lib"/>
+            <property name="class.smpp.dest.dir" value="${smpp.dest.dir}/classes"/>
+            <property name="smpp.stack.dir" value="${THIRDPARTY}/otherjars"/>
+            <property name="smpp.src.dir" value="${ra.src}/smpp"/>
+
+            <mkdir dir="${tmp.smpp.dir}"/>
+            <mkdir dir="${smpp.dest.dir}"/>
+            <mkdir dir="${lib.smpp.dest.dir}"/>
+            <mkdir dir="${class.smpp.dest.dir}"/>
+			
+      	<copy todir="${lib.smpp.dest.dir}" file="${smpp.stack.dir}/opensmpp-core-3.0.3-SNAPSHOT.jar"/>
+      	  <copy todir="${lib.smpp.dest.dir}" file="${smpp.stack.dir}/opensmpp-client-3.0.3-SNAPSHOT.jar"/>
+      	  <copy todir="${lib.smpp.dest.dir}" file="${smpp.stack.dir}/opensmpp-charset-3.0.3-SNAPSHOT.jar"/>
+
+      	            <!-- Define the classpath. Please make sure that all the jars available in the lib -->
+      	            <path id="raclasspath">
+      	                  <fileset dir="${lib.smpp.dest.dir}">
+      	                        <include name="*.jar"/>
+      	                  </fileset>
+      	            </path>
+
+      	            <javac srcdir="${smpp.src.dir}" destdir="${tmp.smpp.dir}" debug="true">
+      	                  <include name="**/*.java"/>
+      	                  <classpath refid="raclasspath"/>
+      	                  <classpath refid="classpath"/>
+      	            </javac>
+
+      	            <copy todir="${class.smpp.dest.dir}">
+      	                  <fileset dir="${tmp.smpp.dir}">
+      	                        <include name="**/*.class"/>
+      	                        <include name="**/impl/*.class"/>
+      	                        <include name="**/stackif/*.class"/>
+      	                        <include name="**/util/*.class"/>
+      	                  	    <include name="**/server/*.class"/> 
+      	                  </fileset>
+      	            </copy>
+
+
+            
+            <copy todir="${smpp.dest.dir}" file="${ra.src}/smpp/impl/resource.xml"/>
+            <copy todir="${smpp.dest.dir}" file="${ra.src}/smpp/impl/MeasurementConfig.xml"/>
+
+            <jar jarfile="${ra.build}/smpp-ra.jar" basedir="${smpp.dest.dir}" >
+            </jar>
+
+            <echo message ="Building the Smpp Resource i/f jar for applications to compile"/>
+
+            <jar jarfile="${ra.build}/smpp-if.jar">
+                  <fileset dir="${tmp.smpp.dir}">
+                        <exclude name="**/impl/*.class"/>
+                        <exclude name="**/stackif/*.class"/>
+                        <exclude name="**/utils/*.class"/>
+                  </fileset>
+            </jar>
+
+            <jar jarfile="${ra.build}/smpp-full.jar">
+                  <fileset dir="${tmp.smpp.dir}">
+                  </fileset>
+            </jar>
+
+            <echo message ="Building the Smpp Javadoc for application developers"/>
+
+            <javadoc destdir="${smpp.doc.dir}" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes"> 
+                        <include name="com/baypackets/ase/ra/smpp/**/*.java"/>
+                  </fileset> 
+                  <classpath refid="classpath"/>
+            </javadoc>
+
+            <copy todir="${buildDir}/bpjars" file="${ra.build}/smpp-if.jar"/>
+
+            <delete dir="${class.smpp.dest.dir}"/>
+            <delete dir="${lib.smpp.dest.dir}"/> 
+            <delete dir="${smpp.dest.dir}"/> 
+            <delete dir="${tmp.smpp.dir}"/> 
+      </target>
+	  
+	  
+		<!-- Target for building telnet ssh ra component -->
+		      <target name="ra-telnetssh" depends="rainit" description ="telnet ssh Resource Adaptor.">
+            <echo message ="Building the Telnet/ssh Resource Adaptor"/>
+
+            <property name="tmp.telnetssh.dir" value="${ra.build}/tmp"/>
+            <property name="telnetssh.dest.dir" value="${ra.build}/telnetssh"/>
+            <property name="telnetssh.doc.dir" value="${buildDir}/doc/telnetsshdoc"/>
+            <property name="lib.telnetssh.dest.dir" value="${telnetssh.dest.dir}/lib"/>
+            <property name="class.telnetssh.dest.dir" value="${telnetssh.dest.dir}/classes"/>
+            <property name="telnetssh.src.dir" value="${ra.src}/telnetssh"/>
+
+            <mkdir dir="${tmp.telnetssh.dir}"/>
+            <mkdir dir="${telnetssh.dest.dir}"/>
+            <mkdir dir="${lib.telnetssh.dest.dir}"/>
+            <mkdir dir="${class.telnetssh.dest.dir}"/>
+			<!--<mkdir dir="${telnetssh.doc.dir}"/> -->
+
+            <copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/commons-net-3.0.1.jar"/>
+			<copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/jsch-0.1.44.jar"/>
+			<copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/spring-beans-2.5.6.jar"/>
+			<copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/spring-context-2.0.4.jar"/>
+			<copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/spring-core-2.5.6.jar"/>
+			<copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/spring-dao.jar"/>
+			<copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/spring-jdbc-2.5.6.jar"/>
+			
+            <!-- Define the classpath. Please make sure that all the jars available in the lib -->
+            <path id="raclasspath">
+                  <fileset dir="${lib.telnetssh.dest.dir}">
+                        <include name="*.jar"/>
+                  </fileset>
+            </path>
+
+            <javac srcdir="${telnetssh.src.dir}" destdir="${tmp.telnetssh.dir}" debug="true">
+                  <include name="**/*.java"/>
+                  <exclude name="**/qm/LsInteractionTask.java"/>
+                  <classpath refid="raclasspath"/>
+                  <classpath refid="classpath"/>
+            </javac>
+
+            <copy todir="${class.telnetssh.dest.dir}">
+                  <fileset dir="${tmp.telnetssh.dir}">
+                        <include name="**/*.class"/>
+                  </fileset>
+            </copy>
+
+            <copy todir="${telnetssh.dest.dir}" file="${ra.src}/telnetssh/resource.xml"/>
+            <copy todir="${telnetssh.dest.dir}" file="${ra.src}/telnetssh/MeasurementConfig.xml"/>
+
+            <jar jarfile="${ra.build}/telnetssh-ra.jar" >
+				<fileset dir="${telnetssh.dest.dir}" > 
+                    <exclude name="**/qm/LsInteractionTask.class"/>
+                 </fileset>
+            </jar>
+
+            <echo message ="Building the telnetssh Resource i/f jar for applications to compile"/>
+					
+           <jar jarfile="${ra.build}/telnetssh-if.jar">
+                  <fileset dir="${tmp.telnetssh.dir}" > 
+                        <exclude name="**/*Impl.class"/>
+						<exclude name="**/*Alarm*.class"/>
+                        <exclude name="**/configmanager/**/*.class"/>
+                        <exclude name="**/exception/*.class"/>		
+						<exclude name="**/logger/*.class"/>
+						<exclude name="**/ls/**/*.class"/>
+						<exclude name="**/message/*Factory*.class"/>
+						<exclude name="**/qm/*.class"/>
+						<exclude name="**/session/*.class"/>
+						<exclude name="**/utils/*.class"/>
+						<exclude name="**/workmanager/*.class"/>
+                  </fileset>
+            </jar>
+
+            <jar jarfile="${ra.build}/telnetssh-full.jar">
+                  <fileset dir="${tmp.telnetssh.dir}">
+						<exclude name="**/qm/LsInteractionTask.class"/>
+                  </fileset>
+            </jar>
+
+            <echo message ="Building the telnetssh Javadoc for application developers"/>
+
+            <javadoc destdir="${telnetssh.doc.dir}" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes"> 
+                        <include name="com/baypackets/ase/ra/telnetssh/**/*.java"/>
+                  </fileset> 
+                  <classpath refid="classpath"/>
+				  <classpath refid="raclasspath"/>
+            </javadoc>
+			<!--
+			<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/commons-net-3.0.1.jar"/>
+			<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jsch-0.1.44.jar"/>
+			<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-beans-2.5.6.jar"/>
+			<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-context-2.0.4.jar"/>
+			<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-core-2.5.6.jar"/>
+			<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-dao.jar"/>
+			<copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-jdbc-2.5.6.jar"/> -->
+            <copy todir="${buildDir}/bpjars" file="${ra.build}/telnetssh-if.jar"/>
+            <delete dir="${class.telnetssh.dest.dir}"/>
+            <delete dir="${lib.telnetssh.dest.dir}"/>
+            <delete dir="${telnetssh.dest.dir}"/>
+            <delete dir="${tmp.telnetssh.dir}"/>
+      </target>
+
+        <!-- Target for building RO RA component -->
+
+      <target name="ra-ro-condor" depends="rainit" description ="Ro Resource Adaptor.">
+            <echo message ="Building the Ro Resource Adaptor"/>
+
+            <property name="tmp.ro.dir" value="${ra.build}/tmp"/>
+            <property name="ro.dest.dir" value="${ra.build}/ro"/>
+            <property name="ro.doc.dir" value="${buildDir}/doc/rodoc"/>
+            <property name="lib.ro.dest.dir" value="${ro.dest.dir}/lib"/>
+            <property name="class.ro.dest.dir" value="${ro.dest.dir}/classes"/>
+            <property name="ro.stack.dir" value="${CAS_STACK_ROOT}/stacks/Diameter"/>
+
+            <property name="ro.src.dir" value="${ra.src}/ro"/>
+
+            <mkdir dir="${tmp.ro.dir}"/>
+            <mkdir dir="${ro.dest.dir}"/>
+            <mkdir dir="${lib.ro.dest.dir}"/>
+            <mkdir dir="${class.ro.dest.dir}"/>
+
+            <copy todir="${lib.ro.dest.dir}" file="${base.ra.stack.dir}/RO/client/ROClient.jar"/>
+            <copy todir="${lib.ro.dest.dir}" file="${base.ra.stack.dir}/lib/chargingcommon.jar"/>
+            <copy todir="${lib.ro.dest.dir}" file="${base.ra.stack.dir}/lib/platform.jar"/>
+            <copy todir="${lib.ro.dest.dir}" file="${THIRDPARTY}/otherjars/log4j-1.2.8.jar"/>
+
+            <!-- Define the classpath. Please make sure that all the jars available in the lib -->
+            <path id="raclasspath">
+                  <fileset dir="${lib.ro.dest.dir}">
+                        <include name="*.jar"/>
+                  </fileset>
+            </path>
+
+            <javac srcdir="${ro.src.dir}" destdir="${tmp.ro.dir}" debug="true">
+                  <include name="**/*.java"/>
+                  <classpath refid="raclasspath"/>
+                  <classpath refid="classpath"/>
+            </javac>
+
+            <copy todir="${class.ro.dest.dir}">
+                  <fileset dir="${tmp.ro.dir}">
+                        <include name="**/*.class"/>
+                        <include name="**/impl/*.class"/>
+                        <include name="**/stackif/*.class"/>
+                        <include name="**/util/*.class"/>
+                  </fileset>
+            </copy>
+
+            <copy todir="${ro.dest.dir}" file="${ra.src}/ro/impl/resource.xml"/>
+            <copy todir="${ro.dest.dir}" file="${ra.src}/ro/impl/MeasurementConfig.xml"/>
+
+            <jar jarfile="${ra.build}/ro-ra.jar" basedir="${ro.dest.dir}" >
+            </jar>
+
+            <echo message ="Building the Ro Resource i/f jar for applications to compile"/>
+
+            <jar jarfile="${ra.build}/ro-if.jar">
+                  <fileset dir="${tmp.ro.dir}">
+                        <exclude name="**/impl/*.class"/>
+                        <exclude name="**/stackif/*.class"/>
+                        <exclude name="**/util/*.class"/>
+                  </fileset>
+            </jar>
+
+            <jar jarfile="${ra.build}/ro-full.jar">
+                  <fileset dir="${tmp.ro.dir}">
+                  </fileset>
+            </jar>
+
+            <echo message ="Building the Ro Javadoc for application developers"/>
+
+            <javadoc destdir="${ro.doc.dir}" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes"> 
+                        <include name="com/baypackets/ase/ra/ro/*.java"/>
+                  </fileset> 
+                  <classpath refid="classpath"/>
+				  <classpath refid="raclasspath"/>
+            </javadoc>
+
+            <copy todir="${buildDir}/bpjars" file="${ra.build}/ro-if.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${base.ra.stack.dir}/lib/platform.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${base.ra.stack.dir}/lib/chargingcommon.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${base.ra.stack.dir}/RO/client/ROClient.jar"/>
+            <delete dir="${class.ro.dest.dir}"/>
+            <delete dir="${lib.ro.dest.dir}"/>
+            <delete dir="${ro.dest.dir}"/>
+            <delete dir="${tmp.ro.dir}"/>
+      </target>
+
+	  <!-- Target for building RADIUS RA component for Tinu Radius stack -->
+
+        <target name="ra-radius" depends="rainit" description ="Radius Resource Adaptor.">
+                <echo message ="Building the Radius Resource Adaptor"/>
+
+                <property name="tmp.radius.dir" value="${ra.build}/tmp"/>
+                <property name="radius.dest.dir" value="${ra.build}/radius"/>
+                <property name="lib.radius.dest.dir" value="${radius.dest.dir}/lib"/>
+                <property name="class.radius.dest.dir" value="${radius.dest.dir}/classes"/>
+				<property name="radius.doc.dir" value="${buildDir}/doc/radiusdoc"/>
+                <property name="radius.src.dir" value="${ra.src}/radius"/>
+
+                <mkdir dir="${tmp.radius.dir}"/>
+                <mkdir dir="${radius.dest.dir}"/>
+                <mkdir dir="${lib.radius.dest.dir}"/>
+                <mkdir dir="${class.radius.dest.dir}"/>
+
+                <!-- Copy Radius Resource Adaptor Specific files -->
+
+			<copy todir="${class.radius.dest.dir}//com/baypackets/ase/ra/radius/rarouter/rulesmanager/" file="${radius.src.dir}/rarouter/rulesmanager/generate_code.xsl"/>
+			<copy todir="${class.radius.dest.dir}//com/baypackets/ase/ra/radius/rarouter/rulesmanager/" 
+			file="${radius.src.dir}/rarouter/rulesmanager/generate_properties.xsl"/>
+
+
+                <!-- Define the classpath. Please make sure that all the jars available in the lib -->
+                <path id="raclasspath">
+                  <fileset dir="${lib.radius.dest.dir}">
+                              <include name="*.jar"/>
+                  </fileset>
+            </path>
+
+                <javac srcdir="${radius.src.dir}" destdir="${tmp.radius.dir}" debug="true">
+                        <include name="**/*.java"/>
+                        <include name="**/attribute/*.java"/>
+                        <include name="**/dictionary/*.java"/>
+                        <include name="**/impl/*.java"/>
+                        <include name="**/stackif/*.java/"/>
+                        <include name="**/utils/*.java"/>
+                        <include name="**/rarouter/*.java"/>
+                        <include name="**/rarouter/rulesmanager/*.java"/>
+
+                        <classpath refid="raclasspath"/>
+                        <classpath refid="classpath"/>
+                </javac>
+
+                <copy todir="${class.radius.dest.dir}">
+                        <fileset dir="${tmp.radius.dir}">
+					<include name="**/radius/"/>
+					<!--<include name="**/radius/*.class"/>-->
+                        </fileset>
+                </copy>
+
+                <copy todir="${radius.dest.dir}" file="${ra.src}/radius/resource.xml"/>
+                <copy todir="${radius.dest.dir}" file="${ra.src}/radius/MeasurementConfig.xml"/>
+
+      <jar jarfile="${ra.build}/radius-ra.jar" basedir="${ra.build}/radius" />
+
+
+                <echo message ="Building the Radius Resource If Jar applications to compile"/>
+
+      <jar jarfile="${ra.build}/radius-if.jar">
+                <fileset dir="${tmp.radius.dir}">
+                        <exclude name="**/impl"/>
+                        <exclude name="**/impl/*.class"/>
+                        <exclude name="**/stackif"/>
+                        <exclude name="**/stackif/*.class"/>
+						<exclude name="**/rarouter"/>
+                        <exclude name="**/rarouter/*.class"/>
+                        <exclude name="**/rarouter/rulesmanager"/>
+                        <exclude name="**/rarouter/rulesmanager/*.class"/>
+                </fileset>
+        </jar>
+
+      <jar jarfile="${ra.build}/radius-full.jar">
+                <fileset dir="${tmp.radius.dir}">
+                </fileset>
+        </jar>
+
+       	<copy todir="${buildDir}/bpjars" file="${ra.build}/radius-if.jar"/>
+   
+    <!--     
+	<echo message ="Building the Radius Javadoc for application developers"/>
+        -->    
+            <!-- Define the classpath -->
+            <path id="radiusclasspath">
+            <fileset dir="${ra.build}/">
+                  <include name="radius-full.jar"/>
+                  <include name="${THIRDPARTY}/otherjars/TinyRadius-0.9.9.jar"/>
+            </fileset>
+            </path>
+
+            <javadoc destdir="${radius.doc.dir}" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes"> 
+                        <include name="com/baypackets/ase/ra/radius/*.java"/>
+                        <include name="com/baypackets/ase/ra/radius/attribute/*.java"/>
+                        <include name="com/baypackets/ase/ra/radius/dictionary/*.java"/>
+                        <include name="com/baypackets/ase/ra/radius/utils/*.java"/>
+                  </fileset> 
+                  <classpath refid="radiusclasspath"/>
+                  <classpath refid="classpath"/>
+            </javadoc>
+      <delete dir="${class.radius.dest.dir}"/>
+      <delete dir="${lib.radius.dest.dir}"/>
+      <delete dir="${radius.dest.dir}"/>
+      <delete dir="${tmp.radius.dir}"/>
+  </target>
+  
+	     <!-- Target for building RF RA component for OpenBlox stack -->
+
+        <target name="ra-ro" depends="rainit" description ="Ro Resource Adaptor.">
+                <echo message ="Building the Ro Resource Adaptor"/>
+
+                <property name="tmp.ro.dir" value="${ra.build}/tmp"/>
+                <property name="ro.dest.dir" value="${ra.build}/ro"/>
+                <property name="lib.ro.dest.dir" value="${ro.dest.dir}/lib"/>
+                <property name="class.ro.dest.dir" value="${ro.dest.dir}/classes"/>
+				<property name="ro.doc.dir" value="${buildDir}/doc/rodoc"/>
+                <property name="diabase.src.dir" value="${ra.src}/diameter/"/>
+                <property name="ro.src.dir" value="${ra.src}/diameter/ro"/>
+
+                <mkdir dir="${tmp.ro.dir}"/>
+                <mkdir dir="${ro.dest.dir}"/>
+                <mkdir dir="${lib.ro.dest.dir}"/>
+                <mkdir dir="${class.ro.dest.dir}"/>
+
+                <!-- Copy Ro Resource Adaptor Specific files to lib -->
+		<copy todir="${lib.ro.dest.dir}" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+		<copy todir="${lib.ro.dest.dir}" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-ro-3.2-obf.jar"/>
+                <copy todir="${lib.ro.dest.dir}" file="${THIRDPARTY}/otherjars/log4j-1.2.16.jar"/>
+
+			<copy todir="${class.ro.dest.dir}//com/baypackets/ase/ra/diameter/ro/rarouter/rulesmanager/" file="${ro.src.dir}/rarouter/rulesmanager/generate_code.xsl"/>
+			<copy todir="${class.ro.dest.dir}//com/baypackets/ase/ra/diameter/ro/rarouter/rulesmanager/" 
+			file="${ro.src.dir}/rarouter/rulesmanager/generate_properties.xsl"/>
+
+
+                <!-- Define the classpath. Please make sure that all the jars available in the lib -->
+                <path id="raclasspath">
+                  <fileset dir="${lib.ro.dest.dir}">
+                              <include name="*.jar"/>
+                  </fileset>
+            </path>
+
+                <javac srcdir="${diabase.src.dir}" destdir="${tmp.ro.dir}" debug="true">
+						<include name="**/base/"/>
+						<include name="**/base/*.java"/>
+						<include name="**/common/"/>
+						<include name="**/common/*.java"/>
+                        <include name="**/ro"/>
+                        <include name="**/ro/*.java"/>
+                        <include name="**/ro/avp/"/>
+                        <include name="**/ro/avp/*.java"/>
+                        <include name="**/ro/enums/*.java"/>
+                        <include name="**/ro/impl/*.java"/>
+                        <include name="**/ro/stackif/*.java/"/>
+                        <include name="**/ro/utils/*.java"/>
+			<include name="**/ro/utils/statistic/*.java"/>
+                        <include name="**/ro/rarouter/*.java"/>
+                        <include name="**/ro/rarouter/rulesmanager/*.java"/>
+
+                        <classpath refid="raclasspath"/>
+                        <classpath refid="classpath"/>
+                </javac>
+
+                <copy todir="${class.ro.dest.dir}">
+                        <fileset dir="${tmp.ro.dir}">
+					<include name="**/base/"/>
+					<include name="**/base/*.class"/>
+					<include name="**/common/"/>
+					<include name="**/common/*.class"/>
+					<include name="**/ro/"/>
+					<include name="**/ro/*.class"/>
+                        </fileset>
+                </copy>
+
+                <copy todir="${ro.dest.dir}" file="${ra.src}/diameter/ro/resource.xml"/>
+                <copy todir="${ro.dest.dir}" file="${ra.src}/diameter/ro/MeasurementConfig.xml"/>
+
+      <jar jarfile="${ra.build}/ro-ra.jar" basedir="${ra.build}/ro" />
+
+
+                <echo message ="Building the Ro Resource If Jar applications to compile"/>
+
+      <jar jarfile="${ra.build}/ro-if.jar">
+                <fileset dir="${tmp.ro.dir}">
+                        <exclude name="**/impl"/>
+                        <exclude name="**/impl/*.class"/>
+                        <exclude name="**/stackif"/>
+                        <exclude name="**/stackif/*.class"/>
+									<exclude name="**/rarouter"/>
+                        <exclude name="**/rarouter/*.class"/>
+                        <exclude name="**/rarouter/rulesmanager"/>
+                        <exclude name="**/rarouter/rulesmanager/*.class"/>
+			<exclude name="**/utils/statistic/*class"/>
+
+                </fileset>
+        </jar>
+
+      <jar jarfile="${ra.build}/ro-full.jar">
+                <fileset dir="${tmp.ro.dir}">
+                </fileset>
+        </jar>
+
+       	<copy todir="${buildDir}/bpjars" file="${ra.build}/ro-if.jar"/>
+	<copy todir="${buildDir}/otherjars" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+	<copy todir="${buildDir}/otherjars" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-ro-3.2-obf.jar"/>
+   
+    <!--     
+	<echo message ="Building the Ro Javadoc for application developers"/>
+        -->    
+            <!-- Define the classpath -->
+            <path id="roclasspath">
+            <fileset dir="${ra.build}/">
+                  <include name="ro-full.jar"/>
+                  <include name="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+                  <include name="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-ro-3.2-obf.jar"/>
+            </fileset>
+            </path>
+
+            <javadoc destdir="${ro.doc.dir}" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes"> 
+                        <include name="com/baypackets/ase/ra/diameter/ro/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/ro/avp/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/base/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/common/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/ro/enums/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/ro/utils/*.java"/>
+                  </fileset> 
+                  <classpath refid="roclasspath"/>
+                  <classpath refid="classpath"/>
+            </javadoc>
+      <delete dir="${class.ro.dest.dir}"/>
+      <delete dir="${lib.ro.dest.dir}"/>
+      <delete dir="${ro.dest.dir}"/>
+      <delete dir="${tmp.ro.dir}"/>
+  </target>
+  
+  	     <!-- Target for building GY RA component for OpenBlox stack -->
+
+       <!-- <target name="ra-gy" depends="rainit" description ="Gy Resource Adaptor.">
+                <echo message ="Building the Gy Resource Adaptor"/>
+
+                <property name="tmp.gy.dir" value="${ra.build}/tmp"/>
+                <property name="gy.dest.dir" value="${ra.build}/gy"/>
+                <property name="lib.gy.dest.dir" value="${gy.dest.dir}/lib"/>
+                <property name="class.gy.dest.dir" value="${gy.dest.dir}/classes"/>
+				<property name="gy.doc.dir" value="${buildDir}/doc/gydoc"/>
+                <property name="diabase.src.dir" value="${ra.src}/diameter/"/>
+                <property name="gy.src.dir" value="${ra.src}/diameter/gy"/>
+
+                <mkdir dir="${tmp.gy.dir}"/>
+                <mkdir dir="${gy.dest.dir}"/>
+                <mkdir dir="${lib.gy.dest.dir}"/>
+                <mkdir dir="${class.gy.dest.dir}"/>
+
+		<copy todir="${lib.gy.dest.dir}" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+		<copy todir="${lib.gy.dest.dir}" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-gy-3.2-obf.jar"/>
+                <copy todir="${lib.gy.dest.dir}" file="${THIRDPARTY}/otherjars/log4j-1.2.16.jar"/>
+
+			<copy todir="${class.gy.dest.dir}//com/baypackets/ase/ra/diameter/gy/rarouter/rulesmanager/" file="${gy.src.dir}/rarouter/rulesmanager/generate_code.xsl"/>
+			<copy todir="${class.gy.dest.dir}//com/baypackets/ase/ra/diameter/gy/rarouter/rulesmanager/" 
+			file="${gy.src.dir}/rarouter/rulesmanager/generate_properties.xsl"/>
+
+
+                <path id="raclasspath">
+                  <fileset dir="${lib.gy.dest.dir}">
+                              <include name="*.jar"/>
+                  </fileset>
+            </path>
+
+                <javac srcdir="${diabase.src.dir}" destdir="${tmp.gy.dir}" debug="true">
+						<include name="**/base/"/>
+						<include name="**/base/*.java"/>
+						<include name="**/common/"/>
+						<include name="**/common/*.java"/>
+                        <include name="**/gy"/>
+                        <include name="**/gy/*.java"/>
+                        <include name="**/gy/avp/"/>
+                        <include name="**/gy/avp/*.java"/>
+                        <include name="**/gy/enums/*.java"/>
+                        <include name="**/gy/impl/*.java"/>
+                        <include name="**/gy/stackif/*.java/"/>
+                        <include name="**/gy/utils/*.java"/>
+                        <include name="**/gy/rarouter/*.java"/>
+                        <include name="**/gy/rarouter/rulesmanager/*.java"/>
+
+                        <classpath refid="raclasspath"/>
+                        <classpath refid="classpath"/>
+                </javac>
+
+                <copy todir="${class.gy.dest.dir}">
+                        <fileset dir="${tmp.gy.dir}">
+					<include name="**/base/"/>
+					<include name="**/base/*.class"/>
+					<include name="**/common/"/>
+					<include name="**/common/*.class"/>
+					<include name="**/gy/"/>
+					<include name="**/gy/*.class"/>
+                        </fileset>
+                </copy>
+
+                <copy todir="${gy.dest.dir}" file="${ra.src}/diameter/gy/resource.xml"/>
+                <copy todir="${gy.dest.dir}" file="${ra.src}/diameter/gy/MeasurementConfig.xml"/>
+
+      <jar jarfile="${ra.build}/gy-ra.jar" basedir="${ra.build}/gy" />
+
+
+                <echo message ="Building the Gy Resource If Jar applications to compile"/>
+
+      <jar jarfile="${ra.build}/gy-if.jar">
+                <fileset dir="${tmp.gy.dir}">
+                        <exclude name="**/impl"/>
+                        <exclude name="**/impl/*.class"/>
+                        <exclude name="**/stackif"/>
+                        <exclude name="**/stackif/*.class"/>
+									<exclude name="**/rarouter"/>
+                        <exclude name="**/rarouter/*.class"/>
+                        <exclude name="**/rarouter/rulesmanager"/>
+                        <exclude name="**/rarouter/rulesmanager/*.class"/>
+
+                </fileset>
+        </jar>
+
+      <jar jarfile="${ra.build}/gy-full.jar">
+                <fileset dir="${tmp.gy.dir}">
+                </fileset>
+        </jar>
+
+       	<copy todir="${buildDir}/bpjars" file="${ra.build}/gy-if.jar"/>
+
+	<copy todir="${buildDir}/otherjars" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+	<copy todir="${buildDir}/otherjars" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-gy-3.2-obf.jar"/>
+   
+            <path id="gyclasspath">
+            <fileset dir="${ra.build}/">
+                  <include name="gy-full.jar"/>
+                  <include name="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+                  <include name="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-gy-3.2-obf.jar"/>
+            </fileset>
+            </path>
+
+            <javadoc destdir="${gy.doc.dir}" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes"> 
+                        <include name="com/baypackets/ase/ra/diameter/gy/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/gy/avp/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/base/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/common/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/gy/enums/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/gy/utils/*.java"/>
+                  </fileset> 
+                  <classpath refid="gyclasspath"/>
+                  <classpath refid="classpath"/>
+            </javadoc>
+		
+      <delete dir="${class.gy.dest.dir}"/>
+      <delete dir="${lib.gy.dest.dir}"/>
+      <delete dir="${gy.dest.dir}"/>
+      <delete dir="${tmp.gy.dir}"/> 
+  </target>
+ --> 
+	  
+      <!-- Target for building SH RA component -->
+
+      <target name="ra-sh" depends="rainit" description ="Sh Resource Adaptor.">
+            <echo message ="Building the Sh Resource Adaptor"/>
+
+            <property name="tmp.sh.dir" value="${ra.build}/tmp"/>
+            <property name="sh.dest.dir" value="${ra.build}/sh"/>
+            <property name="lib.sh.dest.dir" value="${sh.dest.dir}/lib"/>
+            <property name="class.sh.dest.dir" value="${sh.dest.dir}/classes"/>
+            <property name="sh.doc.dir" value="${buildDir}/doc/shdoc"/>
+            <property name="diabase.src.dir" value="${ra.src}/diameter/"/>
+            <property name="sh.src.dir" value="${ra.src}/diameter/sh"/>
+
+            <mkdir dir="${tmp.sh.dir}"/>
+            <mkdir dir="${sh.dest.dir}"/>
+            <mkdir dir="${lib.sh.dest.dir}"/>
+            <mkdir dir="${class.sh.dest.dir}"/>
+
+            <!-- Copy Sh Resource Adaptor Specific files to lib -->
+	<!--
+            <copy todir="${lib.sh.dest.dir}" file="${base.ra.stack.dir}/SH/client/sh.jar"/>
+            <copy todir="${lib.sh.dest.dir}" file="${base.ra.stack.dir}/lib/platform.jar"/>
+	-->
+			<copy todir="${class.sh.dest.dir}//com/baypackets/ase/ra/diameter/sh/rarouter/rulesmanager/" file="${sh.src.dir}/rarouter/rulesmanager/generate_code.xsl"/>
+			<copy todir="${class.sh.dest.dir}//com/baypackets/ase/ra/diameter/sh/rarouter/rulesmanager/" 
+			file="${sh.src.dir}/rarouter/rulesmanager/generate_properties.xsl"/>
+
+            <!--<copy todir="${lib.sh.dest.dir}" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+            <copy todir="${lib.sh.dest.dir}" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-sh-3.2-obf.jar"/>-->
+            <copy todir="${lib.sh.dest.dir}" file="${THIRDPARTY}/otherjars/log4j-1.2.16.jar"/>
+
+            <!-- Define the classpath. Please make sure that all the jars available in the lib -->
+            <path id="raclasspath">
+                  <fileset dir="${lib.sh.dest.dir}">
+                        <include name="*.jar"/>
+                  </fileset>
+            </path>
+
+                <javac srcdir="${diabase.src.dir}" destdir="${tmp.sh.dir}" debug="true">
+                        <include name="**/base/"/>
+                        <include name="**/base/*.java"/>
+                        <include name="**/common/"/>
+                        <include name="**/common/*.java"/>
+                        <include name="**/sh/*.java"/>
+                        <include name="**/sh/avp/"/>
+                        <include name="**/sh/avp/*.java"/>
+                        <include name="**/sh/enums/*.java"/>
+                        <include name="**/sh/impl/*.java"/>
+                        <include name="**/sh/stackif/*.java/"/>
+                        <include name="**/sh/utils/*.java"/>
+                        <include name="**/sh/rarouter/*.java"/>
+                        <include name="**/sh/rarouter/rulesmanager/*.java"/>
+                       <include name="**/sh/utils/statistic/*.java"/>
+
+                        <classpath refid="raclasspath"/>
+                        <classpath refid="classpath"/>
+                </javac>
+
+	<!--
+            <javac srcdir="${sh.src.dir}" destdir="${tmp.sh.dir}" debug="true">
+                  <include name="**/*.java"/>
+                  <classpath refid="raclasspath"/>
+                  <classpath refid="classpath"/>
+            </javac>
+	-->
+
+            <copy todir="${class.sh.dest.dir}">
+                  <fileset dir="${tmp.sh.dir}">
+                                <include name="**/base/"/>
+                                <include name="**/base/*.class"/>
+                                <include name="**/common/"/>
+                                <include name="**/common/*.class"/>
+                                <include name="**/sh/"/>
+                                <include name="**/sh/*.class"/>
+                  </fileset>
+            </copy>
+            <copy todir="${sh.dest.dir}" file="${ra.src}/diameter/sh/resource.xml"/>
+            <copy todir="${sh.dest.dir}" file="${ra.src}/diameter/sh/MeasurementConfig.xml"/>
+
+            <jar jarfile="${ra.build}/sh-ra.jar" basedir="${ra.build}/sh"/>
+
+            <echo message ="Building the Sh Resource If Jar applications to compile"/>
+            <jar jarfile="${ra.build}/sh-if.jar">
+                  <fileset dir="${tmp.sh.dir}"> 
+                        <exclude name="**/impl"/>
+                        <exclude name="**/impl/*.class"/>
+                        <exclude name="**/stackif"/>
+                        <exclude name="**/stackif/*.class"/>
+                        <exclude name="**/rarouter"/>
+                        <exclude name="**/rarouter/*.class"/>
+                        <exclude name="**/rarouter/rulesmanager"/>
+                        <exclude name="**/rarouter/rulesmanager/*.class"/>
+                  </fileset>
+            </jar>
+
+            <jar jarfile="${ra.build}/sh-full.jar">
+                  <fileset dir="${tmp.sh.dir}"/>
+            </jar>
+
+            <echo message ="Building the Sh Javadoc for application developers"/>
+      
+            <!-- Define the classpath -->
+            <path id="shclasspath">
+            <fileset dir="${ra.build}/">
+                  <include name="sh-full.jar"/>
+		<!--
+                  <include name="${base.ra.stack.dir}/SH/client/sh.jar"/>
+		-->
+                  <include name="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+                  <include name="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-sh-3.2-obf.jar"/>
+            </fileset>
+            </path>
+
+            <javadoc destdir="${sh.doc.dir}" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes"> 
+                        <include name="com/baypackets/ase/ra/diameter/sh/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/sh/avp/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/base/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/common/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/sh/enums/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/sh/utils/*.java"/>
+                  </fileset> 
+                  <classpath refid="shclasspath"/>
+                  <classpath refid="classpath"/>
+            </javadoc>
+
+	<copy todir="${buildDir}/bpjars" file="${ra.build}/sh-if.jar"/>
+	<copy todir="${buildDir}/otherjars" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+	<copy todir="${buildDir}/otherjars" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-sh-3.2-obf.jar"/>
+      <delete dir="${class.sh.dest.dir}"/>
+      <delete dir="${lib.sh.dest.dir}"/>
+      <delete dir="${sh.dest.dir}"/>
+      <delete dir="${tmp.sh.dir}"/>
+  </target>
+
+<!-- Sh Resource adaptor build -->
+
+
+        <!-- Target for building Condor stack specific  RF RA component -->
+<!--
+        <target name="ra-rf-condor" depends="rainit" description ="Rf Resource Adaptor.">
+                <echo message ="Building the Rf Resource Adaptor"/>
+
+                <property name="tmp.rf.dir" value="${ra.build}/tmp"/>
+                <property name="rf.dest.dir" value="${ra.build}/rf"/>
+                <property name="lib.rf.dest.dir" value="${rf.dest.dir}/lib"/>
+                <property name="class.rf.dest.dir" value="${rf.dest.dir}/classes"/>
+                <property name="rf.stack.dir" value="${CAS_STACK_ROOT}/stacks/Diameter"/>
+                <property name="rf.stack.dir" value="/imm4/sunil"/>
+				<property name="rf.doc.dir" value="${buildDir}/doc/rfdoc"/>
+
+                <property name="rf.src.dir" value="${ra.src}/rf"/>
+
+                <mkdir dir="${tmp.rf.dir}"/>
+                <mkdir dir="${rf.dest.dir}"/>
+                <mkdir dir="${lib.rf.dest.dir}"/>
+                <mkdir dir="${class.rf.dest.dir}"/>
+
+                <copy todir="${lib.rf.dest.dir}" file="${base.ra.stack.dir}/RF/client/RFClient.jar"/>
+                <copy todir="${lib.rf.dest.dir}" file="${base.ra.stack.dir}/lib/platform.jar"/>
+                <copy todir="${lib.rf.dest.dir}" file="${base.ra.stack.dir}/lib/chargingcommon.jar"/>
+                <copy todir="${lib.rf.dest.dir}" file="${base.ra.stack.dir}/lib/javolution.jar"/>
+                <copy todir="${lib.rf.dest.dir}" file="${THIRDPARTY}/otherjars/log4j-1.2.8.jar"/>
+
+                <path id="raclasspath">
+                  <fileset dir="${lib.rf.dest.dir}">
+                              <include name="*.jar"/>
+                  </fileset>
+            </path>
+
+                <javac srcdir="${rf.src.dir}" destdir="${tmp.rf.dir}" debug="true">
+                        <include name="**/*.java"/>
+                        <classpath refid="raclasspath"/>
+                        <classpath refid="classpath"/>
+                </javac>
+
+                <copy todir="${class.rf.dest.dir}">
+                        <fileset dir="${tmp.rf.dir}">
+                                <include name="**/*.class"/>
+                                <include name="**/impl/*.class"/>
+                        </fileset>
+                </copy>
+                <copy todir="${rf.dest.dir}" file="${ra.src}/rf/resource.xml"/>
+                <copy todir="${rf.dest.dir}" file="${ra.src}/rf/MeasurementConfig.xml"/>
+
+      <jar jarfile="${ra.build}/rf-ra.jar" basedir="${ra.build}/rf" />
+
+
+                <echo message ="Building the Rf Resource If Jar applications to compile"/>
+
+      <jar jarfile="${ra.build}/rf-if.jar">
+                <fileset dir="${tmp.rf.dir}">
+                        <exclude name="**/impl"/>
+                        <exclude name="**/impl/*.class"/>
+                </fileset>
+        </jar>
+
+      <jar jarfile="${ra.build}/rf-full.jar">
+                <fileset dir="${tmp.rf.dir}">
+                </fileset>
+        </jar>
+
+        <copy todir="${buildDir}/bpjars" file="${ra.build}/rf-if.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${base.ra.stack.dir}/lib/platform.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${base.ra.stack.dir}/lib/chargingcommon.jar"/>
+            <copy todir="${buildDir}/otherjars" file="${base.ra.stack.dir}/RF/client/RFClient.jar"/>
+            
+            <echo message ="Building the Rf Javadoc for application developers"/>
+            
+
+            <path id="rfclasspath">
+            <fileset dir="${ra.build}/">
+                  <include name="rf-full.jar"/>
+                  <include name="${base.ra.stack.dir}/RF/client/RFClient.jar"/>
+            </fileset>
+            </path>
+
+            <javadoc destdir="${rf.doc.dir}" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes"> 
+                        <include name="com/baypackets/ase/ra/rf/*.java"/>
+                  </fileset> 
+                  <classpath refid="rfclasspath"/>
+                  <classpath refid="classpath"/>
+            </javadoc>
+
+      <delete dir="${class.rf.dest.dir}"/>
+      <delete dir="${lib.rf.dest.dir}"/>
+      <delete dir="${rf.dest.dir}"/>
+      <delete dir="${tmp.rf.dir}"/>
+  </target>
+-->
+
+        <!-- Target for building RF RA component -->
+
+        <!--<target name="ra-rf" depends="rainit" description ="Rf Resource Adaptor.">
+                <echo message ="Building the Rf Resource Adaptor"/>
+
+                <property name="tmp.rf.dir" value="${ra.build}/tmp"/>
+                <property name="rf.dest.dir" value="${ra.build}/rf"/>
+                <property name="lib.rf.dest.dir" value="${rf.dest.dir}/lib"/>
+                <property name="class.rf.dest.dir" value="${rf.dest.dir}/classes"/>
+		<property name="rf.doc.dir" value="${buildDir}/doc/rfdoc"/>
+                <property name="diabase.src.dir" value="${ra.src}/diameter/"/>
+                <property name="rf.src.dir" value="${ra.src}/diameter/rf"/>
+
+                <mkdir dir="${tmp.rf.dir}"/>
+                <mkdir dir="${rf.dest.dir}"/>
+                <mkdir dir="${lib.rf.dest.dir}"/>
+                <mkdir dir="${class.rf.dest.dir}"/>
+
+		<copy todir="${lib.rf.dest.dir}" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+		<copy todir="${lib.rf.dest.dir}" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-rf-3.2-obf.jar"/>
+                <copy todir="${lib.rf.dest.dir}" file="${THIRDPARTY}/otherjars/log4j-1.2.16.jar"/>
+
+			<copy todir="${class.rf.dest.dir}//com/baypackets/ase/ra/diameter/rf/rarouter/rulesmanager/" file="${rf.src.dir}/rarouter/rulesmanager/generate_code.xsl"/>
+			<copy todir="${class.rf.dest.dir}//com/baypackets/ase/ra/diameter/rf/rarouter/rulesmanager/" 
+			file="${rf.src.dir}/rarouter/rulesmanager/generate_properties.xsl"/>
+
+                <path id="raclasspath">
+                  <fileset dir="${lib.rf.dest.dir}">
+                              <include name="*.jar"/>
+                  </fileset>
+            </path>
+
+                <javac srcdir="${diabase.src.dir}" destdir="${tmp.rf.dir}" debug="true">
+			<include name="**/base/"/>
+			<include name="**/base/*.java"/>
+			<include name="**/common/"/>
+			<include name="**/common/*.java"/>
+                        <include name="**/rf"/>
+                        <include name="**/rf/*.java"/>
+                        <include name="**/rf/avp/"/>
+                        <include name="**/rf/avp/*.java"/>
+                        <include name="**/rf/enums/*.java"/>
+                        <include name="**/rf/impl/*.java"/>
+                        <include name="**/rf/stackif/*.java/"/>
+                        <include name="**/rf/utils/*.java"/>
+                        <include name="**/rf/rarouter/*.java"/>
+                        <include name="**/rf/rarouter/rulesmanager/*.java"/>
+
+                        <classpath refid="raclasspath"/>
+                        <classpath refid="classpath"/>
+                </javac>
+
+                <copy todir="${class.rf.dest.dir}">
+                        <fileset dir="${tmp.rf.dir}">
+				<include name="**/base/"/>
+				<include name="**/base/*.class"/>
+				<include name="**/common/"/>
+				<include name="**/common/*.class"/>
+				<include name="**/rf/"/>
+				<include name="**/rf/*.class"/>
+                        </fileset>
+                </copy>
+
+                <copy todir="${rf.dest.dir}" file="${ra.src}/diameter/rf/resource.xml"/>
+                <copy todir="${rf.dest.dir}" file="${ra.src}/diameter/rf/MeasurementConfig.xml"/>
+
+      <jar jarfile="${ra.build}/rf-ra.jar" basedir="${ra.build}/rf" />
+
+
+                <echo message ="Building the Rf Resource If Jar applications to compile"/>
+
+      <jar jarfile="${ra.build}/rf-if.jar">
+                <fileset dir="${tmp.rf.dir}">
+                        <exclude name="**/impl"/>
+                        <exclude name="**/impl/*.class"/>
+                        <exclude name="**/stackif"/>
+                        <exclude name="**/stackif/*.class"/>
+						<exclude name="**/rarouter"/>
+                        <exclude name="**/rarouter/*.class"/>
+                        <exclude name="**/rarouter/rulesmanager"/>
+                        <exclude name="**/rarouter/rulesmanager/*.class"/>
+
+                </fileset>
+        </jar>
+
+      <jar jarfile="${ra.build}/rf-full.jar">
+                <fileset dir="${tmp.rf.dir}">
+                </fileset>
+        </jar>
+
+       	<copy todir="${buildDir}/bpjars" file="${ra.build}/rf-if.jar"/>
+	<copy todir="${buildDir}/otherjars" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+	<copy todir="${buildDir}/otherjars" file="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-rf-3.2-obf.jar"/>
+            
+	<echo message ="Building the Rf Javadoc for application developers"/>
+            
+
+            <path id="rfclasspath">
+            <fileset dir="${ra.build}/">
+                  <include name="rf-full.jar"/>
+                  <include name="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-core-3.2-obf.jar"/>
+                  <include name="${CAS_STACK_ROOT}/stacks/Diameter/OpenBlox3.2.2/openblox-rf-3.2-obf.jar"/>
+            </fileset>
+            </path>
+
+            <javadoc destdir="${rf.doc.dir}" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes"> 
+                        <include name="com/baypackets/ase/ra/diameter/rf/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/rf/avp/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/base/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/common/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/rf/enums/*.java"/>
+                        <include name="com/baypackets/ase/ra/diameter/rf/utils/*.java"/>
+                  </fileset> 
+                  <classpath refid="rfclasspath"/>
+                  <classpath refid="classpath"/>
+            </javadoc>
+
+      <delete dir="${class.rf.dest.dir}"/>
+      <delete dir="${lib.rf.dest.dir}"/>
+      <delete dir="${rf.dest.dir}"/>
+      <delete dir="${tmp.rf.dir}"/>
+  </target>
+
+-->
+
+      <!-- RF Resource adaptor build -->
+
+      <!-- Generic target used to build a .sar file -->
+  <target name="build-app">
+    <mkdir dir="${apps.build}/${app.name}/WEB-INF/classes"/>
+
+    <property name="app.src"
+             value="${apps.src}/${app.name}/WEB-INF"/>
+    <property name="app.dest"
+             value="${apps.build}/${app.name}/WEB-INF"/>
+    
+    <copy todir="${app.dest}">
+                  <fileset dir="${app.src}">
+                        <exclude name="**/*.java"/>
+                  </fileset>
+            </copy>
+                        
+    <javac srcdir="${app.src}/classes" destdir="${app.dest}/classes" debug="true">
+         <include name="**/*.java"/>
+         <classpath refid="classpath"/>
+    </javac>
+    
+    <jar jarfile="${apps.build}/${app.name}.sar" basedir="${apps.build}/${app.name}"/>
+
+            <delete dir="${apps.build}/${app.name}"/>
+  </target>
+
+  <target name="ide" depends="init">
+      <ant dir="../ide"/>
+  </target>
+	
+	<target name="sample-correlation-app" depends="tcap-api,inap,isup" >
+		<echo message="building sample correlatrion application"/>
+	    <ant antfile="../tools/SampleCorrelationApplication/build/build.xml" target="build" inheritAll="false">
+			<property name="INSTALLROOT" value="${INSTALLROOT}"/>
+	    </ant>
+	</target>
+	
+	<target name="simulator" depends="tcap-api,inap,inapitu-t_cs2,isup,win,sbb" >
+		<echo message="building sample correlatrion application"/>
+	    <ant antfile="../tools/SasBasedSimulator/build/build.xml" target="build" inheritAll="false">
+			<property name="INSTALLROOT" value="${INSTALLROOT}"/>
+			<property name="THIRDPARTY" value="${THIRDPARTY}"/>
+	    </ant>
+	</target>
+      
+      <target name="simulator-nodeps"  >
+                <echo message="building sample correlatrion application"/>
+            <ant antfile="../tools/SasBasedSimulator/build/build.xml" target="build" inheritAll="false">
+                        <property name="INSTALLROOT" value="${INSTALLROOT}"/>
+            </ant>
+        </target> 
+
+       <!-- Target for building http ra component -->
+                      <target name="ra-http" depends="rainit" description ="http Resource Adaptor.">
+            <echo message ="Building the Http Resource Adaptor"/>
+
+            <property name="tmp.http.dir" value="${ra.build}/tmp"/>
+            <property name="http.dest.dir" value="${ra.build}/http"/>
+            <property name="http.doc.dir" value="${buildDir}/doc/httpdoc"/>
+          <!--  <property name="lib.http.dest.dir" value="${http.dest.dir}/lib"/> -->
+            <property name="class.http.dest.dir" value="${http.dest.dir}/classes"/>
+            <property name="http.src.dir" value="${ra.src}/http"/>
+
+            <mkdir dir="${tmp.http.dir}"/>
+            <mkdir dir="${http.dest.dir}"/>
+         <!--   <mkdir dir="${lib.http.dest.dir}"/>  -->
+            <mkdir dir="${class.http.dest.dir}"/>
+                        <!--<mkdir dir="${http.doc.dir}"/> -->
+
+           <!-- <copy todir="${lib.http.dest.dir}" file="${THIRDPARTY}/otherjars/commons-net-3.0.1.jar"/>
+                        <copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/jsch-0.1.44.jar"/>
+                        <copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/spring-beans-2.5.6.jar"/>
+                        <copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/spring-context-2.0.4.jar"/>
+                        <copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/spring-core-2.5.6.jar"/>
+                        <copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/spring-dao.jar"/>
+                        <copy todir="${lib.telnetssh.dest.dir}" file="${THIRDPARTY}/otherjars/spring-jdbc-2.5.6.jar"/>
+             -->
+            <!-- Define the classpath. Please make sure that all the jars available in the lib -->
+           <!-- <path id="raclasspath">
+                  <fileset dir="${lib.http.dest.dir}">
+                        <include name="*.jar"/>
+                  </fileset>
+            </path>
+                 -->
+
+              <path id="httpraclasspath">
+                  <fileset dir="${buildDir}/httpjars/">
+                   <include name="ase-http.jar"/>
+                  </fileset>
+              </path> 
+
+            <javac srcdir="${http.src.dir}" destdir="${tmp.http.dir}" debug="true">
+
+
+
+                  <include name="**/*.java"/>
+
+                   <exclude name="**/qm/HttpReaderTask.class"/>
+
+                 
+                  <classpath refid="httpraclasspath"/>
+                 
+                  <classpath refid="classpath"/>
+            </javac>
+
+            <copy todir="${class.http.dest.dir}">
+                  <fileset dir="${tmp.http.dir}">
+                        <include name="**/*.class"/>
+                  </fileset>
+            </copy>
+
+            <copy todir="${http.dest.dir}" file="${ra.src}/http/resource.xml"/>
+            <copy todir="${http.dest.dir}" file="${ra.src}/http/MeasurementConfig.xml"/>
+
+            <jar jarfile="${ra.build}/http-ra.jar" >
+                                <fileset dir="${http.dest.dir}" >
+              
+
+                                      <exclude name="**/qm/HttpReaderTask.class"/>
+                        </fileset>
+            </jar>
+
+            <echo message ="Building the http Resource i/f jar for applications to compile"/>
+
+           <jar jarfile="${ra.build}/http-if.jar">
+                  <fileset dir="${tmp.http.dir}" >
+                        <exclude name="**/*Impl.class"/>
+                        <exclude name="**/exception/*.class"/>
+                        <exclude name="**/web/**/*.class"/>
+                        <exclude name="**/message/*Factory*.class"/>
+                        <exclude name="**/qm/*.class"/>
+                         <exclude name="**/session/*.class"/>
+                         <exclude name="**/utils/*.class"/>
+                         <exclude name="**/workmanager/*.class"/>
+                  </fileset>
+            </jar>
+
+            <jar jarfile="${ra.build}/http-full.jar">
+                  <fileset dir="${tmp.http.dir}">
+                                               <exclude name="**/qm/HttpReaderTask.class"/> 
+                  </fileset>
+            </jar>
+
+            <echo message ="Building the http Javadoc for application developers"/>
+
+            <javadoc destdir="${http.doc.dir}" additionalparam="-Xdoclint:none">
+                  <fileset dir="${src}" defaultexcludes="yes">
+                        <include name="com/baypackets/ase/ra/http/**/*.java"/>
+                  </fileset>
+                  <classpath refid="classpath"/>
+            </javadoc>
+                        <!--
+                        <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/commons-net-3.0.1.jar"/>
+                        <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/jsch-0.1.44.jar"/>
+                        <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-beans-2.5.6.jar"/>
+                        <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-context-2.0.4.jar"/>
+                        <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-core-2.5.6.jar"/>
+                        <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-dao.jar"/>
+                        <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/spring-jdbc-2.5.6.jar"/> -->
+            <copy todir="${buildDir}/bpjars" file="${ra.build}/http-if.jar"/>
+            <delete dir="${class.http.dest.dir}"/>
+           <!-- <delete dir="${lib.http.dest.dir}"/> -->
+            <delete dir="${http.dest.dir}"/>
+            <delete dir="${tmp.http.dir}"/>
+      </target>
+
+	       <!-- Target for building enum ra component -->
+	                      <target name="ra-enum" depends="rainit" description ="enum Resource Adaptor.">
+	            <echo message ="Building the Enum Resource Adaptor"/>
+
+	            <property name="tmp.enum.dir" value="${ra.build}/tmp"/>
+	            <property name="enum.dest.dir" value="${ra.build}/enumserver"/>
+	            <property name="enum.doc.dir" value="${buildDir}/doc/enumdoc"/>
+	            <property name="class.enum.dest.dir" value="${enum.dest.dir}/classes"/>
+	            <property name="enum.src.dir" value="${ra.src}/enumserver"/>
+
+	            <mkdir dir="${tmp.enum.dir}"/>
+	            <mkdir dir="${enum.dest.dir}"/>
+	       
+	            <mkdir dir="${class.enum.dest.dir}"/>
+	                    
+
+	            <javac srcdir="${enum.src.dir}" destdir="${tmp.enum.dir}" debug="true">
+
+
+
+	                  <include name="**/*.java"/>
+
+	            <!-- <exclude name="**/qm/EnumDequeTask.class"/>-->
+	                 
+	                 <!-- <classpath refid="httpraclasspath"/>-->
+	                 
+	                  <classpath refid="classpath"/>
+	            </javac>
+
+	            <copy todir="${class.enum.dest.dir}">
+	                  <fileset dir="${tmp.enum.dir}">
+	                        <include name="**/*.class"/>
+	                  </fileset>
+	            </copy>
+
+	            <copy todir="${enum.dest.dir}" file="${ra.src}/enumserver/resource.xml"/>
+	            <copy todir="${enum.dest.dir}" file="${ra.src}/enumserver/MeasurementConfig.xml"/>
+
+	            <jar jarfile="${ra.build}/enum-ra.jar" >
+	                                <fileset dir="${enum.dest.dir}" >
+
+	                        </fileset>
+	            </jar>
+
+	            <echo message ="Building the enum Resource i/f jar for applications to compile"/>
+
+	           <jar jarfile="${ra.build}/enum-if.jar">
+	                  <fileset dir="${tmp.enum.dir}" >
+	                        <exclude name="**/*Impl.class"/>
+	                        <exclude name="**/exception/*.class"/>
+	                        <exclude name="**/web/**/*.class"/>
+	                        <exclude name="**/message/*Factory*.class"/>
+	                        <exclude name="**/qm/*.class"/>
+	                         <exclude name="**/session/*.class"/>
+	                         <exclude name="**/utils/*.class"/>
+	                  	     <exclude name="**/rarouter/*.class"/>
+	                         <exclude name="**/threadpool/*.class"/>
+	                  </fileset>
+	            </jar>
+
+	            <jar jarfile="${ra.build}/enum-full.jar">
+	                  <fileset dir="${tmp.enum.dir}">
+	                  </fileset>
+	            </jar>
+
+	            <echo message ="Building the enum Javadoc for application developers"/>
+
+	            <javadoc destdir="${enum.doc.dir}" additionalparam="-Xdoclint:none">
+	                  <fileset dir="${src}" defaultexcludes="yes">
+	                        <include name="com/baypackets/ase/ra/enumserver/**/*.java"/>
+	                  </fileset>
+	                  <classpath refid="classpath"/>
+	            </javadoc>
+
+	            <copy todir="${buildDir}/bpjars" file="${ra.build}/enum-if.jar"/>
+	            <delete dir="${class.enum.dest.dir}"/>
+	            <delete dir="${enum.dest.dir}"/>
+	            <delete dir="${tmp.enum.dir}"/>
+	      </target>
+	
+        <target name="camel-v2" depends="init">
+            <path id="bnclasspath">
+                  <fileset dir="${BN_HOME}/Dist/lib/java">
+                        <include name="binarynotes.jar"/>
+                  </fileset> 
+                    <fileset dir="${THIRDPARTY}/otherjars">
+	        	<include name="log4j-1.2.16.jar"/>
+                  </fileset> 
+
+             </path> 
+
+            <mkdir dir="${buildDir}/camel"/>
+            <mkdir dir="${buildDir}/camel/v2"/>
+            <mkdir dir="${buildDir}/camel/v2/codecclasses"/>
+			
+            <javac srcdir="${PARENT_BASE}/tcap/camel/v2/codec/src" destdir="${buildDir}/camel/v2/codecclasses" debug="true">
+                  <include name="**/*.java"/>
+                  <classpath refid="bnclasspath"/>
+            </javac>
+
+            <mkdir dir="${buildDir}/bpjars/camel"/>
+            <jar update="true" jarfile="${buildDir}/bpjars/camel-v2.jar" basedir="${buildDir}/camel/v2/codecclasses"/>
+      </target>
+ 
+       <target name="camel-v3" depends="init">
+            <path id="bnclasspath">
+				  <fileset dir="${THIRDPARTY}/otherjars">
+						<include name="log4j-1.2.16.jar"/>
+                  </fileset>
+			
+                  <fileset dir="${BN_HOME}/Dist/lib/java">
+                        <include name="binarynotes.jar"/>
+                  </fileset>	  
+            </path>
+
+            <mkdir dir="${buildDir}/camel"/>
+            <mkdir dir="${buildDir}/camel/v3"/>
+            <mkdir dir="${buildDir}/camel/v3/codecclasses"/>
+            <javac srcdir="${PARENT_BASE}/tcap/camel/v3/codec/src" destdir="${buildDir}/camel/v3/codecclasses" debug="true">
+                  <include name="**/*.java"/>
+                  <classpath refid="bnclasspath"/>
+            </javac>
+
+            <mkdir dir="${buildDir}/bpjars/camel"/>
+            <jar update="true" jarfile="${buildDir}/bpjars/camel-v3.jar" basedir="${buildDir}/camel/v3/codecclasses"/>
+      </target> 
+</project>

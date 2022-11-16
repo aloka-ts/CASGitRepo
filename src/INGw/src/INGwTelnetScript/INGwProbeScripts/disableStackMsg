@@ -1,0 +1,9 @@
+## This script is used to disable messages exchanged between different 
+## stack layers. This should be executed once enableStackMsg has been 
+## executed.
+#!/usr/bin/ksh
+
+. ~/profile.ingw
+. $INSTALLROOT/$SUBSYS_DIR/sol28g/conf/hssenv.sh
+
+$INSTALLROOT/$SUBSYS_DIR/sol28g/bin/INGwProbe -s $SIP_LISTENER_HOST -c "set stk-logmask-inc RESET"

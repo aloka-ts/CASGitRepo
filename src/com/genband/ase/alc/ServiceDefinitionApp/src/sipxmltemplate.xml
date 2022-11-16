@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sip-app PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN" "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+<sip-app id="${ServletName}">
+    
+	<display-name>${ServletName}</display-name>
+     
+	 <distributable/>
+	
+	${ContextParms}
+	 
+	  <listener id="SipApplicationSessionListener">
+          <listener-class>${ServletClass}</listener-class>
+      </listener>
+    
+     <!-- <listener>
+          <listener-class>com.baypackets.ase.sbb.impl.SBBServlet</listener-class>
+      </listener>-->
+      <servlet>
+            <servlet-name>${ServletName}</servlet-name>
+            <display-name>${ServletName}</display-name>
+            <description>${ServletName} implements ${ALCFileURL}</description>
+            <servlet-class>${ServletClass}</servlet-class>
+            <load-on-startup>1</load-on-startup>
+        </servlet>
+      <!--  <servlet>
+                <servlet-name>SBBServlet</servlet-name>
+                <servlet-class>com.baypackets.ase.sbb.impl.SBBServlet</servlet-class>
+               <load-on-startup>1</load-on-startup>
+        </servlet>-->
+		<servlet>
+    <servlet-name>ProxyServlet</servlet-name>
+    <servlet-class>com.genband.apps.routing.ProxyServlet</servlet-class>
+    <load-on-startup/>
+  </servlet>
+
+	<!--${ServletMappings}-->
+	
+<servlet-mapping>
+     <servlet-name>ProxyServlet</servlet-name>
+    <pattern>
+        <equal>
+          <var>request.uri.user</var>
+          <value>proxy</value>
+        </equal>
+    </pattern>
+  </servlet-mapping>
+</sip-app>

@@ -1,0 +1,11 @@
+## This script is used to fetch stack configuration. It dumps value in  
+## /LOGS/INGw/ss7PduDump.txt file
+## Stack configuration in abovementioned file shall appear after
+## ----- STACK CONFIGURATION DUMP ----- comment
+
+#!/usr/bin/ksh
+
+. ~/profile.ingw
+. $INSTALLROOT/$SUBSYS_DIR/sol28g/conf/hssenv.sh
+
+$INSTALLROOT/$SUBSYS_DIR/sol28g/bin/INGwProbe -s $SIP_LISTENER_HOST -c "get stack-config"

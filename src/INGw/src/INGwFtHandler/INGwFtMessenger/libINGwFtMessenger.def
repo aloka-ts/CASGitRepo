@@ -1,0 +1,26 @@
+RULES=lib
+
+#include ../commondefs/ccm-config.def
+
+TARGET=libINGwFtMessenger
+
+EXTRA_DEFINES += _RWSTD_MULTI_THREAD
+
+SRCS = $(wildcard INGwFtMessenger/*.C)
+HDRS = $(wildcard INGwFtMessenger/*.h)
+
+#SRCS = INGwFtMessenger/INGwFtMsnMessengerThread.C    \
+#       INGwFtMessenger/INGwFtMsnMessenger.C          \
+#       INGwFtMessenger/INGwFtMsnFaultMgr.C           \
+#       INGwFtMessenger/INGwFtMsnCommMgr.C            \
+#       INGwFtMessenger/INGwFtMsnPktDispatcher.C      \
+#       INGwFtMessenger/INGwFtMsnPktReceiver.C 
+#
+#HDRS = INGwFtMessenger/INGwFtMsnMessengerThread.h    \
+#       INGwFtMessenger/INGwFtMsnMessenger.h          \
+#       INGwFtMessenger/INGwFtMsnMessengerInterface.h \
+#       INGwFtMessenger/INGwFtMsnFaultMgr.h           \
+#       INGwFtMessenger/INGwFtMsnCommMgr.h            \
+#       INGwFtMessenger/INGwFtMsnPktDispatcher.h      \
+#       INGwFtMessenger/INGwFtMsnPktReceiver.h 
+

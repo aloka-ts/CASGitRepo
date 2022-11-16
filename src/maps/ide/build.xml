@@ -1,0 +1,37 @@
+<project name="testng" default="test" basedir=".">
+	
+	<!-- COMPILE TESTS-->
+   <path id="cpath">
+      <pathelement location="testng-2.0beta-jdk15.jar"/>
+      <pathelement location="commons-lang-2.0.jar"/>     
+   </path>
+
+   <target name="compile">
+      <echo message="compiling tests"/>
+	  <mkdir dir="classes"/>
+      <javac   debug="true"
+               source="1.5"
+               classpathref="cpath"
+               srcdir="src"
+               destdir="classes"/>
+   </target>
+
+	<!-- RUN TESTS-->
+   <taskdef name="testng"
+            classname="com.beust.testng.TestNGAntTask"
+            classpathref="cpath"/>
+
+	<path id="runpath">
+		<path refid="cpath"/>
+		<pathelement location="classes"/>
+	</path>
+	
+	<target name="test" depends="compile">
+		<echo message="running tests"/>
+		<testng fork="yes" classpathref="runpath" outputDir="test-output">
+			<fileset dir="src" includes="testng.xml"/>
+		    <jvmarg value="-ea" />
+		</testng>
+	</target>
+	
+</project>

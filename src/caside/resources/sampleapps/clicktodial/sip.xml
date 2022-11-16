@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+   "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+   
+<sip-app>
+
+  <display-name>"Click to Dial" Application</display-name>
+  
+  <listener>
+    <listener-class>com.baypackets.clicktodial.util.CallStatePersister</listener-class>
+  </listener>
+
+  <servlet>
+    <servlet-name>InitServlet</servlet-name>
+    <servlet-class>com.baypackets.clicktodial.servlets.InitServlet</servlet-class> 
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+    
+  <servlet>
+    <servlet-name>ClickToDialSipServlet1</servlet-name>
+    <servlet-class>com.baypackets.clicktodial.servlets.ClickToDialSipServlet1</servlet-class> 
+  </servlet>
+
+  <servlet>
+    <servlet-name>ClickToDialSipServlet2</servlet-name>
+    <servlet-class>com.baypackets.clicktodial.servlets.ClickToDialSipServlet2</servlet-class>    
+  </servlet>  
+
+  <servlet>
+    <servlet-name>ClickToDialSipServlet3</servlet-name>
+    <servlet-class>com.baypackets.clicktodial.servlets.ClickToDialSipServlet3</servlet-class>    
+  </servlet>    
+          
+  <session-config>
+    <session-timeout>10</session-timeout>
+  </session-config>
+  
+</sip-app>

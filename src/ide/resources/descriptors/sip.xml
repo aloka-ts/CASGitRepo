@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+  PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+  "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+<sip-app>
+  <display-name>$NAME</display-name>
+  <distributable/>
+
+  <!-- The following section specifies the application session timeout value. -->
+  <session-config>
+    <session-timeout>5</session-timeout>
+  </session-config>
+</sip-app>

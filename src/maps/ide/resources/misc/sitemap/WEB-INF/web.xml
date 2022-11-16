@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+ 
+<web-app
+   xmlns="http://java.sun.com/xml/ns/j2ee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee  http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+   version="2.4">
+ 
+   <!-- MyFaces specific configuration -->
+   <context-param>
+      <param-name>org.apache.myfaces.ALLOW_JAVASCRIPT</param-name>
+      <param-value>true</param-value>
+   </context-param>
+   <context-param>
+      <param-name>org.apache.myfaces.DETECT_JAVASCRIPT</param-name>
+      <param-value>false</param-value>
+   </context-param>
+   <context-param>
+      <param-name>org.apache.myfaces.AUTO_SCROLL</param-name>
+      <param-value>false</param-value>
+   </context-param>
+   <context-param>
+      <param-name>org.apache.myfaces.CHECK_EXTENSIONS_FILTER</param-name>
+      <param-value>false</param-value>
+   </context-param>
+   <context-param>
+      <param-name>org.apache.myfaces.PRETTY_HTML</param-name>
+      <param-value>true</param-value>
+   </context-param>
+
+   <!-- Facelet configuration -->
+   <context-param>
+      <param-name>facelets.DEVELOPMENT</param-name>
+      <param-value>false</param-value>
+   </context-param>
+   <context-param>
+      <param-name>facelets.SKIP_COMMENTS</param-name>
+      <param-value>true</param-value>
+   </context-param>
+   <context-param>
+      <param-name>facelets.LIBRARIES</param-name>
+      <param-value>/WEB-INF/portal.taglib.xml</param-value>
+   </context-param>
+
+   <!-- JSF configuration -->
+   <context-param>
+      <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+      <param-value>.xhtml</param-value>
+   </context-param>
+   <context-param>
+      <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+      <param-value>server</param-value>
+   </context-param>
+
+   <!-- The JSF servlet -->
+   <servlet>
+       <servlet-name>Faces Servlet</servlet-name>
+       <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+       <load-on-startup>1</load-on-startup>
+   </servlet>
+   
+   <!-- The JSF meta bridge bootstrap -->
+   <listener>
+      <display-name> Faces Meta Bridge Bootstrap</display-name>
+      <listener-class>org.jboss.portal.faces.portlet.JSFMetaBridgeBootstrap</listener-class>
+   </listener>
+
+   <!-- CPFListener uploads configuration data to database 
+   <listener>
+      <display-name>data upload guy</display-name>
+      <listener-class>com.genband.m5.maps.security.CPFListener</listener-class>
+   </listener> -->
+</web-app>
+

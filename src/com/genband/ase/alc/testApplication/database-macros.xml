@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application-logic-control xmlns:x0="http://www.w3.org/2001/XMLSchema">
+
+      <!-- Data base access functions -->
+        <service name="get-table-information">
+            <attribute name="table"/>
+            <attribute name="field"/>
+            <attribute name="where"/>
+            <attribute reference="true" name="resultant"/>
+
+            <define-local variable="QUERY" 
+                  equal-to="select * from ${table} where ${where} "/>
+            
+            <condition if="${where}" equal-to="null">
+                  <set variable="QUERY" equal-to="select * from ${table} "/>
+            </condition>
+            
+            <execute-query statement="${QUERY}">
+                  <results value="Results Found"> 
+                        <get-from-results column="${field}" results-in="${resultant}"/>
+                        <set variable="return" equal-to="TupleFound"/>
+                        <log level="INFO" value="Field ${field} in ${table} table is ${${resultant}}"/>
+                  </results>              
+                  <results value="Results Not Found"> 
+                        <set variable="${resultant}" equal-to="TupleNotFound"/>
+                        <set variable="return" equal-to="TupleNotFound"/>
+                  </results>              
+            </execute-query>
+      </service>
+        
+      <!-- Media support functions -->
+      <service name="initialize-global-media">
+            <define-global variable="VoiceMailProvisioningMenu"/>
+            <define-global variable="MasterCallJumpProvisioningInvalidEntry"/>
+            <define-global variable="CallJumpDestinatoinPrompt"/>
+            <define-global variable="CallJumpAccessPrompt"/>
+            <define-global variable="MasterCallJumpProvisioningInvalidEntry"/>
+            <define-global variable="MEDIA_SERVER_IP"/>
+            <define-global variable="MediaType"/>
+            <define-global variable="voicemailmenudestination"/>
+            <define-global variable="MaxDigits" equal-to="10"/>
+            <execute-query statement="select * from calljumpconfig">
+                  <results value="Results Found"> 
+                        <get-from-results column="accessnumber" results-in="voicemailmenudestination"/>
+                        <get-from-results column="mainmenuprompt" results-in="VoiceMailProvisioningMenu"/>
+                        <get-from-results column="invalidentryprompt" results-in="MasterCallJumpProvisioningInvalidEntry"/>
+                        <get-from-results column="mediatype" results-in="MediaType"/>
+                        <get-from-results column="mediaserverip" results-in="MEDIA_SERVER_IP"/>
+                        <get-from-results column="accessnumberentryprompt" results-in="CallJumpAccessPrompt"/>
+                        <get-from-results column="destinationnumberentryprompt" results-in="CallJumpDestinatoinPrompt"/>
+                        
+                        <log level="INFO" value="** ${voicemailmenudestination} ${VoiceMailProvisioningMenu} ${MasterCallJumpProvisioningInvalidEntry} ${CallJumpAccessPrompt} ${CallJumpDestinatoinPrompt} ${MediaType} ${MEDIA_SERVER_IP}"/>
+                  </results>              
+            </execute-query>
+      </service>
+
+</application-logic-control>
+

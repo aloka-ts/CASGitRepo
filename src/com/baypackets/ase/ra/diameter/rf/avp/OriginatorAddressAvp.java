@@ -1,0 +1,175 @@
+package com.baypackets.ase.ra.diameter.rf.avp;
+
+import org.apache.log4j.Logger;
+
+import com.baypackets.ase.ra.diameter.base.avp.AvpDiameterGrouped;
+import com.baypackets.ase.ra.diameter.common.enums.FlagRuleEnum;
+import com.baypackets.ase.ra.diameter.rf.RfResourceException;
+import com.baypackets.ase.ra.diameter.rf.enums.AddressTypeEnum;
+import com.traffix.openblox.core.exceptions.ValidationException;
+import com.traffix.openblox.diameter.rf.generated.avp.AvpOriginatorAddress;
+import com.traffix.openblox.diameter.rf.generated.enums.EnumAddressType;
+
+public class OriginatorAddressAvp extends AvpDiameterGrouped {
+
+	private static Logger logger = Logger.getLogger(OriginatorAddressAvp.class.getName());
+	public static final long vendorId = 0L;
+
+	private AvpOriginatorAddress stackObj;
+
+	public OriginatorAddressAvp(AvpOriginatorAddress stkObj){
+		super(stkObj);
+		this.stackObj=stkObj;
+	}
+
+	/**
+	 * This method returns the standard code for this AVP.
+	 */
+	public int getCode() {
+		return stackObj.getCode();
+	}
+
+	/**
+	 * The standard rule for the M (mandatory) AVP header flag
+	 */
+	public FlagRuleEnum getMRule() {
+		return FlagRuleEnum.getContainerObj(stackObj.getMRule());
+	}
+
+	/**
+	 * This method returns the name of this AVP.
+	 */
+	public String getName() {
+		return stackObj.getName();
+	}
+
+	/**
+	 * The standard rule for the P (end-to-end encryption) AVP header flag
+	 */
+	public FlagRuleEnum getPRule() {
+		return FlagRuleEnum.getContainerObj(stackObj.getPRule());
+	}
+
+	/**
+	 * This method returns the vendor ID associated with this AVP.
+	 */
+	public long getVendorId() {
+		return stackObj.getVendorId();
+	}
+
+	/**
+	 * The standard rule for the V (vendor) AVP header flag
+	 */
+	public FlagRuleEnum getVRule() {
+		return FlagRuleEnum.getContainerObj(stackObj.getVRule());
+	}
+
+
+	/**
+	 *  Adding AddressData AVP of type UTF8String to the message.
+	 */
+	public AddressDataAvp addAddressData(java.lang.String value) throws RfResourceException { 
+
+		try {
+			if(logger.isDebugEnabled()){
+				logger.debug("Inside addAddressData()");
+			}
+			return new AddressDataAvp(stackObj.addAddressData(value));
+		} catch (ValidationException e) {
+			throw new RfResourceException("Exception in addAddressData",e);
+		}
+	}
+
+	/**
+	 *  Adding AddressType AVP of type Enumerated to the message.
+	 */
+	public AddressTypeAvp addAddressType(EnumAddressType value) throws RfResourceException { 
+
+		try {
+			if(logger.isDebugEnabled()){
+				logger.debug("Inside addAddressType()");
+			}
+			return new AddressTypeAvp(stackObj.addAddressType(value));
+		} catch (ValidationException e) {
+			throw new RfResourceException("Exception in addAddressType",e);
+		}
+	}
+
+	/**
+	 *  Adding AddressDomain AVP of type Grouped to the message.
+	 */
+	public AddressDomainAvp addGroupedAddressDomain() throws RfResourceException { 
+
+		try {
+			if(logger.isDebugEnabled()){
+				logger.debug("Inside addGroupedAddressDomain()");
+			}
+			return new AddressDomainAvp(stackObj.addGroupedAddressDomain());
+		} catch (ValidationException e) {
+			throw new RfResourceException("Exception in addGroupedAddressDomain",e);
+		}
+	}
+
+	/**
+	 *  Retrieving a single UTF8String value from AddressData AVPs.
+	 */
+	public java.lang.String getAddressData() throws RfResourceException { 
+
+		try {
+			if(logger.isDebugEnabled()){
+				logger.debug("Inside getAddressData()");
+			}
+			return stackObj.getAddressData();
+		} catch (ValidationException e) {
+			throw new RfResourceException("Exception in getAddressData",e);
+		}
+	}
+
+	/**
+	 *  Retrieving a single Enumerated value from AddressType AVPs.
+	 */
+	public int getAddressType() throws RfResourceException { 
+
+		try {
+			if(logger.isDebugEnabled()){
+				logger.debug("Inside getAddressType()");
+			}
+			return stackObj.getAddressType();
+		} catch (ValidationException e) {
+			throw new RfResourceException("Exception in getAddressType",e);
+		}
+	}
+
+	/**
+	 *  This method returns the Enumvlaue of Address Type AVP.
+	 */
+	public AddressTypeEnum getEnumAddressType() throws RfResourceException { 
+
+		try {
+			if(logger.isDebugEnabled()){
+				logger.debug("Inside getEnumAddressType()");
+			}
+			return AddressTypeEnum.getContainerObj(stackObj.getEnumAddressType());
+		} catch (ValidationException e) {
+			throw new RfResourceException("Exception in getEnumAddressType",e);
+		}
+	}
+
+	/**
+	 *  Retrieving a single Grouped value from AddressDomain AVPs.
+	 */
+	public AddressDomainAvp getGroupedAddressDomain() throws RfResourceException { 
+
+		try {
+			if(logger.isDebugEnabled()){
+				logger.debug("Inside getGroupedAddressDomain()");
+			}
+			return new AddressDomainAvp(stackObj.getGroupedAddressDomain());
+		} catch (ValidationException e) {
+			throw new RfResourceException("Exception in getGroupedAddressDomain",e);
+		}
+	}
+
+
+
+}

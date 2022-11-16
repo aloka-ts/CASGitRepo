@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin
+	id="com.baypackets.sas.ide"
+	name="Ide Plug-in"
+	version="1.0.0"
+	provider-name="Agnity"
+	class="com.baypackets.sas.ide.SasPlugin">
+	
+	<runtime>
+		<library name="library/jmxri.jar">
+		<export name="*"/>
+		</library>
+	</runtime>
+	
+	<runtime>
+		<library name="library/jmxremote.jar">
+		<export name="*"/>
+		</library>
+	</runtime>
+	
+        <runtime>
+		<library name="library/jmxremote_optional.jar">
+		<export name="*"/>
+		</library>
+	</runtime>
+	
+	<runtime>
+		<library name="library/sasdd.jar">
+		<export name="*"/>
+		</library>
+	</runtime>
+	
+	<runtime>
+		<library name="library/jdom.jar">
+		<export name="*"/>
+		</library>
+	</runtime>
+
+	<runtime>
+		<library name="library/jmxide.jar">
+		<export name="*"/>
+		</library>
+	</runtime>
+	
+	<runtime>
+		<library name="library/sipservlet.jar">
+		<export name="*"/>
+		</library>
+	</runtime>
+	
+	<runtime>
+		<library name="library/servlet-2.4.jar">
+		<export name="*"/>
+		</library>
+	</runtime>
+
+
+        <runtime>
+                <library name="library/jakarta-oro-2.0.6.jar">
+                <export name="*"/>
+                </library>
+        </runtime>
+           
+            <runtime>
+                <library name="library/soa-iface.jar">
+                <export name="*"/>
+                </library>
+        </runtime> 
+                  
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="actionSetSasManagement"
+            label="CAS Management"
+            visible="true">
+         <menu
+               id="menuSasManagement"
+               label="CAS &amp;Management">
+            <separator name="separatorSasManagement"/>
+         </menu>
+         
+          <menu
+                id="menuEmbeddedSasManagement"
+                label="Embedded &amp;CAS"
+                path="menuSasManagement/separatorSasManagement">
+            <separator name="separatorSasManagement"/>
+           </menu>
+         
+         
+          <menu
+                id="menuExternalSasManagement"
+                label="External &amp;CAS"
+                path="menuSasManagement/separatorSasManagement">
+            <separator name="separatorSasManagement"/>
+          </menu>
+         <action
+               class="com.baypackets.sas.ide.mgmt.ShutdownSASAction"
+               icon="icons/stop.gif"
+               id="com.baypackets.sas.ide.mgmt.ShutdownSASAction"
+               label="&amp;Shut Down CAS Gracefully"
+               menubarPath="menuSasManagement/separatorSasManagement"
+               style="push"
+               toolbarPath="separatorSasManagement"
+               tooltip="Shut down CAS Gracefully"/>
+         <action
+               class="com.baypackets.sas.ide.mgmt.StatusSASAction"
+               icon="icons/status.gif"
+               id="com.baypackets.sas.ide.mgmt.StatusSASAction"
+               label="&amp;Status CAS"
+               style="push"
+              	menubarPath="menuSasManagement/separatorSasManagement"
+               toolbarPath="separatorSasManagement"
+               tooltip="Check Status of the CAS"/>
+         <action
+               class="com.baypackets.sas.ide.mgmt.ConfigureDataSourceAction"
+               icon="icons/buildSAR.gif"
+               id="com.baypackets.sas.ide.mgmt.ConfigureDataSourceAction"
+               label="&amp;Configure Data Source"
+               menubarPath="menuSasManagement/separatorSasManagement"
+               style="push"
+               toolbarPath="separatorSasManagement"
+               tooltip="Configure Database in datasource descriptor"/>
+            <action
+               class="com.baypackets.sas.ide.mgmt.ConfigureMediaServerAction"
+               icon="icons/buildSAR.gif"
+               id="com.baypackets.sas.ide.mgmt.ConfigureMediaServerAction"
+               label="&amp;Configure Media Server"
+               menubarPath="menuSasManagement/separatorSasManagement"
+               style="push"
+               toolbarPath="separatorSasManagement"
+               tooltip="Configure Media Server"/>
+                    
+         <action
+               class="com.baypackets.sas.ide.mgmt.AbortSAS"
+               icon="icons/stop.gif"
+               id="abortSAS"
+               label="Abort CAS"
+               style="push"
+               menubarPath="menuSasManagement/menuEmbeddedSasManagement/separatorSasManagement"
+               toolbarPath="separatorSasManagement"
+               tooltip="Abort AGNITY SIP Application Server"/>
+         
+         <action
+               class="com.baypackets.sas.ide.mgmt.StartSASDebug"
+               icon="icons/debug.gif"
+               id="StartSASDebug"
+               label="&amp;Start CAS (Debug Mode)"
+               menubarPath="menuSasManagement/menuEmbeddedSasManagement/separatorSasManagement"
+               toolbarPath="separatorSasManagement"
+               tooltip="Start AGNITY SIP Application Server in Debug Mode"/>
+         <action
+               class="com.baypackets.sas.ide.mgmt.StartSAS"
+               icon="icons/start.gif"
+               id="StartSAS"
+               label="&amp;Start CAS"
+               menubarPath="menuSasManagement/menuEmbeddedSasManagement/separatorSasManagement"
+               toolbarPath="separatorSasManagement"
+		tooltip="Start AGNITY SIP Application Server"/>
+         <action
+               class="com.baypackets.sas.ide.mgmt.AttachSASAction"
+               icon="icons/attach.gif"
+               id="com.baypackets.sas.ide.mgmt.AttachSASAction"
+               label="&amp;Attach CAS"
+               style="push"
+     	          menubarPath="menuSasManagement/menuExternalSasManagement/separatorSasManagement"
+               toolbarPath="separatorSasManagement"
+            tooltip="Attach with Running instance of CAS"/>
+         <action
+               class="com.baypackets.sas.ide.mgmt.DetachSASAction"
+               icon="icons/detach.gif"
+               id="com.baypackets.sas.ide.mgmt.DetachSASAction"
+               label="&amp;Detach CAS"
+               style="push"
+                   menubarPath="menuSasManagement/menuExternalSasManagement/separatorSasManagement"
+               toolbarPath="separatorSasManagement"
+               tooltip="Detach from running instance of CAS"/>
+      
+      </actionSet>
+	</extension>
+
+
+
+   <extension
+         id="BP_WIZARDS"
+         name="AGNITY-CAS IDE"
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="AGNITY-CAS IDE"
+            name="AGNITY-CAS IDE"/>
+      <wizard
+            canFinishEarly="true"
+            category="AGNITY-CAS IDE"
+            class="com.baypackets.sas.ide.wizards.BPProjectWizard"
+            hasPages="true"
+            icon="icons/bp.gif"
+            id="bpProjectWizard"
+            name="AGNITY CAS Project"
+            project="true"/>
+      <wizard
+            canFinishEarly="true"
+            category="AGNITY-CAS IDE"
+            class="com.baypackets.sas.ide.wizards.BPSipServletWizard"
+            hasPages="true"
+            icon="icons/bp.gif"
+            id="bpSipServletWizard"
+            name="Sip Servlet"
+            project="false"/>
+      <wizard
+            canFinishEarly="true"
+            category="AGNITY-CAS IDE"
+            class="com.baypackets.sas.ide.wizards.BPHttpServletWizard"
+            hasPages="true"
+            icon="icons/bp.gif"
+            id="bpHttpServletWizard"
+            name="Http Servlet"
+            project="false"/> 
+      <wizard
+            canFinishEarly="true"
+            category="AGNITY-CAS IDE"
+            class="com.baypackets.sas.ide.wizards.BPSipListenerWizard"
+            hasPages="true"
+            icon="icons/bp.gif"
+            id="bpSipListenerWizard"
+            name="Sip Listener"
+            project="false"/>
+      <wizard
+            canFinishEarly="true"
+            category="AGNITY-CAS IDE"
+            class="com.baypackets.sas.ide.wizards.BPSbbListenerWizard"
+            hasPages="true"
+            icon="icons/bp.gif"
+            id="bpSbbListenerWizard"
+            name="SBB Event Listener"
+            project="false"/>
+         <wizard
+            canFinishEarly="true"
+            category="AGNITY-CAS IDE"
+            class="com.baypackets.sas.ide.wizards.BPRAMessageHandlerWizard"
+            hasPages="true"
+            icon="icons/bp.gif"
+            id="bpMessageHandlerWizard"
+            name="Resource Message Handler"
+            project="false"/>
+         <wizard
+            canFinishEarly="true"
+            category="AGNITY-CAS IDE"
+            class="com.baypackets.sas.ide.wizards.BPRAResourceListenerWizard"
+            hasPages="true"
+            icon="icons/bp.gif"
+            id="bpResListenerWizard"
+            name="Resource Listener"
+            project="false"/>    
+       <wizard
+            canFinishEarly="true"
+            category="AGNITY-CAS IDE"
+            class="com.baypackets.sas.ide.alc.AlcFileCreationWizard"
+            hasPages="true"
+            icon="icons/bp.gif"
+            id="bpAlcFileCreationWizard"
+            name="ALC XML File"
+            project="false"/>           
+   </extension>
+   
+    <extension
+         id="AGNITY CAS Sample Applications"
+         name="AGNITY CAS Sample Applications"
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="AGNITY CAS Sample Applications"
+            name="AGNITY CAS Sample Applications"/>
+      <wizard
+            canFinishEarly="true"
+            category="AGNITY CAS Sample Applications"
+            class="com.baypackets.sas.ide.samples.BPClickToDialApplication"
+            hasPages="true"
+            icon="icons/clicktodial.gif"
+            id="AGNITY CAS ClickToDial Application"
+            name="AGNITY CAS ClickToDial Application"
+            project="true"/>
+      <wizard
+            canFinishEarly="true"
+            category="AGNITY CAS Sample Applications"
+            class="com.baypackets.sas.ide.samples.BPB2buaApplication"
+            hasPages="true"
+            icon="icons/b2bua.gif"
+            id="AGNITY CAS B2bua Application"
+            name="AGNITY CAS B2bua Application"
+            project="true"/>
+      <wizard
+            canFinishEarly="true"
+            category="AGNITY CAS Sample Applications"
+            class="com.baypackets.sas.ide.samples.BPProxyApplication"
+            hasPages="true"
+            icon="icons/proxy.gif"
+            id="AGNITY CAS Proxy Application"
+            name="AGNITY CAS Proxy Application"
+            project="true"/>
+      <wizard
+            canFinishEarly="true"
+            category="AGNITY CAS Sample Applications"
+            class="com.baypackets.sas.ide.samples.BPUASApplication"
+            hasPages="true"
+            icon="icons/uas.gif"
+            id="AGNITY CAS UAS Application"
+            name="AGNITY CAS UAS Application"
+            project="true"/>
+      <wizard
+            canFinishEarly="true"
+            category="AGNITY CAS Sample Applications"
+            class="com.baypackets.sas.ide.samples.BPUACApplication"
+            hasPages="true"
+            icon="icons/uac.gif"
+            id="AGNITY CAS UAC Application"
+            name="AGNITY CAS UAC Application"
+            project="true"/>
+   </extension>
+   
+      
+   <extension point="org.eclipse.help.toc">
+      <toc file="toc.xml" primary="true" />
+   </extension>
+  
+   <extension
+         id="AGNITY CAS Service Management View"
+         name="AGNITY CAS Service Management View"
+         point="org.eclipse.ui.views">
+      <category
+            id="AGNITY CAS Service Management View"
+            name="AGNITY CAS Service Management View"/>
+      <view
+            allowMultiple="true"
+            category="AGNITY CAS Service Management View"
+            class="com.baypackets.sas.ide.servicemanagement.ServiceManagementView"
+            icon="icons/dialup3.gif"
+            id="ServiceManagement"
+            name="ServiceManagement"/>
+   </extension>
+
+ <extension
+         id="AGNITY CAS SOA Views"
+         name="AGNITY CAS SOA Views"
+         point="org.eclipse.ui.views">
+      <category
+            id="AGNITY CAS SOA Views"
+            name="AGNITY CAS SOA Views"/>
+      <view 
+            allowMultiple="true"
+            category="AGNITY CAS SOA Views"
+            class="com.baypackets.sas.ide.soa.views.ProvisionSOAServiceView"
+            icon="icons/dialup3.gif"
+            id="SOAServiceProvisioning"
+            name="SOAServiceProvisioning"/>
+
+   <!-- <view 
+            allowMultiple="true"
+            category="AGNITY CAS SOA Views"
+            class="com.baypackets.sas.ide.soa.views.RegisterSOAApplicationView"
+            icon="icons/dialup3.gif"
+            id="SOAServiceRegistration"
+            name="SOAServiceRegistration"/>-->
+   <view
+            allowMultiple="true"
+            category="AGNITY CAS SOA Views"
+            class="com.baypackets.sas.ide.soa.views.SOAServiceManagementView"
+            icon="icons/dialup3.gif"
+            id="SOAServiceManagement"
+            name="SOAServiceManagement"/>
+
+ 
+   </extension>
+
+ 
+  <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="CAS Logger"
+            id="com.baypackets.sas.ide.logger">
+      </category>
+      <view
+            name="CAS Server Logs"
+            icon="icons/lw_icon.gif"
+            category="com.baypackets.sas.ide.logger"
+            class="com.baypackets.sas.ide.logger.views.SASServerLoggerView"
+            id="com.baypackets.sas.ide.logger.views.SASServerLoggerView">
+      </view>
+
+      <view
+            name="SIP Debug Logs"
+            icon="icons/lw_icon.gif"
+            category="com.baypackets.sas.ide.logger"
+            class="com.baypackets.sas.ide.logger.views.SASDebugLoggerView"
+            id="com.baypackets.sas.ide.logger.views.SASDebugLoggerView">
+      </view>
+</extension>
+
+
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="com.baypackets.sas.ide.logger.views.SASServerLoggerView">
+         </view>
+
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="com.baypackets.sas.ide.logger.views.SASDebugLoggerView">
+         </view>
+
+      </perspectiveExtension>
+   </extension>
+
+
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="CAS Logger"
+            class="com.baypackets.sas.ide.logger.preferences.PrefsPage"
+            id="com.baypackets.sas.ide.logger.preferences.PrefsPage">
+      </page>
+   </extension>
+ 
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="ServiceAction"
+            label="&amp;Build Service"
+            visible="true">
+         <menu
+               id="MenuBuildService"
+               label="&amp;Build Service">
+            <separator name="BuildSARSeparator"/>
+         </menu>
+         <action
+               class="com.baypackets.sas.ide.servicemanagement.BuildSARAction"
+               icon="icons/buildSAR.gif"
+               id="BuildService"
+               label="&amp;Build Service"
+               menubarPath="MenuBuildService/BuildSARSeparator"
+               style="push"
+               toolbarPath="MenuBuildService/BuildSARSeparator"
+               tooltip="Build Service"/>
+         <action
+               class="com.baypackets.sas.ide.servicemanagement.DeployServiceAction"
+               icon="icons/deployService.gif"
+               id="DeployService"
+               label="&amp;Deploy Service"
+               menubarPath="MenuBuildService/BuildSARSeparator"
+               style="push"
+               toolbarPath="MenuBuildService/BuildSARSeparator"
+               tooltip="Deploy service on CAS"/>
+      </actionSet>
+   </extension>
+
+  <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="SOAServiceAction"
+            label="&amp;SOA Service"
+            visible="true">
+         <menu
+               id="MenuSOAService"
+               label="&amp;SOA Service">
+            <separator name="SOASeparator"/>
+         </menu>
+         <action
+               class="com.baypackets.sas.ide.soa.actions.ProvisionSOAServiceAction"
+               icon="icons/buildSAR.gif"
+               id="ProvisionService"
+               label="&amp;Provision Service"
+               menubarPath="MenuSOAService/SOASeparator"
+               style="push"
+               toolbarPath="MenuSOAService/SOASeparator"
+               tooltip="Provision SOA Service on CAS"/>
+       <!--  <action
+               class="com.baypackets.sas.ide.soa.actions.RegisterSOAApplicationAction"
+               icon="icons/deployService.gif"
+               id="RegisterApplication"
+               label="&amp;Register Application"
+               menubarPath="MenuSOAService/SOASeparator"
+               style="push"
+               toolbarPath="MenuSOAService/SOASeparator"
+               tooltip="Register SOA Application on CAS"/>-->
+      </actionSet>
+   </extension>
+ 
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.baypackets.sas.ide.editor.XMLEditor"
+            filenames="sas.xml, cas.xml, sip.xml, web.xml, soa.xml,datasources.xml,media-server-config.xml"
+            icon="icons/sample.gif"
+            id="editorSasXml"
+            name="CAS Descriptor Editor"/>
+   </extension>
+   
+    <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="com.baypackets.sas.ide.alc">
+            <filter
+            name="projectNature"
+            value="com.baypackets.sas.ide.alcExtensionNature">
+            </filter> 
+         <action
+               label="Build ALC Extensions"
+               class="com.baypackets.sas.ide.alc.BuildAlcExtAction"
+               menubarPath="additions"
+               enablesFor="1"
+               id="com.baypackets.sas.ide.alc">
+         </action>
+      </objectContribution>
+
+   </extension>
+   
+   
+ <!--      <extension
+         id="alcBuilder"
+         name="ALC Project Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="com.baypackets.sas.ide.alc.AlcBuilder">
+         </run>
+      </builder>
+   </extension> -->
+  
+   <extension
+         id="alcNature"
+         name="ALC Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.baypackets.sas.ide.alc.AlcNature">
+         </run>
+      </runtime>
+      <requires-nature id="org.eclipse.jdt.core.javanature"/>
+ <!--     <builder
+            id="com.baypackets.sas.ide.alcBuilder">
+      </builder> -->
+   </extension>
+   
+    <extension
+         id="alcExtensionNature"
+         name="ALC Extension Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.baypackets.sas.ide.alc.AlcExtensionNature">
+         </run>
+      </runtime>
+      <requires-nature id="org.eclipse.jdt.core.javanature"/>
+ <!--     <builder
+            id="com.baypackets.sas.ide.alcBuilder">
+      </builder> -->
+   </extension>
+   
+     <extension point="org.eclipse.ui.editors">
+      <editor name="ALC Editor"
+              extensions="alcml"
+              icon="icons/sample.gif"
+              default="true"
+              class="com.baypackets.sas.ide.alc.editor.ALCEditor"
+              contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
+              id="com.baypackets.sas.ide.alc.editor.ALCEditor">
+  <!--            <contentTypeBinding contentTypeId="org.eclipse.core.runtime.xml"/>
+              <contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xmlsource"/> -->
+      </editor>
+   </extension>
+   
+    <extension point="org.eclipse.core.runtime.contentTypes">
+    <file-association content-type="org.eclipse.core.runtime.xml" file-extensions="alcml"/>
+    </extension>
+    
+    
+     <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="com.baypackets.sas.ide.servicemanagement.DebugSASServices">
+             <filter
+            name="projectNature"
+            value="com.baypackets.sas.ide.SASServicesNature">
+            </filter> 
+         <action
+               label="Debug AGNITY CAS Service"
+               class="com.baypackets.sas.ide.servicemanagement.DebugSASServices"
+               menubarPath="additions"
+               enablesFor="1"
+               id="com.baypackets.sas.ide.servicemanagement.DebugSASServices">
+         </action>
+      </objectContribution>
+
+   </extension>
+   
+   
+    <extension
+         id="SASServicesNature"
+         name="CAS Services Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.baypackets.sas.ide.util.BPSASServicesNature">
+         </run>
+      </runtime>
+      <requires-nature id="org.eclipse.jdt.core.javanature"/>
+   </extension>
+   
+   
+    <extension
+         id="SASSOAServicesNature"
+         name="CAS Services Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.baypackets.sas.ide.util.BPSASSOAServicesNature">
+         </run>
+      </runtime>
+      <requires-nature id="org.eclipse.jdt.core.javanature"/>
+   </extension>
+
+</plugin>
+

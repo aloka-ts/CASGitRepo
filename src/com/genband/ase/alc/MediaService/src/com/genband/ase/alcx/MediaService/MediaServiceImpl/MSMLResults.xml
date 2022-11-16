@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application-logic-control xmlns:x0="http://www.w3.org/2001/XMLSchema">
+	<service name="MSMLPLAY_COLLECT_APP.DONE">
+
+		<regex applied-to="${content}" results-in="Match">
+			<pattern><![CDATA[dtmf.(match|noinput|nomatch)]]></pattern>
+		</regex>
+
+		<condition on-input="${Match}">
+			<match value="match">
+				<regex applied-to="${content}" results-in="Results">
+					<pattern><![CDATA[<value>([0-9]+)[t#]{0,1}</value>]]></pattern>
+				</regex>
+			</match>
+			<match value="noinput">
+				<regex applied-to="${content}" results-in="Results">
+					<pattern><![CDATA[<value>(t)</value>]]></pattern>
+				</regex>
+				<condition if="${Results}" equal-to="null">
+					<then>
+						<set variable="Results" equal-to="timeout"/>
+					</then>
+				</condition>
+			</match>
+			
+			<match value="nomatch">
+				<regex applied-to="${content}" results-in="Results">
+					<pattern><![CDATA[<value>([0-9]+)[t#]{0,1}</value>]]></pattern>
+				</regex>
+			</match>
+		</condition>		
+
+		<!-- return value is in context at Results -->	
+	</service>
+</application-logic-control>

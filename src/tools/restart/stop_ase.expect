@@ -1,0 +1,15 @@
+#!/usr/local/bin/expect -f
+
+set ip [lindex $argv 0]
+set port [lindex $argv 1]
+set send_slow {10000 .00001}
+
+set timeout 60
+spawn telnet $ip $port
+expect "*ase>"
+
+send -s "\r"
+send -s "stopserver\r"
+expect timeout {
+}
+

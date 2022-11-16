@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="MAPCodec">
+
+	<property name="MAP_HOME" value="${PARENT_BASE}/tcap/map" />
+        <property name="BN_SRC_HOME" value="${PARENT_BASE}/tcap/bn/" />
+	 
+	<target name="clean" description="Clean the build directory">
+		<delete dir="${INSTALLROOT}/map"/>
+		<delete file="${INSTALLROOT}/bpjars/map-codecs-0.1.jar"/>
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${INSTALLROOT}/map/codecClasses"/>
+	</target>
+
+	<path id="lib.dir">
+      <fileset dir="${THIRDPARTY}/otherjars">
+            <include name="log4j-1.2.8.jar"/>
+      </fileset>
+   <fileset dir="${INSTALLROOT}/bpjars">
+                        <include name="tcap-provider-api.jar"/>
+      </fileset>
+
+    </path>
+	
+	<target name="build" depends="init">
+			<echo message="THIRDPARTY: ${THIRDPARTY}"/>
+ 			<echo message="BN_SRC_HOME: ${BN_SRC_HOME}"/>
+ 			<echo message="MAP_HOME: ${MAP_HOME}"/>
+
+			<javac srcdir="${BN_SRC_HOME}/src" destdir="${INSTALLROOT}/map/codecClasses" debug="true">
+				<include name="org/**/*.java"/>
+				<classpath refid="lib.dir"/>
+			</javac>
+
+			<javac srcdir="${MAP_HOME}/codec/src" destdir="${INSTALLROOT}/map/codecClasses" debug="true">
+				  <include name="**/*.java"/>
+                                  <!-- Not compiling the junit cases now, due to junit4 dependency --> 
+				  <exclude name="**/com/agnity/map/test/**/*.java"/> 
+				  <classpath refid="lib.dir"/>
+			</javac>
+			<jar update="true" jarfile="${INSTALLROOT}/bpjars/map-codecs-0.1.jar" basedir="${INSTALLROOT}/map/codecClasses"/>
+			<delete dir="${INSTALLROOT}/map"/>
+	  </target>
+	  
+</project>

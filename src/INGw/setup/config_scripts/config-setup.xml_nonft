@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Config_Setup>
+
+<ConfigSection>
+
+	<!--We are dividing the host attributes into two sets of information, first one containing the physical host information while the second part contain the inter face information on the host.-->
+
+	<!--Following is the physical information of the HOST. Here the HOSTID will identify a host in the network, while CPU specifies the no of CPUs the host will have. RAM will specify the RAM size, in MB, on this host. OS_VER will specify the version of the OS, which is installed on the host.-->
+
+	<Hosts>
+                
+		<Host HostId="H1">	
+			<AttributeList>
+			<Attribute Name="CPU" Value="1"/>
+			<Attribute Name="RAM" Value="2048"/>
+			<Attribute Name="OS_VER" Value="5.10"/>
+			<Attribute Name="OS_TYPE" Value="SunOS"/> <!-- Can be Linux or SunOS-->
+			<Attribute Name="DisplayName" Value="gbidcsun34"/>
+			</AttributeList>
+		</Host>
+		<Host HostId="H2">
+                <AttributeList>
+                   <Attribute Name="CPU" Value="1"/>
+                   <Attribute Name="RAM" Value="3072"/>
+                   <Attribute Name="OS_VER" Value="5.10"/>
+                   <Attribute Name="OS_TYPE" Value="SunOS"/>  <!-- Can be Linux or SunOS-->
+                   <Attribute Name="DisplayName" Value="gbidcsun23"/>
+                </AttributeList>
+                </Host>
+		
+	</Hosts>
+
+	<!--In the following description we assume that the two hosts H1 and H2 have one interface each (IF11 and IF12). The interface IF11 and IF21 are for accessing EMS from the outside world (e.g. OSS, SNMP), signaling (SIP, MGCP), mgmt-s (i.e. for connectivity bw EMS and other component), messaging and provisioning traffic, i.e. LDAP, IMAP and HTTP traffic. The Enums are like
+	0- None
+	1- Management North
+	2- Management South
+	3- Signaling
+	4- Messaging
+	5- Provisioning -->
+	
+	<Interfaces>
+              <Interface IFID="IF11" HostId="H1" Name="gbidcsun34" IP="10.32.15.8" Intf="0" Intf_Type="0,1,2,3"/>
+		 <Interface IFID="IF12" HostId="H2" Name="gbidcsun23" IP="10.32.8.124" Intf="0" Intf_Type="0"/>
+	</Interfaces>
+
+	<!--Following is the database machine details with the Service Name (SVCNAME). Here we are keeping reference to the HOSTID. All the parameters are self-explanatory.-->
+
+	<!--Here again, we can keep the oracle passwords with DB HOST info. For the same reason we haven't done so, these passwords will be prompted to the user.-->
+
+	<Databases>
+	  <Database DBID="DB1" HOSTID="H2" SVCNAME="sun23"  VERSION="11.2.0.1.0" ADMIN_PASSWD="manager" USER_PASSWD="USER_PASSWD" />
+	</Databases>
+
+	<DB_USERS>
+	  <DB_USER UserId="EMSCAMEL" Name="EMSCAMEL" Passwd="emscamel"/>
+	  <DB_USER UserId="SAS_CAMEL" Name="SAS_CAMEL" Passwd="sas_camel"/>
+	  <DB_USER UserId="INGW" Name="INGW" Passwd="ingw"/>
+	</DB_USERS>
+
+	<!--Following is the info related to the IVRs, here we are keeping all the necessary information about the IVR.-->
+	<!--TYPE can be one of the following 
+	COG - 1
+	IPUNITY - 2
+	SS - 3
+	AIN - 4
+	CONVEDIA/SIP - 5
+	CONVEDIA/MGCP - 6
+	AUDIOCODES - 7
+
+	MSG_TYPE could be one of the following
+	NONE - 0
+	URL - 1
+	TRACK - 2
+	CONVERGENCE - 3 -->
+  <IVRS>
+		<IVR IVRID="IVR1" MSG_TYPE="3" BASE_DIR="/home/ngin/bpfs" TYPE="5" IP="192.168.8.58" PORT="2427" URL_PREFIX="file:///"/>
+  </IVRS>
+
+	<ANNOUNCEMENT_SERVERS>
+		<ANNOUNCEMENT_SERVER SERVER_ID="ANN1" STORAGE_PATH="/export/bpfs/ekcAnn" SERVER_IP="192.168.12.33" USER="root" PASSWORD="abc123" />
+	</ANNOUNCEMENT_SERVERS>
+	<!--Following are the entries for AIN signaling gateways. The attributes are self-explanatory.-->
+	<AIN_SGS>
+		<AIN_SG SGID="SG1" IP="0.0.0.0" PORT="SGP1" TRANSPORT_TYPE="1"/>
+		<AIN_SG SGID="SG2" IP="0.0.0.0" PORT="SGP2" TRANSPORT_TYPE="1"/>
+	</AIN_SGS>
+
+	<!--Following are the entries for outbound SIP gateways. The attributes are self-explanatory.-->
+        <OB_SIP_GWS>
+          <OB_SIP_GW GWID="OB1" IP="192.168.13.33" PORT="5060"/>
+          <OB_SIP_GW GWID="OB2" IP="192.168.13.34" PORT="5060"/>
+        </OB_SIP_GWS>
+
+	<!--Following are some miscellaneous entries required for the installation. These entries are such that the user might wish to change them but not necessarily-->
+
+	<Misc>
+		<UnixUser UserName="sas" Passwd="sas" Group="other" HomeDir="/home1/sas" Shell="bash"/>
+
+		<OracleClientInfo ORACLE_HOME="/net/10.32.8.124/home/11gclient/client32" ORACLE_VERSION="11.2.0.1.0"/>
+
+		<JDK>
+			<JDKInfo JDK_ID="JDK1.6" VERSION="1.6.0_02" JDK_HOME="/usr/jdk1.6.0_02"/>
+		</JDK>
+
+		<REF_IPS>
+			<REF_IP REF_IP_ID="REF_IP1" IP="10.32.15.1"/>
+		</REF_IPS>
+
+		<FIPS>
+			<FIP FIP_ID="FIP_EMS" TYPE="EMS" IP="0.0.0.0"/>
+      <FIP FIP_ID="FIP_INGW" TYPE="INGW" IP="0.0.0.0"/>
+      <FIP FIP_ID="FIP_SAS" TYPE="SAS" IP="0.0.0.0"/>
+      <FIP FIP_ID="FIP_SPSI" TYPE="SPSI" IP="10.54.10.6"/>
+		</FIPS>
+		<MULTICAST_IPS>
+			<MULTICAST_IP MULTICAST_IP_ID="MULTICAST_IP1" TYPE="SMS" IP="228.1.2.38"/>			
+		</MULTICAST_IPS>
+                
+		<REPORT_SERVERS>
+	    <REPORT_SERVER REPORT_SERVER_ID="REPORT_SERVER1" TYPE="SMS" IP="0.0.0.0" port="7777"/>
+      <REPORT_SERVER REPORT_SERVER_ID="REPORT_SERVER2" TYPE="SMS" IP="0.0.0.0" port="7777"/> 
+     </REPORT_SERVERS>
+
+		<CLUSTERS>
+		
+	    <CLUSTER CLU_ID="CLU1" NAME="EMS" REGION="INDIA"/>
+			<CLUSTER CLU_ID="CLU2" NAME="SAS" REGION="INDIA"/> 
+      <CLUSTER CLU_ID="CLU3" NAME="INGW" REGION="INDIA"/>
+      <CLUSTER CLU_ID="CLU4" NAME="SPSI" REGION="INDIA"/>
+		</CLUSTERS>
+
+		<CONTACT_INFO>
+			<INFO CON_INFO_ID="CON1" Name="EMS TEAM" Phone_Number="9899932853" Mail_Id="bay.ems@genband.com" Address="C-42 BP INDIA"/>
+		</CONTACT_INFO>
+	</Misc>
+
+</ConfigSection>
+
+<SetupSection>
+
+	<!--The values of different parameters will refer the above section (SECTION-1), until/unless specified, here only the Ids will be mentioned for the corresponding section. For details please refer the example section.-->
+
+<!--This is the first cluster that will contain EMS only-->
+
+  <Cluster value="CLU2">
+
+                <System Name="SAS" Type="rsiAse" BuildDir="SAS_BUILD/SipServlet7.0.0.1">
+                        <INSTALLATION_TYPE value="NFT"/>
+                        <INSTALL_ROOT value="/home1/sas/install/SAS_INSTALL"/>
+                        <HOSTS value="H1"/>
+                        <INGW_LIST value=" "/>
+                        <DB_USER value="SAS_CAMEL"/>
+                        <DBS value="DB1"/>
+                        <REF_IPS value="REF_IP1"/>
+                        <DBFT_STATUS value="0"/>
+                        <SERVER_CONF value="maps-ha" />
+                        <TEMP_LOCATION value="/tmp/MAPS" />
+                        <DB_VENDOR value="Oracle" />
+                        <DB_DRIVER_NAME value="oracle.jdbc.driver.OracleDriver" />
+                        <DB_LISTENER_PORT value="1521" />
+                        <DB_LISTENER_PORT_2 value="1521" />
+                        <DB_MIN_CON_THRESHOLD value="1" />
+                        <DB_MAX_CON_THRESHOLD value="25" />
+                        <WWW_BIND_IP value="0.0.0.0" />
+                        <WWW_PORT value="8080" />
+                        <WS_PORT value="192.168.1.100" />
+                        <WWW_SERVER_SSL value="1" />
+                        <WWW_SSL_PORT value="443" />
+                        <WS_SSL value="1" />
+                        <WS_SSL_PORT value="443" />
+                        <NS_PORT value="1099" />
+                        <HANS_PORT value="1100" />
+                        <LOG_LOCATION value="/LOGS/SAS"/>
+                        <LOG_LEVEL value="ERROR" />
+                        <Subsystems>
+                                <Subsystem Type="ASE Subsystem" Hosts="H1" Fips="FIP_SAS" Jdk_Ver="JDK1.6" />
+                        </Subsystems>
+                </System>
+        </Cluster>
+
+        <Cluster value="CLU3">
+            <System Name="INGW" Type="rsiIngw" BuildDir="INGW_BUILD/INGw5.8.0.1">
+                <INSTALLATION_TYPE value="NFT"/>
+                <INSTALL_ROOT value="/home1/sas/install/INGW_INSTALL"/>
+                <HOSTS value="H1"/>
+                <DB_USER value="INGW"/>
+                <DBS value="DB1"/>
+                <REF_IPS value="REF_IP1,REF_IP2"/>
+                <INGW_LIST value=" "/>
+                <DBFT_STATUS value="3"/> 
+                <Subsystems>
+                    <Subsystem Type="INGw" Hosts="H1" Fips="FIP_SAS" Jdk_Ver="JDK1.6" />
+                </Subsystems>
+
+                <!-- The format of data for corresponding OID 32.2.5 should be as follows
+                  OPC,OSSN,ApplicationId,ProtocolVariant,SCCPProtocolVariant,NetworkAppearance,
+                  TcapApplicationDlgCount,TcapStackDlgCount
+                  Sample data: 0-15-0,146,1,ITU92,ITU,0,10000,50000
+                -->
+		            <Ss7AppInfo checkString="Id,opc,ssn">
+      	        		<App Id="1" opc="1-1-1" ssn="241" protocol_variant="att" maxDlgId="60000" stackStartDlgId="1" numDlgPerInst="25000"/>
+      	        		<App Id="2" opc="1-2-1" ssn="241" protocol_variant="att" maxDlgId="60000" stackStartDlgId="1" numDlgPerInst="25000"/>
+    		        </Ss7AppInfo>
+
+		            <SS7_STACK_FT_MODE value="2"/> 
+                <STACK_ACTIVE_IP value="192.168.13.41" />
+                <STACK_STANDBY_IP value="192.168.13.53" />
+                <PORT_STACK_ACTIVE value="12050"/>
+		            <PORT_STACK_STANDBY value="12050"/>
+    		        <SIP_FIREWALL_ADDRESS value=""/>
+            </System>
+        </Cluster>
+
+
+        <Cluster value="CLU4">
+          <System Name="SPSI" Type="rsi8k" BuildDir="SPSI_BUILD/RSI">
+                  <INSTALLATION_TYPE value="NFT"/>
+                  <INSTALL_ROOT value="/home/sas/setup/SPSI_INSTALL"/>
+                  <HOSTS value="H1"/>
+                  <DB_USER value="camelsas"/>
+                  <DBS value="DB1"/>
+                  <DBFT_STATUS value="0"/>
+                  <ACTIVE_DATA_GUARD value="0"/>
+                  <PRI_SPSI_PROVISIONING_IP value="10.54.10.6"/>
+                  <SEC_SPSI_PROVISIONING_IP value="10.54.10.6"/>
+                  <SPSI_FLOATING_IP value="FIP_SPSI"/>
+                  <SPSI_GW_FIP value="0.0.0.0" /> <!-- Gateway floating IP -->
+                  <SPSI_REF_IP value="REF_IP1"/>
+                  <IP_2_URL_REQD value="Y" />
+                  <SPSI_URL value="www.aconyxSPSI.com" />
+                  <ANNOUNCEMENT_SERVERS value="ANN1"/>
+                  <ANN_LIST value="1,2" /> <!-- 1-English, 2-Spanish -->
+                  <REPORT_SERVERS value="REP1,REP2"/>
+                  <Subsystems>
+                     <Subsystem Type="SPSI" Hosts="H1" Fips="FIP_SPSI" Jdk_Ver="JDK1.6" />
+                  </Subsystems>
+          </System>
+        </Cluster>
+
+
+</SetupSection>
+</Config_Setup>

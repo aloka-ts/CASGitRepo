@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<ocm>
+
+	<!--
+	-->
+
+	<!-- Overload control parameters -->
+<!--    <parameter name="CPU Usage" id="0" type="float" weight="0.4" max="60"/>-->
+<!--	<parameter name="Protocol Session Count" id="1" type="int" weight="0.1" max="10000"/>-->
+<!--	<parameter name="Application Session Count" id="2" type="int" weight="0.1" max="5000"/>-->
+<!--	<parameter name="Response Time" id="3" type="float" weight="0.4"/>-->
+<!--	<parameter name="Memory Usage" id="4" type="float" weight="0.2" max="60"/>-->
+
+	<parameter name="CPU Usage" id="0" type="float" weight="0.4" max="60"/>
+	<parameter name="Protocol Session Count" id="1" type="int" weight="0.1" max="10000"/>
+	<parameter name="Application Session Count" id="2" type="int" weight="0.1" max="5000"/>
+	<parameter name="Response Time" id="3" type="float" weight="0.4"/>
+	<parameter name="Memory Usage" id="4" type="float" weight="0.2" max="75"/>
+	<parameter name="Contention Level One for CPU" id="5" type="float" weight="0.2" max="60"/>
+	<parameter name="Contention Level two for CPU" id="6" type="float" weight="0.2" max="60"/>
+	<parameter name="Contention Level three for CPU" id="7" type="float" weight="0.2" max="60"/>
+	<parameter name="Contention Level One for Memory" id="8" type="float" weight="0.2" max="60"/>
+	<parameter name="Contention Level two for Memory" id="9" type="float" weight="0.2" max="60"/>
+	<parameter name="Contention Level three for Memory" id="10" type="float" weight="0.2" max="60"/>
+	<parameter name="Contention Level One for Max Active Calls" id="11" type="float" weight="0.2" max="60"/>
+	<parameter name="Contention Level two for Max Active Calls" id="12" type="float" weight="0.2" max="60"/>
+	<parameter name="Contention Level three for Max Active Calls" id="13" type="float" weight="0.2" max="60"/>
+	<parameter name="Average Network Transactions Per Second" id="14" type="float" weight="0.4" max="1500"/>
+	<parameter name="Average Aggregated Transactions Per Second" id="15" type="float" weight="0.4" max="3000"/>
+	<parameter name="New Calls Per second" id="16" type="float" weight="0.4" max="500"/>
+	
+	<!-- OLF Serious Threshod -->
+	<olf_threshod name="protocol" value="0.8" />
+	<olf_threshod name="platform" value="0.9" />
+	<olf_threshod name="application" value="0.7" />
+	
+	<!-- Enable OCM -->
+	<enable value="true" />
+	
+	<!-- Scan Interval -->
+	<interval value="30" />
+
+	<!-- 
+	SIP White List: The application deployer could specify multiple sip-white-list elements in the server-ocm.xml.
+	Each white list entry is used to allow the initial requests that matches the rules specified during the overload conditions. 
+	For example, an application may want SAS to process and respond to the heart beat messages received 
+	in the form of initial OPTIONS request during the overload conditions. (OR) The Tcap Provider Application 
+	would like to continue to receive the NOTIFY requests from the INGW. 
+	These exceptions can be defined as rules. The syntax of the rules is same as the <pattern> element as defined in
+	the JSR-116 sip.xml specification. The following entries provides examples of how to define the sip-white-list elements:
+	-->
+        <!--
+	<sip-white-list>
+                <pattern>
+                        <equal>
+                                <var>request.method</var>
+                                <value>OPTIONS</value>
+                        </equal>
+                </pattern>
+        </sip-white-list>
+        <sip-white-list>
+                <pattern>
+                        <and>
+                        <equal>
+                                <var>request.method</var>
+                                <value>NOTIFY</value>
+                        </equal>
+                        <equal>
+                                <var>request.uri.user</var>
+                                <value>TcapListener</value>
+                        </equal>
+                        </and>
+                </pattern>
+        </sip-white-list>
+        -->
+</ocm>		

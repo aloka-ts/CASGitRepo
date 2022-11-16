@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sip-app
+   PUBLIC "-//Java Community Process//DTD SIP Application 1.0//EN"
+   "http://www.jcp.org/dtd/sip-app_1_0.dtd">
+
+
+<sip-app>
+
+  <display-name>A Sample UAC SIP Application</display-name>
+  <distributable/>
+  
+  <listener>
+    <listener-class>com.baypackets.testapps.UacServlet</listener-class>
+  </listener>
+  
+  <servlet>
+    <servlet-name>UacServlet</servlet-name>
+    <servlet-class>com.baypackets.testapps.UacServlet</servlet-class>
+    <init-param>
+        <param-name>toURI</param-name>
+        <param-value>sip:uas@192.168.2.172:5060</param-value>        
+    </init-param>
+    <init-param>
+        <param-name>fromURI</param-name>
+        <param-value>sip:uac@192.168.2.192:4060</param-value>
+    </init-param>   
+    <init-param>
+        <param-name>method</param-name>
+        <param-value>INVITE</param-value>
+    </init-param> 
+    <init-param>
+        <param-name>callDuration</param-name>
+        <param-value>3000</param-value>
+    </init-param>
+    <init-param>
+        <param-name>startDelay</param-name>
+        <param-value>3000</param-value>
+    </init-param>
+    <init-param>
+        <param-name>burstInterval</param-name>
+        <param-value>1000</param-value>
+    </init-param>
+    <init-param>
+        <param-name>burstSize</param-name>
+        <param-value>1</param-value>
+    </init-param>
+    <init-param>
+        <param-name>totalCalls</param-name>
+        <param-value>1</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet> 
+            
+  <session-config>
+    <session-timeout>5</session-timeout>
+  </session-config>
+</sip-app>

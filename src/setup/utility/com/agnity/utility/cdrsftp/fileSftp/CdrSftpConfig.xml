@@ -1,0 +1,46 @@
+<!--  
+CDR Sftp script configuration File
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="cdrSftpConfigBean"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders">
+			<value>true</value>
+		</property>
+
+		<property name="locations">
+            <list>
+                <value>
+                    classpath:/CdrSftpConfig.properties
+                </value>
+            </list>
+        </property>
+    </bean>
+
+	<!-- Script property-->
+	<bean id="cdrSftpConfig"
+		class="com.agnity.utility.cdrsftp.fileSftp.utils.CDRSftpConfig">
+        <property name="cdrWaitInterval" value="${cdr.filesftp.wait.interval}" />
+        <property name="sftpConnWaitInterval" value="${cdr.filesftp.conn.wait.interval}" />
+        <property name="cdrLocalDir" value="${cdr.filesftp.local.dir.name}" />
+        <property name="cdrArchiveDir" value="${cdr.filesftp.archive.dir.name}" />
+        <property name="cdrFilePrefix" value="${cdr.filesftp.file.Prefix}" />
+        <property name="cdrFileExtension" value="${cdr.filesftp.file.extension}" />     
+		<property name="remoteIp" value="${cdr.filesftp.remote.ip}" />
+		<property name="remoteSftpPort" value="${cdr.filesftp.remote.port}" />
+		<property name="remoteSftpUser" value="${cdr.filesftp.remote.user}" />
+		<property name="remoteSftpPassword" value="${cdr.filesftp.remote.password}" />
+		<property name="remoteSftpDir" value="${cdr.filesftp.remote.dir}" />
+		<property name="renameRemoteCdrFile" value="${cdr.filesftp.rename.remote.file}" />
+		<property name="cdrRemoteFilePrefix" value="${cdr.filesftp.remote.file.Prefix}" />
+		<property name="cdrRemoteFileExtension" value="${cdr.filesftp.remote.file.extension}" />
+		<property name="cdrRemoteFileDateFormat" value="${cdr.filesftp.remote.file.date.format}" />
+		<property name="remoteSftpConnRetries" value="${cdr.filesftp.remote.connection.retries}" />
+		<property name="numberOfCdrsToProcess" value="${cdr.filesftp.number.cdrs.process}" />
+		<property name="cdrDateDirEnabled" value="${cdr.filesftp.date.dir.enabled}" />
+	</bean>
+</beans>
