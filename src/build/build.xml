@@ -8,8 +8,6 @@
 <!-- Define the SonarQube global properties (the most usual way is to pass these properties via the command line) -->
 <property name="sonar.host.url" value="http://10.32.10.126:9000/" />
  
-...
-  
 <!-- Define the SonarQube project properties -->
 <property name="sonar.projectKey" value="Rogers-CAS" />
 <property name="sonar.projectName" value="Rogers-CAS" />
