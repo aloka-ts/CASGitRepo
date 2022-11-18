@@ -17,7 +17,7 @@
 <property name="sonar.java.libraries" value="lib/**/*.jar" />
 
 <target name="sonar">
-    <taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
+    <taskdef uri="antlib:org.sonar.ant" resource="CASGitRepo/src/build/antlib.xml">
         <!-- Update the following line, or put the "sonarqube-ant-task-*.jar" file in your "$HOME/.ant/lib" folder -->
         <classpath path="/**/lib/sonarqube-ant-task-*.jar" />
     </taskdef>
