@@ -13,8 +13,8 @@
 <property name="sonar.projectName" value="Rogers-CAS" />
 <property name="sonar.projectVersion" value="1.0" />
 <property name="sonar.sources" value="src" />
-<property name="sonar.java.binaries" value="build" />
-<property name="sonar.java.libraries" value="lib/**/*.jar" />
+<property name="sonar.java.binaries" value="distribution" />
+<property name="sonar.java.libraries" value="distribution/*/*.jar" />
 
 <target name="sonar">
     <taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
