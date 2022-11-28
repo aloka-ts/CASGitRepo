@@ -10,7 +10,7 @@
 
 	<!-- Define the SonarQube and Jacaco Report's properties -->
 	<property name="src.dir" location="../" />
-	<property name="result.dir" location="../../../distribution" />
+	<property name="result.dir" location="../../../target" />
 	<property name="result.classes.dir" location="${result.dir}/classes" />
 	<property name="result.report.dir" location="${result.dir}/site/jacoco" />
 	<property name="result.exec.file" location="${result.dir}/jacoco.exec" />
@@ -19,8 +19,8 @@
 <property name="sonar.projectName" value="Rogers-CAS" />
 <property name="sonar.projectVersion" value="1.0" />
 <property name="sonar.sources" value="../" />
-<property name="sonar.java.binaries" value="distribution" />
-<property name="sonar.java.libraries" value="distribution/*/*.jar" />
+<property name="sonar.java.binaries" value="target" />
+<property name="sonar.java.libraries" value="target/*/*.jar" />
 <property name="result.report.dir" location="${result.dir}/site/jacoco" />
 <property name="result.exec.file" location="${result.dir}/jacoco.exec" />
 <property name="sonar.coverage.jacoco.xmlReportPaths" value="${result.report.dir}/report.xml" />
