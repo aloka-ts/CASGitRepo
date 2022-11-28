@@ -21,8 +21,6 @@
 <property name="sonar.sources" value="../" />
 <property name="sonar.java.binaries" value="target" />
 <property name="sonar.java.libraries" value="target/*/*.jar" />
-<property name="result.report.dir" location="${result.dir}/site/jacoco" />
-<property name="result.exec.file" location="${result.dir}/jacoco.exec" />
 <property name="sonar.coverage.jacoco.xmlReportPaths" value="${result.report.dir}/report.xml" />
 
 		<!-- Step 1: Import JaCoCo Ant tasks -->
