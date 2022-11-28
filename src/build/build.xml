@@ -9,7 +9,7 @@
 <property name="sonar.host.url" value="http://10.32.10.126:9000/" />
 
 	<!-- Define the SonarQube and Jacaco Report's properties -->
-	<property name="src.dir" location="../" />
+	<property name="src.dir" location="../../src" />
 	<property name="result.dir" location="../../../target" />
 	<property name="result.classes.dir" location="${result.dir}/classes" />
 	<property name="result.report.dir" location="${result.dir}/site/jacoco" />
