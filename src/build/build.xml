@@ -4,10 +4,16 @@
 <!-- build.xml, Monday, August 9, 2004 -->
 <!-- Author : Ravi  -->
 <!-- ==================================================== -->
-<project name="BayPackets ASE" default="all" basedir="." xmlns:sonar="antlib:org.sonar.ant">
+<project name="BayPackets ASE" default="all" basedir="." xmlns:sonar="antlib:org.sonar.ant" xmlns:jacoco="antlib:org.jacoco.ant">
 <!-- Define the SonarQube global properties (the most usual way is to pass these properties via the command line) -->
 <property name="sonar.host.url" value="http://10.32.10.126:9000/" />
 
+	<!-- Define the SonarQube and Jacaco Report's properties -->
+	<property name="src.dir" location="../" />
+	<property name="result.dir" location="../../../distribution" />
+	<property name="result.classes.dir" location="${result.dir}/classes" />
+	<property name="result.report.dir" location="${result.dir}/site/jacoco" />
+	<property name="result.exec.file" location="${result.dir}/jacoco.exec" />
 	<!-- Define the SonarQube project properties -->
 <property name="sonar.projectKey" value="Rogers-CAS" />
 <property name="sonar.projectName" value="Rogers-CAS" />
@@ -15,6 +21,64 @@
 <property name="sonar.sources" value="../" />
 <property name="sonar.java.binaries" value="distribution" />
 <property name="sonar.java.libraries" value="distribution/*/*.jar" />
+<property name="result.report.dir" location="${result.dir}/site/jacoco" />
+<property name="result.exec.file" location="${result.dir}/jacoco.exec" />
+
+		<!-- Step 1: Import JaCoCo Ant tasks -->
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<!-- Update the following line with the location to the jacocoant.jar -->
+		<classpath path="/home/jenkins/jacoco/lib/jacocoant.jar" />
+	</taskdef>
+
+	<target name="clean">
+		<delete dir="${result.dir}" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${result.classes.dir}" />
+		<javac srcdir="${src.dir}" destdir="${result.classes.dir}" debug="true" includeantruntime="false" />
+	</target>
+
+	<target name="test" depends="compile">
+		<!-- Step 2: Wrap test execution with the JaCoCo coverage task -->
+		<jacoco:coverage destfile="${result.exec.file}">
+			<java classname="org.jacoco.examples.parser.Main" fork="true">
+				<classpath path="${result.classes.dir}" />
+				<arg value="2 * 3 + 4"/>
+				<arg value="2 + 3 * 4"/>
+				<arg value="(2 + 3) * 4"/>
+				<arg value="2 * 2 * 2 * 2"/>
+				<arg value="1 + 2 + 3 + 4"/>
+				<arg value="2 * 3 + 2 * 5"/>
+			</java>
+		</jacoco:coverage>
+	</target>
+
+	<target name="report" depends="test">
+		<!-- Step 3: Create coverage report -->
+		<jacoco:report>
+
+			<!-- This task needs the collected execution data and ... -->
+			<executiondata>
+				<file file="${result.exec.file}" />
+			</executiondata>
+
+			<!-- the class files and optional source files ... -->
+			<structure name="JaCoCo Ant Example">
+				<classfiles>
+					<fileset dir="${result.classes.dir}" />
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${src.dir}" />
+				</sourcefiles>
+			</structure>
+
+			<!-- to produce reports in different formats. -->
+			<html destdir="${result.report.dir}" />
+			<csv destfile="${result.report.dir}/report.csv" />
+			<xml destfile="${result.report.dir}/report.xml" />
+		</jacoco:report>
+	</target>
 
 <target name="sonar">
     <taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
