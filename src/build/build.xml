@@ -465,7 +465,7 @@
 
 <!--            <copy todir="${buildDir}/lib">
                   <fileset dir="${src}/setup/platform_lib"/>
-            </copy>
+            </copy>  -->
 
             <copy todir="${buildDir}/schema">
                   <fileset dir="${src}/setup/schema"/>
