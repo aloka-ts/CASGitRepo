@@ -467,7 +467,7 @@
                   <fileset dir="${src}/setup/platform_lib"/>
             </copy>  -->
 
-            <copy todir="${buildDir}/schema">
+  <!--          <copy todir="${buildDir}/schema">
                   <fileset dir="${src}/setup/schema"/>
             </copy>
 
@@ -501,7 +501,7 @@
 
           <copy todir="${buildDir}/mjds">
                   <fileset dir="${THIRDPARTY}/mjds"/>
-            </copy>
+            </copy>	-->
  
             <!-- Copy the thirdparty libraries to the otherjars & dsjars folders -->
             <copy todir="${buildDir}/otherjars" file="${THIRDPARTY}/otherjars/TinyRadius-0.9.9.jar"/>
