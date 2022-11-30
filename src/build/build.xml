@@ -51,7 +51,7 @@
       <property name="dev" value="${dev}"/>
 
       <!-- Target for running the JUnit test cases -->
-      <target name="runTests" depends="init,sonar">
+      <target name="runTests" depends="init">
             <property name="testDir" value="${buildDir}"/>
 
             <junit printsummary="yes">
@@ -463,7 +463,7 @@
                
 <!--            <copy todir="${buildDir}/Common/thirdParty/jakarta-tomcat/lib" file="${THIRDPARTY}/webserver/apache-tomcat-7.0.30/lib/tomcat-coyote.jar"/>  -->
 
-            <copy todir="${buildDir}/lib">
+<!--            <copy todir="${buildDir}/lib">
                   <fileset dir="${src}/setup/platform_lib"/>
             </copy>
 
