@@ -38,47 +38,6 @@
 		<javac srcdir="${src.dir}" destdir="${result.classes.dir}" debug="true" includeantruntime="false" />
 	</target>
 
-	<target name="test" depends="compile">
-		<!-- Step 2: Wrap test execution with the JaCoCo coverage task -->
-		<jacoco:coverage destfile="${result.exec.file}">
-			<java classname="org.jacoco.examples.parser.Main" fork="true">
-				<classpath path="${result.classes.dir}" />
-				<arg value="2 * 3 + 4"/>
-				<arg value="2 + 3 * 4"/>
-				<arg value="(2 + 3) * 4"/>
-				<arg value="2 * 2 * 2 * 2"/>
-				<arg value="1 + 2 + 3 + 4"/>
-				<arg value="2 * 3 + 2 * 5"/>
-			</java>
-		</jacoco:coverage>
-	</target>
-
-	<target name="report" depends="test">
-		<!-- Step 3: Create coverage report -->
-		<jacoco:report>
-
-			<!-- This task needs the collected execution data and ... -->
-			<executiondata>
-				<file file="${result.exec.file}" />
-			</executiondata>
-
-			<!-- the class files and optional source files ... -->
-			<structure name="JaCoCo Ant Example">
-				<classfiles>
-					<fileset dir="${result.classes.dir}" />
-				</classfiles>
-				<sourcefiles encoding="UTF-8">
-					<fileset dir="${src.dir}" />
-				</sourcefiles>
-			</structure>
-
-			<!-- to produce reports in different formats. -->
-			<html destdir="${result.report.dir}" />
-			<csv destfile="${result.report.dir}/report.csv" />
-			<xml destfile="${result.report.dir}/report.xml" />
-		</jacoco:report>
-	</target>
-
 <target name="sonar">
     <taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
         <!-- Update the following line, or put the "sonarqube-ant-task-*.jar" file in your "$HOME/.ant/lib" folder -->
@@ -92,7 +51,7 @@
       <property name="dev" value="${dev}"/>
 
       <!-- Target for running the JUnit test cases -->
-      <target name="runTests" depends="init">
+      <target name="runTests" depends="init,sonar">
             <property name="testDir" value="${buildDir}"/>
 
             <junit printsummary="yes">
